@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="InsideSFG_WFModelStoreContainer" CdmEntityContainer="InsideSFG_WFEntities">
+    <EntitySetMapping Name="BG_HApprove">
+      <EntityTypeMapping TypeName="InsideSFG_WFModel.BG_HApprove">
+        <MappingFragment StoreEntitySet="BG_HApprove">
+          <ScalarProperty Name="departmentID" ColumnName="departmentID" />
+          <ScalarProperty Name="department_" ColumnName="department_" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="EmpID" ColumnName="EmpID" />
+          <ScalarProperty Name="Flag" ColumnName="Flag" />
+          <ScalarProperty Name="Cost" ColumnName="Cost" />
+          <ScalarProperty Name="SDate" ColumnName="SDate" />
+          <ScalarProperty Name="EDate" ColumnName="EDate" />
+          <ScalarProperty Name="UserID_Save" ColumnName="UserID_Save" />
+          <ScalarProperty Name="EmpChk" ColumnName="EmpChk" />
+          <ScalarProperty Name="UserID_Chk" ColumnName="UserID_Chk" />
+          <ScalarProperty Name="DepartmentChk" ColumnName="DepartmentChk" />
+          <ScalarProperty Name="Sta" ColumnName="Sta" />
+          <ScalarProperty Name="RemarkIO" ColumnName="RemarkIO" />
+          <ScalarProperty Name="Detail" ColumnName="Detail" />
+          <ScalarProperty Name="Status_Department" ColumnName="Status_Department" />
+          <ScalarProperty Name="statusIO" ColumnName="statusIO" />
+          <ScalarProperty Name="BrandForWS" ColumnName="BrandForWS" />
+          <ScalarProperty Name="FlagForWS" ColumnName="FlagForWS" />
+          <ScalarProperty Name="FlagForWF" ColumnName="FlagForWF" />
+          <ScalarProperty Name="ID_Brand" ColumnName="ID_Brand" />
+          <ScalarProperty Name="UserIDHead_OnlyFC" ColumnName="UserIDHead_OnlyFC" />
+          <ScalarProperty Name="Head_Department" ColumnName="Head_Department" />
+          <ScalarProperty Name="Head_Department_UserID" ColumnName="Head_Department_UserID" />
+          <ScalarProperty Name="Remark" ColumnName="Remark" />
+          <ScalarProperty Name="Note" ColumnName="Note" />
+          <ScalarProperty Name="FlagAddEDate" ColumnName="FlagAddEDate" />
+          <ScalarProperty Name="Type_BrandGroup" ColumnName="Type_BrandGroup" />
+          <ScalarProperty Name="ReserveGroupCompanyID" ColumnName="ReserveGroupCompanyID" />
+          <ScalarProperty Name="Purchase_Chk" ColumnName="Purchase_Chk" />
+          <ScalarProperty Name="Purchase_UserID_Chk" ColumnName="Purchase_UserID_Chk" />
+          <ScalarProperty Name="Flag_PB" ColumnName="Flag_PB" />
+          <ScalarProperty Name="Comp_Group" ColumnName="Comp_Group" />
+          <ScalarProperty Name="Group_Conso" ColumnName="Group_Conso" />
+          <ScalarProperty Name="Flag_Clear" ColumnName="Flag_Clear" />
+          <ScalarProperty Name="Flag_FCBonus" ColumnName="Flag_FCBonus" />
+          <ScalarProperty Name="Flag_VGroup" ColumnName="Flag_VGroup" />
+          <ScalarProperty Name="UserID_Shoes" ColumnName="UserID_Shoes" />
+          <ScalarProperty Name="SAP_Ref" ColumnName="SAP_Ref" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Employees">
+      <EntityTypeMapping TypeName="InsideSFG_WFModel.Employee">
+        <MappingFragment StoreEntitySet="Employee">
+          <ScalarProperty Name="userID" ColumnName="userID" />
+          <ScalarProperty Name="masterID" ColumnName="masterID" />
+          <ScalarProperty Name="TypeEmployee" ColumnName="TypeEmployee" />
+          <ScalarProperty Name="uCode" ColumnName="uCode" />
+          <ScalarProperty Name="title_" ColumnName="title_" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="surname" ColumnName="surname" />
+          <ScalarProperty Name="eName" ColumnName="eName" />
+          <ScalarProperty Name="eSurname" ColumnName="eSurname" />
+          <ScalarProperty Name="nick" ColumnName="nick" />
+          <ScalarProperty Name="phone" ColumnName="phone" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="username_" ColumnName="username_" />
+          <ScalarProperty Name="password_" ColumnName="password_" />
+          <ScalarProperty Name="uLevel" ColumnName="uLevel" />
+          <ScalarProperty Name="birthDay" ColumnName="birthDay" />
+          <ScalarProperty Name="educationID" ColumnName="educationID" />
+          <ScalarProperty Name="provinceID" ColumnName="provinceID" />
+          <ScalarProperty Name="placeID" ColumnName="placeID" />
+          <ScalarProperty Name="positionID" ColumnName="positionID" />
+          <ScalarProperty Name="pNote" ColumnName="pNote" />
+          <ScalarProperty Name="departmentID" ColumnName="departmentID" />
+          <ScalarProperty Name="brandID" ColumnName="brandID" />
+          <ScalarProperty Name="posts" ColumnName="posts" />
+          <ScalarProperty Name="comments" ColumnName="comments" />
+          <ScalarProperty Name="logins" ColumnName="logins" />
+          <ScalarProperty Name="lastLogin" ColumnName="lastLogin" />
+          <ScalarProperty Name="ip" ColumnName="ip" />
+          <ScalarProperty Name="ipInternet" ColumnName="ipInternet" />
+          <ScalarProperty Name="start_" ColumnName="start_" />
+          <ScalarProperty Name="resign_" ColumnName="resign_" />
+          <ScalarProperty Name="isShow" ColumnName="isShow" />
+          <ScalarProperty Name="isActive" ColumnName="isActive" />
+          <ScalarProperty Name="LastActive" ColumnName="LastActive" />
+          <ScalarProperty Name="isConfirm" ColumnName="isConfirm" />
+          <ScalarProperty Name="isInternet" ColumnName="isInternet" />
+          <ScalarProperty Name="notify" ColumnName="notify" />
+          <ScalarProperty Name="StatWork" ColumnName="StatWork" />
+          <ScalarProperty Name="EmpInsert" ColumnName="EmpInsert" />
+          <ScalarProperty Name="Date_Create" ColumnName="Date_Create" />
+          <ScalarProperty Name="EmpUpdate" ColumnName="EmpUpdate" />
+          <ScalarProperty Name="Date_Update" ColumnName="Date_Update" />
+          <ScalarProperty Name="RemarkUpdate" ColumnName="RemarkUpdate" />
+          <ScalarProperty Name="Img" ColumnName="Img" />
+          <ScalarProperty Name="Balance" ColumnName="Balance" />
+          <ScalarProperty Name="BalanceBrand" ColumnName="BalanceBrand" />
+          <ScalarProperty Name="Type_Level" ColumnName="Type_Level" />
+          <ScalarProperty Name="Type_Work" ColumnName="Type_Work" />
+          <ScalarProperty Name="Bank_Name" ColumnName="Bank_Name" />
+          <ScalarProperty Name="Bank_Acc_Name" ColumnName="Bank_Acc_Name" />
+          <ScalarProperty Name="Bank_Acc_No" ColumnName="Bank_Acc_No" />
+          <ScalarProperty Name="EmpEvaluation1" ColumnName="EmpEvaluation1" />
+          <ScalarProperty Name="c_EmpEvaluation1_Group" ColumnName="c_EmpEvaluation1_Group" />
+          <ScalarProperty Name="EmpEvaluation1_Group" ColumnName="EmpEvaluation1_Group" />
+          <ScalarProperty Name="EmpEvaluation2" ColumnName="EmpEvaluation2" />
+          <ScalarProperty Name="EmpHead" ColumnName="EmpHead" />
+          <ScalarProperty Name="NullEmp2" ColumnName="NullEmp2" />
+          <ScalarProperty Name="Shop" ColumnName="Shop" />
+          <ScalarProperty Name="Company" ColumnName="Company" />
+          <ScalarProperty Name="c_FastSave" ColumnName="c_FastSave" />
+          <ScalarProperty Name="Ref" ColumnName="Ref" />
+          <ScalarProperty Name="IsReplace" ColumnName="IsReplace" />
+          <ScalarProperty Name="text_Position" ColumnName="text_Position" />
+          <ScalarProperty Name="email_2" ColumnName="email_2" />
+          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <ScalarProperty Name="Vcard_URL" ColumnName="Vcard_URL" />
+          <ScalarProperty Name="ISContact" ColumnName="ISContact" />
+          <ScalarProperty Name="ISContact_Leave" ColumnName="ISContact_Leave" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BG_ForeCast">
+      <EntityTypeMapping TypeName="InsideSFG_WFModel.BG_ForeCast">
+        <MappingFragment StoreEntitySet="BG_ForeCast">
+          <ScalarProperty Name="Remark" ColumnName="Remark" />
+          <ScalarProperty Name="Flag" ColumnName="Flag" />
+          <ScalarProperty Name="ActiveDate" ColumnName="ActiveDate" />
+          <ScalarProperty Name="ActiveID" ColumnName="ActiveID" />
+          <ScalarProperty Name="UserID_Active" ColumnName="UserID_Active" />
+          <ScalarProperty Name="ActiveStatus" ColumnName="ActiveStatus" />
+          <ScalarProperty Name="SaveDate" ColumnName="SaveDate" />
+          <ScalarProperty Name="SaveID" ColumnName="SaveID" />
+          <ScalarProperty Name="UserID_Save" ColumnName="UserID_Save" />
+          <ScalarProperty Name="M12" ColumnName="M12" />
+          <ScalarProperty Name="M11" ColumnName="M11" />
+          <ScalarProperty Name="M10" ColumnName="M10" />
+          <ScalarProperty Name="M09" ColumnName="M09" />
+          <ScalarProperty Name="M08" ColumnName="M08" />
+          <ScalarProperty Name="M07" ColumnName="M07" />
+          <ScalarProperty Name="M06" ColumnName="M06" />
+          <ScalarProperty Name="M05" ColumnName="M05" />
+          <ScalarProperty Name="M04" ColumnName="M04" />
+          <ScalarProperty Name="M03" ColumnName="M03" />
+          <ScalarProperty Name="M02" ColumnName="M02" />
+          <ScalarProperty Name="M01" ColumnName="M01" />
+          <ScalarProperty Name="GroupNameID" ColumnName="GroupNameID" />
+          <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+          <ScalarProperty Name="Year" ColumnName="Year" />
+          <ScalarProperty Name="ForecastID" ColumnName="ForecastID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

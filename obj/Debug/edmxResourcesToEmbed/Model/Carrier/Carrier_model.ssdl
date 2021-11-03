@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CarrierModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Article_Category">
+    <Key>
+      <PropertyRef Name="ArticleCode" />
+    </Key>
+    <Property Name="ArticleCode" Type="int" Nullable="false" />
+    <Property Name="ArticleName" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Notify">
+    <Key>
+      <PropertyRef Name="TicketPickupId" />
+    </Key>
+    <Property Name="TicketPickupId" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="StaffInfoId" Type="int" />
+    <Property Name="StaffInfoName" Type="nvarchar" MaxLength="50" />
+    <Property Name="StaffInfoPhone" Type="nvarchar" MaxLength="20" />
+    <Property Name="UpCountryNote" Type="nvarchar(max)" />
+    <Property Name="TimeoutAtText" Type="nvarchar(max)" />
+    <Property Name="TicketMessage" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Docno" />
+    </Key>
+    <Property Name="Docno" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="Date_send" Type="datetime" />
+    <Property Name="UserID" Type="int" />
+    <Property Name="ExpressCategory" Type="int" />
+    <Property Name="Owner_ID" Type="int" />
+    <Property Name="StorageWM_ID" Type="int" />
+    <Property Name="Channel_ID" Type="int" />
+    <Property Name="Ref_Order" Type="nvarchar" MaxLength="50" />
+    <Property Name="srcName" Type="nvarchar(max)" />
+    <Property Name="srcPhone" Type="nvarchar" MaxLength="20" />
+    <Property Name="srcProvinceName" Type="nvarchar" MaxLength="150" />
+    <Property Name="srcCityName" Type="nvarchar" MaxLength="150" />
+    <Property Name="srcDistrictName" Type="nvarchar" MaxLength="150" />
+    <Property Name="srcPostalCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="srcDetailAddress" Type="nvarchar(max)" />
+    <Property Name="dstName" Type="nvarchar(max)" />
+    <Property Name="dstPhone" Type="nvarchar" MaxLength="20" />
+    <Property Name="dstHomePhone" Type="nvarchar" MaxLength="20" />
+    <Property Name="dstProvinceName" Type="nvarchar" MaxLength="150" />
+    <Property Name="dstCityName" Type="nvarchar" MaxLength="150" />
+    <Property Name="dstDistrictName" Type="nvarchar" MaxLength="150" />
+    <Property Name="dstPostalCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="dstDetailAddress" Type="nvarchar(max)" />
+    <Property Name="articleCategory" Type="int" />
+    <Property Name="weight" Type="int" />
+    <Property Name="width" Type="int" />
+    <Property Name="length" Type="int" />
+    <Property Name="height" Type="int" />
+    <Property Name="insured" Type="int" />
+    <Property Name="remark" Type="nvarchar(max)" />
+    <Property Name="status" Type="nvarchar" MaxLength="5" />
+    <Property Name="Transport_Type" Type="int" />
+    <Property Name="SDpart" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Order_Item">
+    <Key>
+      <PropertyRef Name="Docno" />
+    </Key>
+    <Property Name="Docno" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="Date_Success" Type="datetime" />
+    <Property Name="sign" Type="nvarchar(max)" />
+    <Property Name="pno" Type="nvarchar" MaxLength="20" />
+    <Property Name="mchId" Type="nvarchar" MaxLength="40" />
+    <Property Name="sortCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="dstStoreName" Type="nvarchar" MaxLength="50" />
+    <Property Name="sortingLineCode" Type="nvarchar" MaxLength="10" />
+    <Property Name="earlyFlightEnabled" Type="nvarchar" MaxLength="5" />
+    <Property Name="packEnabled" Type="nvarchar" MaxLength="5" />
+    <Property Name="upcountryCharge" Type="nvarchar" MaxLength="5" />
+    <Property Name="Qty" Type="int" />
+    <Property Name="Status" Type="nvarchar" MaxLength="10" />
+    <Property Name="CodeResponse" Type="int" />
+    <Property Name="ticketPickupId" Type="nvarchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="Status">
+    <Key>
+      <PropertyRef Name="StatusID" />
+    </Key>
+    <Property Name="StatusID" Type="nvarchar" MaxLength="5" Nullable="false" />
+    <Property Name="StatusName" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="int" Nullable="false" />
+    <Property Name="Username" Type="nvarchar" MaxLength="50" />
+    <Property Name="Email" Type="nvarchar(max)" />
+    <Property Name="Permission" Type="nvarchar" MaxLength="20" />
+  </EntityType>
+  <EntityContainer Name="CarrierModelStoreContainer">
+    <EntitySet Name="Article_Category" EntityType="Self.Article_Category" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Notify" EntityType="Self.Notify" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Order_Item" EntityType="Self.Order_Item" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

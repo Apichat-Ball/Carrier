@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="CarrierModelStoreContainer" CdmEntityContainer="CarrierEntities">
+    <EntitySetMapping Name="Article_Category">
+      <EntityTypeMapping TypeName="CarrierModel.Article_Category">
+        <MappingFragment StoreEntitySet="Article_Category">
+          <ScalarProperty Name="ArticleName" ColumnName="ArticleName" />
+          <ScalarProperty Name="ArticleCode" ColumnName="ArticleCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Orders">
+      <EntityTypeMapping TypeName="CarrierModel.Order">
+        <MappingFragment StoreEntitySet="Order">
+          <ScalarProperty Name="SDpart" ColumnName="SDpart" />
+          <ScalarProperty Name="Transport_Type" ColumnName="Transport_Type" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="remark" ColumnName="remark" />
+          <ScalarProperty Name="insured" ColumnName="insured" />
+          <ScalarProperty Name="height" ColumnName="height" />
+          <ScalarProperty Name="length" ColumnName="length" />
+          <ScalarProperty Name="width" ColumnName="width" />
+          <ScalarProperty Name="weight" ColumnName="weight" />
+          <ScalarProperty Name="articleCategory" ColumnName="articleCategory" />
+          <ScalarProperty Name="dstDetailAddress" ColumnName="dstDetailAddress" />
+          <ScalarProperty Name="dstPostalCode" ColumnName="dstPostalCode" />
+          <ScalarProperty Name="dstDistrictName" ColumnName="dstDistrictName" />
+          <ScalarProperty Name="dstCityName" ColumnName="dstCityName" />
+          <ScalarProperty Name="dstProvinceName" ColumnName="dstProvinceName" />
+          <ScalarProperty Name="dstHomePhone" ColumnName="dstHomePhone" />
+          <ScalarProperty Name="dstPhone" ColumnName="dstPhone" />
+          <ScalarProperty Name="dstName" ColumnName="dstName" />
+          <ScalarProperty Name="srcDetailAddress" ColumnName="srcDetailAddress" />
+          <ScalarProperty Name="srcPostalCode" ColumnName="srcPostalCode" />
+          <ScalarProperty Name="srcDistrictName" ColumnName="srcDistrictName" />
+          <ScalarProperty Name="srcCityName" ColumnName="srcCityName" />
+          <ScalarProperty Name="srcProvinceName" ColumnName="srcProvinceName" />
+          <ScalarProperty Name="srcPhone" ColumnName="srcPhone" />
+          <ScalarProperty Name="srcName" ColumnName="srcName" />
+          <ScalarProperty Name="Ref_Order" ColumnName="Ref_Order" />
+          <ScalarProperty Name="Channel_ID" ColumnName="Channel_ID" />
+          <ScalarProperty Name="StorageWM_ID" ColumnName="StorageWM_ID" />
+          <ScalarProperty Name="Owner_ID" ColumnName="Owner_ID" />
+          <ScalarProperty Name="ExpressCategory" ColumnName="ExpressCategory" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="Date_send" ColumnName="Date_send" />
+          <ScalarProperty Name="Docno" ColumnName="Docno" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Status">
+      <EntityTypeMapping TypeName="CarrierModel.Status">
+        <MappingFragment StoreEntitySet="Status">
+          <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+          <ScalarProperty Name="StatusID" ColumnName="StatusID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Notifies">
+      <EntityTypeMapping TypeName="CarrierModel.Notify">
+        <MappingFragment StoreEntitySet="Notify">
+          <ScalarProperty Name="TicketMessage" ColumnName="TicketMessage" />
+          <ScalarProperty Name="TimeoutAtText" ColumnName="TimeoutAtText" />
+          <ScalarProperty Name="UpCountryNote" ColumnName="UpCountryNote" />
+          <ScalarProperty Name="StaffInfoPhone" ColumnName="StaffInfoPhone" />
+          <ScalarProperty Name="StaffInfoName" ColumnName="StaffInfoName" />
+          <ScalarProperty Name="StaffInfoId" ColumnName="StaffInfoId" />
+          <ScalarProperty Name="TicketPickupId" ColumnName="TicketPickupId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Order_Item">
+      <EntityTypeMapping TypeName="CarrierModel.Order_Item">
+        <MappingFragment StoreEntitySet="Order_Item">
+          <ScalarProperty Name="ticketPickupId" ColumnName="ticketPickupId" />
+          <ScalarProperty Name="CodeResponse" ColumnName="CodeResponse" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Qty" ColumnName="Qty" />
+          <ScalarProperty Name="upcountryCharge" ColumnName="upcountryCharge" />
+          <ScalarProperty Name="packEnabled" ColumnName="packEnabled" />
+          <ScalarProperty Name="earlyFlightEnabled" ColumnName="earlyFlightEnabled" />
+          <ScalarProperty Name="sortingLineCode" ColumnName="sortingLineCode" />
+          <ScalarProperty Name="dstStoreName" ColumnName="dstStoreName" />
+          <ScalarProperty Name="sortCode" ColumnName="sortCode" />
+          <ScalarProperty Name="mchId" ColumnName="mchId" />
+          <ScalarProperty Name="pno" ColumnName="pno" />
+          <ScalarProperty Name="sign" ColumnName="sign" />
+          <ScalarProperty Name="Date_Success" ColumnName="Date_Success" />
+          <ScalarProperty Name="Docno" ColumnName="Docno" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="CarrierModel.User">
+        <MappingFragment StoreEntitySet="User">
+          <ScalarProperty Name="Permission" ColumnName="Permission" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

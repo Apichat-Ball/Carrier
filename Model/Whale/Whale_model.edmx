@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="WhaleModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Box">
+          <Key>
+            <PropertyRef Name="Box_ID" />
+          </Key>
+          <Property Name="Box_ID" Type="int" Nullable="false" />
+          <Property Name="Box_Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Barcode" Type="nvarchar" MaxLength="20" />
+          <Property Name="Flag_Active" Type="bit" />
+        </EntityType>
+        <EntityType Name="City">
+          <Key>
+            <PropertyRef Name="City_ID" />
+            <PropertyRef Name="Province_ID" />
+          </Key>
+          <Property Name="City_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="City_Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Province_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="Customer_ID" />
+            <PropertyRef Name="StorageWM_ID" />
+            <PropertyRef Name="Channel_ID" />
+          </Key>
+          <Property Name="Customer_ID" Type="int" Nullable="false" />
+          <Property Name="StorageWM_ID" Type="int" Nullable="false" />
+          <Property Name="Channel_ID" Type="int" Nullable="false" />
+          <Property Name="refCode" Type="nvarchar" MaxLength="8" />
+          <Property Name="Customer_Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="SAP_Channel" Type="nvarchar" MaxLength="50" />
+          <Property Name="SAP_Company" Type="nvarchar" MaxLength="4" />
+          <Property Name="SAP_Storage_Transfer" Type="nvarchar" MaxLength="20" />
+          <Property Name="SAP_Storage_Received" Type="nvarchar" MaxLength="20" />
+          <Property Name="SAP_Site" Type="nvarchar" MaxLength="10" />
+          <Property Name="DC" Type="nvarchar" MaxLength="10" />
+          <Property Name="ECommerce_Channel_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="District">
+          <Key>
+            <PropertyRef Name="Distinct_ID" />
+            <PropertyRef Name="City_ID" />
+          </Key>
+          <Property Name="Distinct_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Distinct_Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="City_ID" Type="int" Nullable="false" />
+          <Property Name="Postcode" Type="int" />
+        </EntityType>
+        <EntityType Name="Province">
+          <Key>
+            <PropertyRef Name="Province_ID" />
+          </Key>
+          <Property Name="Province_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Province_Name" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <EntityContainer Name="WhaleModelStoreContainer">
+          <EntitySet Name="Box" EntityType="Self.Box" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="City" EntityType="Self.City" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="District" EntityType="Self.District" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Province" EntityType="Self.Province" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="WhaleModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Box">
+          <Key>
+            <PropertyRef Name="Box_ID" />
+          </Key>
+          <Property Name="Box_ID" Type="Int32" Nullable="false" />
+          <Property Name="Box_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Barcode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_Active" Type="Boolean" />
+        </EntityType>
+        <EntityContainer Name="WhaleEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Boxes" EntityType="Self.Box" />
+          <EntitySet Name="Cities" EntityType="WhaleModel.City" />
+          <EntitySet Name="Customers" EntityType="WhaleModel.Customer" />
+          <EntitySet Name="Districts" EntityType="WhaleModel.District" />
+          <EntitySet Name="Provinces" EntityType="WhaleModel.Province" />
+        </EntityContainer>
+        <EntityType Name="City">
+          <Key>
+            <PropertyRef Name="City_ID" />
+            <PropertyRef Name="Province_ID" />
+          </Key>
+          <Property Name="City_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="City_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Province_ID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="Customer_ID" />
+            <PropertyRef Name="StorageWM_ID" />
+            <PropertyRef Name="Channel_ID" />
+          </Key>
+          <Property Name="Customer_ID" Type="Int32" Nullable="false" />
+          <Property Name="StorageWM_ID" Type="Int32" Nullable="false" />
+          <Property Name="Channel_ID" Type="Int32" Nullable="false" />
+          <Property Name="refCode" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Customer_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SAP_Channel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SAP_Company" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="SAP_Storage_Transfer" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SAP_Storage_Received" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SAP_Site" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="DC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ECommerce_Channel_ID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="District">
+          <Key>
+            <PropertyRef Name="Distinct_ID" />
+            <PropertyRef Name="City_ID" />
+          </Key>
+          <Property Name="Distinct_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Distinct_Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="City_ID" Type="Int32" Nullable="false" />
+          <Property Name="Postcode" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Province">
+          <Key>
+            <PropertyRef Name="Province_ID" />
+          </Key>
+          <Property Name="Province_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Province_Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="WhaleModelStoreContainer" CdmEntityContainer="WhaleEntities">
+          <EntitySetMapping Name="Boxes">
+            <EntityTypeMapping TypeName="WhaleModel.Box">
+              <MappingFragment StoreEntitySet="Box">
+                <ScalarProperty Name="Box_ID" ColumnName="Box_ID" />
+                <ScalarProperty Name="Box_Name" ColumnName="Box_Name" />
+                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+                <ScalarProperty Name="Flag_Active" ColumnName="Flag_Active" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cities">
+            <EntityTypeMapping TypeName="WhaleModel.City">
+              <MappingFragment StoreEntitySet="City">
+                <ScalarProperty Name="Province_ID" ColumnName="Province_ID" />
+                <ScalarProperty Name="City_Name" ColumnName="City_Name" />
+                <ScalarProperty Name="City_ID" ColumnName="City_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="WhaleModel.Customer">
+              <MappingFragment StoreEntitySet="Customer">
+                <ScalarProperty Name="ECommerce_Channel_ID" ColumnName="ECommerce_Channel_ID" />
+                <ScalarProperty Name="DC" ColumnName="DC" />
+                <ScalarProperty Name="SAP_Site" ColumnName="SAP_Site" />
+                <ScalarProperty Name="SAP_Storage_Received" ColumnName="SAP_Storage_Received" />
+                <ScalarProperty Name="SAP_Storage_Transfer" ColumnName="SAP_Storage_Transfer" />
+                <ScalarProperty Name="SAP_Company" ColumnName="SAP_Company" />
+                <ScalarProperty Name="SAP_Channel" ColumnName="SAP_Channel" />
+                <ScalarProperty Name="Customer_Name" ColumnName="Customer_Name" />
+                <ScalarProperty Name="refCode" ColumnName="refCode" />
+                <ScalarProperty Name="Channel_ID" ColumnName="Channel_ID" />
+                <ScalarProperty Name="StorageWM_ID" ColumnName="StorageWM_ID" />
+                <ScalarProperty Name="Customer_ID" ColumnName="Customer_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Districts">
+            <EntityTypeMapping TypeName="WhaleModel.District">
+              <MappingFragment StoreEntitySet="District">
+                <ScalarProperty Name="Postcode" ColumnName="Postcode" />
+                <ScalarProperty Name="City_ID" ColumnName="City_ID" />
+                <ScalarProperty Name="Distinct_Name" ColumnName="Distinct_Name" />
+                <ScalarProperty Name="Distinct_ID" ColumnName="Distinct_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Provinces">
+            <EntityTypeMapping TypeName="WhaleModel.Province">
+              <MappingFragment StoreEntitySet="Province">
+                <ScalarProperty Name="Province_Name" ColumnName="Province_Name" />
+                <ScalarProperty Name="Province_ID" ColumnName="Province_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

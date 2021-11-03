@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="InsideSFG_WFModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="BG_ForeCast">
+    <Key>
+      <PropertyRef Name="ForecastID" />
+      <PropertyRef Name="Year" />
+      <PropertyRef Name="DepartmentID" />
+      <PropertyRef Name="GroupNameID" />
+    </Key>
+    <Property Name="ForecastID" Type="varchar" MaxLength="18" Nullable="false" />
+    <Property Name="Year" Type="varchar" MaxLength="4" Nullable="false" />
+    <Property Name="DepartmentID" Type="varchar" MaxLength="18" Nullable="false" />
+    <Property Name="GroupNameID" Type="varchar" MaxLength="18" Nullable="false" />
+    <Property Name="M01" Type="float" />
+    <Property Name="M02" Type="float" />
+    <Property Name="M03" Type="float" />
+    <Property Name="M04" Type="float" />
+    <Property Name="M05" Type="float" />
+    <Property Name="M06" Type="float" />
+    <Property Name="M07" Type="float" />
+    <Property Name="M08" Type="float" />
+    <Property Name="M09" Type="float" />
+    <Property Name="M10" Type="float" />
+    <Property Name="M11" Type="float" />
+    <Property Name="M12" Type="float" />
+    <Property Name="UserID_Save" Type="nvarchar" MaxLength="10" />
+    <Property Name="SaveID" Type="varchar" MaxLength="10" />
+    <Property Name="SaveDate" Type="datetime" />
+    <Property Name="ActiveStatus" Type="int" />
+    <Property Name="UserID_Active" Type="nvarchar" MaxLength="10" />
+    <Property Name="ActiveID" Type="varchar" MaxLength="10" />
+    <Property Name="ActiveDate" Type="datetime" />
+    <Property Name="Flag" Type="varchar" MaxLength="1" />
+    <Property Name="Remark" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="BG_HApprove">
+    <Key>
+      <PropertyRef Name="departmentID" />
+    </Key>
+    <Property Name="departmentID" Type="varchar" MaxLength="150" Nullable="false" />
+    <Property Name="department_" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="UserID" Type="nvarchar" MaxLength="50" />
+    <Property Name="EmpID" Type="nvarchar" MaxLength="50" />
+    <Property Name="Flag" Type="nvarchar" MaxLength="4" />
+    <Property Name="Cost" Type="varchar" MaxLength="50" />
+    <Property Name="SDate" Type="date" />
+    <Property Name="EDate" Type="date" />
+    <Property Name="UserID_Save" Type="nvarchar" MaxLength="10" />
+    <Property Name="EmpChk" Type="nvarchar" MaxLength="100" />
+    <Property Name="UserID_Chk" Type="nvarchar(max)" />
+    <Property Name="DepartmentChk" Type="nvarchar" MaxLength="100" />
+    <Property Name="Sta" Type="varchar" MaxLength="1" />
+    <Property Name="RemarkIO" Type="varchar(max)" />
+    <Property Name="Detail" Type="varchar(max)" />
+    <Property Name="Status_Department" Type="nvarchar" MaxLength="1" />
+    <Property Name="statusIO" Type="varchar" MaxLength="10" />
+    <Property Name="BrandForWS" Type="varchar" MaxLength="50" />
+    <Property Name="FlagForWS" Type="varchar" MaxLength="1" />
+    <Property Name="FlagForWF" Type="varchar" MaxLength="1" />
+    <Property Name="ID_Brand" Type="nvarchar" MaxLength="20" />
+    <Property Name="UserIDHead_OnlyFC" Type="nvarchar" MaxLength="10" />
+    <Property Name="Head_Department" Type="nvarchar" MaxLength="10" />
+    <Property Name="Head_Department_UserID" Type="nvarchar" MaxLength="10" />
+    <Property Name="Remark" Type="nvarchar(max)" />
+    <Property Name="Note" Type="nvarchar(max)" />
+    <Property Name="FlagAddEDate" Type="char" MaxLength="10" />
+    <Property Name="Type_BrandGroup" Type="nvarchar" MaxLength="4" />
+    <Property Name="ReserveGroupCompanyID" Type="nvarchar" MaxLength="50" />
+    <Property Name="Purchase_Chk" Type="nvarchar(max)" />
+    <Property Name="Purchase_UserID_Chk" Type="nvarchar(max)" />
+    <Property Name="Flag_PB" Type="char" MaxLength="2" />
+    <Property Name="Comp_Group" Type="char" MaxLength="10" />
+    <Property Name="Group_Conso" Type="nvarchar" MaxLength="50" />
+    <Property Name="Flag_Clear" Type="nvarchar" MaxLength="1" />
+    <Property Name="Flag_FCBonus" Type="nvarchar" MaxLength="50" />
+    <Property Name="Flag_VGroup" Type="nvarchar" MaxLength="50" />
+    <Property Name="UserID_Shoes" Type="varchar(max)" />
+    <Property Name="SAP_Ref" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Employee">
+    <Key>
+      <PropertyRef Name="userID" />
+    </Key>
+    <Property Name="userID" Type="int" Nullable="false" />
+    <Property Name="masterID" Type="int" />
+    <Property Name="TypeEmployee" Type="nvarchar" MaxLength="4" />
+    <Property Name="uCode" Type="varchar" MaxLength="20" />
+    <Property Name="title_" Type="tinyint" />
+    <Property Name="name" Type="varchar" MaxLength="100" />
+    <Property Name="surname" Type="varchar" MaxLength="100" />
+    <Property Name="eName" Type="varchar" MaxLength="100" />
+    <Property Name="eSurname" Type="varchar" MaxLength="100" />
+    <Property Name="nick" Type="varchar" MaxLength="10" />
+    <Property Name="phone" Type="varchar" MaxLength="3" />
+    <Property Name="email" Type="varchar" MaxLength="100" />
+    <Property Name="username_" Type="varchar" MaxLength="20" />
+    <Property Name="password_" Type="varchar" MaxLength="50" />
+    <Property Name="uLevel" Type="int" />
+    <Property Name="birthDay" Type="datetime" />
+    <Property Name="educationID" Type="int" />
+    <Property Name="provinceID" Type="int" />
+    <Property Name="placeID" Type="int" />
+    <Property Name="positionID" Type="int" />
+    <Property Name="pNote" Type="varchar" MaxLength="50" />
+    <Property Name="departmentID" Type="int" />
+    <Property Name="brandID" Type="varchar" MaxLength="10" />
+    <Property Name="posts" Type="int" />
+    <Property Name="comments" Type="int" />
+    <Property Name="logins" Type="int" />
+    <Property Name="lastLogin" Type="datetime" />
+    <Property Name="ip" Type="nvarchar" MaxLength="50" />
+    <Property Name="ipInternet" Type="varchar" MaxLength="20" />
+    <Property Name="start_" Type="datetime" />
+    <Property Name="resign_" Type="datetime" />
+    <Property Name="isShow" Type="bit" />
+    <Property Name="isActive" Type="bit" />
+    <Property Name="LastActive" Type="datetime" />
+    <Property Name="isConfirm" Type="bit" />
+    <Property Name="isInternet" Type="bit" />
+    <Property Name="notify" Type="varchar" MaxLength="200" />
+    <Property Name="StatWork" Type="char" MaxLength="1" />
+    <Property Name="EmpInsert" Type="varchar" MaxLength="50" />
+    <Property Name="Date_Create" Type="datetime" />
+    <Property Name="EmpUpdate" Type="varchar" MaxLength="50" />
+    <Property Name="Date_Update" Type="datetime" />
+    <Property Name="RemarkUpdate" Type="text" />
+    <Property Name="Img" Type="varchar" MaxLength="100" />
+    <Property Name="Balance" Type="int" />
+    <Property Name="BalanceBrand" Type="int" />
+    <Property Name="Type_Level" Type="nvarchar(max)" />
+    <Property Name="Type_Work" Type="nvarchar" MaxLength="4" />
+    <Property Name="Bank_Name" Type="varchar" MaxLength="100" />
+    <Property Name="Bank_Acc_Name" Type="varchar" MaxLength="200" />
+    <Property Name="Bank_Acc_No" Type="varchar" MaxLength="100" />
+    <Property Name="EmpEvaluation1" Type="nvarchar" MaxLength="10" />
+    <Property Name="c_EmpEvaluation1_Group" Type="nvarchar" MaxLength="1" />
+    <Property Name="EmpEvaluation1_Group" Type="nvarchar" MaxLength="6" />
+    <Property Name="EmpEvaluation2" Type="nvarchar" MaxLength="10" />
+    <Property Name="EmpHead" Type="nvarchar" MaxLength="10" />
+    <Property Name="NullEmp2" Type="nvarchar" MaxLength="1" />
+    <Property Name="Shop" Type="nvarchar" MaxLength="100" />
+    <Property Name="Company" Type="nvarchar" MaxLength="4" />
+    <Property Name="c_FastSave" Type="nvarchar" MaxLength="1" />
+    <Property Name="Ref" Type="nvarchar(max)" />
+    <Property Name="IsReplace" Type="char" MaxLength="5" />
+    <Property Name="text_Position" Type="nvarchar" MaxLength="100" />
+    <Property Name="email_2" Type="nvarchar" MaxLength="100" />
+    <Property Name="Mobile" Type="nvarchar" MaxLength="20" />
+    <Property Name="Vcard_URL" Type="nvarchar" MaxLength="100" />
+    <Property Name="ISContact" Type="varchar" MaxLength="5" />
+    <Property Name="ISContact_Leave" Type="varchar" MaxLength="5" />
+  </EntityType>
+  <EntityContainer Name="InsideSFG_WFModelStoreContainer">
+    <EntitySet Name="BG_ForeCast" EntityType="Self.BG_ForeCast" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BG_HApprove" EntityType="Self.BG_HApprove" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="WhaleModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Box">
+    <Key>
+      <PropertyRef Name="Box_ID" />
+    </Key>
+    <Property Name="Box_ID" Type="int" Nullable="false" />
+    <Property Name="Box_Name" Type="nvarchar" MaxLength="50" />
+    <Property Name="Barcode" Type="nvarchar" MaxLength="20" />
+    <Property Name="Flag_Active" Type="bit" />
+  </EntityType>
+  <EntityType Name="City">
+    <Key>
+      <PropertyRef Name="City_ID" />
+      <PropertyRef Name="Province_ID" />
+    </Key>
+    <Property Name="City_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="City_Name" Type="nvarchar" MaxLength="100" />
+    <Property Name="Province_ID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Customer_ID" />
+      <PropertyRef Name="StorageWM_ID" />
+      <PropertyRef Name="Channel_ID" />
+    </Key>
+    <Property Name="Customer_ID" Type="int" Nullable="false" />
+    <Property Name="StorageWM_ID" Type="int" Nullable="false" />
+    <Property Name="Channel_ID" Type="int" Nullable="false" />
+    <Property Name="refCode" Type="nvarchar" MaxLength="8" />
+    <Property Name="Customer_Name" Type="nvarchar" MaxLength="100" />
+    <Property Name="SAP_Channel" Type="nvarchar" MaxLength="50" />
+    <Property Name="SAP_Company" Type="nvarchar" MaxLength="4" />
+    <Property Name="SAP_Storage_Transfer" Type="nvarchar" MaxLength="20" />
+    <Property Name="SAP_Storage_Received" Type="nvarchar" MaxLength="20" />
+    <Property Name="SAP_Site" Type="nvarchar" MaxLength="10" />
+    <Property Name="DC" Type="nvarchar" MaxLength="10" />
+    <Property Name="ECommerce_Channel_ID" Type="int" />
+  </EntityType>
+  <EntityType Name="District">
+    <Key>
+      <PropertyRef Name="Distinct_ID" />
+      <PropertyRef Name="City_ID" />
+    </Key>
+    <Property Name="Distinct_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Distinct_Name" Type="nvarchar" MaxLength="200" />
+    <Property Name="City_ID" Type="int" Nullable="false" />
+    <Property Name="Postcode" Type="int" />
+  </EntityType>
+  <EntityType Name="Province">
+    <Key>
+      <PropertyRef Name="Province_ID" />
+    </Key>
+    <Property Name="Province_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Province_Name" Type="nvarchar" MaxLength="200" />
+  </EntityType>
+  <EntityContainer Name="WhaleModelStoreContainer">
+    <EntitySet Name="Box" EntityType="Self.Box" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="City" EntityType="Self.City" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="District" EntityType="Self.District" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Province" EntityType="Self.Province" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

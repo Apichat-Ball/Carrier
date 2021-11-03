@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="Online_LazadaModelStoreContainer" CdmEntityContainer="Online_LazadaEntities">
+    <EntitySetMapping Name="API_Key">
+      <EntityTypeMapping TypeName="Online_LazadaModel.API_Key">
+        <MappingFragment StoreEntitySet="API_Key">
+          <ScalarProperty Name="Brand" ColumnName="Brand" />
+          <ScalarProperty Name="App_Name" ColumnName="App_Name" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="App_Key" ColumnName="App_Key" />
+          <ScalarProperty Name="App_Secret" ColumnName="App_Secret" />
+          <ScalarProperty Name="AccessToken" ColumnName="AccessToken" />
+          <ScalarProperty Name="Url" ColumnName="Url" />
+          <ScalarProperty Name="API_Path" ColumnName="API_Path" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Status_Token" ColumnName="Status_Token" />
+          <ScalarProperty Name="Shop_ID" ColumnName="Shop_ID" />
+          <ScalarProperty Name="refresh_token" ColumnName="refresh_token" />
+          <ScalarProperty Name="refresh_expires_in" ColumnName="refresh_expires_in" />
+          <ScalarProperty Name="refresh_create" ColumnName="refresh_create" />
+          <ScalarProperty Name="refresh_in" ColumnName="refresh_in" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

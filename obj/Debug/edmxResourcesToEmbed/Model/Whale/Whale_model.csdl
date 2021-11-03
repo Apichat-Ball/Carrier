@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="WhaleModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Box">
+    <Key>
+      <PropertyRef Name="Box_ID" />
+    </Key>
+    <Property Name="Box_ID" Type="Int32" Nullable="false" />
+    <Property Name="Box_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Barcode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Flag_Active" Type="Boolean" />
+  </EntityType>
+  <EntityContainer Name="WhaleEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Boxes" EntityType="Self.Box" />
+    <EntitySet Name="Cities" EntityType="WhaleModel.City" />
+    <EntitySet Name="Customers" EntityType="WhaleModel.Customer" />
+    <EntitySet Name="Districts" EntityType="WhaleModel.District" />
+    <EntitySet Name="Provinces" EntityType="WhaleModel.Province" />
+  </EntityContainer>
+  <EntityType Name="City">
+    <Key>
+      <PropertyRef Name="City_ID" />
+      <PropertyRef Name="Province_ID" />
+    </Key>
+    <Property Name="City_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="City_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Province_ID" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Customer">
+    <Key>
+      <PropertyRef Name="Customer_ID" />
+      <PropertyRef Name="StorageWM_ID" />
+      <PropertyRef Name="Channel_ID" />
+    </Key>
+    <Property Name="Customer_ID" Type="Int32" Nullable="false" />
+    <Property Name="StorageWM_ID" Type="Int32" Nullable="false" />
+    <Property Name="Channel_ID" Type="Int32" Nullable="false" />
+    <Property Name="refCode" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="Customer_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="SAP_Channel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="SAP_Company" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Name="SAP_Storage_Transfer" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="SAP_Storage_Received" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="SAP_Site" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="DC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="ECommerce_Channel_ID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="District">
+    <Key>
+      <PropertyRef Name="Distinct_ID" />
+      <PropertyRef Name="City_ID" />
+    </Key>
+    <Property Name="Distinct_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Distinct_Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="City_ID" Type="Int32" Nullable="false" />
+    <Property Name="Postcode" Type="Int32" />
+  </EntityType>
+  <EntityType Name="Province">
+    <Key>
+      <PropertyRef Name="Province_ID" />
+    </Key>
+    <Property Name="Province_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Province_Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+  </EntityType>
+</Schema>

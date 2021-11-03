@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="CarrierModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="CarrierEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Article_Category" EntityType="CarrierModel.Article_Category" />
+    <EntitySet Name="Orders" EntityType="CarrierModel.Order" />
+    <EntitySet Name="Status" EntityType="CarrierModel.Status" />
+    <EntitySet Name="Notifies" EntityType="CarrierModel.Notify" />
+    <EntitySet Name="Order_Item" EntityType="CarrierModel.Order_Item" />
+    <EntitySet Name="Users" EntityType="CarrierModel.User" />
+  </EntityContainer>
+  <EntityType Name="Article_Category">
+    <Key>
+      <PropertyRef Name="ArticleCode" />
+    </Key>
+    <Property Name="ArticleCode" Type="Int32" Nullable="false" />
+    <Property Name="ArticleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Order">
+    <Key>
+      <PropertyRef Name="Docno" />
+    </Key>
+    <Property Name="Docno" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Date_send" Type="DateTime" Precision="3" />
+    <Property Name="UserID" Type="Int32" />
+    <Property Name="ExpressCategory" Type="Int32" />
+    <Property Name="Owner_ID" Type="Int32" />
+    <Property Name="StorageWM_ID" Type="Int32" />
+    <Property Name="Channel_ID" Type="Int32" />
+    <Property Name="Ref_Order" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="srcName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="srcPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="srcProvinceName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="srcCityName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="srcDistrictName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="srcPostalCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="srcDetailAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="dstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="dstPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="dstHomePhone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="dstProvinceName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="dstCityName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="dstDistrictName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+    <Property Name="dstPostalCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="dstDetailAddress" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="articleCategory" Type="Int32" />
+    <Property Name="weight" Type="Int32" />
+    <Property Name="width" Type="Int32" />
+    <Property Name="length" Type="Int32" />
+    <Property Name="height" Type="Int32" />
+    <Property Name="insured" Type="Int32" />
+    <Property Name="remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="status" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+    <Property Name="Transport_Type" Type="Int32" />
+    <Property Name="SDpart" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Status">
+    <Key>
+      <PropertyRef Name="StatusID" />
+    </Key>
+    <Property Name="StatusID" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+    <Property Name="StatusName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Notify">
+    <Key>
+      <PropertyRef Name="TicketPickupId" />
+    </Key>
+    <Property Name="TicketPickupId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="StaffInfoId" Type="Int32" />
+    <Property Name="StaffInfoName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="StaffInfoPhone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="UpCountryNote" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="TimeoutAtText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="TicketMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Order_Item">
+    <Key>
+      <PropertyRef Name="Docno" />
+    </Key>
+    <Property Name="Docno" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Date_Success" Type="DateTime" Precision="3" />
+    <Property Name="sign" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="pno" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="mchId" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="sortCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="dstStoreName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="sortingLineCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="earlyFlightEnabled" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+    <Property Name="packEnabled" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+    <Property Name="upcountryCharge" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+    <Property Name="Qty" Type="Int32" />
+    <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="CodeResponse" Type="Int32" />
+    <Property Name="ticketPickupId" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Permission" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+  </EntityType>
+</Schema>

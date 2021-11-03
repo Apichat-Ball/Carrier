@@ -1,0 +1,501 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="InsideSFG_WFModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BG_ForeCast">
+          <Key>
+            <PropertyRef Name="ForecastID" />
+            <PropertyRef Name="Year" />
+            <PropertyRef Name="DepartmentID" />
+            <PropertyRef Name="GroupNameID" />
+          </Key>
+          <Property Name="ForecastID" Type="varchar" MaxLength="18" Nullable="false" />
+          <Property Name="Year" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="DepartmentID" Type="varchar" MaxLength="18" Nullable="false" />
+          <Property Name="GroupNameID" Type="varchar" MaxLength="18" Nullable="false" />
+          <Property Name="M01" Type="float" />
+          <Property Name="M02" Type="float" />
+          <Property Name="M03" Type="float" />
+          <Property Name="M04" Type="float" />
+          <Property Name="M05" Type="float" />
+          <Property Name="M06" Type="float" />
+          <Property Name="M07" Type="float" />
+          <Property Name="M08" Type="float" />
+          <Property Name="M09" Type="float" />
+          <Property Name="M10" Type="float" />
+          <Property Name="M11" Type="float" />
+          <Property Name="M12" Type="float" />
+          <Property Name="UserID_Save" Type="nvarchar" MaxLength="10" />
+          <Property Name="SaveID" Type="varchar" MaxLength="10" />
+          <Property Name="SaveDate" Type="datetime" />
+          <Property Name="ActiveStatus" Type="int" />
+          <Property Name="UserID_Active" Type="nvarchar" MaxLength="10" />
+          <Property Name="ActiveID" Type="varchar" MaxLength="10" />
+          <Property Name="ActiveDate" Type="datetime" />
+          <Property Name="Flag" Type="varchar" MaxLength="1" />
+          <Property Name="Remark" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="BG_HApprove">
+          <Key>
+            <PropertyRef Name="departmentID" />
+          </Key>
+          <Property Name="departmentID" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="department_" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="50" />
+          <Property Name="EmpID" Type="nvarchar" MaxLength="50" />
+          <Property Name="Flag" Type="nvarchar" MaxLength="4" />
+          <Property Name="Cost" Type="varchar" MaxLength="50" />
+          <Property Name="SDate" Type="date" />
+          <Property Name="EDate" Type="date" />
+          <Property Name="UserID_Save" Type="nvarchar" MaxLength="10" />
+          <Property Name="EmpChk" Type="nvarchar" MaxLength="100" />
+          <Property Name="UserID_Chk" Type="nvarchar(max)" />
+          <Property Name="DepartmentChk" Type="nvarchar" MaxLength="100" />
+          <Property Name="Sta" Type="varchar" MaxLength="1" />
+          <Property Name="RemarkIO" Type="varchar(max)" />
+          <Property Name="Detail" Type="varchar(max)" />
+          <Property Name="Status_Department" Type="nvarchar" MaxLength="1" />
+          <Property Name="statusIO" Type="varchar" MaxLength="10" />
+          <Property Name="BrandForWS" Type="varchar" MaxLength="50" />
+          <Property Name="FlagForWS" Type="varchar" MaxLength="1" />
+          <Property Name="FlagForWF" Type="varchar" MaxLength="1" />
+          <Property Name="ID_Brand" Type="nvarchar" MaxLength="20" />
+          <Property Name="UserIDHead_OnlyFC" Type="nvarchar" MaxLength="10" />
+          <Property Name="Head_Department" Type="nvarchar" MaxLength="10" />
+          <Property Name="Head_Department_UserID" Type="nvarchar" MaxLength="10" />
+          <Property Name="Remark" Type="nvarchar(max)" />
+          <Property Name="Note" Type="nvarchar(max)" />
+          <Property Name="FlagAddEDate" Type="char" MaxLength="10" />
+          <Property Name="Type_BrandGroup" Type="nvarchar" MaxLength="4" />
+          <Property Name="ReserveGroupCompanyID" Type="nvarchar" MaxLength="50" />
+          <Property Name="Purchase_Chk" Type="nvarchar(max)" />
+          <Property Name="Purchase_UserID_Chk" Type="nvarchar(max)" />
+          <Property Name="Flag_PB" Type="char" MaxLength="2" />
+          <Property Name="Comp_Group" Type="char" MaxLength="10" />
+          <Property Name="Group_Conso" Type="nvarchar" MaxLength="50" />
+          <Property Name="Flag_Clear" Type="nvarchar" MaxLength="1" />
+          <Property Name="Flag_FCBonus" Type="nvarchar" MaxLength="50" />
+          <Property Name="Flag_VGroup" Type="nvarchar" MaxLength="50" />
+          <Property Name="UserID_Shoes" Type="varchar(max)" />
+          <Property Name="SAP_Ref" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="userID" />
+          </Key>
+          <Property Name="userID" Type="int" Nullable="false" />
+          <Property Name="masterID" Type="int" />
+          <Property Name="TypeEmployee" Type="nvarchar" MaxLength="4" />
+          <Property Name="uCode" Type="varchar" MaxLength="20" />
+          <Property Name="title_" Type="tinyint" />
+          <Property Name="name" Type="varchar" MaxLength="100" />
+          <Property Name="surname" Type="varchar" MaxLength="100" />
+          <Property Name="eName" Type="varchar" MaxLength="100" />
+          <Property Name="eSurname" Type="varchar" MaxLength="100" />
+          <Property Name="nick" Type="varchar" MaxLength="10" />
+          <Property Name="phone" Type="varchar" MaxLength="3" />
+          <Property Name="email" Type="varchar" MaxLength="100" />
+          <Property Name="username_" Type="varchar" MaxLength="20" />
+          <Property Name="password_" Type="varchar" MaxLength="50" />
+          <Property Name="uLevel" Type="int" />
+          <Property Name="birthDay" Type="datetime" />
+          <Property Name="educationID" Type="int" />
+          <Property Name="provinceID" Type="int" />
+          <Property Name="placeID" Type="int" />
+          <Property Name="positionID" Type="int" />
+          <Property Name="pNote" Type="varchar" MaxLength="50" />
+          <Property Name="departmentID" Type="int" />
+          <Property Name="brandID" Type="varchar" MaxLength="10" />
+          <Property Name="posts" Type="int" />
+          <Property Name="comments" Type="int" />
+          <Property Name="logins" Type="int" />
+          <Property Name="lastLogin" Type="datetime" />
+          <Property Name="ip" Type="nvarchar" MaxLength="50" />
+          <Property Name="ipInternet" Type="varchar" MaxLength="20" />
+          <Property Name="start_" Type="datetime" />
+          <Property Name="resign_" Type="datetime" />
+          <Property Name="isShow" Type="bit" />
+          <Property Name="isActive" Type="bit" />
+          <Property Name="LastActive" Type="datetime" />
+          <Property Name="isConfirm" Type="bit" />
+          <Property Name="isInternet" Type="bit" />
+          <Property Name="notify" Type="varchar" MaxLength="200" />
+          <Property Name="StatWork" Type="char" MaxLength="1" />
+          <Property Name="EmpInsert" Type="varchar" MaxLength="50" />
+          <Property Name="Date_Create" Type="datetime" />
+          <Property Name="EmpUpdate" Type="varchar" MaxLength="50" />
+          <Property Name="Date_Update" Type="datetime" />
+          <Property Name="RemarkUpdate" Type="text" />
+          <Property Name="Img" Type="varchar" MaxLength="100" />
+          <Property Name="Balance" Type="int" />
+          <Property Name="BalanceBrand" Type="int" />
+          <Property Name="Type_Level" Type="nvarchar(max)" />
+          <Property Name="Type_Work" Type="nvarchar" MaxLength="4" />
+          <Property Name="Bank_Name" Type="varchar" MaxLength="100" />
+          <Property Name="Bank_Acc_Name" Type="varchar" MaxLength="200" />
+          <Property Name="Bank_Acc_No" Type="varchar" MaxLength="100" />
+          <Property Name="EmpEvaluation1" Type="nvarchar" MaxLength="10" />
+          <Property Name="c_EmpEvaluation1_Group" Type="nvarchar" MaxLength="1" />
+          <Property Name="EmpEvaluation1_Group" Type="nvarchar" MaxLength="6" />
+          <Property Name="EmpEvaluation2" Type="nvarchar" MaxLength="10" />
+          <Property Name="EmpHead" Type="nvarchar" MaxLength="10" />
+          <Property Name="NullEmp2" Type="nvarchar" MaxLength="1" />
+          <Property Name="Shop" Type="nvarchar" MaxLength="100" />
+          <Property Name="Company" Type="nvarchar" MaxLength="4" />
+          <Property Name="c_FastSave" Type="nvarchar" MaxLength="1" />
+          <Property Name="Ref" Type="nvarchar(max)" />
+          <Property Name="IsReplace" Type="char" MaxLength="5" />
+          <Property Name="text_Position" Type="nvarchar" MaxLength="100" />
+          <Property Name="email_2" Type="nvarchar" MaxLength="100" />
+          <Property Name="Mobile" Type="nvarchar" MaxLength="20" />
+          <Property Name="Vcard_URL" Type="nvarchar" MaxLength="100" />
+          <Property Name="ISContact" Type="varchar" MaxLength="5" />
+          <Property Name="ISContact_Leave" Type="varchar" MaxLength="5" />
+        </EntityType>
+        <EntityContainer Name="InsideSFG_WFModelStoreContainer">
+          <EntitySet Name="BG_ForeCast" EntityType="Self.BG_ForeCast" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BG_HApprove" EntityType="Self.BG_HApprove" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="InsideSFG_WFModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BG_HApprove">
+          <Key>
+            <PropertyRef Name="departmentID" />
+          </Key>
+          <Property Name="departmentID" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="department_" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EmpID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Flag" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Cost" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SDate" Type="DateTime" Precision="0" />
+          <Property Name="EDate" Type="DateTime" Precision="0" />
+          <Property Name="UserID_Save" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="EmpChk" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_Chk" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DepartmentChk" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Sta" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="RemarkIO" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Detail" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Status_Department" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="statusIO" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="BrandForWS" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FlagForWS" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="FlagForWF" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="ID_Brand" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="UserIDHead_OnlyFC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Head_Department" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Head_Department_UserID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FlagAddEDate" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="Type_BrandGroup" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="ReserveGroupCompanyID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Purchase_Chk" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Purchase_UserID_Chk" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_PB" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="Comp_Group" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="Group_Conso" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_Clear" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_FCBonus" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_VGroup" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_Shoes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="SAP_Ref" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="userID" />
+          </Key>
+          <Property Name="userID" Type="Int32" Nullable="false" />
+          <Property Name="masterID" Type="Int32" />
+          <Property Name="TypeEmployee" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="uCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="title_" Type="Byte" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="surname" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="eName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="eSurname" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="nick" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="phone" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="username_" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="password_" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="uLevel" Type="Int32" />
+          <Property Name="birthDay" Type="DateTime" Precision="3" />
+          <Property Name="educationID" Type="Int32" />
+          <Property Name="provinceID" Type="Int32" />
+          <Property Name="placeID" Type="Int32" />
+          <Property Name="positionID" Type="Int32" />
+          <Property Name="pNote" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="departmentID" Type="Int32" />
+          <Property Name="brandID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="posts" Type="Int32" />
+          <Property Name="comments" Type="Int32" />
+          <Property Name="logins" Type="Int32" />
+          <Property Name="lastLogin" Type="DateTime" Precision="3" />
+          <Property Name="ip" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ipInternet" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="start_" Type="DateTime" Precision="3" />
+          <Property Name="resign_" Type="DateTime" Precision="3" />
+          <Property Name="isShow" Type="Boolean" />
+          <Property Name="isActive" Type="Boolean" />
+          <Property Name="LastActive" Type="DateTime" Precision="3" />
+          <Property Name="isConfirm" Type="Boolean" />
+          <Property Name="isInternet" Type="Boolean" />
+          <Property Name="notify" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="StatWork" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="EmpInsert" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Date_Create" Type="DateTime" Precision="3" />
+          <Property Name="EmpUpdate" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Date_Update" Type="DateTime" Precision="3" />
+          <Property Name="RemarkUpdate" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Img" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Balance" Type="Int32" />
+          <Property Name="BalanceBrand" Type="Int32" />
+          <Property Name="Type_Level" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Type_Work" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Bank_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Bank_Acc_Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Bank_Acc_No" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="EmpEvaluation1" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="c_EmpEvaluation1_Group" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="EmpEvaluation1_Group" Type="String" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="EmpEvaluation2" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="EmpHead" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="NullEmp2" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="Shop" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Company" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="c_FastSave" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="Ref" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsReplace" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="text_Position" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="email_2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Mobile" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Vcard_URL" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ISContact" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="ISContact_Leave" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityContainer Name="InsideSFG_WFEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BG_HApprove" EntityType="Self.BG_HApprove" />
+          <EntitySet Name="Employees" EntityType="Self.Employee" />
+          <EntitySet Name="BG_ForeCast" EntityType="InsideSFG_WFModel.BG_ForeCast" />
+        </EntityContainer>
+        <EntityType Name="BG_ForeCast">
+          <Key>
+            <PropertyRef Name="ForecastID" />
+            <PropertyRef Name="Year" />
+            <PropertyRef Name="DepartmentID" />
+            <PropertyRef Name="GroupNameID" />
+          </Key>
+          <Property Name="ForecastID" Type="String" Nullable="false" MaxLength="18" FixedLength="false" Unicode="false" />
+          <Property Name="Year" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="DepartmentID" Type="String" Nullable="false" MaxLength="18" FixedLength="false" Unicode="false" />
+          <Property Name="GroupNameID" Type="String" Nullable="false" MaxLength="18" FixedLength="false" Unicode="false" />
+          <Property Name="M01" Type="Double" />
+          <Property Name="M02" Type="Double" />
+          <Property Name="M03" Type="Double" />
+          <Property Name="M04" Type="Double" />
+          <Property Name="M05" Type="Double" />
+          <Property Name="M06" Type="Double" />
+          <Property Name="M07" Type="Double" />
+          <Property Name="M08" Type="Double" />
+          <Property Name="M09" Type="Double" />
+          <Property Name="M10" Type="Double" />
+          <Property Name="M11" Type="Double" />
+          <Property Name="M12" Type="Double" />
+          <Property Name="UserID_Save" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SaveID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="SaveDate" Type="DateTime" Precision="3" />
+          <Property Name="ActiveStatus" Type="Int32" />
+          <Property Name="UserID_Active" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ActiveID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ActiveDate" Type="DateTime" Precision="3" />
+          <Property Name="Flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="Remark" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="InsideSFG_WFModelStoreContainer" CdmEntityContainer="InsideSFG_WFEntities">
+          <EntitySetMapping Name="BG_HApprove">
+            <EntityTypeMapping TypeName="InsideSFG_WFModel.BG_HApprove">
+              <MappingFragment StoreEntitySet="BG_HApprove">
+                <ScalarProperty Name="departmentID" ColumnName="departmentID" />
+                <ScalarProperty Name="department_" ColumnName="department_" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="EmpID" ColumnName="EmpID" />
+                <ScalarProperty Name="Flag" ColumnName="Flag" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="SDate" ColumnName="SDate" />
+                <ScalarProperty Name="EDate" ColumnName="EDate" />
+                <ScalarProperty Name="UserID_Save" ColumnName="UserID_Save" />
+                <ScalarProperty Name="EmpChk" ColumnName="EmpChk" />
+                <ScalarProperty Name="UserID_Chk" ColumnName="UserID_Chk" />
+                <ScalarProperty Name="DepartmentChk" ColumnName="DepartmentChk" />
+                <ScalarProperty Name="Sta" ColumnName="Sta" />
+                <ScalarProperty Name="RemarkIO" ColumnName="RemarkIO" />
+                <ScalarProperty Name="Detail" ColumnName="Detail" />
+                <ScalarProperty Name="Status_Department" ColumnName="Status_Department" />
+                <ScalarProperty Name="statusIO" ColumnName="statusIO" />
+                <ScalarProperty Name="BrandForWS" ColumnName="BrandForWS" />
+                <ScalarProperty Name="FlagForWS" ColumnName="FlagForWS" />
+                <ScalarProperty Name="FlagForWF" ColumnName="FlagForWF" />
+                <ScalarProperty Name="ID_Brand" ColumnName="ID_Brand" />
+                <ScalarProperty Name="UserIDHead_OnlyFC" ColumnName="UserIDHead_OnlyFC" />
+                <ScalarProperty Name="Head_Department" ColumnName="Head_Department" />
+                <ScalarProperty Name="Head_Department_UserID" ColumnName="Head_Department_UserID" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="FlagAddEDate" ColumnName="FlagAddEDate" />
+                <ScalarProperty Name="Type_BrandGroup" ColumnName="Type_BrandGroup" />
+                <ScalarProperty Name="ReserveGroupCompanyID" ColumnName="ReserveGroupCompanyID" />
+                <ScalarProperty Name="Purchase_Chk" ColumnName="Purchase_Chk" />
+                <ScalarProperty Name="Purchase_UserID_Chk" ColumnName="Purchase_UserID_Chk" />
+                <ScalarProperty Name="Flag_PB" ColumnName="Flag_PB" />
+                <ScalarProperty Name="Comp_Group" ColumnName="Comp_Group" />
+                <ScalarProperty Name="Group_Conso" ColumnName="Group_Conso" />
+                <ScalarProperty Name="Flag_Clear" ColumnName="Flag_Clear" />
+                <ScalarProperty Name="Flag_FCBonus" ColumnName="Flag_FCBonus" />
+                <ScalarProperty Name="Flag_VGroup" ColumnName="Flag_VGroup" />
+                <ScalarProperty Name="UserID_Shoes" ColumnName="UserID_Shoes" />
+                <ScalarProperty Name="SAP_Ref" ColumnName="SAP_Ref" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employees">
+            <EntityTypeMapping TypeName="InsideSFG_WFModel.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="userID" ColumnName="userID" />
+                <ScalarProperty Name="masterID" ColumnName="masterID" />
+                <ScalarProperty Name="TypeEmployee" ColumnName="TypeEmployee" />
+                <ScalarProperty Name="uCode" ColumnName="uCode" />
+                <ScalarProperty Name="title_" ColumnName="title_" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="surname" ColumnName="surname" />
+                <ScalarProperty Name="eName" ColumnName="eName" />
+                <ScalarProperty Name="eSurname" ColumnName="eSurname" />
+                <ScalarProperty Name="nick" ColumnName="nick" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="username_" ColumnName="username_" />
+                <ScalarProperty Name="password_" ColumnName="password_" />
+                <ScalarProperty Name="uLevel" ColumnName="uLevel" />
+                <ScalarProperty Name="birthDay" ColumnName="birthDay" />
+                <ScalarProperty Name="educationID" ColumnName="educationID" />
+                <ScalarProperty Name="provinceID" ColumnName="provinceID" />
+                <ScalarProperty Name="placeID" ColumnName="placeID" />
+                <ScalarProperty Name="positionID" ColumnName="positionID" />
+                <ScalarProperty Name="pNote" ColumnName="pNote" />
+                <ScalarProperty Name="departmentID" ColumnName="departmentID" />
+                <ScalarProperty Name="brandID" ColumnName="brandID" />
+                <ScalarProperty Name="posts" ColumnName="posts" />
+                <ScalarProperty Name="comments" ColumnName="comments" />
+                <ScalarProperty Name="logins" ColumnName="logins" />
+                <ScalarProperty Name="lastLogin" ColumnName="lastLogin" />
+                <ScalarProperty Name="ip" ColumnName="ip" />
+                <ScalarProperty Name="ipInternet" ColumnName="ipInternet" />
+                <ScalarProperty Name="start_" ColumnName="start_" />
+                <ScalarProperty Name="resign_" ColumnName="resign_" />
+                <ScalarProperty Name="isShow" ColumnName="isShow" />
+                <ScalarProperty Name="isActive" ColumnName="isActive" />
+                <ScalarProperty Name="LastActive" ColumnName="LastActive" />
+                <ScalarProperty Name="isConfirm" ColumnName="isConfirm" />
+                <ScalarProperty Name="isInternet" ColumnName="isInternet" />
+                <ScalarProperty Name="notify" ColumnName="notify" />
+                <ScalarProperty Name="StatWork" ColumnName="StatWork" />
+                <ScalarProperty Name="EmpInsert" ColumnName="EmpInsert" />
+                <ScalarProperty Name="Date_Create" ColumnName="Date_Create" />
+                <ScalarProperty Name="EmpUpdate" ColumnName="EmpUpdate" />
+                <ScalarProperty Name="Date_Update" ColumnName="Date_Update" />
+                <ScalarProperty Name="RemarkUpdate" ColumnName="RemarkUpdate" />
+                <ScalarProperty Name="Img" ColumnName="Img" />
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="BalanceBrand" ColumnName="BalanceBrand" />
+                <ScalarProperty Name="Type_Level" ColumnName="Type_Level" />
+                <ScalarProperty Name="Type_Work" ColumnName="Type_Work" />
+                <ScalarProperty Name="Bank_Name" ColumnName="Bank_Name" />
+                <ScalarProperty Name="Bank_Acc_Name" ColumnName="Bank_Acc_Name" />
+                <ScalarProperty Name="Bank_Acc_No" ColumnName="Bank_Acc_No" />
+                <ScalarProperty Name="EmpEvaluation1" ColumnName="EmpEvaluation1" />
+                <ScalarProperty Name="c_EmpEvaluation1_Group" ColumnName="c_EmpEvaluation1_Group" />
+                <ScalarProperty Name="EmpEvaluation1_Group" ColumnName="EmpEvaluation1_Group" />
+                <ScalarProperty Name="EmpEvaluation2" ColumnName="EmpEvaluation2" />
+                <ScalarProperty Name="EmpHead" ColumnName="EmpHead" />
+                <ScalarProperty Name="NullEmp2" ColumnName="NullEmp2" />
+                <ScalarProperty Name="Shop" ColumnName="Shop" />
+                <ScalarProperty Name="Company" ColumnName="Company" />
+                <ScalarProperty Name="c_FastSave" ColumnName="c_FastSave" />
+                <ScalarProperty Name="Ref" ColumnName="Ref" />
+                <ScalarProperty Name="IsReplace" ColumnName="IsReplace" />
+                <ScalarProperty Name="text_Position" ColumnName="text_Position" />
+                <ScalarProperty Name="email_2" ColumnName="email_2" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="Vcard_URL" ColumnName="Vcard_URL" />
+                <ScalarProperty Name="ISContact" ColumnName="ISContact" />
+                <ScalarProperty Name="ISContact_Leave" ColumnName="ISContact_Leave" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BG_ForeCast">
+            <EntityTypeMapping TypeName="InsideSFG_WFModel.BG_ForeCast">
+              <MappingFragment StoreEntitySet="BG_ForeCast">
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="Flag" ColumnName="Flag" />
+                <ScalarProperty Name="ActiveDate" ColumnName="ActiveDate" />
+                <ScalarProperty Name="ActiveID" ColumnName="ActiveID" />
+                <ScalarProperty Name="UserID_Active" ColumnName="UserID_Active" />
+                <ScalarProperty Name="ActiveStatus" ColumnName="ActiveStatus" />
+                <ScalarProperty Name="SaveDate" ColumnName="SaveDate" />
+                <ScalarProperty Name="SaveID" ColumnName="SaveID" />
+                <ScalarProperty Name="UserID_Save" ColumnName="UserID_Save" />
+                <ScalarProperty Name="M12" ColumnName="M12" />
+                <ScalarProperty Name="M11" ColumnName="M11" />
+                <ScalarProperty Name="M10" ColumnName="M10" />
+                <ScalarProperty Name="M09" ColumnName="M09" />
+                <ScalarProperty Name="M08" ColumnName="M08" />
+                <ScalarProperty Name="M07" ColumnName="M07" />
+                <ScalarProperty Name="M06" ColumnName="M06" />
+                <ScalarProperty Name="M05" ColumnName="M05" />
+                <ScalarProperty Name="M04" ColumnName="M04" />
+                <ScalarProperty Name="M03" ColumnName="M03" />
+                <ScalarProperty Name="M02" ColumnName="M02" />
+                <ScalarProperty Name="M01" ColumnName="M01" />
+                <ScalarProperty Name="GroupNameID" ColumnName="GroupNameID" />
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="ForecastID" ColumnName="ForecastID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
