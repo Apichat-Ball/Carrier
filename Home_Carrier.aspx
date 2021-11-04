@@ -6,7 +6,7 @@
             $('#<%= txtDateStart.ClientID %>').datepicker({
                 uiLibrary: 'bootstrap4',
                 format: 'dd/mm/yyyy'
-            }),
+            });
                 $('#<%= txtDateEnd.ClientID%>').datepicker({
                     uiLibrary: 'bootstrap4',
                     format: 'dd/mm/yyyy'
