@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Home_Carrier.aspx.cs" Inherits="Carrier.Home_Carrier" MasterPageFile="~/Site.Master" %>
 
 <asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="MainContent">
-    <script type="text/html">
+    <script type="text/javascript">
         $(document).ready(function () {
             $('#<%= txtDateStart.ClientID %>').datepicker({
                         uiLibrary: 'bootstrap4',
@@ -101,6 +101,7 @@
                     <ItemTemplate>
                         <asp:ImageButton runat="server" ID="imgbtnCancelOrder" Width="30px" ImageUrl="~/Icon/cancellation.png" OnClick="imgbtnCancelOrder_Click"/>
                     </ItemTemplate>
+                    <ItemStyle CssClass="align-content-center" />
                 </asp:TemplateField>
             </Columns>
         </asp:GridView>

@@ -403,7 +403,7 @@ namespace Carrier.Service
                 }
                 else { return null; }
             }
-            else { HttpContext.Current.Session["_UserID"] = "101635"; return null; }
+            else {return null; }
         }
         public string CancelOrder(string lbDocno,string lkbpno)
         {
