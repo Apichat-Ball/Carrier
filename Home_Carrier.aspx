@@ -13,59 +13,81 @@
                 });
         }--%>
 
-             function pageLoad() {
-                $("#<%= txtDateStart.ClientID %>").datepicker({
-                     uiLibrary: 'bootstrap4',
-                     format: 'dd/mm/yyyy'
-                 }),
+        function pageLoad() {
+            $("#<%= txtDateStart.ClientID %>").datepicker({
+                uiLibrary: 'bootstrap4',
+                format: 'dd/mm/yyyy'
+            }),
 
-                     $("#<%= txtDateEnd.ClientID %>").datepicker({
+                $("#<%= txtDateEnd.ClientID %>").datepicker({
                     uiLibrary: 'bootstrap4',
                     format: 'dd/mm/yyyy'
                 });
-             }
+        }
     </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <div class="mt-3">
         <asp:Label runat="server" ID="lbForm" Text="Transportation" CssClass="h1"></asp:Label>
         <asp:Label runat="server" ID="lbuserid" Visible="false"></asp:Label>
-         <div  class="float-end mt-3">
-            <asp:Button runat="server" ID="btnCreateOrder" Text="Create Order" CssClass=" btn btn-primary " Width="100%" Height="30px" OnClick="btnCreateOrder_Click"/>
+        <div class="float-end mt-3">
+            <asp:Button runat="server" ID="btnCreateOrder" Text="Create Order" CssClass=" btn btn-primary " Width="100%" OnClick="btnCreateOrder_Click" />
         </div>
     </div>
-    <div class="mt-3 " >
+    <div class="mt-3 ">
         <div class="row">
-            <div class="col-md-3">
-                <asp:Label runat="server" ID="lbDateStart" Text="เริ่มวันที่"></asp:Label>
-                <asp:TextBox runat="server" ID="txtDateStart" ></asp:TextBox>
+            <div class="col-sm-3 input-group w-25">
+                <asp:Label runat="server" ID="lbDocnoSearch" Text="เลขที่เอกสาร" CssClass="input-group-text"></asp:Label>
+                <asp:TextBox runat="server" ID="txtDocnoSearch" CssClass="form-control"></asp:TextBox>
             </div>
-            <div class="col-md-3">
-                <asp:Label runat="server" ID="lbDateEnd" Text="สิ้นสุดวันที่"></asp:Label>
-                <asp:TextBox runat="server" ID="txtDateEnd"  ></asp:TextBox>
+            <div class="col-sm-3 input-group w-25">
+                <asp:Label runat="server" ID="lbPnoSearch" Text="รหัสพัสดุ" CssClass="input-group-text ml-2"></asp:Label>
+                <asp:TextBox runat="server" ID="txtPnoSearch" CssClass="form-control"></asp:TextBox>
             </div>
-            <div class="col-md-3">
-                <asp:Button runat="server" ID="btnSearch" CssClass="btn btn-primary " Text="Search" Width="100%" />
+            <div class="col-sm-3 input-group w-25">
+                <asp:Label runat="server" ID="lbDstNameSearch" Text="ชื่อผู้รับ" CssClass="input-group-text ml-2"></asp:Label>
+                <asp:TextBox runat="server" ID="txtDstNameSearch" CssClass="form-control"></asp:TextBox>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-sm-3 align-self-center">
+                <div class="input-group w-100">
+                    <asp:Label runat="server" ID="lbArticleSearch" Text="ประเภทพัสดุ" CssClass="input-group-text"></asp:Label>
+                    <asp:TextBox runat="server" ID="txtArticleSearch" CssClass="form-control"></asp:TextBox>
+                </div>
+            </div>
+
+            <div class="col-sm-3 input-group w-25">
+                <asp:Label runat="server" ID="lbDateStart" Text="เริ่มวันที่ " CssClass="input-group-text ml-2">
+                    <asp:TextBox runat="server" ID="txtDateStart" CssClass="form-control"  BackColor="White"></asp:TextBox></asp:Label>
+            </div>
+            <div class="col-sm-3 input-group w-25">
+                <asp:Label runat="server" ID="lbDateEnd" Text="สิ้นสุดวันที่" CssClass="input-group-text ml-2">
+                    <asp:TextBox runat="server" ID="txtDateEnd" CssClass="form-control" BackColor="White"></asp:TextBox></asp:Label>
+            </div>
+            <div class="col-sm-3">
+                <asp:Button runat="server" ID="btnSearch" Text="SEARCH" CssClass="btn btn-primary" OnClick="btnSearch_Click"/>
             </div>
         </div>
 
     </div>
     <div class="row mt-3">
-        <asp:GridView runat="server" ID="gv_OrderAll" Width="100%" EmptyDataText="ไม่มีการสร้างรายการ" AutoGenerateColumns="false" CssClass="table-hover" HeaderStyle-HorizontalAlign="Center" >
+        <asp:GridView runat="server" ID="gv_OrderAll" Width="100%" EmptyDataText="ไม่มีการสร้างรายการ" AutoGenerateColumns="false" CssClass="table table-striped table-bordered table-hover" 
+            HeaderStyle-HorizontalAlign="Center" >
             <Columns>
                 <asp:TemplateField ControlStyle-CssClass="ml-1">
                     <HeaderTemplate>
-                        <asp:Label runat="server" ID="lbhpno" Text="รหัสพัสดุ"></asp:Label>
+                        <asp:Label runat="server" ID="lbhDocno" Text="เลขที่เอกสาร"></asp:Label>
                     </HeaderTemplate>
-                    <ItemTemplate>
-                       <asp:LinkButton runat="server" ID="lkbpno" Text='<%# Bind("pno") %>' OnClick="lkbpno_Click"></asp:LinkButton>
+                    <ItemTemplate> 
+                        <asp:LinkButton runat="server" ID="lkDocno" Text='<%# Bind("Docno") %>' OnClick="lkDocno_Click"></asp:LinkButton>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField>
                     <HeaderTemplate>
-                        <asp:Label runat="server" ID="lbhDocno" Text="เลขที่เอกสาร" ></asp:Label>
+                        <asp:Label runat="server" ID="lbhpno" Text="รหัสพัสดุ"></asp:Label>
                     </HeaderTemplate>
                     <ItemTemplate>
-                        <asp:Label runat="server" ID="lbDocno" Text='<%# Bind("Docno") %>'  ></asp:Label>
+                        <asp:Label runat="server" ID="lbpno" Text='<%# Bind("pno") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField>
@@ -84,13 +106,14 @@
                         <asp:Label runat="server" ID="lbdstName" Text='<%# Bind("dstName") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                 <asp:TemplateField>
+                <asp:TemplateField>
                     <HeaderTemplate>
-                        <asp:label runat="server" id="lbhCategory" Text="ประเภทพัสดุ"></asp:label>
+                        <asp:Label runat="server" ID="lbhCategory" Text="ประเภทพัสดุ"></asp:Label>
                     </HeaderTemplate>
                     <ItemTemplate>
-                        <asp:Label runat="server" ID="lbCategory" Text='<%# Bind("ArticleCategory") %>' ></asp:Label>
+                        <asp:Label runat="server" ID="lbCategory" Text='<%# Bind("ArticleCategory") %>'></asp:Label>
                     </ItemTemplate>
+                    <ItemStyle CssClass="gj-text-align-center" />
                 </asp:TemplateField>
                 <asp:TemplateField>
                     <HeaderTemplate>
@@ -99,6 +122,7 @@
                     <ItemTemplate>
                         <asp:Label runat="server" ID="lbDateCreate" Text='<%# Bind("dateCreate") %>'></asp:Label>
                     </ItemTemplate>
+                    <ItemStyle CssClass="gj-text-align-center" />
                 </asp:TemplateField>
                 <asp:TemplateField>
                     <HeaderTemplate>
@@ -121,11 +145,24 @@
                         <asp:Label runat="server" ID="lbProcess" Text="การดำเนินการ"></asp:Label>
                     </HeaderTemplate>
                     <ItemTemplate>
-                        <asp:ImageButton runat="server" ID="imgbtnCancelOrder" Width="30px" ImageUrl="~/Icon/cancellation.png" OnClick="imgbtnCancelOrder_Click"/>
+                        <asp:ImageButton runat="server" ID="imgbtnCancelOrder" Width="30px" ImageUrl="~/Icon/x-button.png" OnClick="imgbtnCancelOrder_Click" />
                     </ItemTemplate>
-                    <ItemStyle CssClass="align-content-center" />
+                    <ItemStyle CssClass="gj-text-align-center" />
                 </asp:TemplateField>
             </Columns>
         </asp:GridView>
+
     </div>
+    <div aria-label="nav Page navigation example">
+        <div class="btn-group" role="group" aria-label="Basic outlined example">
+            <asp:LinkButton runat="server" ID="lkPrevious"  CssClass="btn btn-outline-primary " OnCommand="selectPage" Visible="false" >PREVIOUS</asp:LinkButton>
+            <asp:LinkButton runat="server" ID="lkFirst"  CssClass="btn btn-outline-primary" OnCommand="selectPage" Visible="false"></asp:LinkButton>
+            <asp:LinkButton runat="server" ID="lk1"  CssClass="btn btn-outline-primary" OnCommand="selectPage" Visible="false"></asp:LinkButton>
+            <asp:LinkButton runat="server" ID="lk2"  CssClass="btn btn-outline-primary" OnCommand="selectPage" Visible="false"></asp:LinkButton>
+            <asp:LinkButton runat="server" ID="lk3"  CssClass="btn btn-outline-primary" OnCommand="selectPage" Visible="false"></asp:LinkButton>
+            <asp:LinkButton runat="server" ID="lkLast"  CssClass="btn btn-outline-primary" OnCommand="selectPage" Visible="false"></asp:LinkButton>
+            <asp:LinkButton runat="server" ID="lkNext"  CssClass="btn btn-outline-primary" OnCommand="selectPage" Visible="false" >NEXT</asp:LinkButton>
+        </div>
+    </div>
+    
 </asp:Content>

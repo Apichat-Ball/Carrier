@@ -165,6 +165,7 @@
     <Content Include="Home_Carrier.aspx" />
     <Content Include="Icon\cancellation.png" />
     <Content Include="Icon\tracking.png" />
+    <Content Include="Icon\x-button.png" />
     <Content Include="Model\Carrier\Carrier_model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Carrier_model.edmx</DependentUpon>

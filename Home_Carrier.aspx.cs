@@ -2,6 +2,7 @@
 using Carrier.Service;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -31,64 +32,169 @@ namespace Carrier
             lbuserid.Text = Session["_UserID"].ToString();
             if (!IsPostBack)
             {
-                loadtable();
+
+                txtDateStart.Text = new DateTime(DateTime.UtcNow.Year, DateTime.Now.Month, 1).ToString("dd/MM/yyyy");
+                txtDateEnd.Text = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)).ToString("dd/MM/yyyy");
+                loadtable(1);
             }
         }
-        public void loadtable()
+        public void loadtable(int page)
         {
             var user = Convert.ToInt32(lbuserid.Text);
-            var start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1);
-            var end = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1);
+            var maxrow = 10;
             var orderList = (from orderItem in carrier_Entities.Order_Item
                              join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
-                             where order.UserID == user && orderItem.Status != "C" &&((order.Date_send >= start && order.Date_send <= end) || orderItem.Status == null)
-                             select new { 
-                                 Docno = orderItem.Docno, 
-                                 pno = orderItem.pno, 
-                                 srcName = order.srcName, 
+                             where order.UserID == user && orderItem.Status != "C"
+                             select new
+                             {
+                                 Docno = orderItem.Docno,
+                                 pno = orderItem.pno,
+                                 srcName = order.srcName,
                                  dstName = order.dstName,
                                  ArticleCategory = carrier_Entities.Article_Category.Where(w => w.ArticleCode == order.articleCategory).ToList().FirstOrDefault().ArticleName,
-                                 dateCreate = orderItem.Date_Success,   
+                                 dateCreate = orderItem.Date_Success,
                                  TrackingPickup = orderItem.ticketPickupId,
                                  TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == orderItem.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
                              }).ToList();
-            
-            gv_OrderAll.DataSource = orderList;
-            gv_OrderAll.DataBind();
-            foreach(GridViewRow row in gv_OrderAll.Rows)
+
+                var format = "dd/MM/yyyy";
+                var enUS = new CultureInfo("en-US");
+                var start = DateTime.ParseExact(txtDateStart.Text,format,enUS,DateTimeStyles.None);
+                var end = DateTime.ParseExact(txtDateEnd.Text,format, enUS,DateTimeStyles.None);
+            if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
             {
+                orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end ).ToList();
+                if(txtDocnoSearch.Text != "")
+                {
+                    orderList = orderList.Where(w => w.Docno == txtDocnoSearch.Text).ToList();
+                }
+                if(txtPnoSearch.Text != "")
+                {
+                    orderList = orderList.Where(w => w.pno == txtPnoSearch.Text).ToList();
+                }
+                if(txtDstNameSearch.Text != "")
+                {
+                    orderList = orderList.Where(w => w.dstName == txtDstNameSearch.Text).ToList();
+                }
+                if(txtArticleSearch.Text != "")
+                {
+                    orderList = orderList.Where(w => w.ArticleCategory == txtArticleSearch.Text).ToList();
+                }
+
+            }
+            else 
+            {
+                orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
+                
+            }
+            double maxdata_gvData = (double)((decimal)Convert.ToDecimal(orderList.Count()) / Convert.ToDecimal(maxrow));
+            int pageCount_gvData = (int)Math.Ceiling(maxdata_gvData);
+            gv_OrderAll.DataSource = orderList.OrderByDescending(x => x.dateCreate).Skip((page - 1) * maxrow).Take(maxrow);
+            gv_OrderAll.DataBind();
+            Page_gv(page, pageCount_gvData);
+
+            foreach (GridViewRow row in gv_OrderAll.Rows)
+            {
+                Label lbDateCreate = (Label)row.FindControl("lbDateCreate");
                 Label lbStatus = (Label)row.FindControl("lbStatus");
                 ImageButton imgbtnCancelOrder = (ImageButton)row.FindControl("imgbtnCancelOrder");
+                lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
                 if (lbStatus.Text != "")
                 {
                     imgbtnCancelOrder.Visible = false;
                 }
             }
 
-            txtDateStart.Text = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).ToShortDateString();
-            txtDateEnd.Text = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)).ToShortDateString();
+
         }
-        protected void lkbpno_Click(object sender, EventArgs e)
+        protected void Page_gv(int pageselect, int pageCount)
         {
-            LinkButton lkbpno = (LinkButton)sender;
-            Label lbDocno = (Label)lkbpno.NamingContainer.FindControl("lbDocno");
-            var lbDocnoss = lbDocno.Text;
+            lkPrevious.Visible = true;
+            lkNext.Visible = true;
+            lk1.Visible = false;
+            lk2.Visible = false;
+            lk3.Visible = false;
+            lkFirst.Visible = false; 
+            lkLast.Visible = false;
+            lkFirst.Text = "1"; 
+            lkFirst.CommandArgument = "1"; 
+            lkLast.Text = pageCount.ToString(); 
+            lkLast.CommandArgument = pageCount.ToString();
+            if (pageCount <= 3)
+            {
+                switch (pageCount)
+                {
+                    case 1:
+                        lk1.Visible = true; lk1.Text = Convert.ToString(pageCount);
+                        break;
+                    case 2:
+                        lk1.Visible = true;
+                        lk2.Visible = true;
+                        lk1.Text = Convert.ToString(pageCount - 1);
+                        lk2.Text = Convert.ToString(pageCount);
+                        break;
+                    case 3:
+                        lk1.Visible = true; lk1.Text = Convert.ToString(pageCount - 2);
+                        lk2.Visible = true; lk2.Text = Convert.ToString(pageCount - 1);
+                        lk3.Visible = true; lk3.Text = Convert.ToString(pageCount);
+                        break;
+                }
 
-            #region Open File pdf
-            //String originalPath = new Uri(HttpContext.Current.Request.Url.AbsoluteUri).OriginalString;
-            //string filePath = originalPath.Substring(0, originalPath.LastIndexOf("/Default")) + "/PDFFile/"+lbDocnoss+".pdf";
-            //string fileExtention = Path.GetExtension(filePath);
-            //WebClient client = new WebClient();
-            //Byte[] buffer = client.DownloadData(filePath);
-            //Response.ContentType = service_Flashs.ReturnExtension(fileExtention);
 
-            //Response.AddHeader("content-length", buffer.Length.ToString());
-            //Response.BinaryWrite(buffer);
-            #endregion
-            Response.Redirect("Transport_Form.aspx?Docno=" + lbDocnoss);
-            //service_Flashs.Get_Docment(lbDocno.Text);
+            }
+            else
+            {
+                lk1.Visible = true; lk2.Visible = true; lk3.Visible = true;
+                switch (pageselect)
+                {
+                    case 1:
+                        lk1.Text = Convert.ToString(pageselect); lk2.Text = Convert.ToString(pageselect + 1); lk3.Text = Convert.ToString(pageselect + 2);
+                        break;
+                    case 2:
+                        lk1.Text = Convert.ToString(pageselect - 1); lk2.Text = Convert.ToString(pageselect); lk3.Text = Convert.ToString(pageselect + 1);
+                        break;
+                    case 3:
+                        lk1.Text = Convert.ToString(pageselect - 2); lk2.Text = Convert.ToString(pageselect - 1); lk3.Text = Convert.ToString(pageselect);
+                        break;
+
+                    default:
+                        lkFirst.Visible = true;
+                        switch (pageselect == pageCount)
+                        {
+                            case false:
+                                lk1.Text = Convert.ToString(pageselect - 1); lk2.Text = Convert.ToString(pageselect); lk3.Text = Convert.ToString(pageselect + 1);
+                                break;
+
+                            case true:
+                                lk1.Text = Convert.ToString(pageselect - 2); lk2.Text = Convert.ToString(pageselect - 1); lk3.Text = Convert.ToString(pageselect);
+                                break;
+                        }
+                        break;
+
+
+                }
+
+                //Last
+                
+            }
+            lkPrevious.CommandArgument = Convert.ToString(pageselect - 1);
+            lkNext.CommandArgument = Convert.ToString(pageselect + 1);
+            if (pageselect <= (pageCount - 2)) { lkLast.Visible = true; }
+            lkPrevious.CssClass = "btn btn-outline-primary"; 
+            lkNext.CssClass = "btn btn-outline-primary";
+            if (pageselect - 1 <= 0) { lkPrevious.CssClass = "btn btn-outline-secondary disabled"; }
+            if (pageselect + 1 > pageCount) { lkNext.CssClass = "btn btn-outline-secondary disabled"; }
+
+            
+            if (lkFirst.Text == pageselect.ToString()) { lkFirst.CssClass = "btn btn-outline-primary active"; } else { lkFirst.CssClass = "btn btn-outline-primary"; }
+            if (lkLast.Text == pageselect.ToString()) { lkLast.CssClass = "btn btn-outline-primary active"; } else { lkLast.CssClass = "btn btn-outline-primary"; }
+            if (lk1.Text == pageselect.ToString()) { lk1.CssClass = "btn btn-outline-primary active"; } else { lk1.CssClass = "btn btn-outline-primary"; }
+            if (lk2.Text == pageselect.ToString()) { lk2.CssClass = "btn btn-outline-primary active"; } else { lk2.CssClass = "btn btn-outline-primary"; }
+            if (lk3.Text == pageselect.ToString()) { lk3.CssClass = "btn btn-outline-primary active"; } else { lk3.CssClass = "btn btn-outline-primary"; }
+
+            lk1.CommandArgument = lk1.Text; lk2.CommandArgument = lk2.Text; lk3.CommandArgument = lk3.Text;
+
         }
-
         protected void btnCreateOrder_Click(object sender, EventArgs e)
         {
             Response.Redirect("Transport_Form.aspx");
@@ -102,7 +208,25 @@ namespace Carrier
             Label lbDocno = (Label)row.FindControl("lbDocno");
             var res = service_Flashs.CancelOrder(lbDocno.Text, lkbpno.Text);
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('succes : " + res + "')", true);
-            loadtable();
+            loadtable(1);
+        }
+
+        protected void lkDocno_Click(object sender, EventArgs e)
+        {
+            LinkButton lkDocno = (LinkButton)sender;
+            var lbDocnoss = lkDocno.Text;
+
+            Response.Redirect("Transport_Form.aspx?Docno=" + lbDocnoss);
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            loadtable(1);
+        }
+
+        protected void selectPage(object sender, CommandEventArgs e)
+        {
+            loadtable(Convert.ToInt32(e.CommandArgument));
         }
     }
 }
