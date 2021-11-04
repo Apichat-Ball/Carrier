@@ -84,6 +84,14 @@
                         <asp:Label runat="server" ID="lbTimeTracking" Text='<%# Bind("TimeTracking") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
+                <asp:TemplateField>
+                    <HeaderTemplate>
+                        <asp:Label runat="server" ID="lbProcess" Text="การดำเนินการ"></asp:Label>
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:ImageButton runat="server" ID="imgbtnCancelOrder" Width="30px" ImageUrl="~/Icon/cancellation.png" OnClick="imgbtnCancelOrder_Click"/>
+                    </ItemTemplate>
+                </asp:TemplateField>
             </Columns>
         </asp:GridView>
     </div>

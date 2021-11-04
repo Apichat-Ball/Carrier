@@ -64,11 +64,14 @@ namespace Carrier
                 {
                     CheckBox cbItem = (CheckBox)row.FindControl("cbItem");
                     Label lbStatus = (Label)row.FindControl("lbStatus");
-                    if(lbStatus.Text != "")
+                    ImageButton imgbtnCancelOrder = (ImageButton)row.FindControl("imgbtnCancelOrder");
+                    if(lbStatus.Text != "") 
                     {
                         cbItem.Visible = false;
+                        imgbtnCancelOrder.Visible = false;
                     }
                 }
+               
             }
             else if (permission == null)
             {
@@ -180,6 +183,16 @@ namespace Carrier
         protected void btnCreateOrder_Click(object sender, EventArgs e)
         {
             Response.Redirect("Transport_Form.aspx");
+        }
+        protected void imgbtnCancelOrder_Click(object sender, ImageClickEventArgs e)
+        {
+            ImageButton imgbtnCancelOrder = (ImageButton)sender;
+            GridViewRow row = (GridViewRow)imgbtnCancelOrder.NamingContainer;
+            LinkButton lkbpno = (LinkButton)row.FindControl("lkbpno");
+            Label lbDocno = (Label)row.FindControl("lbDocno");
+            var res = service_Flashs.CancelOrder(lbDocno.Text, lkbpno.Text);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('succes : " + res + "')", true);
+            loadtable();
         }
     }
 }
