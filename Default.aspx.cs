@@ -24,7 +24,7 @@ namespace Carrier
         {
             Session.Clear();
 
-            Session["_UserID"] = "942";
+            //Session["_UserID"] = "942";
 
             if (Session["_UserID"] == null)
             {
@@ -43,12 +43,14 @@ namespace Carrier
         public void loadtable()
         {
             var user = Convert.ToInt32(Session["_UserID"].ToString());
+            var start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1);
+            var end = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1);
             var permission = carrier_Entities.Users.Where(w => w.UserID == user).Select(s => s.Permission).FirstOrDefault();
             if (permission != null && permission == "Admin")
             {
                 var orderList = (from orderItem in carrier_Entities.Order_Item
                                  join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
-                                 where orderItem.Status != "C"
+                                 where orderItem.Status != "C" && ((order.Date_send >= start && order.Date_send <= end) || orderItem.Status == null)
                                  select new
                                  {
                                      Docno = orderItem.Docno,

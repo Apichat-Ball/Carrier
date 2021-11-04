@@ -20,7 +20,6 @@ namespace Carrier
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-            lbuserid.Text = Session["_UserID"].ToString();
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();
@@ -29,6 +28,7 @@ namespace Carrier
             {
                 Response.Redirect("https://www.sfg-th.com/Login/");
             }
+            lbuserid.Text = Session["_UserID"].ToString();
             if (!IsPostBack)
             {
                 loadtable();
@@ -37,9 +37,11 @@ namespace Carrier
         public void loadtable()
         {
             var user = Convert.ToInt32(lbuserid.Text);
+            var start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1);
+            var end = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1);
             var orderList = (from orderItem in carrier_Entities.Order_Item
                              join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
-                             where order.UserID == user && orderItem.Status != "C"
+                             where order.UserID == user && orderItem.Status != "C" &&((order.Date_send >= start && order.Date_send <= end) || orderItem.Status == null)
                              select new { 
                                  Docno = orderItem.Docno, 
                                  pno = orderItem.pno, 
@@ -50,6 +52,7 @@ namespace Carrier
                                  TrackingPickup = orderItem.ticketPickupId,
                                  TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == orderItem.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
                              }).ToList();
+            
             gv_OrderAll.DataSource = orderList;
             gv_OrderAll.DataBind();
             foreach(GridViewRow row in gv_OrderAll.Rows)

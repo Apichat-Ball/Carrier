@@ -42,6 +42,15 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.Button btnCreateOrder;
 
         /// <summary>
+        /// lbDateStart control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbDateStart;
+
+        /// <summary>
         /// txtDateStart control.
         /// </summary>
         /// <remarks>
@@ -49,6 +58,15 @@ namespace Carrier
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDateStart;
+
+        /// <summary>
+        /// lbDateEnd control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbDateEnd;
 
         /// <summary>
         /// txtDateEnd control.

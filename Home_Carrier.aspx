@@ -36,10 +36,12 @@
     <div class="mt-3 " >
         <div class="row">
             <div class="col-md-3">
-                <asp:TextBox runat="server" ID="txtDateStart" CssClass="form-control" Width="100%"></asp:TextBox>
+                <asp:Label runat="server" ID="lbDateStart" Text="เริ่มวันที่"></asp:Label>
+                <asp:TextBox runat="server" ID="txtDateStart" ></asp:TextBox>
             </div>
             <div class="col-md-3">
-                <asp:TextBox runat="server" ID="txtDateEnd" CssClass="form-control " Width="100%"></asp:TextBox>
+                <asp:Label runat="server" ID="lbDateEnd" Text="สิ้นสุดวันที่"></asp:Label>
+                <asp:TextBox runat="server" ID="txtDateEnd"  ></asp:TextBox>
             </div>
             <div class="col-md-3">
                 <asp:Button runat="server" ID="btnSearch" CssClass="btn btn-primary " Text="Search" Width="100%" />
@@ -48,15 +50,22 @@
 
     </div>
     <div class="row mt-3">
-        <asp:GridView runat="server" ID="gv_OrderAll" Width="100%" EmptyDataText="ไม่มีการสร้างรายการ" AutoGenerateColumns="false" CssClass="table-hover">
+        <asp:GridView runat="server" ID="gv_OrderAll" Width="100%" EmptyDataText="ไม่มีการสร้างรายการ" AutoGenerateColumns="false" CssClass="table-hover" HeaderStyle-HorizontalAlign="Center" >
             <Columns>
                 <asp:TemplateField ControlStyle-CssClass="ml-1">
                     <HeaderTemplate>
                         <asp:Label runat="server" ID="lbhpno" Text="รหัสพัสดุ"></asp:Label>
                     </HeaderTemplate>
                     <ItemTemplate>
-                        <asp:Label runat="server" ID="lbDocno" Text='<%# Bind("Docno") %>' Visible="false" ></asp:Label>
                        <asp:LinkButton runat="server" ID="lkbpno" Text='<%# Bind("pno") %>' OnClick="lkbpno_Click"></asp:LinkButton>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField>
+                    <HeaderTemplate>
+                        <asp:Label runat="server" ID="lbhDocno" Text="เลขที่เอกสาร" ></asp:Label>
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:Label runat="server" ID="lbDocno" Text='<%# Bind("Docno") %>'  ></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField>

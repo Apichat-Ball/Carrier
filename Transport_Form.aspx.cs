@@ -436,15 +436,10 @@ namespace Carrier
         protected void btnPrint_Click(object sender, EventArgs e)
         {
 
-            Response.Redirect("Transport_bill?Docno=" + lbDocno.Text);
+            Response.Redirect("Transport_bill?Docno=" + txtDocno.Text);
         }
 
-        protected void txtsrcPhone_TextChanged(object sender, EventArgs e)
-        {
-            TextBox s = (TextBox)sender;
-
-            var f = s.Text;
-        }
+       
 
         protected void ddlFavorites_SelectedIndexChanged(object sender, EventArgs e)
         {

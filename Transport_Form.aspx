@@ -62,7 +62,7 @@
                     <div class="col-sm-2 w-100 input-group mb-2">
                         
                         <asp:Label runat="server" ID="lbsrcPhone" Text="เบอร์โทรศัพท์มือถือ" CssClass=" input-group-text s-15px shadow"></asp:Label>
-                        <asp:TextBox runat="server" ID="txtsrcPhone" Width="100%" CssClass="form-control s-15px shadow " MaxLength="10" OnTextChanged="txtsrcPhone_TextChanged" TextMode="Phone" AutoCompleteType="Disabled"></asp:TextBox>
+                        <asp:TextBox runat="server" ID="txtsrcPhone" Width="100%" CssClass="form-control s-15px shadow " MaxLength="10"  TextMode="Phone" AutoCompleteType="Disabled"></asp:TextBox>
                         <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ControlToValidate="txtsrcPhone" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง" ValidationExpression="[0]{1}[6,8,9]{1}[0-9]{8}" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
                     </div>
                 </div>
