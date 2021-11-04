@@ -80,7 +80,8 @@
                 <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
             </footer>
         </div>
-
+             <script src="Scripts/gijgo/combined/gijgo.min.js"></script>
+        <link href="Content/gijgo/combined/gijgo.min.css" rel="stylesheet" />
     </form>
 </body>
 </html>

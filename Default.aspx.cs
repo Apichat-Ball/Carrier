@@ -23,6 +23,9 @@ namespace Carrier
         protected void Page_Load(object sender, EventArgs e)
         {
             Session.Clear();
+
+            Session["_UserID"] = "942";
+
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();

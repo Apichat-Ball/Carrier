@@ -2,15 +2,28 @@
 
 <asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="MainContent">
     <script type="text/javascript">
-        $(document).ready(function () {
+<%--        $(document).ready(function () {
             $('#<%= txtDateStart.ClientID %>').datepicker({
-                        uiLibrary: 'bootstrap4',
-                        format: 'dd/mm/yyyy'
-                    });
-             $('#<%= txtDateEnd.ClientID%>').datepicker({
-                 uiLibrary: 'bootstrap4',
-                 format: 'dd/mm/yyyy'
-             });
+                uiLibrary: 'bootstrap4',
+                format: 'dd/mm/yyyy'
+            }),
+                $('#<%= txtDateEnd.ClientID%>').datepicker({
+                    uiLibrary: 'bootstrap4',
+                    format: 'dd/mm/yyyy'
+                });
+        }--%>
+
+             function pageLoad() {
+                $("#<%= txtDateStart.ClientID %>").datepicker({
+                     uiLibrary: 'bootstrap4',
+                     format: 'dd/mm/yyyy'
+                 }),
+
+                     $("#<%= txtDateEnd.ClientID %>").datepicker({
+                    uiLibrary: 'bootstrap4',
+                    format: 'dd/mm/yyyy'
+                });
+             }
     </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <div class="mt-3">
@@ -20,7 +33,7 @@
             <asp:Button runat="server" ID="btnCreateOrder" Text="Create Order" CssClass=" btn btn-primary " Width="100%" Height="30px" OnClick="btnCreateOrder_Click"/>
         </div>
     </div>
-    <div class="mt-3 " style="display:none;">
+    <div class="mt-3 " >
         <div class="row">
             <div class="col-md-3">
                 <asp:TextBox runat="server" ID="txtDateStart" CssClass="form-control" Width="100%"></asp:TextBox>
