@@ -132,6 +132,24 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.DropDownList ddlSDpart;
 
         /// <summary>
+        /// lbSite control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbSite;
+
+        /// <summary>
+        /// txtSiteStorage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSiteStorage;
+
+        /// <summary>
         /// lbgroupSend control.
         /// </summary>
         /// <remarks>

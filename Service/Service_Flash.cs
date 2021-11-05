@@ -101,7 +101,7 @@ namespace Carrier.Service
                     var selectOrder = entities_Carrier.Orders.Where(w => w.Docno == docno).FirstOrDefault();
                     entities_Carrier.Orders.Remove(selectOrder);
                     entities_Carrier.SaveChanges();
-                    return new Model_Trackingno { success = false, trackingno = j.Last.ToString().Replace("\r", "").Replace("\n", "") };
+                    return new Model_Trackingno { success = false, trackingno = j["message"].ToString() };
                 }
             }
             else
@@ -248,7 +248,7 @@ namespace Carrier.Service
                     return "application/octet-stream";
             }
         }
-        public responseNotify Notify(List<string> tracking)
+        public List<responseNotify> Notify(List<string> tracking)
         {
             var keyFlash = Get_Key("FLASH", "FLASH");
             
@@ -262,6 +262,7 @@ namespace Carrier.Service
                                  {
                                      mchId = orderItem.mchId,
                                      //nonceStr = order.Docno,
+                                     pno = orderItem.pno,
                                      Docno = order.Docno,
                                      srcName = order.srcName,
                                      srcPhone = order.srcPhone,
@@ -276,73 +277,111 @@ namespace Carrier.Service
                 Order_Noti.Add(orderData);
 
             }
-            //var groupCity = Order_Noti.GroupBy(g => new { mchid = g.mchId , srcProvinceName = g.srcProvinceName, srcCityName = g.srcCityName, srcDistrictName = g.srcDistrictName, srcDetailAddress = g.srcDetailAddress })
-            //    .Select(s=>new { mchId = s.Key.mchid , srcProvinceName = s.Key.srcProvinceName , srcCityName = s.Key.srcCityName , srcDistrictName = s.Key.srcDistrictName , srcDetailAddress  = s.Key.srcDetailAddress ,item = s.Count()})
-            //    .ToList();
 
-            //foreach (var i in groupCity)
-            //{
-            //    var random = "mdchId=" + i.mchId + "&srcProvinceName=" + i.srcProvinceName + "&srcCityName=" + i.srcCityName + "&srcDistrictName=" + i.srcDistrictName + "&srcDetailAddress=" + i.srcDetailAddress;
-            //    var Md5 = MD5_hash(random);
-            //    var header =
-            //        "estimateParcelNumber=" + i.item +
-            //        "&mchId=" + i.mchId +
-            //        "&nonceStr=" + Md5 +
-            //        "&srcCityName=" + "เขตบางคอแหลม" +
-            //        "&srcDetailAddress=" + "477 พระราม 3 " +
-            //        "&srcDistrictName=" + "บางโคล่" +
-            //        "&srcName=" + "บริษัท สตาร์แฟชั่น(2551) จำกัด" +
-            //        "&srcPhone=" + "0873078300" +
-            //        "&srcPostalCode=" + "10120" +
-            //        "&srcProvinceName=" + "กรุงเทพมหานคร";
-            //}
-            var last = Order_Noti.LastOrDefault();
-            var random = "mdchId=" + last.mchId + "&sendTime=" + DateTime.Now;
-            var Md5 = MD5_hash(random);
-            var header =
-                "estimateParcelNumber=" + Order_Noti.Count() +
-                "&mchId=" + last.mchId +
-                "&nonceStr=" + Md5 +
-                "&srcCityName=" + "เขตบางคอแหลม" +
-                "&srcDetailAddress=" + "477 พระราม 3 " +
-                "&srcDistrictName=" + "บางโคล่" +
-                "&srcName=" + "บริษัท สตาร์แฟชั่น(2551) จำกัด" +
-                "&srcPhone=" + "0873078300" +
-                "&srcPostalCode=" + "10120" +
-                "&srcProvinceName=" + "กรุงเทพมหานคร";
-
-            string sign = sha256_hash(header + "&key=" + keyFlash.key).ToUpper();
-            var client = new RestClient("https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign);
-            client.Timeout = -1;
-            var request = new RestRequest(Method.POST);
-            request.AlwaysMultipartFormData = true;
-            IRestResponse response = client.Execute(request);
-            JObject j = JObject.Parse(response.Content);
+            var SDC1 = Order_Noti.Where(w => w.srcName == "บริษัท เอส.ดี.ซี วัน จำกัด").ToList();
+            foreach(var sd in SDC1)
+            {
+                Order_Noti.Remove(sd);
+            }
+            List<responseNotify> listResnotify = new List<responseNotify>();
             responseNotify resnotity = new responseNotify();
-            if (Convert.ToInt32(j["code"]) == 1)
+            if (SDC1.Count != 0)
             {
-                resnotity.pno = tracking;
-                resnotity.code = Convert.ToInt32(j["code"]);
-                resnotity.message = j["message"].ToString();
-                resnotity.ticketPickupId = j["data"]["ticketPickupId"].ToString();
-                resnotity.staffInfoId = Convert.ToInt32(j["data"]["staffInfoId"]);
-                resnotity.staffInfoName = j["data"]["staffInfoName"].ToString();
-                resnotity.staffInfoPhone = j["data"]["staffInfoPhone"].ToString();
-                resnotity.upCountryNote = j["data"]["upCountryNote"].ToString();
-                resnotity.timeoutAtText = j["data"]["timeoutAtText"].ToString();
-                resnotity.ticketMessage = j["data"]["ticketMessage"].ToString();
-                
+                var last = SDC1.LastOrDefault();
+                var random = "mdchId=" + last.mchId + "&sendTime=" + DateTime.Now;
+                var Md5 = MD5_hash(random);
+                var header =
+                    "estimateParcelNumber=" + SDC1.Count() +
+                    "&mchId=" + last.mchId +
+                    "&nonceStr=" + Md5 +
+                    "&srcCityName=" + "อำเภอวังน้อย" +
+                    "&srcDetailAddress=" + "59/1 ม.1 " +
+                    "&srcDistrictName=" + "ลำไทร" +
+                    "&srcName=" + "บริษัท เอส.ดี.ซี วัน จำกัด" +
+                    "&srcPhone=" + "0944764565" +
+                    "&srcPostalCode=" + "13170" +
+                    "&srcProvinceName=" + "พระนครศรีอยุธยา";
+
+                string sign = sha256_hash(header + "&key=" + keyFlash.key).ToUpper();
+                var client = new RestClient("https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign);
+                client.Timeout = -1;
+                var request = new RestRequest(Method.POST);
+                request.AlwaysMultipartFormData = true;
+                IRestResponse response = client.Execute(request);
+                JObject j = JObject.Parse(response.Content);
+                var pno = SDC1.Select(s => s.pno).ToList();
+                if (Convert.ToInt32(j["code"]) == 1)
+                {
+                    resnotity.pno = pno;
+                    resnotity.code = Convert.ToInt32(j["code"]);
+                    resnotity.message = j["message"].ToString();
+                    resnotity.ticketPickupId = j["data"]["ticketPickupId"].ToString();
+                    resnotity.staffInfoId = Convert.ToInt32(j["data"]["staffInfoId"]);
+                    resnotity.staffInfoName = j["data"]["staffInfoName"].ToString();
+                    resnotity.staffInfoPhone = j["data"]["staffInfoPhone"].ToString();
+                    resnotity.upCountryNote = j["data"]["upCountryNote"].ToString();
+                    resnotity.timeoutAtText = j["data"]["timeoutAtText"].ToString();
+                    resnotity.ticketMessage = j["data"]["ticketMessage"].ToString();
+
+                }
+                else
+                {
+                    resnotity.pno = pno;
+                    resnotity.code = Convert.ToInt32(j["code"]);
+                    resnotity.message = j["message"].ToString();
+
+                }
+                listResnotify.Add(resnotity);
             }
-            else
+            if(Order_Noti.Count != 0)
             {
-                resnotity.pno = tracking;
-                resnotity.code = Convert.ToInt32(j["code"]);
-                resnotity.message = j["message"].ToString();
-                
+                var last = Order_Noti.LastOrDefault();
+                var random = "mdchId=" + last.mchId + "&sendTime=" + DateTime.Now;
+                var Md5 = MD5_hash(random);
+                var header =
+                    "estimateParcelNumber=" + Order_Noti.Count() +
+                    "&mchId=" + last.mchId +
+                    "&nonceStr=" + Md5 +
+                    "&srcCityName=" + "เขตบางคอแหลม" +
+                    "&srcDetailAddress=" + "477 พระราม 3 " +
+                    "&srcDistrictName=" + "บางโคล่" +
+                    "&srcName=" + "บริษัท สตาร์แฟชั่น(2551) จำกัด" +
+                    "&srcPhone=" + "0873078300" +
+                    "&srcPostalCode=" + "10120" +
+                    "&srcProvinceName=" + "กรุงเทพมหานคร";
+
+                string sign = sha256_hash(header + "&key=" + keyFlash.key).ToUpper();
+                var client = new RestClient("https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign);
+                client.Timeout = -1;
+                var request = new RestRequest(Method.POST);
+                request.AlwaysMultipartFormData = true;
+                IRestResponse response = client.Execute(request);
+                JObject j = JObject.Parse(response.Content);
+                var pno = Order_Noti.Select(s => s.pno).ToList();
+                if (Convert.ToInt32(j["code"]) == 1)
+                {
+                    resnotity.pno = pno;
+                    resnotity.code = Convert.ToInt32(j["code"]);
+                    resnotity.message = j["message"].ToString();
+                    resnotity.ticketPickupId = j["data"]["ticketPickupId"].ToString();
+                    resnotity.staffInfoId = Convert.ToInt32(j["data"]["staffInfoId"]);
+                    resnotity.staffInfoName = j["data"]["staffInfoName"].ToString();
+                    resnotity.staffInfoPhone = j["data"]["staffInfoPhone"].ToString();
+                    resnotity.upCountryNote = j["data"]["upCountryNote"].ToString();
+                    resnotity.timeoutAtText = j["data"]["timeoutAtText"].ToString();
+                    resnotity.ticketMessage = j["data"]["ticketMessage"].ToString();
+
+                }
+                else
+                {
+                    resnotity.pno = pno;
+                    resnotity.code = Convert.ToInt32(j["code"]);
+                    resnotity.message = j["message"].ToString();
+
+                }
+                listResnotify.Add(resnotity);
             }
-
-
-            return resnotity;
+            return listResnotify;
         }
         public string Validate_Transport(Order item)
         {
@@ -374,7 +413,7 @@ namespace Carrier.Service
             {
                 return "กรุณาเลือกแผนกที่ต้องการเบิก";
             }
-            else if(item.articleCategory == 0)
+            else if(item.articleCategory == 1111)
             {
                 return "กรุณาเลือกประเภทพัสดุ";
             }

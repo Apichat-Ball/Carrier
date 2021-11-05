@@ -14,6 +14,7 @@ namespace Carrier.Info
     {
         public int estimateParcelNumber { get; set; }
         public string mchId { get; set; }
+        public string pno { get; set; }
     }
     public class responseNotify
     {

@@ -249,43 +249,74 @@ namespace Carrier
             }
             else
             {
-                var responseNotify = service_Flashs.Notify(tracking);
-
-                if (responseNotify.code == 1)
+                var responseNotifyList = service_Flashs.Notify(tracking);
+                List<messageNotify> messageNoti = new List<messageNotify>();
+                foreach(var responseNotify in responseNotifyList)
                 {
-                    foreach (var pno in responseNotify.pno)
+                    if (responseNotify.code == 1)
                     {
-                        var orderItem = carrier_Entities.Order_Item.Where(w => w.pno == pno).FirstOrDefault();
-                        orderItem.Status = "A";
-                        orderItem.CodeResponse = responseNotify.code;
-                        orderItem.ticketPickupId = responseNotify.ticketPickupId;
-                    }
-                    carrier_Entities.Notifies.Add(new Notify
-                    {
-                        TicketPickupId = responseNotify.ticketPickupId,
-                        StaffInfoId = responseNotify.staffInfoId,
-                        StaffInfoName = responseNotify.staffInfoName,
-                        StaffInfoPhone = responseNotify.staffInfoPhone,
-                        UpCountryNote = responseNotify.upCountryNote,
-                        TimeoutAtText = responseNotify.timeoutAtText,
-                        TicketMessage = responseNotify.ticketMessage
-                    });
+                        var mess = "เลขที่พัสดุที่ : ";
+                        var lastpno = responseNotify.pno.LastOrDefault();
+                        foreach (var pno in responseNotify.pno)
+                        {
+                            var orderItem = carrier_Entities.Order_Item.Where(w => w.pno == pno).FirstOrDefault();
+                            orderItem.Status = "A";
+                            orderItem.CodeResponse = responseNotify.code;
+                            orderItem.ticketPickupId = responseNotify.ticketPickupId;
+                            if(lastpno == pno)
+                            {
+                                mess += pno + " เรียกรถเรียบร้อยแล้ว";
+                            }
+                            else
+                            {
+                                mess += pno + ",";
+                            }
+                            
+                        }
+                        carrier_Entities.Notifies.Add(new Notify
+                        {
+                            TicketPickupId = responseNotify.ticketPickupId,
+                            StaffInfoId = responseNotify.staffInfoId,
+                            StaffInfoName = responseNotify.staffInfoName,
+                            StaffInfoPhone = responseNotify.staffInfoPhone,
+                            UpCountryNote = responseNotify.upCountryNote,
+                            TimeoutAtText = responseNotify.timeoutAtText,
+                            TicketMessage = responseNotify.ticketMessage
+                        });
 
-                    carrier_Entities.SaveChanges();
-                }
-                else
-                {
-                    foreach (var pno in responseNotify.pno)
-                    {
-                        var orderItem = carrier_Entities.Order_Item.Where(w => w.pno == pno).FirstOrDefault();
-                        orderItem.Status = "F";
-                        orderItem.CodeResponse = responseNotify.code;
                         carrier_Entities.SaveChanges();
+                        messageNoti.Add(new messageNotify { code = 1, message = mess });
+                    }
+                    else
+                    {
+                        var mess = "เลขที่พัสดุที่ : ";
+                        var lastpno = responseNotify.pno.LastOrDefault();
+                        foreach (var pno in responseNotify.pno)
+                        {
+                            var orderItem = carrier_Entities.Order_Item.Where(w => w.pno == pno).FirstOrDefault();
+                            orderItem.Status = "F";
+                            orderItem.CodeResponse = responseNotify.code;
+                            carrier_Entities.SaveChanges();
+                            if (lastpno == pno)
+                            {
+                                mess += pno + " ไม่สามารถเรียกรถได้";
+                            }
+                            else
+                            {
+                                mess += pno + ",";
+                            }
+                        }
+                        messageNoti.Add(new messageNotify { code = 1, message = mess });
                     }
                 }
+                var messageAlert = "";
+                foreach (var listmess in messageNoti)
+                {
+                    messageAlert = listmess.message + "\n";
+                }
+                
 
-
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('เรียกรถมารับพัสดุเรียบร้อย โปรดเช็ครายละเอียดการเรียกรถได้ที่ตาราง')", true);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('"+messageAlert+"')", true);
                 loadtable(1);
             }
 
@@ -319,5 +350,10 @@ namespace Carrier
             var lbDocnoss = lkbDocno.Text;
             Response.Redirect("Transport_Form.aspx?Docno=" + lbDocnoss);
         }
+    }
+    public class messageNotify
+    {
+        public int code { get; set; }
+        public string message { get; set; }
     }
 }

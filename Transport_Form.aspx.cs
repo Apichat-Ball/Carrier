@@ -152,6 +152,7 @@ namespace Carrier
                     ddlSDpart.SelectedValue = query.SDpart;
                     ddlSDpart.Enabled = false;
                     txtremark.Enabled = false;
+                    txtremark.Text = query.Remark;
                     lbDocno.Visible = true;
                     txtDocno.Visible = true;
                     txtDocno.Text = query.Docno;
@@ -173,12 +174,9 @@ namespace Carrier
                     
                     if (allFavorite.Count() == 0)
                     {
-                        //allFavorite.Add(new newList { text = "ไม่มีข้อมูลผู้ส่งที่ใช้บ่อย" ,val = "No Data"});
-                        //ddlFavorites.DataSource = allFavorite;
-                        //ddlFavorites.DataBind();
-                        //ddlFavorites.Enabled = false;
                         allFavorite.Insert(0, new newList { val = "select", text = "เลือกผู้ส่งที่ใช้บ่อย" });
-                        allFavorite.Insert(1, new newList { val = "StarFashion", text = "Star Fashion Group" });
+                        allFavorite.Insert(1, new newList { val = "บริษัท สตาร์แฟชั่น(2551) จำกัด", text = "Star Fashion Group" });
+                        allFavorite.Insert(2, new newList { val = "บริษัท เอส.ดี.ซี วัน จำกัด", text = "SDC1" });
                         ddlFavorites.DataSource = allFavorite;
                         ddlFavorites.DataBind();
                         lbFavorites.Visible = true;
@@ -187,7 +185,25 @@ namespace Carrier
                     else
                     {
                         allFavorite.Insert(0, new newList { val = "select", text = "เลือกผู้ส่งที่ใช้บ่อย" });
-                        allFavorite.Insert(1, new newList { val = "StarFashion", text = "Star Fashion Group" });
+                        var fav = allFavorite.Where(w => w.val == "บริษัท สตาร์แฟชั่น(2551) จำกัด" || w.val == "บริษัท เอส.ดี.ซี วัน จำกัด").ToList();
+                        if(fav.Count == 0)
+                        {
+                            allFavorite.Insert(1, new newList { val = "บริษัท สตาร์แฟชั่น(2551) จำกัด", text = "Star Fashion Group" });
+                            allFavorite.Insert(2, new newList { val = "บริษัท เอส.ดี.ซี วัน จำกัด", text = "SDC1" });
+                        }
+                        else
+                        {
+                            var sfg = allFavorite.Where(w => w.text == "บริษัท สตาร์แฟชั่น(2551) จำกัด").ToList();
+                            var SDC1 = allFavorite.Where(w => w.text == "บริษัท เอส.ดี.ซี วัน จำกัด").ToList();
+                            if (sfg.Count != 0)
+                            {
+                                allFavorite.Where(w => w.text == "บริษัท สตาร์แฟชั่น(2551) จำกัด").ToList().FirstOrDefault().text = "Star Fashion Group";
+                            }
+                            if(SDC1.Count != 0)
+                            {
+                                allFavorite.Where(w => w.text == "บริษัท เอส.ดี.ซี วัน จำกัด").ToList().FirstOrDefault().text =  "SDC1";
+                            }
+                        }
                         ddlFavorites.DataSource = allFavorite;
                         ddlFavorites.DataBind();
                         lbFavorites.Visible = true;
@@ -251,7 +267,7 @@ namespace Carrier
                 srcDistrictName = "",
                 srcPostalCode = txtsrcPostalCode.Text,
                 srcDetailAddress = txtsrcDetailAddress.Text,
-                Ref_Order = "Test",
+                Ref_Order = "API",
                 dstName = txtdstName.Text,
                 dstPhone = txtdstPhone.Text,
                 dstHomePhone = txtdstHomePhone.Text,
@@ -303,7 +319,7 @@ namespace Carrier
         public void loadArticle()
         {
             var Article = Carrier_Entities.Article_Category.ToList();
-            Article.Insert(0, new Article_Category { ArticleCode = 0, ArticleName = "กรุณาเลือกประเภทพัสดุ" });
+            Article.Insert(0, new Article_Category { ArticleCode = 1111, ArticleName = "กรุณาเลือกประเภทพัสดุ" });
             ddlarticleCategory.DataSource = Article;
             ddlarticleCategory.DataBind();
         }
@@ -316,8 +332,8 @@ namespace Carrier
             ddlsrcProvinceName.DataBind();
             ddlsrcCityName.Enabled = false;
             ddlsrcDistrictName.Enabled = false;
-            //dst
 
+            //dst
             ddldstProvinceName.DataSource = Provincelist;
             ddldstProvinceName.DataBind();
             ddldstCityName.Enabled = false;
@@ -447,48 +463,123 @@ namespace Carrier
             var user = Convert.ToInt32(Session["_UserID"].ToString());
             if (selectFavorite != "select")
             {
-                if(selectFavorite == "StarFashion")
+                switch (selectFavorite)
                 {
-                    txtsrcName.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด";
-                    txtsrcPhone.Text = "0873078300";
-                    ddlsrcProvinceName.SelectedValue = "1";
-                    var province = Convert.ToInt32(ddlsrcProvinceName.SelectedValue);
+                    case "บริษัท สตาร์แฟชั่น(2551) จำกัด":
+                        txtsrcName.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด";
+                        txtsrcPhone.Text = "0873078300";
+                        ddlsrcProvinceName.SelectedValue = "1";
+                        var provinceSFG = Convert.ToInt32(ddlsrcProvinceName.SelectedValue);
 
-                    ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == province).ToList();
-                    ddlsrcCityName.DataBind();
-                    ddlsrcDistrictName.Enabled = true;
-                    ddlsrcCityName.SelectedValue = "20";
+                        ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSFG).ToList();
+                        ddlsrcCityName.DataBind();
+                        ddlsrcDistrictName.Enabled = true;
+                        ddlsrcCityName.SelectedValue = "20";
 
-                    var city = Convert.ToInt32(ddlsrcCityName.SelectedValue);
-                    ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == city).ToList();
-                    ddlsrcDistrictName.DataBind();
-                    ddlsrcDistrictName.SelectedValue = "119";
-                    txtsrcPostalCode.Text = "10120";
-                    txtsrcDetailAddress.Text = "477 พระราม 3 ";
+                        var citySFG = Convert.ToInt32(ddlsrcCityName.SelectedValue);
+                        ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citySFG).ToList();
+                        ddlsrcDistrictName.DataBind();
+                        ddlsrcDistrictName.SelectedValue = "119";
+                        txtsrcPostalCode.Text = "10120";
+                        txtsrcDetailAddress.Text = "477 พระราม 3 ";
+
+                        //ผู้รับ
+                        txtdstName.Text = "บริษัท เอส.ดี.ซี วัน จำกัด";
+                        txtdstPhone.Text = "0944764565";
+                        txtdstHomePhone.Text = "-";
+                        ddldstProvinceName.SelectedValue = "5";
+                        var provincedstSCD1 = Convert.ToInt32(ddldstProvinceName.SelectedValue);
+
+                        ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provincedstSCD1).ToList();
+                        ddldstCityName.DataBind();
+                        ddldstDistrictName.Enabled = true;
+                        ddldstCityName.SelectedValue = "755";
+
+                        var citydstSCD1 = Convert.ToInt32(ddldstCityName.SelectedValue);
+                        ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citydstSCD1).ToList();
+                        ddldstDistrictName.DataBind();
+                        ddldstDistrictName.SelectedValue = "483";
+                        txtdstPostalCode.Text = "13170";
+                        txtdstDetailAddress.Text = "59/1 ม.1 ";
+                        break;
+                    case "บริษัท เอส.ดี.ซี วัน จำกัด":
+                        //ผู้ส่ง
+                        txtsrcName.Text = "บริษัท เอส.ดี.ซี วัน จำกัด";
+                        txtsrcPhone.Text = "0944764565";
+                        ddlsrcProvinceName.SelectedValue = "5";
+                        var provinceSDC1 = Convert.ToInt32(ddlsrcProvinceName.SelectedValue);
+
+                        ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSDC1).ToList();
+                        ddlsrcCityName.DataBind();
+                        ddlsrcDistrictName.Enabled = true;
+                        ddlsrcCityName.SelectedValue = "755";
+
+                        var citySDC1 = Convert.ToInt32(ddlsrcCityName.SelectedValue);
+                        ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citySDC1).ToList();
+                        ddlsrcDistrictName.DataBind();
+                        ddlsrcDistrictName.SelectedValue = "483";
+                        txtsrcPostalCode.Text = "13170";
+                        txtsrcDetailAddress.Text = "59/1 ม.1 ";
+                        //ผู้รับ
+                        txtdstName.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด";
+                        txtdstPhone.Text = "0873078300";
+                        txtdstHomePhone.Text = "-";
+                        ddldstProvinceName.SelectedValue = "1";
+                        var provincedstSFG = Convert.ToInt32(ddldstProvinceName.SelectedValue);
+
+                        ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provincedstSFG).ToList();
+                        ddldstCityName.DataBind();
+                        ddldstDistrictName.Enabled = true;
+                        ddldstCityName.SelectedValue = "20";
+
+                        var citydstSFG = Convert.ToInt32(ddldstCityName.SelectedValue);
+                        ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citydstSFG).ToList();
+                        ddldstDistrictName.DataBind();
+                        ddldstDistrictName.SelectedValue = "119";
+                        txtdstPostalCode.Text = "10120";
+                        txtdstDetailAddress.Text = "477 พระราม 3 "; 
+                        break;
+                    default:
+                        var Favorites = Carrier_Entities.Orders.Where(w => w.UserID == user && w.srcName == selectFavorite).GroupBy(g => new { userId = g.UserID, srcName = g.srcName, phone = g.srcPhone, province = g.srcProvinceName, city = g.srcCityName, distric = g.srcDistrictName }).Select(s => new { userid = s.Key.userId ?? 0, srcName = s.Key.srcName, phone = s.Key.phone, province = s.Key.province, City = s.Key.city, distric = s.Key.distric, item = s.Count() }).OrderBy(r => r.item).ToList().LastOrDefault();
+                        var query = Carrier_Entities.Orders.Where(w => w.UserID == Favorites.userid && w.srcName == Favorites.srcName && w.srcPhone == Favorites.phone && w.srcProvinceName == Favorites.province && w.srcCityName == Favorites.City && w.srcDistrictName == Favorites.distric).ToList().LastOrDefault();
+                        lbDocno.Text = query.Docno ?? "";
+                        txtsrcName.Text = query.srcName ?? "";
+                        txtsrcPhone.Text = query.srcPhone ?? "";
+                        var pro = Whale_Entities.Provinces.Where(w => w.Province_Name == query.srcProvinceName).ToList().FirstOrDefault().Province_ID;
+                        ddlsrcProvinceName.SelectedValue = pro.ToString();
+                        ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == pro).ToList();
+                        ddlsrcCityName.DataBind();
+                        var city = Whale_Entities.Cities.Where(w => w.City_Name == query.srcCityName).ToList().FirstOrDefault().City_ID;
+                        ddlsrcCityName.SelectedValue = city.ToString();
+                        ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == city).ToList();
+                        ddlsrcDistrictName.DataBind();
+                        var district = Whale_Entities.Districts.Where(w => w.Distinct_Name == query.srcDistrictName).ToList().FirstOrDefault().Distinct_ID;
+                        ddlsrcDistrictName.SelectedValue = district.ToString();
+                        txtsrcPostalCode.Text = query.srcPostalCode ?? "";
+                        txtsrcDetailAddress.Text = query.srcDetailAddress ?? "";
+
+
+                        List<City> defaultCity = new List<City>();
+                        defaultCity.Add(new City { City_ID = 0, City_Name = "" });
+                        List<District> defaultDistrict = new List<District>();
+                        defaultDistrict.Add(new District { Distinct_ID = 0, Distinct_Name = "" });
+                        txtdstName.Text = "";
+                        txtdstPhone.Text = "";
+                        txtdstHomePhone.Text = "";
+                        ddldstProvinceName.SelectedValue = "0";
+
+                        ddldstCityName.DataSource = defaultCity;
+                        ddldstCityName.DataBind();
+                        ddldstCityName.Enabled = false;
+                        ddldstDistrictName.Enabled = false;
+                        ddldstDistrictName.DataSource = defaultDistrict;
+                        ddldstDistrictName.DataBind();
+                        txtdstPostalCode.Text = "";
+                        txtdstDetailAddress.Text = "";
+                        break;
                 }
-                else{
-                    var Favorites = Carrier_Entities.Orders.Where(w => w.UserID == user && w.srcName == selectFavorite).GroupBy(g => new { userId = g.UserID, srcName = g.srcName,phone = g.srcPhone , province = g.srcProvinceName, city = g.srcCityName, distric = g.srcDistrictName }).Select(s => new { userid = s.Key.userId ?? 0, srcName = s.Key.srcName, phone = s.Key.phone, province = s.Key.province, City = s.Key.city, distric = s.Key.distric, item = s.Count() }).OrderBy(r=> r.item).ToList().LastOrDefault();
-
-                    var query = Carrier_Entities.Orders.Where(w => w.UserID == Favorites.userid && w.srcName == Favorites.srcName && w.srcPhone == Favorites.phone && w.srcProvinceName == Favorites.province && w.srcCityName == Favorites.City && w.srcDistrictName == Favorites.distric).ToList().LastOrDefault();
-                    lbDocno.Text = query.Docno ?? "";
-                    txtsrcName.Text = query.srcName ?? "";
-                    txtsrcPhone.Text = query.srcPhone ?? "";
-                    var pro = Whale_Entities.Provinces.Where(w => w.Province_Name == query.srcProvinceName).ToList().FirstOrDefault().Province_ID;
-                    ddlsrcProvinceName.SelectedValue = pro.ToString();
-                    ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == pro).ToList();
-                    ddlsrcCityName.DataBind();
-                    var city = Whale_Entities.Cities.Where(w => w.City_Name == query.srcCityName).ToList().FirstOrDefault().City_ID;
-                    ddlsrcCityName.SelectedValue = city.ToString();
-                    ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == city).ToList();
-                    ddlsrcDistrictName.DataBind();
-                    var district = Whale_Entities.Districts.Where(w => w.Distinct_Name == query.srcDistrictName).ToList().FirstOrDefault().Distinct_ID;
-                    ddlsrcDistrictName.SelectedValue = district.ToString();
-                    txtsrcPostalCode.Text = query.srcPostalCode ?? "";
-                    txtsrcDetailAddress.Text = query.srcDetailAddress ?? "";
-                }
-                
-
-            }else
+            }
+            else
             {
                 txtsrcName.Text = "";
                 txtsrcPhone.Text = "";
@@ -505,7 +596,22 @@ namespace Carrier
                 ddlsrcDistrictName.Enabled = false;
                 txtsrcPostalCode.Text = "";
                 txtsrcDetailAddress.Text = "";
+
+                txtdstName.Text = "";
+                txtdstPhone.Text = "";
+                txtdstHomePhone.Text = "";
+                ddldstProvinceName.SelectedValue = "0";
+
+                ddldstCityName.DataSource = defaultCity;
+                ddldstCityName.DataBind();
+                ddldstCityName.Enabled = false;
+                ddldstDistrictName.Enabled = false;
+                ddldstDistrictName.DataSource = defaultDistrict;
+                ddldstDistrictName.DataBind();
+                txtdstPostalCode.Text = "";
+                txtdstDetailAddress.Text = "";
             }
+                
         }
     }
     public class newList
