@@ -333,7 +333,9 @@ namespace Carrier.Service
                 }
                 listResnotify.Add(resnotity);
             }
-            if(Order_Noti.Count != 0)
+            resnotity = new responseNotify();
+
+            if (Order_Noti.Count != 0)
             {
                 var last = Order_Noti.LastOrDefault();
                 var random = "mdchId=" + last.mchId + "&sendTime=" + DateTime.Now;
@@ -442,7 +444,7 @@ namespace Carrier.Service
                 }
                 else { return null; }
             }
-            else { return null; }
+            else { HttpContext.Current.Session["_UserID"] = "101635";  return null; }
         }
         public string CancelOrder(string lbDocno,string lkbpno)
         {
