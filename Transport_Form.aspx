@@ -53,7 +53,7 @@
             <div class="row " style="margin-bottom:10px;">
                 <div class="col-sm-2 w-100 input-group mb-2 ">
                     <asp:Label runat="server" ID="lbSite" Text="Site Storage" CssClass="input-group-text s-15px shadow" ></asp:Label>
-                    <asp:TextBox runat="server" ID="txtSiteStorage" CssClass="form-control s-15px shadow"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="txtSiteStorage" CssClass="form-control s-15px shadow" OnTextChanged="txtSiteStorage_TextChanged" AutoPostBack="true"></asp:TextBox>
                 </div>
             </div>
                 <asp:Label runat="server" ID="lbgroupSend" Text="ผู้ส่ง" CssClass=" s-15px "></asp:Label>

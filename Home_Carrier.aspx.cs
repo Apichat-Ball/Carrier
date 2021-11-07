@@ -32,9 +32,9 @@ namespace Carrier
             lbuserid.Text = Session["_UserID"].ToString();
             if (!IsPostBack)
             {
-
-                txtDateStart.Text = new DateTime(DateTime.UtcNow.Year, DateTime.Now.Month, 1).ToString("dd/MM/yyyy");
-                txtDateEnd.Text = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)).ToString("dd/MM/yyyy");
+                var nextday = DateTime.Now.AddDays(1);
+                txtDateStart.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                txtDateEnd.Text = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy");
                 loadtable(1);
             }
         }

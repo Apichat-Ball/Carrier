@@ -28,5 +28,6 @@ namespace Carrier.Model.InsideSFG_WF
         public virtual DbSet<BG_HApprove> BG_HApprove { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<BG_ForeCast> BG_ForeCast { get; set; }
+        public virtual DbSet<Customer_Tax> Customer_Tax { get; set; }
     }
 }

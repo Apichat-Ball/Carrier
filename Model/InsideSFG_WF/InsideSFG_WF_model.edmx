@@ -82,6 +82,27 @@
           <Property Name="UserID_Shoes" Type="varchar(max)" />
           <Property Name="SAP_Ref" Type="nvarchar" MaxLength="100" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Customer_Tax">
+          <Key>
+            <PropertyRef Name="CustomerCode" />
+          </Key>
+          <Property Name="CustomerCode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="NameTax" Type="nvarchar(max)" />
+          <Property Name="BranchCode" Type="nvarchar(max)" />
+          <Property Name="TaxID" Type="nvarchar(max)" />
+          <Property Name="Address1" Type="nvarchar(max)" />
+          <Property Name="lane1" Type="nvarchar(max)" />
+          <Property Name="Road1" Type="nvarchar(max)" />
+          <Property Name="Zone1" Type="nvarchar(max)" />
+          <Property Name="Area1" Type="nvarchar(max)" />
+          <Property Name="Postal1" Type="nvarchar(max)" />
+          <Property Name="phone1" Type="nvarchar(max)" />
+          <Property Name="fax1" Type="nvarchar(max)" />
+          <Property Name="Province1" Type="nvarchar(max)" />
+          <Property Name="Branch_Acc" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Employee">
           <Key>
             <PropertyRef Name="userID" />
@@ -155,10 +176,34 @@
           <Property Name="ISContact" Type="varchar" MaxLength="5" />
           <Property Name="ISContact_Leave" Type="varchar" MaxLength="5" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'InsideSFG_WF.dbo.WSTransport_New_City' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'InsideSFG_WF.dbo.WSTransport_New_District' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'InsideSFG_WF.dbo.WSTransport_New_Provice' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityContainer Name="InsideSFG_WFModelStoreContainer">
           <EntitySet Name="BG_ForeCast" EntityType="Self.BG_ForeCast" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BG_HApprove" EntityType="Self.BG_HApprove" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customer_Tax" EntityType="Self.Customer_Tax" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Customer_Tax].[CustomerCode] AS [CustomerCode], 
+    [Customer_Tax].[NameTax] AS [NameTax], 
+    [Customer_Tax].[BranchCode] AS [BranchCode], 
+    [Customer_Tax].[TaxID] AS [TaxID], 
+    [Customer_Tax].[Address1] AS [Address1], 
+    [Customer_Tax].[lane1] AS [lane1], 
+    [Customer_Tax].[Road1] AS [Road1], 
+    [Customer_Tax].[Zone1] AS [Zone1], 
+    [Customer_Tax].[Area1] AS [Area1], 
+    [Customer_Tax].[Postal1] AS [Postal1], 
+    [Customer_Tax].[phone1] AS [phone1], 
+    [Customer_Tax].[fax1] AS [fax1], 
+    [Customer_Tax].[Province1] AS [Province1], 
+    [Customer_Tax].[Branch_Acc] AS [Branch_Acc]
+    FROM [dbo].[Customer_Tax] AS [Customer_Tax]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -285,6 +330,7 @@
           <EntitySet Name="BG_HApprove" EntityType="Self.BG_HApprove" />
           <EntitySet Name="Employees" EntityType="Self.Employee" />
           <EntitySet Name="BG_ForeCast" EntityType="InsideSFG_WFModel.BG_ForeCast" />
+          <EntitySet Name="Customer_Tax" EntityType="InsideSFG_WFModel.Customer_Tax" />
         </EntityContainer>
         <EntityType Name="BG_ForeCast">
           <Key>
@@ -318,6 +364,25 @@
           <Property Name="ActiveDate" Type="DateTime" Precision="3" />
           <Property Name="Flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="Remark" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Customer_Tax">
+          <Key>
+            <PropertyRef Name="CustomerCode" />
+          </Key>
+          <Property Name="CustomerCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NameTax" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="BranchCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TaxID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Address1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="lane1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Road1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Zone1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Area1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Postal1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="phone1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="fax1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Province1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Branch_Acc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -472,6 +537,26 @@
                 <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
                 <ScalarProperty Name="Year" ColumnName="Year" />
                 <ScalarProperty Name="ForecastID" ColumnName="ForecastID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customer_Tax">
+            <EntityTypeMapping TypeName="InsideSFG_WFModel.Customer_Tax">
+              <MappingFragment StoreEntitySet="Customer_Tax">
+                <ScalarProperty Name="Branch_Acc" ColumnName="Branch_Acc" />
+                <ScalarProperty Name="Province1" ColumnName="Province1" />
+                <ScalarProperty Name="fax1" ColumnName="fax1" />
+                <ScalarProperty Name="phone1" ColumnName="phone1" />
+                <ScalarProperty Name="Postal1" ColumnName="Postal1" />
+                <ScalarProperty Name="Area1" ColumnName="Area1" />
+                <ScalarProperty Name="Zone1" ColumnName="Zone1" />
+                <ScalarProperty Name="Road1" ColumnName="Road1" />
+                <ScalarProperty Name="lane1" ColumnName="lane1" />
+                <ScalarProperty Name="Address1" ColumnName="Address1" />
+                <ScalarProperty Name="TaxID" ColumnName="TaxID" />
+                <ScalarProperty Name="BranchCode" ColumnName="BranchCode" />
+                <ScalarProperty Name="NameTax" ColumnName="NameTax" />
+                <ScalarProperty Name="CustomerCode" ColumnName="CustomerCode" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

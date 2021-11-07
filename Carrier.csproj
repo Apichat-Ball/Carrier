@@ -483,6 +483,9 @@
     <Compile Include="Model\InsideSFG_WF\BG_HApprove.cs">
       <DependentUpon>InsideSFG_WF_model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\InsideSFG_WF\Customer_Tax.cs">
+      <DependentUpon>InsideSFG_WF_model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\InsideSFG_WF\Employee.cs">
       <DependentUpon>InsideSFG_WF_model.tt</DependentUpon>
     </Compile>
@@ -518,6 +521,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Online_Lazada_model.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Online_Lazada\PROVINCE.cs">
+      <DependentUpon>Online_Lazada_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Whale\Box.cs">
       <DependentUpon>Whale_model.tt</DependentUpon>
