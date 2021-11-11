@@ -9,6 +9,11 @@
             background-color: darkgrey;
         }
     </style>
+    <%--<script type="text/javascript">
+        $(function(){
+            $("#<%= txtSiteStorage.ClientID %>").keypress(
+        });
+    </script>--%>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <div class="mt-3">
         <div style="position:absolute; left:50%;" class="float-end">
@@ -50,10 +55,10 @@
                     <asp:DropDownList ID="ddlSDpart" runat="server" DataTextField="department_" DataValueField="departmentID"  class="btn dropdown-toggle s-15px shadow"></asp:DropDownList>
                 </div>
             </div>
-            <div class="row " style="margin-bottom:10px;">
+            <div class="row" runat="server" id="divSite" style="margin-bottom:10px;">
                 <div class="col-sm-2 w-100 input-group mb-2 ">
                     <asp:Label runat="server" ID="lbSite" Text="Site Storage" CssClass="input-group-text s-15px shadow" ></asp:Label>
-                    <asp:TextBox runat="server" ID="txtSiteStorage" CssClass="form-control s-15px shadow" OnTextChanged="txtSiteStorage_TextChanged" AutoPostBack="true"></asp:TextBox>
+                    <asp:TextBox runat="server" ID="txtSiteStorage" CssClass="form-control s-15px shadow"  OnTextChanged="txtSiteStorage_TextChanged" AutoPostBack="true"></asp:TextBox>
                 </div>
             </div>
                 <asp:Label runat="server" ID="lbgroupSend" Text="ผู้ส่ง" CssClass=" s-15px "></asp:Label>
@@ -67,9 +72,9 @@
                 <div class="row">
                     <div class="col-sm-2 w-100 input-group mb-2">
                         
-                        <asp:Label runat="server" ID="lbsrcPhone" Text="เบอร์โทรศัพท์มือถือ" CssClass=" input-group-text s-15px shadow"></asp:Label>
+                        <asp:Label runat="server" ID="lbsrcPhone" Text="เบอร์โทรศัพท์" CssClass=" input-group-text s-15px shadow"></asp:Label>
                         <asp:TextBox runat="server" ID="txtsrcPhone" Width="100%" CssClass="form-control s-15px shadow " MaxLength="10"  TextMode="Phone" AutoCompleteType="Disabled"></asp:TextBox>
-                        <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ControlToValidate="txtsrcPhone" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง" ValidationExpression="[0]{1}[6,8,9]{1}[0-9]{8}" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
+                        <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ControlToValidate="txtsrcPhone" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง" ValidationExpression="[0]{1}(([6,8,9]{1}[0-9]{8})|([2]{1}[0-9]{7}))" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
                     </div>
                 </div>
                 <div class="row">
@@ -110,6 +115,13 @@
                 <div class="col-sm-2 w-100 input-group mb-2 ">
                     <asp:Label runat="server" ID="lbExpress" Text="รูปแบบการจัดส่ง" CssClass="input-group-text s-15px shadow"></asp:Label>
                     <asp:DropDownList runat="server" ID="ddlExpress" CssClass="btn   dropdown-toggle s-15px shadow" DataTextField="text" DataValueField="val" Enabled="false"></asp:DropDownList>
+                </div>
+            </div>
+            <div class="row " style="margin-bottom:10px;">
+                <div class="col-sm-2 w-100 input-group mb-2 ">
+                    <asp:Label runat="server" ID="Label1" Text="รูปแบบการขายสินค้า" CssClass="input-group-text s-15px shadow"></asp:Label>
+                    <asp:RadioButton runat="server" ID="radioWorkOn" Text="ONLINE" GroupName="SaleOn"  CssClass="ml-4 mt-2 custom-radio"/>
+                    <asp:RadioButton runat="server" ID="radioWorkOff" Text="OFFLINE" GroupName="SaleOn" CssClass="ml-4 mt-2 custom-radio "/>
                 </div>
             </div>
             <asp:Label runat="server" ID="Label2" Text="ผู้รับ" CssClass="s-15px"></asp:Label>

@@ -32,7 +32,7 @@ namespace Carrier
             lbuserid.Text = Session["_UserID"].ToString();
             if (!IsPostBack)
             {
-                var nextday = DateTime.Now.AddDays(1);
+                
                 txtDateStart.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 txtDateEnd.Text = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy");
                 loadtable(1);
@@ -59,50 +59,57 @@ namespace Carrier
 
                 var format = "dd/MM/yyyy";
                 var enUS = new CultureInfo("en-US");
-                var start = DateTime.ParseExact(txtDateStart.Text,format,enUS,DateTimeStyles.None);
-                var end = DateTime.ParseExact(txtDateEnd.Text,format, enUS,DateTimeStyles.None);
-            if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
+            if (txtDateStart.Text != "" && txtDateEnd.Text != "")
             {
-                orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end ).ToList();
-                if(txtDocnoSearch.Text != "")
+                var start = DateTime.ParseExact(txtDateStart.Text, format, enUS, DateTimeStyles.None);
+                var end = DateTime.ParseExact(txtDateEnd.Text, format, enUS, DateTimeStyles.None);
+                if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
                 {
-                    orderList = orderList.Where(w => w.Docno == txtDocnoSearch.Text).ToList();
-                }
-                if(txtPnoSearch.Text != "")
-                {
-                    orderList = orderList.Where(w => w.pno == txtPnoSearch.Text).ToList();
-                }
-                if(txtDstNameSearch.Text != "")
-                {
-                    orderList = orderList.Where(w => w.dstName == txtDstNameSearch.Text).ToList();
-                }
-                if(txtArticleSearch.Text != "")
-                {
-                    orderList = orderList.Where(w => w.ArticleCategory == txtArticleSearch.Text).ToList();
-                }
+                    orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
+                    if (txtDocnoSearch.Text != "")
+                    {
+                        orderList = orderList.Where(w => w.Docno == txtDocnoSearch.Text).ToList();
+                    }
+                    if (txtPnoSearch.Text != "")
+                    {
+                        orderList = orderList.Where(w => w.pno == txtPnoSearch.Text).ToList();
+                    }
+                    if (txtDstNameSearch.Text != "")
+                    {
+                        orderList = orderList.Where(w => w.dstName == txtDstNameSearch.Text).ToList();
+                    }
+                    if (txtArticleSearch.Text != "")
+                    {
+                        orderList = orderList.Where(w => w.ArticleCategory == txtArticleSearch.Text).ToList();
+                    }
 
-            }
-            else 
-            {
-                orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
-                
-            }
-            double maxdata_gvData = (double)((decimal)Convert.ToDecimal(orderList.Count()) / Convert.ToDecimal(maxrow));
-            int pageCount_gvData = (int)Math.Ceiling(maxdata_gvData);
-            gv_OrderAll.DataSource = orderList.OrderByDescending(x => x.dateCreate).Skip((page - 1) * maxrow).Take(maxrow);
-            gv_OrderAll.DataBind();
-            Page_gv(page, pageCount_gvData);
-
-            foreach (GridViewRow row in gv_OrderAll.Rows)
-            {
-                Label lbDateCreate = (Label)row.FindControl("lbDateCreate");
-                Label lbStatus = (Label)row.FindControl("lbStatus");
-                ImageButton imgbtnCancelOrder = (ImageButton)row.FindControl("imgbtnCancelOrder");
-                lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
-                if (lbStatus.Text != "")
-                {
-                    imgbtnCancelOrder.Visible = false;
                 }
+                else
+                {
+                    orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
+
+                }
+                double maxdata_gvData = (double)((decimal)Convert.ToDecimal(orderList.Count()) / Convert.ToDecimal(maxrow));
+                int pageCount_gvData = (int)Math.Ceiling(maxdata_gvData);
+                gv_OrderAll.DataSource = orderList.OrderByDescending(x => x.dateCreate).Skip((page - 1) * maxrow).Take(maxrow);
+                gv_OrderAll.DataBind();
+                Page_gv(page, pageCount_gvData);
+
+                foreach (GridViewRow row in gv_OrderAll.Rows)
+                {
+                    Label lbDateCreate = (Label)row.FindControl("lbDateCreate");
+                    Label lbStatus = (Label)row.FindControl("lbStatus");
+                    ImageButton imgbtnCancelOrder = (ImageButton)row.FindControl("imgbtnCancelOrder");
+                    lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
+                    if (lbStatus.Text != "")
+                    {
+                        imgbtnCancelOrder.Visible = false;
+                    }
+                }
+            }
+            else
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('กรุณาเลือกวันที่เริ่มและสิ้นสุดการค้นหา')", true);
             }
 
 

@@ -61,6 +61,8 @@
           <Property Name="status" Type="nvarchar" MaxLength="5" />
           <Property Name="Transport_Type" Type="int" />
           <Property Name="SDpart" Type="nvarchar" MaxLength="50" />
+          <Property Name="saleOn" Type="nvarchar" MaxLength="20" />
+          <Property Name="siteStorage" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="Order_Item">
           <Key>
@@ -162,6 +164,8 @@
           <Property Name="status" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
           <Property Name="Transport_Type" Type="Int32" />
           <Property Name="SDpart" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="saleOn" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="siteStorage" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Status">
           <Key>
@@ -228,6 +232,8 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="CarrierModel.Order">
               <MappingFragment StoreEntitySet="Order">
+                <ScalarProperty Name="siteStorage" ColumnName="siteStorage" />
+                <ScalarProperty Name="saleOn" ColumnName="saleOn" />
                 <ScalarProperty Name="SDpart" ColumnName="SDpart" />
                 <ScalarProperty Name="Transport_Type" ColumnName="Transport_Type" />
                 <ScalarProperty Name="status" ColumnName="status" />

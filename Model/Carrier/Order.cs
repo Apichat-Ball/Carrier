@@ -47,5 +47,7 @@ namespace Carrier.Model.Carrier
         public string status { get; set; }
         public Nullable<int> Transport_Type { get; set; }
         public string SDpart { get; set; }
+        public string saleOn { get; set; }
+        public string siteStorage { get; set; }
     }
 }

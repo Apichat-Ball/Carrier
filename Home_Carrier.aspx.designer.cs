@@ -132,6 +132,15 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.TextBox txtDateStart;
 
         /// <summary>
+        /// RegularExpressionValidatorDateStart control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator RegularExpressionValidatorDateStart;
+
+        /// <summary>
         /// lbDateEnd control.
         /// </summary>
         /// <remarks>
@@ -148,6 +157,15 @@ namespace Carrier
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDateEnd;
+
+        /// <summary>
+        /// RegularExpressionValidatorDateEnd control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator RegularExpressionValidatorDateEnd;
 
         /// <summary>
         /// btnSearch control.

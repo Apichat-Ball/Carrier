@@ -75,8 +75,8 @@ namespace Carrier
                                      Remark = order.remark,
                                      status = order.status,
                                      TrackingNo = orderItem.pno,
-                                     SDpart = order.SDpart
-
+                                     SDpart = order.SDpart,
+                                     saleOn = order.saleOn
                                  }).ToList().FirstOrDefault();
 
 
@@ -156,13 +156,26 @@ namespace Carrier
                     lbDocno.Visible = true;
                     txtDocno.Visible = true;
                     txtDocno.Text = query.Docno;
+
+                    //txtSiteStorage.Enabled = false;
+                    //txtSiteStorage.Visible = false;
+                    divSite.Visible = false;
+                    radioWorkOn.Enabled = false;
+                    radioWorkOff.Enabled = false;
+                    switch (query.saleOn)
+                    {
+                        case "ONLINE": radioWorkOn.Checked = true;
+                            break;
+                        case "OFFLINE": radioWorkOff.Checked = true;
+                            break;
+                    }
                 }
                 else
                 {
                     var user = Convert.ToInt32(Session["_UserID"].ToString());
                     var Favorites = Carrier_Entities.Orders.Where(w => w.UserID == user).GroupBy(g => new { userId = g.UserID, srcName = g.srcName, province = g.srcProvinceName, city = g.srcCityName, distric = g.dstDistrictName }).Select(s => new { userid = s.Key.userId ?? 0, srcName = s.Key.srcName, province = s.Key.province, City = s.Key.city, distric = s.Key.distric, item = s.Count() }).ToList();
-
-
+                    radioWorkOn.Checked = true;
+                    //txtSiteStorage.Attributes.Add("onkeypress", "return true");
                     List<newList> allFavorite = new List<newList>();
                     foreach (var item in Favorites)
                     {
@@ -253,6 +266,39 @@ namespace Carrier
                 var lastId = Convert.ToInt32(newId.Substring(2, 10)) + 1;
                 newId = newId.Substring(0, 2) + newId.Substring(2, 10 - lastId.ToString().Length) + lastId.ToString();
             }
+
+            var siteCode = "";
+            if (txtSiteStorage.Text.Length >= 4)
+            {
+                siteCode = txtSiteStorage.Text.Substring(0, 4).ToUpper();
+            }
+            var online = Online_Lazada_Entities.PROVINCEs.Select(s => s.PROVINCE_ID).ToList();
+            var siteAddress = (from tax in InsideSFG_WF_Entities.Customer_Tax
+                               where online.Contains(tax.Province1) && tax.CustomerCode == siteCode
+                               select new
+                               {
+                                   NameTax = tax.NameTax,
+                                   srcDetail = tax.Address1 + " " + tax.lane1 + " " + tax.Road1,
+                                   srcProvince = tax.Province1,
+                                   srcCity = tax.Area1,
+                                   srcDistrict = tax.Zone1,
+                                   srcPostal = tax.Postal1
+
+                               }).ToList().FirstOrDefault();
+            var siteId = "";
+            if (siteAddress != null)
+            {
+                if (siteAddress.srcDetail == txtsrcDetailAddress.Text && siteAddress.NameTax == txtsrcName.Text &&
+                    siteAddress.srcProvince == ddlsrcProvinceName.SelectedValue && siteAddress.srcCity.Contains(ddlsrcCityName.SelectedItem.Text) &&
+                    siteAddress.srcDistrict.Contains(ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text) && siteAddress.srcPostal == txtsrcPostalCode.Text)
+                {
+                    siteId = txtSiteStorage.Text;
+                }
+                else
+                {
+                    siteId = "";
+                }
+            }
             var item = new Order
             {
                 Docno = newId,
@@ -283,15 +329,24 @@ namespace Carrier
                 length = Convert.ToInt32(txtlength.Text),
                 height = Convert.ToInt32(txtheight.Text),
                 remark = txtremark.Text,
-                SDpart = ddlSDpart.SelectedValue
+                SDpart = ddlSDpart.SelectedValue,
+                siteStorage = siteId
             };
             var vali = service_Flashs.Validate_Transport(item);
             if (vali == "PASS")
             {
-                item.srcCityName = ddlsrcCityName.SelectedItem.Text;
-                item.srcDistrictName = ddlsrcDistrictName.SelectedItem.Text;
-                item.dstCityName = ddldstCityName.SelectedItem.Text;
-                item.dstDistrictName = ddldstDistrictName.SelectedItem.Text;
+                if (radioWorkOn.Checked)
+                {
+                    item.saleOn = radioWorkOn.Text;
+                }
+                else
+                {
+                    item.saleOn = radioWorkOff.Text;
+                }
+                item.srcCityName = ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text;
+                item.srcDistrictName = ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text;
+                item.dstCityName = ddldstCityName.SelectedItem == null ? "" : ddldstCityName.SelectedItem.Text;
+                item.dstDistrictName = ddldstDistrictName.SelectedItem == null ? "" : ddldstDistrictName.SelectedItem.Text;
                 Carrier_Entities.Orders.Add(item);
                 Carrier_Entities.SaveChanges();
                 var res = service_Flashs.CreateOrderFLASH(newId);
@@ -622,11 +677,11 @@ namespace Carrier
             var siteinput = (TextBox)sender;
             if (siteinput.Text.Length >= 4)
             {
-                getAddressOnSite(siteinput.Text.Substring(0, 4));
+                getAddressOnSite(siteinput.Text.Substring(0, 4).ToUpper());
             }
 
         }
-        protected void getAddressOnSite(string siteId)
+        public void getAddressOnSite(string siteId)
         {
             var online = Online_Lazada_Entities.PROVINCEs.Select(s => s.PROVINCE_ID).ToList();
             var address = (from tax in InsideSFG_WF_Entities.Customer_Tax
@@ -641,38 +696,42 @@ namespace Carrier
                                srcPostal = tax.Postal1
 
                            }).ToList().FirstOrDefault();
-            if (address == null)
+            if (address != null)
             {
-
-            }
-            txtsrcName.Text = address.NameTax;
-            txtsrcPhone.Text = "";
-            ddlsrcProvinceName.SelectedValue = address.srcProvince;
-            var provinceSDC1 = Convert.ToInt32(ddlsrcProvinceName.SelectedValue);
+                txtsrcName.Text = address.NameTax;
+                txtsrcPhone.Text = "";
+                ddlsrcProvinceName.SelectedValue = address.srcProvince;
+                var provinceSDC1 = Convert.ToInt32(ddlsrcProvinceName.SelectedValue);
 
 
-            var citylike = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSDC1 && w.City_Name.Contains(address.srcCity)).ToList().FirstOrDefault();
-            if (citylike != null)
-            {
-                ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSDC1).ToList();
-                ddlsrcCityName.DataBind();
-                ddlsrcCityName.SelectedValue = citylike.City_ID.ToString();
-                ddlsrcCityName.Enabled = true;
-
-                var citySDC1 = Convert.ToInt32(ddlsrcCityName.SelectedValue);
-                var districtlike = Whale_Entities.Districts.Where(w => w.City_ID == citySDC1 && w.Distinct_Name.Contains(address.srcDistrict)).ToList().FirstOrDefault();
-                if (districtlike != null)
+                var citylike = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSDC1 && w.City_Name.Contains(address.srcCity)).ToList().FirstOrDefault();
+                if (citylike != null)
                 {
-                    ddlsrcDistrictName.Enabled = true;
-                    ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citySDC1).ToList();
-                    ddlsrcDistrictName.DataBind();
-                    ddlsrcDistrictName.SelectedValue = districtlike.Distinct_ID.ToString();
+                    ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSDC1).ToList();
+                    ddlsrcCityName.DataBind();
+                    ddlsrcCityName.SelectedValue = citylike.City_ID.ToString();
+                    ddlsrcCityName.Enabled = true;
+
+                    var citySDC1 = Convert.ToInt32(ddlsrcCityName.SelectedValue);
+                    var districtlike = Whale_Entities.Districts.Where(w => w.City_ID == citySDC1 && w.Distinct_Name.Contains(address.srcDistrict)).ToList().FirstOrDefault();
+                    if (districtlike != null)
+                    {
+                        ddlsrcDistrictName.Enabled = true;
+                        ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citySDC1).ToList();
+                        ddlsrcDistrictName.DataBind();
+                        ddlsrcDistrictName.SelectedValue = districtlike.Distinct_ID.ToString();
+                    }
+
                 }
+
+                txtsrcPostalCode.Text = address.srcPostal;
+                txtsrcDetailAddress.Text = address.srcDetail;
+            }
+            else
+            {
 
             }
             
-            txtsrcPostalCode.Text = address.srcPostal;
-            txtsrcDetailAddress.Text = address.srcDetail;
 
         }
     }

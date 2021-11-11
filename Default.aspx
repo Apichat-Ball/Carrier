@@ -23,10 +23,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <div class="mt-3">
         
-        <asp:Label runat="server" ID="lbForm" Text="Transportation(Admin)" CssClass="h1"></asp:Label>
+        <asp:Label runat="server" ID="lbForm" Text="Transportation Outsource(Admin)" CssClass="h1"></asp:Label>
         <asp:Label runat="server" ID="lbuserid" Visible="false"></asp:Label>
         <div class="float-end mt-3">
-            <asp:Button runat="server" ID="btnCreateOrder" Text="Create Order" CssClass="btn btn-primary s-15px" Width="100%" Height="30px" OnClick="btnCreateOrder_Click" />
+            <asp:Button runat="server" ID="btnCreateOrder" Text="Create Order" CssClass="btn btn-primary s-15px" Width="100%" OnClick="btnCreateOrder_Click" />
         </div>
     </div>
     <div class="mt-3 ">
@@ -54,11 +54,15 @@
 
             <div class="col-sm-3 input-group w-25">
                 <asp:Label runat="server" ID="lbDateStart" Text="เริ่มวันที่ " CssClass="input-group-text ml-2">
-                    <asp:TextBox runat="server" ID="txtDateStart" CssClass="form-control"  BackColor="White"></asp:TextBox></asp:Label>
+                    <asp:TextBox runat="server" ID="txtDateStart" CssClass="form-control"  BackColor="White" AutoCompleteType="Disabled"></asp:TextBox>
+                </asp:Label>
+                <asp:RegularExpressionValidator ID="RegularExpressionValidatorDateStart" runat="server" ControlToValidate="txtDateStart" ErrorMessage="กรุณาเลือกวันที่เริ่มในการค้นหา" ValidationExpression="^(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)\d\d$" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
             </div>
             <div class="col-sm-3 input-group w-25">
                 <asp:Label runat="server" ID="lbDateEnd" Text="สิ้นสุดวันที่" CssClass="input-group-text ml-2">
-                    <asp:TextBox runat="server" ID="txtDateEnd" CssClass="form-control"  BackColor="White"></asp:TextBox></asp:Label>
+                    <asp:TextBox runat="server" ID="txtDateEnd" CssClass="form-control"  BackColor="White" AutoCompleteType="Disabled"></asp:TextBox>
+                </asp:Label>
+                <asp:RegularExpressionValidator ID="RegularExpressionValidatorDateEnd" runat="server" ControlToValidate="txtDateEnd" ErrorMessage="กรุณาเลือกวันที่สุดท้ายในการค้นหา" ValidationExpression="^(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)\d\d$" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
             </div>
             <div class="col-sm-3">
                 <asp:Button runat="server" ID="btnSearch" Text="SEARCH" CssClass="btn btn-primary" OnClick="btnSearch_Click"/>
@@ -171,7 +175,7 @@
     </div>
     <div class ="row">
         <div >
-            <asp:ImageButton runat="server" id="btnNotify" OnClick="btnNotifications_Click" Width="50px" CssClass="float-end" ImageUrl="~/Icon/tracking.png"/>
+            <asp:ImageButton runat="server" id="btnNotify" OnClick="btnNotifications_Click" Width="80px" CssClass="float-end" ImageUrl="~/Icon/tracking.png"/>
         </div>
     </div>
 </asp:Content>
