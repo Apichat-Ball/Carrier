@@ -289,7 +289,7 @@ namespace Carrier
             if (siteAddress != null)
             {
                 if (siteAddress.srcDetail == txtsrcDetailAddress.Text && siteAddress.NameTax == txtsrcName.Text &&
-                    siteAddress.srcProvince == ddlsrcProvinceName.SelectedValue && siteAddress.srcCity.Contains(ddlsrcCityName.SelectedItem.Text) &&
+                    siteAddress.srcProvince == ddlsrcProvinceName.SelectedValue && siteAddress.srcCity.Contains(ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text) &&
                     siteAddress.srcDistrict.Contains(ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text) && siteAddress.srcPostal == txtsrcPostalCode.Text)
                 {
                     siteId = txtSiteStorage.Text;
