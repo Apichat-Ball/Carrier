@@ -82,6 +82,18 @@
           <Property Name="UserID_Shoes" Type="varchar(max)" />
           <Property Name="SAP_Ref" Type="nvarchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="BG_HApprove_Profitcenter">
+          <Key>
+            <PropertyRef Name="DepartmentID" />
+          </Key>
+          <Property Name="DepartmentID" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Depart_Short" Type="nvarchar" MaxLength="100" />
+          <Property Name="ComCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="Profit_Offline" Type="nvarchar" MaxLength="50" />
+          <Property Name="CostCenter_Offline" Type="nvarchar" MaxLength="50" />
+          <Property Name="Profit_Online" Type="nvarchar" MaxLength="50" />
+          <Property Name="CostCenter_Online" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Customer_Tax">
@@ -176,15 +188,10 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
           <Property Name="ISContact" Type="varchar" MaxLength="5" />
           <Property Name="ISContact_Leave" Type="varchar" MaxLength="5" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'InsideSFG_WF.dbo.WSTransport_New_City' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'InsideSFG_WF.dbo.WSTransport_New_District' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'InsideSFG_WF.dbo.WSTransport_New_Provice' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityContainer Name="InsideSFG_WFModelStoreContainer">
           <EntitySet Name="BG_ForeCast" EntityType="Self.BG_ForeCast" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BG_HApprove" EntityType="Self.BG_HApprove" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BG_HApprove_Profitcenter" EntityType="Self.BG_HApprove_Profitcenter" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customer_Tax" EntityType="Self.Customer_Tax" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -331,6 +338,7 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.WSTransport_New_Provice' does not
           <EntitySet Name="Employees" EntityType="Self.Employee" />
           <EntitySet Name="BG_ForeCast" EntityType="InsideSFG_WFModel.BG_ForeCast" />
           <EntitySet Name="Customer_Tax" EntityType="InsideSFG_WFModel.Customer_Tax" />
+          <EntitySet Name="BG_HApprove_Profitcenter" EntityType="InsideSFG_WFModel.BG_HApprove_Profitcenter" />
         </EntityContainer>
         <EntityType Name="BG_ForeCast">
           <Key>
@@ -383,6 +391,18 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.WSTransport_New_Provice' does not
           <Property Name="fax1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Province1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Branch_Acc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="BG_HApprove_Profitcenter">
+          <Key>
+            <PropertyRef Name="DepartmentID" />
+          </Key>
+          <Property Name="DepartmentID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Depart_Short" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ComCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Profit_Offline" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CostCenter_Offline" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Profit_Online" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CostCenter_Online" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -557,6 +577,19 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.WSTransport_New_Provice' does not
                 <ScalarProperty Name="BranchCode" ColumnName="BranchCode" />
                 <ScalarProperty Name="NameTax" ColumnName="NameTax" />
                 <ScalarProperty Name="CustomerCode" ColumnName="CustomerCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BG_HApprove_Profitcenter">
+            <EntityTypeMapping TypeName="InsideSFG_WFModel.BG_HApprove_Profitcenter">
+              <MappingFragment StoreEntitySet="BG_HApprove_Profitcenter">
+                <ScalarProperty Name="CostCenter_Online" ColumnName="CostCenter_Online" />
+                <ScalarProperty Name="Profit_Online" ColumnName="Profit_Online" />
+                <ScalarProperty Name="CostCenter_Offline" ColumnName="CostCenter_Offline" />
+                <ScalarProperty Name="Profit_Offline" ColumnName="Profit_Offline" />
+                <ScalarProperty Name="ComCode" ColumnName="ComCode" />
+                <ScalarProperty Name="Depart_Short" ColumnName="Depart_Short" />
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

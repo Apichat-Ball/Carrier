@@ -71,7 +71,7 @@
 
     </div>
     <div class="row mt-3">
-        <asp:GridView runat="server" ID="gv_OrderAll" Width="100%" EmptyDataText="ไม่มีการสร้างรายการ" AutoGenerateColumns="false" CssClass="ttable table-striped table-bordered table-hover"
+        <asp:GridView runat="server" ID="gv_OrderAll" Width="100%" EmptyDataText="ไม่มีการสร้างรายการ" AutoGenerateColumns="false" CssClass="table table-striped table-bordered table-hover"
             HeaderStyle-HorizontalAlign="Center">
             <Columns>
                 <asp:TemplateField>
@@ -98,6 +98,23 @@
                     <ItemTemplate>
                        <asp:Label runat="server" ID="lbpno" Text='<%# Bind("pno") %>' ></asp:Label>
                     </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField>
+                    <HeaderTemplate>
+                        <asp:Label runat="server" ID="lbhBrand" Text="Brand"></asp:Label>
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:Label runat="server" ID="lbBrand" Text='<%# Bind("Brand") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField>
+                    <HeaderTemplate>
+                        <asp:Label runat="server" ID="lbhBrandShort" Text="BrandShort"></asp:Label>
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:Label runat="server" ID="lbBrandShort"></asp:Label>
+                    </ItemTemplate>
+                    <ItemStyle CssClass="gj-text-align-center" />
                 </asp:TemplateField>
                 <asp:TemplateField>
                     <HeaderTemplate>

@@ -1,4 +1,5 @@
 ﻿using Carrier.Model.Carrier;
+using Carrier.Model.InsideSFG_WF;
 using Carrier.Service;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,12 @@ namespace Carrier
     {
         Service_Flash service_Flashs;
         CarrierEntities carrier_Entities;
+        InsideSFG_WFEntities insideSFG_WF_Entities;
         public Home_Carrier()
         {
             service_Flashs = new Service_Flash();
             carrier_Entities = new CarrierEntities();
+            insideSFG_WF_Entities = new InsideSFG_WFEntities();
         }
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -55,9 +58,10 @@ namespace Carrier
                                  dateCreate = orderItem.Date_Success,
                                  TrackingPickup = orderItem.ticketPickupId,
                                  TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == orderItem.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
+                                 Brand = order.SDpart
                              }).ToList();
-
-                var format = "dd/MM/yyyy";
+           
+            var format = "dd/MM/yyyy";
                 var enUS = new CultureInfo("en-US");
             if (txtDateStart.Text != "" && txtDateEnd.Text != "")
             {
@@ -93,6 +97,7 @@ namespace Carrier
                 int pageCount_gvData = (int)Math.Ceiling(maxdata_gvData);
                 gv_OrderAll.DataSource = orderList.OrderByDescending(x => x.dateCreate).Skip((page - 1) * maxrow).Take(maxrow);
                 gv_OrderAll.DataBind();
+                
                 Page_gv(page, pageCount_gvData);
 
                 foreach (GridViewRow row in gv_OrderAll.Rows)
@@ -105,6 +110,23 @@ namespace Carrier
                     {
                         imgbtnCancelOrder.Visible = false;
                     }
+                    Label lbBrand = (Label)row.FindControl("lbBrand");
+                    Label lbBrandShort = (Label)row.FindControl("lbBrandShort");
+                    var Brand = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
+                                 join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
+                                 where BG_HA.departmentID == lbBrand.Text
+                                 select new { Brand = BG_HA.department_ , BrandShort = BG_HAPF.Depart_Short }).ToList().FirstOrDefault();
+                    if(Brand != null)
+                    {
+                        lbBrand.Text = Brand.Brand;
+                        lbBrandShort.Text = Brand.BrandShort;
+                    }
+                    else
+                    {
+                        lbBrand.Text = "";
+                        lbBrandShort.Text = "";
+                    }
+                    
                 }
             }
             else
