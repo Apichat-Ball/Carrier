@@ -49,6 +49,13 @@
                     </div>
                 </div>
             </div>
+            <div class="col-sm-2">
+                <div class="row " style="margin-bottom: 10px;">
+                    <div class="col-sm-2 w-100 input-group" style="margin-top: 9px;">
+                        <asp:Button runat="server" ID="btnClear" Text="Clear" OnClick="btnClear_Click" CssClass="btn w-100 btn-primary " Visible="false"/>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="row">
             <asp:GridView runat="server" ID="gv_Report" AutoGenerateColumns="false" EmptyDataText="ไม่มีรายการ" CssClass="table table-striped table-bordered table-hover" HeaderStyle-HorizontalAlign="Center">

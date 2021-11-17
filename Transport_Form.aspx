@@ -64,7 +64,7 @@
                     <div class="col-sm-2 w-100 input-group mb-2">
                         <asp:Label runat="server" ID="lbsrcName" Text="ชื่อ" CssClass=" input-group-text s-15px shadow"></asp:Label>
                         <asp:TextBox runat="server" ID="txtsrcName" Width="100%" CssClass="form-control s-15px shadow" AutoCompleteType="Disabled"></asp:TextBox>
-                        <asp:RequiredFieldValidator ID="RequiredFieldValidator2" ControlToValidate="txtsrcName" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1" SetFocusOnError="true" />
+                        <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator2" ControlToValidate="txtsrcName" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1"/>--%>
                     </div>
                 </div>
                 <div class="row">
@@ -72,7 +72,7 @@
                         <asp:Label runat="server" ID="lbsrcPhone" Text="เบอร์โทรศัพท์" CssClass=" input-group-text s-15px shadow"></asp:Label>
                         <asp:TextBox runat="server" ID="txtsrcPhone" Width="100%" CssClass="form-control s-15px shadow " MaxLength="10"  TextMode="Phone" AutoCompleteType="Disabled"></asp:TextBox>
                         <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ControlToValidate="txtsrcPhone" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง" ValidationExpression="[0]{1}(([6,8,9]{1}[0-9]{8})|([2]{1}[0-9]{7}))" Display="Dynamic" ForeColor="Red" ></asp:RegularExpressionValidator>
-                        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" ControlToValidate="txtsrcPhone" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1" SetFocusOnError="true" />
+                        <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator1" ControlToValidate="txtsrcPhone" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1" />--%>
                     </div>
                 </div>
                 <div class="row">
@@ -98,7 +98,7 @@
                         <asp:Label runat="server" ID="lbsrcPostalCode" Text="รหัสไปรษณีย์" CssClass="input-group-text s-15px shadow"></asp:Label>
                         <asp:TextBox runat="server" ID="txtsrcPostalCode" Width="100%" CssClass="form-control s-15px shadow" MaxLength="5" AutoCompleteType="Disabled"></asp:TextBox>
                          <asp:RegularExpressionValidator ID="RegularExpressionValidator4" runat="server" ControlToValidate="txtsrcPostalCode" ErrorMessage="กรุณากรอกรหัสไปรษณีย์ให้ถูกต้อง" ValidationExpression="[0-9]{5}" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
-                        <asp:RequiredFieldValidator ID="RequiredFieldValidator3" ControlToValidate="txtsrcPostalCode" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1" SetFocusOnError="true" />
+                        <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator3" ControlToValidate="txtsrcPostalCode" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1" />--%>
                     </div>
                 </div>
                 <div class="row">
@@ -151,7 +151,7 @@
                     <div class="col-sm-2 w-100 input-group mb-2">
                         <asp:Label runat="server" ID="lbdstName" Text="ชื่อ" CssClass="input-group-text s-15px shadow"></asp:Label>
                         <asp:TextBox runat="server" ID="txtdstName" Width="100%" CssClass="form-control s-15px shadow" AutoCompleteType="Disabled"></asp:TextBox>
-                        <asp:RequiredFieldValidator ID="RequiredFieldValidator4" ControlToValidate="txtdstName" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1" SetFocusOnError="true" />
+                        <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator4" ControlToValidate="txtdstName" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1" />--%>
                     </div>
                 </div>
                 <div class="row">
@@ -159,7 +159,7 @@
                         <asp:Label runat="server" ID="lbdstPhone" Text="เบอร์โทรศัพท์มือถือ" CssClass="input-group-text s-15px shadow"></asp:Label>
                         <asp:TextBox runat="server" ID="txtdstPhone" Width="100%" CssClass="form-control s-15px shadow" MaxLength="10" AutoCompleteType="Disabled"></asp:TextBox>
                         <asp:RegularExpressionValidator ID="RegularExpressionValidator2" runat="server" ControlToValidate="txtdstPhone" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง" ValidationExpression="[0]{1}[6,8,9]{1}[0-9]{8}" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
-                        <asp:RequiredFieldValidator ID="RequiredFieldValidator5" ControlToValidate="txtdstPhone" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1" SetFocusOnError="true" />
+<%--                        <asp:RequiredFieldValidator ID="RequiredFieldValidator5" ControlToValidate="txtdstPhone" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1" />--%>
                     </div>
                 </div>
                 <div class="row">
@@ -192,7 +192,7 @@
                         <asp:Label runat="server" ID="lbdstPostalCode" Text="รหัสไปรษณีย์" CssClass="input-group-text s-15px shadow"></asp:Label>
                         <asp:TextBox runat="server" ID="txtdstPostalCode" Width="100%" CssClass="form-control s-15px shadow" AutoCompleteType="Disabled"></asp:TextBox>
                          <asp:RegularExpressionValidator ID="RegularExpressionValidator5" runat="server" ControlToValidate="txtdstPostalCode" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง" ValidationExpression="[0-9]{5}" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
-                        <asp:RequiredFieldValidator ID="RequiredFieldValidator6" ControlToValidate="txtdstPostalCode" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1" SetFocusOnError="true" />
+                        <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator6" ControlToValidate="txtdstPostalCode" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1"  />--%>
                     </div>
                 </div><div class="row">
                     <div class="col-sm-2 w-100 input-group mb-2">
@@ -205,26 +205,40 @@
         </div>
     </div>
     <div class="row">
-        <div style="display: flex; justify-content: center;" class="mt-3">
-                <asp:Button runat="server" ID="btnSave" Text="SAVE" CssClass="text-center btn btn-success s-15px" Width="100%" Height="30px" OnClick="btnSave_Click" />
+        <div style="display:flex; justify-content: center;" class="mt-3">
+            <div class="col-sm-2 w-100 input-group mb-2">
+                <asp:Label runat="server" ID="Label5" Text="ประเภทกล่อง" CssClass="input-group-text s-15px shadow"></asp:Label>
+                <asp:TextBox runat="server" ID="txtProductName" ></asp:TextBox>
             </div>
-        <div style="display:none;">
+            <div class="col-sm-2 w-100 input-group mb-2">
+                <asp:Label runat="server" ID="Label3" Text="ประเภทกล่อง" CssClass="input-group-text s-15px shadow"></asp:Label>
+                <asp:DropDownList runat="server" ID="ddlBox" Width="100%" CssClass="btn dropdown-toggle s-15px shadow" ></asp:DropDownList>
+            </div>
+
+        </div> 
+    </div>
+    <div class="row">
+        
+        <div style="display: flex; justify-content: center;" class="mt-3">
+            <asp:Button runat="server" ID="btnSave" Text="SAVE" CssClass="text-center btn btn-success s-15px" Width="100%" Height="30px" OnClick="btnSave_Click" />
+        </div>
+        <div style="display: none;">
             <div class="col-sm-2 input-group mb-2 w-25">
-            <asp:Label runat="server" ID="lbweight" Text="น้ำหนัก (กรัม)" CssClass="input-group-text s-15px shadow"></asp:Label>
-            <asp:TextBox runat="server" ID="txtweight" CssClass="form-control s-15px shadow" Enabled="false"></asp:TextBox>
-        </div>
-        <div class="col-sm-2 input-group mb-2 w-25">
-            <asp:Label runat="server" ID="lbwidth" Text="ความกว้าง (เซนติเมตร)" CssClass="input-group-text s-15px shadow"></asp:Label>
-            <asp:TextBox runat="server" ID="txtwidth" CssClass="form-control s-15px shadow" Enabled="false"></asp:TextBox>
-        </div>
-        <div class="col-sm-2 input-group mb-2 w-25">
-            <asp:Label runat="server" ID="lblength" Text="ความยาว (เซนติเมตร)" CssClass="input-group-text s-15px shadow"></asp:Label>
-            <asp:TextBox runat="server" ID="txtlength" CssClass="form-control s-15px shadow" Enabled="false"></asp:TextBox>
-        </div>
-        <div class="col-sm-2 input-group mb-2 w-25">
-            <asp:Label runat="server" ID="lbheight" Text="ความสูง (เซนติเมตร)" CssClass="input-group-text s-15px shadow"></asp:Label>
-            <asp:TextBox runat="server" ID="txtheight" CssClass="form-control s-15px shadow" Enabled="false"></asp:TextBox>
-        </div>
+                <asp:Label runat="server" ID="lbweight" Text="น้ำหนัก (กรัม)" CssClass="input-group-text s-15px shadow"></asp:Label>
+                <asp:TextBox runat="server" ID="txtweight" CssClass="form-control s-15px shadow" Enabled="false"></asp:TextBox>
+            </div>
+            <div class="col-sm-2 input-group mb-2 w-25">
+                <asp:Label runat="server" ID="lbwidth" Text="ความกว้าง (เซนติเมตร)" CssClass="input-group-text s-15px shadow"></asp:Label>
+                <asp:TextBox runat="server" ID="txtwidth" CssClass="form-control s-15px shadow" Enabled="false"></asp:TextBox>
+            </div>
+            <div class="col-sm-2 input-group mb-2 w-25">
+                <asp:Label runat="server" ID="lblength" Text="ความยาว (เซนติเมตร)" CssClass="input-group-text s-15px shadow"></asp:Label>
+                <asp:TextBox runat="server" ID="txtlength" CssClass="form-control s-15px shadow" Enabled="false"></asp:TextBox>
+            </div>
+            <div class="col-sm-2 input-group mb-2 w-25">
+                <asp:Label runat="server" ID="lbheight" Text="ความสูง (เซนติเมตร)" CssClass="input-group-text s-15px shadow"></asp:Label>
+                <asp:TextBox runat="server" ID="txtheight" CssClass="form-control s-15px shadow" Enabled="false"></asp:TextBox>
+            </div>
         </div>
     </div>
 </asp:Content>

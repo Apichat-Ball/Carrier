@@ -130,6 +130,7 @@ namespace Carrier
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             lbFirstLoad.Text = "two";
+            btnClear.Visible = true;
             loadTable(1);
         }
         protected void selectPage(object sender, CommandEventArgs e)
@@ -227,6 +228,13 @@ namespace Carrier
         public class BrandPro : BG_HApprove_Profitcenter
         {
             public string Brand { get; set; }
+        }
+
+        protected void btnClear_Click(object sender, EventArgs e)
+        {
+            lbFirstLoad.Text = "first";
+            loadTable(1);
+            btnClear.Visible = false;
         }
     }
 }
