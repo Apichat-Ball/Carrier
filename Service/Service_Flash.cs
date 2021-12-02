@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Carrier.Info;
+using Carrier.Model.Carrier;
+using Carrier.Model.InsideSFG_WF;
+using Carrier.Model.Online_Lazada;
+using Carrier.Model.Whale;
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Extensions;
-using Carrier.Model.Whale;
-using Carrier.Model.Online_Lazada;
-using Carrier.Model.Carrier;
-using System.Text;
-using System.Security.Cryptography;
-using System.Net;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using Carrier.Model.InsideSFG_WF;
-using Carrier.Info;
+using System.Linq;
+using System.Net;
+using System.Security.Cryptography;
+using System.Text;
+using System.Web;
+using System.Web.UI.WebControls;
 
 namespace Carrier.Service
 {
@@ -391,7 +392,7 @@ namespace Carrier.Service
             {
                 return "กรุุณากรอชื่อผู้ส่ง";
             }
-            else if (item.srcPhone == "")
+            else if (item.srcPhone == ""||item.srcPhone == "-")
             {
                 return "กรุณากรอกเบอร์โทรผู้ส่ง";
             }
@@ -403,13 +404,17 @@ namespace Carrier.Service
             {
                 return "กรุณากรอกชื่อผู้รับ";
             }
-            else if (item.dstPhone == "")
+            else if (item.dstPhone == "" || item.dstPhone == "-")
             {
                 return "กรุณากรอกเบอร์โทรศัพท์มือถือผู้รับ";
             }
             else if (item.dstProvinceName == "เลือกจังหวัด")
             {
                 return "กรุณาเลือกจังหวัดผู้รับ";
+            }
+            else if(item.dstCityName == "" || item.dstCityName == "เลือกอำเภอ")
+            {
+                return "กรุณาเลือกอำเภอผู้รับ";
             }
             else if (item.SDpart == "Select")
             {
@@ -478,6 +483,7 @@ namespace Carrier.Service
                 return "Cancel Order NOT Success.";
             }
         }
+        
     }
     public class Model_Key
     {

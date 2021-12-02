@@ -64,14 +64,18 @@
                 </asp:Label>
                 <asp:RegularExpressionValidator ID="RegularExpressionValidatorDateEnd" runat="server" ControlToValidate="txtDateEnd" ErrorMessage="กรุณาเลือกวันที่สุดท้ายในการค้นหา" ValidationExpression="^(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)\d\d$" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-1">
                 <asp:Button runat="server" ID="btnSearch" Text="SEARCH" CssClass="btn btn-primary" OnClick="btnSearch_Click"/>
+            </div>
+            <div class="col-sm-1">
+                <asp:Button runat="server" ID="btnClear" Text="CLEAR" CssClass="btn btn-primary" OnClick="btnClear_Click" Visible="false"/>
+                <asp:Label runat="server" ID="lbStatusSearch" Text="First" Visible="false"></asp:Label>
             </div>
         </div>
 
     </div>
     <div class="row mt-3">
-        <asp:GridView runat="server" ID="gv_OrderAll" Width="100%" EmptyDataText="ไม่มีการสร้างรายการ" AutoGenerateColumns="false" CssClass="table table-striped table-bordered table-hover"
+        <asp:GridView runat="server" ID="gv_OrderAll" Width="100%" EmptyDataText="ไม่มีการสร้างรายการ" AutoGenerateColumns="false" CssClass="table table-striped table-bordered table-hover small"
             HeaderStyle-HorizontalAlign="Center">
             <Columns>
                 <asp:TemplateField>

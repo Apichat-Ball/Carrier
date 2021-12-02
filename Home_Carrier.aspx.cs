@@ -38,6 +38,7 @@ namespace Carrier
                 
                 txtDateStart.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 txtDateEnd.Text = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy");
+                lbstatusSearch.Text = "First";
                 loadtable(1);
             }
         }
@@ -58,7 +59,8 @@ namespace Carrier
                                  dateCreate = orderItem.Date_Success,
                                  TrackingPickup = orderItem.ticketPickupId,
                                  TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == orderItem.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
-                                 Brand = order.SDpart
+                                 Brand = order.SDpart,
+                                 status = orderItem.Status
                              }).ToList();
            
             var format = "dd/MM/yyyy";
@@ -67,32 +69,40 @@ namespace Carrier
             {
                 var start = DateTime.ParseExact(txtDateStart.Text, format, enUS, DateTimeStyles.None);
                 var end = DateTime.ParseExact(txtDateEnd.Text, format, enUS, DateTimeStyles.None);
-                if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
+                if(lbstatusSearch.Text == "First")
                 {
-                    orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
-                    if (txtDocnoSearch.Text != "")
-                    {
-                        orderList = orderList.Where(w => w.Docno == txtDocnoSearch.Text).ToList();
-                    }
-                    if (txtPnoSearch.Text != "")
-                    {
-                        orderList = orderList.Where(w => w.pno == txtPnoSearch.Text).ToList();
-                    }
-                    if (txtDstNameSearch.Text != "")
-                    {
-                        orderList = orderList.Where(w => w.dstName == txtDstNameSearch.Text).ToList();
-                    }
-                    if (txtArticleSearch.Text != "")
-                    {
-                        orderList = orderList.Where(w => w.ArticleCategory == txtArticleSearch.Text).ToList();
-                    }
-
+                    orderList = orderList.Where(w =>w.status != "A").ToList();
                 }
                 else
                 {
-                    orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
+                    if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
+                    {
+                        orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
+                        if (txtDocnoSearch.Text != "")
+                        {
+                            orderList = orderList.Where(w => w.Docno == txtDocnoSearch.Text).ToList();
+                        }
+                        if (txtPnoSearch.Text != "")
+                        {
+                            orderList = orderList.Where(w => w.pno == txtPnoSearch.Text).ToList();
+                        }
+                        if (txtDstNameSearch.Text != "")
+                        {
+                            orderList = orderList.Where(w => w.dstName == txtDstNameSearch.Text).ToList();
+                        }
+                        if (txtArticleSearch.Text != "")
+                        {
+                            orderList = orderList.Where(w => w.ArticleCategory == txtArticleSearch.Text).ToList();
+                        }
 
+                    }
+                    else
+                    {
+                        orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
+
+                    }
                 }
+                
                 double maxdata_gvData = (double)((decimal)Convert.ToDecimal(orderList.Count()) / Convert.ToDecimal(maxrow));
                 int pageCount_gvData = (int)Math.Ceiling(maxdata_gvData);
                 gv_OrderAll.DataSource = orderList.OrderByDescending(x => x.dateCreate).Skip((page - 1) * maxrow).Take(maxrow);
@@ -250,12 +260,21 @@ namespace Carrier
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
+            lbstatusSearch.Text = "Second";
+            btnClear.Visible = true;
             loadtable(1);
         }
 
         protected void selectPage(object sender, CommandEventArgs e)
         {
             loadtable(Convert.ToInt32(e.CommandArgument));
+        }
+
+        protected void btnClear_Click(object sender, EventArgs e)
+        {
+            lbstatusSearch.Text = "First";
+            btnClear.Visible = false;
+            loadtable(1);
         }
     }
 }

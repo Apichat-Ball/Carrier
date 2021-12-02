@@ -31,5 +31,6 @@ namespace Carrier.Model.Carrier
         public virtual DbSet<Notify> Notifies { get; set; }
         public virtual DbSet<Order_Item> Order_Item { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Order_Box> Order_Box { get; set; }
     }
 }

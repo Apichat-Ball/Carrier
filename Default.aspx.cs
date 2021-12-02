@@ -41,6 +41,7 @@ namespace Carrier
             lbuserid.Text = Session["_UserID"].ToString();
             if (!IsPostBack)
             {
+                lbStatusSearch.Text = "First";
                 txtDateStart.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 txtDateEnd.Text = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy");
                 loadtable(1);
@@ -66,42 +67,50 @@ namespace Carrier
                                      dateCreate = orderItem.Date_Success,
                                      TrackingPickup = orderItem.ticketPickupId,
                                      TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == orderItem.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
-                                     Brand = order.SDpart
+                                     Brand = order.SDpart,
+                                     status = orderItem.Status
                                  }).ToList();
 
                     var format = "dd/MM/yyyy";
                     var enUS = new CultureInfo("en-US");
+
                 if(txtDateStart.Text != "" && txtDateEnd.Text != "")
                 {
                     var start = DateTime.ParseExact(txtDateStart.Text, format, enUS, DateTimeStyles.None);
                     var end = DateTime.ParseExact(txtDateEnd.Text, format, enUS, DateTimeStyles.None);
-                    if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
+                    if(lbStatusSearch.Text == "First")
                     {
-                        orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
-                        if (txtDocnoSearch.Text != "")
-                        {
-                            orderList = orderList.Where(w => w.Docno == txtDocnoSearch.Text).ToList();
-                        }
-                        if (txtPnoSearch.Text != "")
-                        {
-                            orderList = orderList.Where(w => w.pno == txtPnoSearch.Text).ToList();
-                        }
-                        if (txtDstNameSearch.Text != "")
-                        {
-                            orderList = orderList.Where(w => w.dstName == txtDstNameSearch.Text).ToList();
-                        }
-                        if (txtArticleSearch.Text != "")
-                        {
-                            orderList = orderList.Where(w => w.ArticleCategory == txtArticleSearch.Text).ToList();
-                        }
-
+                        orderList = orderList.Where(w => w.status != "A").ToList();
                     }
                     else
                     {
+                        if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
+                        {
+                            orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
+                            if (txtDocnoSearch.Text != "")
+                            {
+                                orderList = orderList.Where(w => w.Docno == txtDocnoSearch.Text).ToList();
+                            }
+                            if (txtPnoSearch.Text != "")
+                            {
+                                orderList = orderList.Where(w => w.pno == txtPnoSearch.Text).ToList();
+                            }
+                            if (txtDstNameSearch.Text != "")
+                            {
+                                orderList = orderList.Where(w => w.dstName == txtDstNameSearch.Text).ToList();
+                            }
+                            if (txtArticleSearch.Text != "")
+                            {
+                                orderList = orderList.Where(w => w.ArticleCategory == txtArticleSearch.Text).ToList();
+                            }
 
-                        orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
-
+                        }
+                        else
+                        {
+                            orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
+                        }
                     }
+                    
                     double maxdata_gvData = (double)((decimal)Convert.ToDecimal(orderList.Count()) / Convert.ToDecimal(maxrow));
                     int pageCount_gvData = (int)Math.Ceiling(maxdata_gvData);
                     gv_OrderAll.DataSource = orderList.OrderByDescending(x => x.dateCreate).Skip((page - 1) * maxrow).Take(maxrow);
@@ -366,6 +375,8 @@ namespace Carrier
         }
         protected void btnSearch_Click(object sender, EventArgs e)
         {
+            lbStatusSearch.Text = "Second";
+            btnClear.Visible = true;
             loadtable(1);
         }
         protected void selectPage(object sender, CommandEventArgs e)
@@ -377,6 +388,13 @@ namespace Carrier
             LinkButton lkbDocno = (LinkButton)sender;
             var lbDocnoss = lkbDocno.Text;
             Response.Redirect("Transport_Form.aspx?Docno=" + lbDocnoss);
+        }
+
+        protected void btnClear_Click(object sender, EventArgs e)
+        {
+            lbStatusSearch.Text = "First";
+            btnClear.Visible = false;
+            loadtable(1);
         }
     }
     public class messageNotify

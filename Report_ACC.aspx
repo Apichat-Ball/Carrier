@@ -56,8 +56,15 @@
                     </div>
                 </div>
             </div>
+            <div class="col-sm-2">
+                <div class="row " style="margin-bottom: 10px;">
+                    <div class="col-sm-2 w-100 input-group" style="margin-top: 9px;">
+                        <asp:Button runat="server" ID="btnExport" Text="EXPORT" OnClick="btnExport_Click" CssClass="btn w-100 btn-primary " Visible="false"/>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="row">
+        <div class="row overflow-auto">
             <asp:GridView runat="server" ID="gv_Report" AutoGenerateColumns="false" EmptyDataText="ไม่มีรายการ" CssClass="table table-striped table-bordered table-hover" HeaderStyle-HorizontalAlign="Center">
                 <Columns>
                     <asp:TemplateField>
@@ -76,6 +83,15 @@
                             <asp:Label runat="server" ID="lbpno" Text='<%# Bind("pno") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
+                    <asp:TemplateField>
+                        <HeaderTemplate>
+                            <asp:Label runat="server" ID="lbhDateCreate" Text="วันที่สร้างเอกสาร"></asp:Label>
+                        </HeaderTemplate>
+                        <ItemTemplate>
+                            <asp:Label runat="server" ID="lbDateCreate" Text='<%# Bind("dateCreate") %>'></asp:Label>
+                        </ItemTemplate>
+                        <ItemStyle CssClass="gj-text-align-center" />
+                    </asp:TemplateField>
                     <asp:TemplateField ControlStyle-Width="200px">
                         <HeaderTemplate>
                             <asp:Label runat="server" ID="lbhBrand" Text="Brand"></asp:Label>
@@ -87,7 +103,7 @@
                     </asp:TemplateField>
                     <asp:TemplateField>
                         <HeaderTemplate>
-                            <asp:Label runat="server" ID="lbhBrandShort" Text="BrandShort"></asp:Label>
+                            <asp:Label runat="server" ID="lbhBrandShort" Text="Brand Short"></asp:Label>
                         </HeaderTemplate>
                         <ItemTemplate>
                             <asp:Label runat="server" ID="lbBrandShort"></asp:Label>
@@ -100,6 +116,15 @@
                         </HeaderTemplate>
                         <ItemTemplate>
                             <asp:Label runat="server" ID="lbSaleOn" Text='<%# Bind("SaleOn") %>'></asp:Label>
+                        </ItemTemplate>
+                        <ItemStyle CssClass="gj-text-align-center" />
+                    </asp:TemplateField>
+                    <asp:TemplateField>
+                        <HeaderTemplate>
+                            <asp:Label runat="server" ID="lbhSiteStorage" Text="Site Storage"></asp:Label>
+                        </HeaderTemplate>
+                        <ItemTemplate>
+                            <asp:Label runat="server" ID="lbSiteStorage" Text='<%# Bind("site") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField ControlStyle-Width="220px">
@@ -126,23 +151,6 @@
                             <asp:Label runat="server" ID="lbCategory" Text='<%# Bind("ArticleCategory") %>'></asp:Label>
                         </ItemTemplate>
                         <ItemStyle CssClass="gj-text-align-center" />
-                    </asp:TemplateField>
-                    <asp:TemplateField>
-                        <HeaderTemplate>
-                            <asp:Label runat="server" ID="lbhDateCreate" Text="Date Create"></asp:Label>
-                        </HeaderTemplate>
-                        <ItemTemplate>
-                            <asp:Label runat="server" ID="lbDateCreate" Text='<%# Bind("dateCreate") %>'></asp:Label>
-                        </ItemTemplate>
-                        <ItemStyle CssClass="gj-text-align-center" />
-                    </asp:TemplateField>
-                    <asp:TemplateField>
-                        <HeaderTemplate>
-                            <asp:Label runat="server" ID="lbhTrackingPickup" Text="Tracking Picup ID"></asp:Label>
-                        </HeaderTemplate>
-                        <ItemTemplate>
-                            <asp:Label runat="server" ID="lbStatus" Text='<%# Bind("TrackingPickup") %>'></asp:Label>
-                        </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField ControlStyle-Width="100px">
                         <HeaderTemplate>
@@ -174,6 +182,7 @@
                 </Columns>
             </asp:GridView>
         </div>
+        <asp:GridView runat="server" ID="gv_Export" Visible="false" ></asp:GridView>
         <div aria-label="nav Page navigation example">
         <div class="btn-group" role="group" aria-label="Basic outlined example">
             <asp:LinkButton runat="server" ID="lkPrevious"  CssClass="btn btn-outline-primary " OnCommand="selectPage" Visible="false" >PREVIOUS</asp:LinkButton>

@@ -76,7 +76,8 @@ namespace Carrier
                                      status = order.status,
                                      TrackingNo = orderItem.pno,
                                      SDpart = order.SDpart,
-                                     saleOn = order.saleOn
+                                     saleOn = order.saleOn,
+                                     SiteStorage = order.siteStorage
                                  }).ToList().FirstOrDefault();
 
 
@@ -157,9 +158,6 @@ namespace Carrier
                     txtDocno.Visible = true;
                     txtDocno.Text = query.Docno;
 
-                    //txtSiteStorage.Enabled = false;
-                    //txtSiteStorage.Visible = false;
-                    divSite.Visible = false;
                     radioWorkOn.Enabled = false;
                     radioWorkOff.Enabled = false;
                     switch (query.saleOn)
@@ -169,6 +167,42 @@ namespace Carrier
                         case "OFFLINE": radioWorkOff.Checked = true;
                             break;
                     }
+                    var listBox = Carrier_Entities.Order_Box.Where(w => w.Docno == Docno).ToList();
+
+                    div_Box.Visible = true;
+
+                    var box = Whale_Entities.Boxes.Where(w => w.Flag_Active == true).ToList();
+                    box.Insert(0, new Box { Box_ID = 0, Box_Name = "เลือกขนาดกล่อง" });
+                    ddlBox.DataSource = box;
+                    ddlBox.DataBind();
+                    ddlBox.Enabled = false;
+
+                    txtQty.Text = "0";
+                    txtQty.Enabled = false;
+
+                    btnAdd.Enabled = false;
+
+                    gv_Box.DataSource = listBox;
+                    gv_Box.DataBind();
+                    gv_Box.Columns[2].Visible = false;
+                    foreach(GridViewRow row in gv_Box.Rows)
+                    {
+                        TextBox txtQty = (TextBox)row.FindControl("txtQty");
+                        Label lbQty = (Label)row.FindControl("lbQty");
+                        txtQty.Visible = false;
+                        lbQty.Visible = true;
+                    }
+                    if(query.SiteStorage == null)
+                    {
+                        divSite.Visible = false;
+                    }
+                    else
+                    {
+                        divSite.Visible = true;
+                        txtSiteStorage.Enabled = false;
+                        txtSiteStorage.Text = query.SiteStorage;
+                    }
+                    
                 }
                 else
                 {
@@ -198,8 +232,7 @@ namespace Carrier
                         allFavorite.ForEach(f => { if (f.val == "select") { f.text = "เลือกปลายทาง"; } });
                         ddlReceiveLocation.DataSource = allFavorite;
                         ddlReceiveLocation.DataBind();
-                        lbReceiveLocation.Visible = true;
-                        ddlReceiveLocation.Visible = true;
+                        div_Receive.Visible = true;
                         lbFavorites.Visible = true;
                         ddlFavorites.Visible = true;
                     }
@@ -236,8 +269,7 @@ namespace Carrier
                         allFavorite.Insert(5, new newList { val = "อื่นๆ", text = "อื่นๆ" });
                         ddlReceiveLocation.DataSource = allFavorite;
                         ddlReceiveLocation.DataBind();
-                        lbReceiveLocation.Visible = true;
-                        ddlReceiveLocation.Visible = true;
+                        div_Receive.Visible = true;
                         lbFavorites.Visible = true;
                         ddlFavorites.Visible = true;
                     }
@@ -268,6 +300,13 @@ namespace Carrier
             depart.Insert(0, new { departmentID = "Select", department_ = "กรุณาเลือกแผนกที่ต้องการเบิก" });
             ddlSDpart.DataSource = depart;
             ddlSDpart.DataBind();
+
+            var box = Whale_Entities.Boxes.Where(w=>w.Flag_Active == true &&( w.Box_Name == "2A" || w.Box_Name == "4")).ToList();
+            box.Insert(0,new Box { Box_ID = 0, Box_Name = "เลือกขนาดกล่อง" });
+            ddlBox.DataSource = box;
+            ddlBox.DataBind();
+            txtQty.Text = "0";
+
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
@@ -329,8 +368,8 @@ namespace Carrier
                 srcName = txtsrcName.Text,
                 srcPhone = txtsrcPhone.Text,
                 srcProvinceName = ddlsrcProvinceName.SelectedItem.Text,
-                srcCityName = "",
-                srcDistrictName = "",
+                srcCityName = ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text,
+                srcDistrictName = ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text,
                 srcPostalCode = txtsrcPostalCode.Text,
                 srcDetailAddress = txtsrcDetailAddress.Text,
                 Ref_Order = "API",
@@ -338,8 +377,8 @@ namespace Carrier
                 dstPhone = txtdstPhone.Text,
                 dstHomePhone = txtdstHomePhone.Text,
                 dstProvinceName = ddldstProvinceName.SelectedItem.Text,
-                dstCityName = "",
-                dstDistrictName = "",
+                dstCityName = ddldstCityName.SelectedItem == null ? "" : ddldstCityName.SelectedItem.Text,
+                dstDistrictName = ddldstDistrictName.SelectedItem == null ? "" : ddldstDistrictName.SelectedItem.Text,
                 dstPostalCode = txtdstPostalCode.Text,
                 dstDetailAddress = txtdstDetailAddress.Text,
                 insured = 0,
@@ -349,7 +388,8 @@ namespace Carrier
                 length = Convert.ToInt32(txtlength.Text),
                 height = Convert.ToInt32(txtheight.Text),
                 remark = txtremark.Text,
-                SDpart = ddlSDpart.SelectedValue
+                SDpart = ddlSDpart.SelectedValue,
+                siteStorage = txtSiteStorage.Text.ToUpper()
             };
             var vali = service_Flashs.Validate_Transport(item);
             if (vali == "PASS")
@@ -362,20 +402,23 @@ namespace Carrier
                 {
                     item.saleOn = radioWorkOff.Text;
                 }
-                item.srcCityName = ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text;
-                item.srcDistrictName = ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text;
-                item.dstCityName = ddldstCityName.SelectedItem == null ? "" : ddldstCityName.SelectedItem.Text;
-                item.dstDistrictName = ddldstDistrictName.SelectedItem == null ? "" : ddldstDistrictName.SelectedItem.Text;
+                //item.srcCityName = ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text;
+                //item.srcDistrictName = ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text;
+                //item.dstCityName = ddldstCityName.SelectedItem == null ? "" : ddldstCityName.SelectedItem.Text;
+                //item.dstDistrictName = ddldstDistrictName.SelectedItem == null ? "" : ddldstDistrictName.SelectedItem.Text;
                 Carrier_Entities.Orders.Add(item);
                 Carrier_Entities.SaveChanges();
                 var res = service_Flashs.CreateOrderFLASH(newId);
 
                 if (res.success == true)
                 {
-                    //ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('succes : " + res.success + " Tracking NO : " + res.trackingno + "')", true);
                     var returnText = service_Flashs.Get_Docment(newId);
                     btnSave.Visible = false;
-                    //Response.Redirect("Transport_Form?Docno=" + newId);
+                    foreach(GridViewRow row in gv_Box.Rows)
+                    {
+                        Carrier_Entities.Order_Box.Add(new Order_Box { Docno = newId, Box_ID = Convert.ToInt32(((Label)row.FindControl("lbBox_ID")).Text), Box_Name = ((Label)row.FindControl("lbBox_Name")).Text ,Qty = Convert.ToInt32(((TextBox)row.FindControl("txtQty")).Text) });
+                    }
+                        Carrier_Entities.SaveChanges();
                     ClientScript.RegisterStartupScript(this.GetType(), "Success", "<script type='text/javascript'>alert('succes : " + res.success + " Tracking NO : " + res.trackingno + "');window.location='Transport_Form?Docno=" + newId + "';</script>'");
                 }
                 else
@@ -697,7 +740,23 @@ namespace Carrier
             var siteinput = (TextBox)sender;
             if (siteinput.Text.Length >= 4)
             {
-                getAddressOnSite(siteinput.Text.Substring(0, 4).ToUpper());
+                getAddressOnSite(siteinput.Text.ToUpper());
+            }
+            else
+            {
+                txtdstName.Text = "";
+                txtdstName.Enabled = true;
+                txtdstPhone.Text = "";
+                txtdstHomePhone.Text = "";
+                txtdstPostalCode.Text = "";
+                ddldstProvinceName.SelectedValue = "0";
+                ddldstCityName.DataSource = new List<City>();
+                ddldstCityName.DataBind();
+                ddldstCityName.Enabled = false;
+                ddldstDistrictName.DataSource = new List<District>();
+                ddldstDistrictName.DataBind();
+                ddldstDistrictName.Enabled = false;
+                txtdstDetailAddress.Text = "";
             }
 
         }
@@ -765,14 +824,22 @@ namespace Carrier
                     ddldstCityName.SelectedValue = citylike.City_ID.ToString();
                     ddldstCityName.Enabled = true;
 
-                    var citySDC1 = Convert.ToInt32(ddldstCityName.SelectedValue);
-                    var districtlike = Whale_Entities.Districts.Where(w => w.City_ID == citySDC1 && w.Distinct_Name.Contains(address.dstDistrict)).ToList().FirstOrDefault();
+                    var city = Convert.ToInt32(ddldstCityName.SelectedValue);
+                    var districtlike = Whale_Entities.Districts.Where(w => w.City_ID == city && w.Distinct_Name.Contains(address.dstDistrict)).ToList().FirstOrDefault();
                     if (districtlike != null)
                     {
                         ddldstDistrictName.Enabled = true;
-                        ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citySDC1).ToList();
+                        ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == city).ToList();
                         ddldstDistrictName.DataBind();
                         ddldstDistrictName.SelectedValue = districtlike.Distinct_ID.ToString();
+                    }
+                    else
+                    {
+                        var district = Whale_Entities.Districts.Where(w => w.City_ID == city).ToList();
+                        district.Insert(0, new District { Distinct_ID = 0, Distinct_Name = "เลือกตำบล" });
+                        ddldstDistrictName.Enabled = true;
+                        ddldstDistrictName.DataSource = district;
+                        ddldstDistrictName.DataBind();
                     }
 
                 }
@@ -780,19 +847,35 @@ namespace Carrier
                 {
                     var city = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSDC1).ToList();
                     city.Insert(0, new City { City_ID = 0, City_Name = "เลือกอำเภอ" });
+                    ddldstCityName.Enabled = true;
                     ddldstCityName.DataSource = city;
                     ddldstCityName.DataBind();
-
+                    ddldstDistrictName.Enabled = false;
                     ddldstDistrictName = new DropDownList();
                     ddldstDistrictName.DataBind();
                 }
 
                 txtdstPostalCode.Text = address.dstPostal;
                 txtdstDetailAddress.Text = address.dstDetail;
+                txtdstName.Enabled = false;
             }
             else
             {
-
+                txtdstName.Text = "";
+                txtdstName.Enabled = true;
+                txtdstPhone.Text = "";
+                txtdstHomePhone.Text = "";
+                txtdstPostalCode.Text = "";
+                ddldstProvinceName.SelectedValue = "0";
+                ddldstCityName.DataSource = new List<City>();
+                ddldstCityName.DataBind();
+                //ddldstCityName.ClearSelection();
+                ddldstCityName.Enabled = false;
+                ddldstDistrictName.DataSource = new List<District>();
+                //ddldstDistrictName.ClearSelection();
+                ddldstDistrictName.DataBind();
+                ddldstDistrictName.Enabled = false;
+                txtdstDetailAddress.Text = "";
             }
             
 
@@ -808,7 +891,7 @@ namespace Carrier
             else
             {
                 divSite.Visible = false;
-
+                txtdstName.Enabled = true;
                 if (selectReceive != "select")
                 {
                     switch (selectReceive)
@@ -861,6 +944,42 @@ namespace Carrier
                 }
             }
         }
+
+        protected void btnAdd_Click(object sender, EventArgs e)
+        {
+            if(ddlBox.SelectedValue != "0" && (txtQty.Text != "" && txtQty.Text !="0"))
+            {
+                List<BoxItem> listBox = new List<BoxItem>();
+                foreach(GridViewRow row in gv_Box.Rows)
+                {
+                    listBox.Add(new BoxItem { Box_ID = Convert.ToInt32(((Label)row.FindControl("lbBox_ID")).Text), Box_Name = ((Label)row.FindControl("lbBox_Name")).Text, Qty = Convert.ToInt32(((TextBox)row.FindControl("txtQty")).Text) });
+                }
+                    listBox.Add(new BoxItem { Box_ID = Convert.ToInt32(ddlBox.SelectedValue), Box_Name = ddlBox.SelectedItem.Text, Qty = Convert.ToInt32(txtQty.Text) });
+                
+                gv_Box.DataSource = listBox;
+                gv_Box.DataBind();
+            }
+        }
+
+        protected void btnDeleteBoxItem_Click(object sender, EventArgs e)
+        {
+            Button btnDeleteBoxItem = (Button)sender;
+            GridViewRow row = (GridViewRow)btnDeleteBoxItem.NamingContainer;
+            GridView gv = (GridView)row.NamingContainer;
+            List<BoxItem> item = new List<BoxItem>();
+            foreach(GridViewRow rows in gv.Rows)
+            {
+                if(rows != row)
+                {
+
+                    item.Add(new BoxItem {Box_ID = Convert.ToInt32(((Label)rows.FindControl("lbBox_ID")).Text), Box_Name = ((Label)rows.FindControl("lbBox_Name")).Text, Qty = Convert.ToInt32(((TextBox)rows.FindControl("txtQty")).Text) });
+                }
+            }
+            gv_Box.DataSource = item;
+            gv_Box.DataBind();
+        }
+
+        
     }
     public class newList
     {
@@ -876,5 +995,11 @@ namespace Carrier
     public class Forecasts
     {
         public string DepartmentID { get; set; }
+    }
+    public class BoxItem
+    {
+        public int Box_ID { get; set; }
+        public string Box_Name { get; set; }
+        public int Qty { get; set; }
     }
 }

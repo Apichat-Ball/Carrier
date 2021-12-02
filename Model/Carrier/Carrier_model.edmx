@@ -64,6 +64,16 @@
           <Property Name="saleOn" Type="nvarchar" MaxLength="20" />
           <Property Name="siteStorage" Type="nvarchar" MaxLength="20" />
         </EntityType>
+        <EntityType Name="Order_Box">
+          <Key>
+            <PropertyRef Name="Docno" />
+            <PropertyRef Name="Box_ID" />
+          </Key>
+          <Property Name="Docno" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Box_ID" Type="int" Nullable="false" />
+          <Property Name="Box_Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Qty" Type="int" />
+        </EntityType>
         <EntityType Name="Order_Item">
           <Key>
             <PropertyRef Name="Docno" />
@@ -104,6 +114,7 @@
           <EntitySet Name="Article_Category" EntityType="Self.Article_Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Notify" EntityType="Self.Notify" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Order_Box" EntityType="Self.Order_Box" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order_Item" EntityType="Self.Order_Item" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
@@ -119,6 +130,7 @@
           <EntitySet Name="Notifies" EntityType="CarrierModel.Notify" />
           <EntitySet Name="Order_Item" EntityType="CarrierModel.Order_Item" />
           <EntitySet Name="Users" EntityType="CarrierModel.User" />
+          <EntitySet Name="Order_Box" EntityType="CarrierModel.Order_Box" />
         </EntityContainer>
         <EntityType Name="Article_Category">
           <Key>
@@ -214,6 +226,16 @@
           <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Permission" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Order_Box">
+          <Key>
+            <PropertyRef Name="Docno" />
+            <PropertyRef Name="Box_ID" />
+          </Key>
+          <Property Name="Docno" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Box_ID" Type="Int32" Nullable="false" />
+          <Property Name="Box_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Qty" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -319,6 +341,16 @@
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Order_Box">
+            <EntityTypeMapping TypeName="CarrierModel.Order_Box">
+              <MappingFragment StoreEntitySet="Order_Box">
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="Box_Name" ColumnName="Box_Name" />
+                <ScalarProperty Name="Box_ID" ColumnName="Box_ID" />
+                <ScalarProperty Name="Docno" ColumnName="Docno" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

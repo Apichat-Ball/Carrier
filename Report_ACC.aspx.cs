@@ -8,6 +8,9 @@ using Carrier.Model.Carrier;
 using Carrier.Model.InsideSFG_WF;
 using Carrier.Service;
 using System.Globalization;
+using System.IO;
+using System.Web.UI.HtmlControls;
+
 namespace Carrier
 {
     public partial class Report_ACC : System.Web.UI.Page
@@ -49,7 +52,7 @@ namespace Carrier
                 var dateend = DateTime.ParseExact(txtDateEnd.Text, format, enUS, DateTimeStyles.None);
                 var orderList = (from order in carrier_Entities.Orders
                                  join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
-                                 where  order_Item.Status != "C"
+                                 where order_Item.Status != "C"
                                  select new
                                  {
                                      Docno = order.Docno,
@@ -61,13 +64,14 @@ namespace Carrier
                                      TrackingPickup = order_Item.ticketPickupId,
                                      TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
                                      SaleOn = order.saleOn,
-                                     Brand = order.SDpart
+                                     Brand = order.SDpart,
+                                     site = order.siteStorage
                                  }).ToList();
-                if(lbFirstLoad.Text != "first")
+                if (lbFirstLoad.Text != "first")
                 {
                     orderList = orderList.Where(w => w.dateCreate >= datestart && w.dateCreate <= dateend).ToList();
                 }
-                var maxrow = 10;
+                var maxrow = 8;
                 double maxdata_gvData = (double)((decimal)Convert.ToDecimal(orderList.Count()) / Convert.ToDecimal(maxrow));
                 int pageCount_gvData = (int)Math.Ceiling(maxdata_gvData);
                 gv_Report.DataSource = orderList.OrderByDescending(x => x.dateCreate).Skip((page - 1) * maxrow).Take(maxrow);
@@ -84,9 +88,10 @@ namespace Carrier
                         var ShotBand = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
                                         join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
                                         where BG_HA.departmentID == lbBrand.Text
-                                        select new BrandPro { 
+                                        select new BrandPro
+                                        {
                                             DepartmentID = BG_HA.departmentID,
-                                            Brand = BG_HA.department_, 
+                                            Brand = BG_HA.department_,
                                             Depart_Short = BG_HAPF.Depart_Short,
                                             ComCode = BG_HAPF.ComCode,
                                             CostCenter_Offline = BG_HAPF.CostCenter_Offline,
@@ -100,7 +105,7 @@ namespace Carrier
                         Label lbCostCenter = (Label)row.FindControl("lbCostCenter");
                         Label lbSaleOn = (Label)row.FindControl("lbSaleOn");
 
-                        if(ShotBand != null)
+                        if (ShotBand != null)
                         {
                             lbBrand.Text = ShotBand.Brand;
                             lbBrandShort.Text = ShotBand.Depart_Short;
@@ -116,9 +121,9 @@ namespace Carrier
                                 lbCostCenter.Text = ShotBand.CostCenter_Offline;
                             }
                         }
-                        
+
                     }
-                    
+
                 }
             }
             else
@@ -131,6 +136,7 @@ namespace Carrier
         {
             lbFirstLoad.Text = "two";
             btnClear.Visible = true;
+            btnExport.Visible = true;
             loadTable(1);
         }
         protected void selectPage(object sender, CommandEventArgs e)
@@ -235,6 +241,117 @@ namespace Carrier
             lbFirstLoad.Text = "first";
             loadTable(1);
             btnClear.Visible = false;
+            btnExport.Visible = false;
+        }
+
+        protected void btnExport_Click(object sender, EventArgs e)
+        {
+            var format = "dd/MM/yyyy";
+            var enUS = new CultureInfo("en-US");
+            var datestart = DateTime.ParseExact(txtDateStart.Text, format, enUS, DateTimeStyles.None);
+            var dateend = DateTime.ParseExact(txtDateEnd.Text, format, enUS, DateTimeStyles.None);
+            var orderList = (from order in carrier_Entities.Orders
+                             join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
+                             where order_Item.Status != "C" && order_Item.Date_Success >= datestart && order_Item.Date_Success <= dateend
+                             select new
+                             {
+                                 Docno = order.Docno,
+                                 pno = order_Item.pno,
+                                 srcName = order.srcName,
+                                 dstName = order.dstName,
+                                 ArticleCategory = carrier_Entities.Article_Category.Where(w => w.ArticleCode == order.articleCategory).ToList().FirstOrDefault().ArticleName,
+                                 dateCreate = order_Item.Date_Success,
+                                 TrackingPickup = order_Item.ticketPickupId,
+                                 TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
+                                 SaleOn = order.saleOn,
+                                 Brand = order.SDpart,
+                                 site = order.siteStorage
+                             }).ToList();
+            gv_Report.DataSource = orderList;
+            gv_Report.DataBind();
+            foreach (GridViewRow row in gv_Report.Rows)
+            {
+                Label lbBrand = (Label)row.FindControl("lbBrand");
+                Label lbBrandShort = (Label)row.FindControl("lbBrandShort");
+                Label lbDateCreate = (Label)row.FindControl("lbDateCreate");
+                lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
+                if (lbBrand.Text != "")
+                {
+                    var ShotBand = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
+                                    join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
+                                    where BG_HA.departmentID == lbBrand.Text
+                                    select new BrandPro
+                                    {
+                                        DepartmentID = BG_HA.departmentID,
+                                        Brand = BG_HA.department_,
+                                        Depart_Short = BG_HAPF.Depart_Short,
+                                        ComCode = BG_HAPF.ComCode,
+                                        CostCenter_Offline = BG_HAPF.CostCenter_Offline,
+                                        CostCenter_Online = BG_HAPF.CostCenter_Online,
+                                        Profit_Offline = BG_HAPF.Profit_Offline,
+                                        Profit_Online = BG_HAPF.Profit_Online
+                                    }
+                             ).ToList().FirstOrDefault();
+                    Label lbComcode = (Label)row.FindControl("lbComcode");
+                    Label lbProfit = (Label)row.FindControl("lbProfit");
+                    Label lbCostCenter = (Label)row.FindControl("lbCostCenter");
+                    Label lbSaleOn = (Label)row.FindControl("lbSaleOn");
+
+                    if (ShotBand != null)
+                    {
+                        lbBrand.Text = ShotBand.Brand;
+                        lbBrandShort.Text = ShotBand.Depart_Short;
+                        lbComcode.Text = ShotBand.ComCode;
+                        if (lbSaleOn.Text == "ONLINE")
+                        {
+                            lbProfit.Text = ShotBand.Profit_Online;
+                            lbCostCenter.Text = ShotBand.CostCenter_Online;
+                        }
+                        else if (lbSaleOn.Text == "OFFLINE")
+                        {
+                            lbProfit.Text = ShotBand.Profit_Offline;
+                            lbCostCenter.Text = ShotBand.CostCenter_Offline;
+                        }
+                    }
+
+                }
+                 
+            }
+            var fileName = "Report_" + DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss") + ".xls";
+
+            ExportExel(gv_Report, fileName);
+        }
+        public void ExportExel(GridView gv_Report, string FileName)
+        {
+            if (gv_Report.Rows.Count == 0)
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('วันที่คุณเลือกไม่ได้มีข้อมูลการสร้างรายการใดๆ หรือรูปแบบวันที่เลือกไม่ถูกต้อง')", true);
+            }
+            else
+            {
+                Page.Response.ClearContent();
+                Page.Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
+                Page.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                Page.Response.Charset = "utf-8";
+                Page.Response.ContentEncoding = System.Text.Encoding.GetEncoding("windows-874");
+                Page.Response.ContentType = "application/vnd.ms-excel";
+                using (StringWriter strwritter = new StringWriter())
+                {
+                    HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
+                    htmltextwrtter.WriteLine("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">");
+                    htmltextwrtter.WriteLine("<meta http-equiv='Content-Type' content='text/html; charset=windows-874'>");
+                    gv_Report.AllowPaging = false;
+                    gv_Report.HeaderRow.BackColor = System.Drawing.Color.White;
+                    gv_Report.RenderControl(htmltextwrtter);
+                    Page.Response.Output.Write(strwritter.ToString());
+                    Page.Response.End();
+                }
+            }
+           
+        }
+        public override void VerifyRenderingInServerForm(Control control)
+        {
+
         }
     }
 }

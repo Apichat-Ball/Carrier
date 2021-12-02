@@ -164,6 +164,7 @@
     <Content Include="Global.asax" />
     <Content Include="Home_Carrier.aspx" />
     <Content Include="Icon\cancellation.png" />
+    <Content Include="Icon\Logo_Courier.png" />
     <Content Include="Icon\tracking.png" />
     <Content Include="Icon\x-button.png" />
     <Content Include="Model\Carrier\Carrier_model.Context.tt">
@@ -467,6 +468,9 @@
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Carrier\Order.cs">
+      <DependentUpon>Carrier_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Carrier\Order_Box.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Carrier\Order_Item.cs">
