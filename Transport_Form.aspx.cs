@@ -11,6 +11,7 @@ using Carrier.Model.Online_Lazada;
 using Carrier.Service;
 using System.IO;
 using System.Net;
+using System.Web.Services;
 
 namespace Carrier
 {
@@ -358,6 +359,10 @@ namespace Carrier
                     siteId = "";
                 }
             }
+            if(ddlReceiveLocation.SelectedValue != "หน้าร้าน")
+            {
+                txtSiteStorage.Text = "";
+            }
             var item = new Order
             {
                 Docno = newId,
@@ -391,7 +396,7 @@ namespace Carrier
                 SDpart = ddlSDpart.SelectedValue,
                 siteStorage = txtSiteStorage.Text.ToUpper()
             };
-            var vali = service_Flashs.Validate_Transport(item);
+            var vali = service_Flashs.Validate_Transport(item, ddlReceiveLocation.SelectedValue);
             if (vali == "PASS")
             {
                 if (radioWorkOn.Checked)
@@ -456,7 +461,6 @@ namespace Carrier
             ddldstCityName.Enabled = false;
             ddldstDistrictName.Enabled = false;
         }
-
         protected void ddlsrcProvinceName_SelectedIndexChanged(object sender, EventArgs e)
         {
             ddlsrcCityName.Enabled = true;
@@ -884,7 +888,7 @@ namespace Carrier
         protected void ddlReceiveLocation_SelectedIndexChanged(object sender, EventArgs e)
         {
             var selectReceive = ddlReceiveLocation.SelectedValue;
-            if (selectReceive == "หน้าร้าน" || selectReceive == "ลูกค้า" || selectReceive == "อื่นๆ")
+            if (selectReceive == "หน้าร้าน" )
             {
                 divSite.Visible = true;
             }
@@ -979,6 +983,32 @@ namespace Carrier
             gv_Box.DataBind();
         }
 
+        [WebMethod]
+        public string AutoSearchSiteStorage(string site)
+        {
+            if (site.Length >= 4)
+            {
+                getAddressOnSite(site.ToUpper());
+                return "Found!";
+            }
+            else
+            {
+                txtdstName.Text = "";
+                txtdstName.Enabled = true;
+                txtdstPhone.Text = "";
+                txtdstHomePhone.Text = "";
+                txtdstPostalCode.Text = "";
+                ddldstProvinceName.SelectedValue = "0";
+                ddldstCityName.DataSource = new List<City>();
+                ddldstCityName.DataBind();
+                ddldstCityName.Enabled = false;
+                ddldstDistrictName.DataSource = new List<District>();
+                ddldstDistrictName.DataBind();
+                ddldstDistrictName.Enabled = false;
+                txtdstDetailAddress.Text = "";
+                return "Not Found!";
+            }
+        }
         
     }
     public class newList

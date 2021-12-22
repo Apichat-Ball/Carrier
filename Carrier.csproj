@@ -512,6 +512,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>InsideSFG_WF_model.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Model\InsideSFG_WF\WSHeadApproveBrand.cs">
+      <DependentUpon>InsideSFG_WF_model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Online_Lazada\API_Key.cs">
       <DependentUpon>Online_Lazada_model.tt</DependentUpon>
     </Compile>

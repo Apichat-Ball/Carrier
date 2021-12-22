@@ -188,11 +188,48 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
           <Property Name="ISContact" Type="varchar" MaxLength="5" />
           <Property Name="ISContact_Leave" Type="varchar" MaxLength="5" />
         </EntityType>
+        <EntityType Name="WSHeadApproveBrand">
+          <Key>
+            <PropertyRef Name="ID_Brand" />
+          </Key>
+          <Property Name="ID_Brand" Type="nvarchar" MaxLength="6" Nullable="false" />
+          <Property Name="Brand" Type="varchar" MaxLength="50" />
+          <Property Name="Brand_Welfare" Type="nvarchar" MaxLength="50" />
+          <Property Name="BRANDABB" Type="nvarchar" MaxLength="4" />
+          <Property Name="ComCode" Type="nvarchar" MaxLength="4" />
+          <Property Name="UserID_Approve" Type="nvarchar" MaxLength="10" />
+          <Property Name="Remark" Type="nvarchar(max)" />
+          <Property Name="Flag" Type="nvarchar" MaxLength="1" />
+          <Property Name="Flag_Sales" Type="nvarchar" MaxLength="1" />
+          <Property Name="Flag_WF" Type="nvarchar" MaxLength="1" />
+          <Property Name="Flag_SalesShop" Type="nvarchar" MaxLength="1" />
+          <Property Name="BM" Type="nvarchar" MaxLength="10" />
+          <Property Name="UserID_BM" Type="nvarchar" MaxLength="9" />
+          <Property Name="UserID_Asst" Type="nvarchar(max)" />
+          <Property Name="EmpSave" Type="nvarchar" MaxLength="10" />
+          <Property Name="Date_Save" Type="datetime" />
+          <Property Name="Cost_Center" Type="nvarchar" MaxLength="20" />
+          <Property Name="EForm_SCE_Sale_UserID" Type="nvarchar(max)" />
+          <Property Name="EForm_SCE_BM_UserID" Type="nvarchar" MaxLength="10" />
+          <Property Name="Daily_Sales_Permission_UserID" Type="nvarchar" MaxLength="300" />
+          <Property Name="Daily_Sales_Flag" Type="nvarchar" MaxLength="5" />
+          <Property Name="UserID_Claim" Type="nvarchar" MaxLength="10" />
+          <Property Name="UserID_Approve_FingerScan" Type="nvarchar" MaxLength="200" />
+          <Property Name="Sale_UserID" Type="varchar" MaxLength="300" />
+          <Property Name="UserID_Asst_PS" Type="nvarchar" MaxLength="300" />
+          <Property Name="UserID_BM_PS" Type="nvarchar" MaxLength="300" />
+          <Property Name="UserID_Senior_PS" Type="nvarchar" MaxLength="300" />
+          <Property Name="UserID_MD_PS" Type="nvarchar" MaxLength="300" />
+          <Property Name="Flag_Clear" Type="char" MaxLength="5" />
+          <Property Name="UserID_Online_Commission" Type="nvarchar(max)" />
+          <Property Name="UserID_Approve_Online_Com" Type="varchar" MaxLength="100" />
+        </EntityType>
         <EntityContainer Name="InsideSFG_WFModelStoreContainer">
           <EntitySet Name="BG_ForeCast" EntityType="Self.BG_ForeCast" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BG_HApprove" EntityType="Self.BG_HApprove" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BG_HApprove_Profitcenter" EntityType="Self.BG_HApprove_Profitcenter" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WSHeadApproveBrand" EntityType="Self.WSHeadApproveBrand" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customer_Tax" EntityType="Self.Customer_Tax" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [Customer_Tax].[CustomerCode] AS [CustomerCode], 
@@ -339,6 +376,7 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
           <EntitySet Name="BG_ForeCast" EntityType="InsideSFG_WFModel.BG_ForeCast" />
           <EntitySet Name="Customer_Tax" EntityType="InsideSFG_WFModel.Customer_Tax" />
           <EntitySet Name="BG_HApprove_Profitcenter" EntityType="InsideSFG_WFModel.BG_HApprove_Profitcenter" />
+          <EntitySet Name="WSHeadApproveBrands" EntityType="InsideSFG_WFModel.WSHeadApproveBrand" />
         </EntityContainer>
         <EntityType Name="BG_ForeCast">
           <Key>
@@ -403,6 +441,42 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
           <Property Name="CostCenter_Offline" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Profit_Online" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="CostCenter_Online" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="WSHeadApproveBrand">
+          <Key>
+            <PropertyRef Name="ID_Brand" />
+          </Key>
+          <Property Name="ID_Brand" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="Brand" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Brand_Welfare" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BRANDABB" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="ComCode" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_Approve" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Flag" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_Sales" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_WF" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_SalesShop" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="BM" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_BM" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_Asst" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EmpSave" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Save" Type="DateTime" Precision="3" />
+          <Property Name="Cost_Center" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="EForm_SCE_Sale_UserID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EForm_SCE_BM_UserID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Daily_Sales_Permission_UserID" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Daily_Sales_Flag" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_Claim" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_Approve_FingerScan" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Sale_UserID" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="UserID_Asst_PS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_BM_PS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_Senior_PS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_MD_PS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_Clear" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="UserID_Online_Commission" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_Approve_Online_Com" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -590,6 +664,43 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
                 <ScalarProperty Name="ComCode" ColumnName="ComCode" />
                 <ScalarProperty Name="Depart_Short" ColumnName="Depart_Short" />
                 <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WSHeadApproveBrands">
+            <EntityTypeMapping TypeName="InsideSFG_WFModel.WSHeadApproveBrand">
+              <MappingFragment StoreEntitySet="WSHeadApproveBrand">
+                <ScalarProperty Name="UserID_Approve_Online_Com" ColumnName="UserID_Approve_Online_Com" />
+                <ScalarProperty Name="UserID_Online_Commission" ColumnName="UserID_Online_Commission" />
+                <ScalarProperty Name="Flag_Clear" ColumnName="Flag_Clear" />
+                <ScalarProperty Name="UserID_MD_PS" ColumnName="UserID_MD_PS" />
+                <ScalarProperty Name="UserID_Senior_PS" ColumnName="UserID_Senior_PS" />
+                <ScalarProperty Name="UserID_BM_PS" ColumnName="UserID_BM_PS" />
+                <ScalarProperty Name="UserID_Asst_PS" ColumnName="UserID_Asst_PS" />
+                <ScalarProperty Name="Sale_UserID" ColumnName="Sale_UserID" />
+                <ScalarProperty Name="UserID_Approve_FingerScan" ColumnName="UserID_Approve_FingerScan" />
+                <ScalarProperty Name="UserID_Claim" ColumnName="UserID_Claim" />
+                <ScalarProperty Name="Daily_Sales_Flag" ColumnName="Daily_Sales_Flag" />
+                <ScalarProperty Name="Daily_Sales_Permission_UserID" ColumnName="Daily_Sales_Permission_UserID" />
+                <ScalarProperty Name="EForm_SCE_BM_UserID" ColumnName="EForm_SCE_BM_UserID" />
+                <ScalarProperty Name="EForm_SCE_Sale_UserID" ColumnName="EForm_SCE_Sale_UserID" />
+                <ScalarProperty Name="Cost_Center" ColumnName="Cost_Center" />
+                <ScalarProperty Name="Date_Save" ColumnName="Date_Save" />
+                <ScalarProperty Name="EmpSave" ColumnName="EmpSave" />
+                <ScalarProperty Name="UserID_Asst" ColumnName="UserID_Asst" />
+                <ScalarProperty Name="UserID_BM" ColumnName="UserID_BM" />
+                <ScalarProperty Name="BM" ColumnName="BM" />
+                <ScalarProperty Name="Flag_SalesShop" ColumnName="Flag_SalesShop" />
+                <ScalarProperty Name="Flag_WF" ColumnName="Flag_WF" />
+                <ScalarProperty Name="Flag_Sales" ColumnName="Flag_Sales" />
+                <ScalarProperty Name="Flag" ColumnName="Flag" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="UserID_Approve" ColumnName="UserID_Approve" />
+                <ScalarProperty Name="ComCode" ColumnName="ComCode" />
+                <ScalarProperty Name="BRANDABB" ColumnName="BRANDABB" />
+                <ScalarProperty Name="Brand_Welfare" ColumnName="Brand_Welfare" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+                <ScalarProperty Name="ID_Brand" ColumnName="ID_Brand" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

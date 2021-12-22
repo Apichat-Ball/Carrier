@@ -386,7 +386,7 @@ namespace Carrier.Service
             }
             return listResnotify;
         }
-        public string Validate_Transport(Order item)
+        public string Validate_Transport(Order item,string receive)
         {
             if (item.srcName == "")
             {
@@ -423,6 +423,13 @@ namespace Carrier.Service
             else if(item.articleCategory == 1111)
             {
                 return "กรุณาเลือกประเภทพัสดุ";
+            }
+            if(receive == "หน้าร้าน")
+            {
+                if(item.siteStorage.Length < 8)
+                {
+                    return "กรุณาใส่ Site Storage ให้ครบทั้ง 8 ตัวด้วยครับ";
+                }
             }
 
             return "PASS";

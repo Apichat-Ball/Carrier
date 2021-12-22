@@ -10,6 +10,7 @@
         <EntityTypeShape EntityType="InsideSFG_WFModel.BG_ForeCast" Width="1.5" PointX="5.375" PointY="0.75" />
         <EntityTypeShape EntityType="InsideSFG_WFModel.Customer_Tax" Width="1.5" PointX="7.375" PointY="0.75" />
         <EntityTypeShape EntityType="InsideSFG_WFModel.BG_HApprove_Profitcenter" Width="1.5" PointX="7.375" PointY="5.75" />
+        <EntityTypeShape EntityType="InsideSFG_WFModel.WSHeadApproveBrand" Width="1.5" PointX="9.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
