@@ -227,8 +227,8 @@ namespace Carrier
                         allFavorite.Insert(2, new newList { val = "บริษัท เอส.ดี.ซี วัน จำกัด", text = "SDC1" });
                         ddlFavorites.DataSource = allFavorite;
                         ddlFavorites.DataBind();
-                        allFavorite.Insert(3, new newList { val = "หน้าร้าน", text = "หน้าร้าน" });
-                        allFavorite.Insert(4, new newList { val = "ลูกค้า", text = "ลูกค้า" });
+                        allFavorite.Insert(3, new newList { val = "Depart", text = "หน้าร้าน" });
+                        allFavorite.Insert(4, new newList { val = "Center", text = "ลูกค้า" });
                         allFavorite.Insert(5, new newList { val = "อื่นๆ", text = "อื่นๆ" });
                         allFavorite.ForEach(f => { if (f.val == "select") { f.text = "เลือกปลายทาง"; } });
                         ddlReceiveLocation.DataSource = allFavorite;
@@ -265,8 +265,8 @@ namespace Carrier
                         allFavorite.Insert(0, new newList { val = "select", text = "เลือกปลายทาง" });
                         allFavorite.Insert(1, new newList { val = "บริษัท สตาร์แฟชั่น(2551) จำกัด", text = "Star Fashion Group" });
                         allFavorite.Insert(2, new newList { val = "บริษัท เอส.ดี.ซี วัน จำกัด", text = "SDC1" });
-                        allFavorite.Insert(3, new newList { val = "หน้าร้าน", text = "หน้าร้าน" });
-                        allFavorite.Insert(4, new newList { val = "ลูกค้า", text = "ลูกค้า" });
+                        allFavorite.Insert(3, new newList { val = "Depart", text = "หน้าร้าน" });
+                        allFavorite.Insert(4, new newList { val = "Center", text = "ลูกค้า" });
                         allFavorite.Insert(5, new newList { val = "อื่นๆ", text = "อื่นๆ" });
                         ddlReceiveLocation.DataSource = allFavorite;
                         ddlReceiveLocation.DataBind();
@@ -345,23 +345,23 @@ namespace Carrier
                                    srcPostal = tax.Postal1
 
                                }).ToList().FirstOrDefault();
-            var siteId = "";
-            if (siteAddress != null)
+            //var siteId = "";
+            //if (siteAddress != null)
+            //{
+            //    if (siteAddress.srcDetail == txtsrcDetailAddress.Text && siteAddress.NameTax == txtsrcName.Text &&
+            //        siteAddress.srcProvince == ddlsrcProvinceName.SelectedValue && siteAddress.srcCity.Contains(ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text) &&
+            //        siteAddress.srcDistrict.Contains(ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text) && siteAddress.srcPostal == txtsrcPostalCode.Text)
+            //    {
+            //        siteId = txtSiteStorage.Text;
+            //    }
+            //    else
+            //    {
+            //        siteId = "";
+            //    }
+            //}
+            if(ddlReceiveLocation.SelectedValue == "Center")
             {
-                if (siteAddress.srcDetail == txtsrcDetailAddress.Text && siteAddress.NameTax == txtsrcName.Text &&
-                    siteAddress.srcProvince == ddlsrcProvinceName.SelectedValue && siteAddress.srcCity.Contains(ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text) &&
-                    siteAddress.srcDistrict.Contains(ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text) && siteAddress.srcPostal == txtsrcPostalCode.Text)
-                {
-                    siteId = txtSiteStorage.Text;
-                }
-                else
-                {
-                    siteId = "";
-                }
-            }
-            if(ddlReceiveLocation.SelectedValue != "หน้าร้าน")
-            {
-                txtSiteStorage.Text = "";
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ไม่พบ SiteStorage Center กรุณาติดต่อฝ่ายบัญชี')", true);
             }
             var item = new Order
             {
@@ -396,21 +396,17 @@ namespace Carrier
                 SDpart = ddlSDpart.SelectedValue,
                 siteStorage = txtSiteStorage.Text.ToUpper()
             };
+            if (radioWorkOn.Checked)
+            {
+                item.saleOn = radioWorkOn.Text;
+            }
+            else
+            {
+                item.saleOn = radioWorkOff.Text;
+            }
             var vali = service_Flashs.Validate_Transport(item, ddlReceiveLocation.SelectedValue);
             if (vali == "PASS")
             {
-                if (radioWorkOn.Checked)
-                {
-                    item.saleOn = radioWorkOn.Text;
-                }
-                else
-                {
-                    item.saleOn = radioWorkOff.Text;
-                }
-                //item.srcCityName = ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text;
-                //item.srcDistrictName = ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text;
-                //item.dstCityName = ddldstCityName.SelectedItem == null ? "" : ddldstCityName.SelectedItem.Text;
-                //item.dstDistrictName = ddldstDistrictName.SelectedItem == null ? "" : ddldstDistrictName.SelectedItem.Text;
                 Carrier_Entities.Orders.Add(item);
                 Carrier_Entities.SaveChanges();
                 var res = service_Flashs.CreateOrderFLASH(newId);
@@ -744,7 +740,7 @@ namespace Carrier
             var siteinput = (TextBox)sender;
             if (siteinput.Text.Length >= 4)
             {
-                getAddressOnSite(siteinput.Text.ToUpper());
+                getAddressOnSite(siteinput.Text.ToUpper().Substring(0,4));
             }
             else
             {
@@ -766,6 +762,7 @@ namespace Carrier
         }
         public void getAddressOnSite(string siteId)
         {
+            var brand = ddlSDpart.SelectedValue;
             var online = Online_Lazada_Entities.PROVINCEs.Select(s => s.PROVINCE_ID).ToList();
             var address = (from tax in InsideSFG_WF_Entities.Customer_Tax
                            where online.Contains(tax.Province1) && tax.CustomerCode == siteId
@@ -888,12 +885,13 @@ namespace Carrier
         protected void ddlReceiveLocation_SelectedIndexChanged(object sender, EventArgs e)
         {
             var selectReceive = ddlReceiveLocation.SelectedValue;
-            if (selectReceive == "หน้าร้าน" )
+            if (selectReceive == "Depart" )
             {
                 divSite.Visible = true;
             }
             else
             {
+                txtSiteStorage.Text = "";
                 divSite.Visible = false;
                 txtdstName.Enabled = true;
                 if (selectReceive != "select")
@@ -982,33 +980,29 @@ namespace Carrier
             gv_Box.DataSource = item;
             gv_Box.DataBind();
         }
+        
 
         [WebMethod]
-        public string AutoSearchSiteStorage(string site)
+        public static List<string> AutoSearchSiteStorage(string site, string saleChannel, string workon)
         {
-            if (site.Length >= 4)
-            {
-                getAddressOnSite(site.ToUpper());
-                return "Found!";
-            }
-            else
-            {
-                txtdstName.Text = "";
-                txtdstName.Enabled = true;
-                txtdstPhone.Text = "";
-                txtdstHomePhone.Text = "";
-                txtdstPostalCode.Text = "";
-                ddldstProvinceName.SelectedValue = "0";
-                ddldstCityName.DataSource = new List<City>();
-                ddldstCityName.DataBind();
-                ddldstCityName.Enabled = false;
-                ddldstDistrictName.DataSource = new List<District>();
-                ddldstDistrictName.DataBind();
-                ddldstDistrictName.Enabled = false;
-                txtdstDetailAddress.Text = "";
-                return "Not Found!";
-            }
-        }
+            InsideSFG_WFEntities InsideSFG_WF_Entities = new InsideSFG_WFEntities();
+            Online_LazadaEntities Online_Lazada_Entities = new Online_LazadaEntities();
+            CarrierEntities carrier_Entities = new CarrierEntities();
+                var online = Online_Lazada_Entities.PROVINCEs.Select(s => s.PROVINCE_ID).ToList();
+                var siteId = site.ToUpper();
+
+            var BG = (from ha in InsideSFG_WF_Entities.BG_HApprove
+                      join haP in InsideSFG_WF_Entities.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
+                      select haP.Depart_Short).ToList();
+            var sitepro = carrier_Entities.Site_Profit.Where(w => w.Sale_Channel == saleChannel && w.Channel == workon 
+            && w.Site_Stroage.Substring(0, site.Length).Contains(siteId)
+            && BG.Contains(w.Brand))
+                .Select(s => s.Site_Stroage).ToList().Take(10);
+           
+
+            return sitepro.ToList();
+            
+        }   
         
     }
     public class newList

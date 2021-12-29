@@ -94,6 +94,19 @@
           <Property Name="CodeResponse" Type="int" />
           <Property Name="ticketPickupId" Type="nvarchar" MaxLength="20" />
         </EntityType>
+        <EntityType Name="Site_Profit">
+          <Key>
+            <PropertyRef Name="Brand" />
+            <PropertyRef Name="Site_Stroage" />
+          </Key>
+          <Property Name="Brand" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Channel" Type="nvarchar" MaxLength="50" />
+          <Property Name="COMCODE" Type="nvarchar" MaxLength="50" />
+          <Property Name="Profit" Type="nvarchar" MaxLength="50" />
+          <Property Name="Costcenter" Type="nvarchar" MaxLength="50" />
+          <Property Name="Site_Stroage" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Sale_Channel" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Status">
           <Key>
             <PropertyRef Name="StatusID" />
@@ -116,6 +129,7 @@
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order_Box" EntityType="Self.Order_Box" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order_Item" EntityType="Self.Order_Item" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Site_Profit" EntityType="Self.Site_Profit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
@@ -131,6 +145,7 @@
           <EntitySet Name="Order_Item" EntityType="CarrierModel.Order_Item" />
           <EntitySet Name="Users" EntityType="CarrierModel.User" />
           <EntitySet Name="Order_Box" EntityType="CarrierModel.Order_Box" />
+          <EntitySet Name="Site_Profit" EntityType="CarrierModel.Site_Profit" />
         </EntityContainer>
         <EntityType Name="Article_Category">
           <Key>
@@ -236,6 +251,19 @@
           <Property Name="Box_ID" Type="Int32" Nullable="false" />
           <Property Name="Box_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Qty" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Site_Profit">
+          <Key>
+            <PropertyRef Name="Brand" />
+            <PropertyRef Name="Site_Stroage" />
+          </Key>
+          <Property Name="Brand" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Channel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="COMCODE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Profit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Costcenter" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Site_Stroage" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Sale_Channel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -351,6 +379,19 @@
                 <ScalarProperty Name="Box_Name" ColumnName="Box_Name" />
                 <ScalarProperty Name="Box_ID" ColumnName="Box_ID" />
                 <ScalarProperty Name="Docno" ColumnName="Docno" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Site_Profit">
+            <EntityTypeMapping TypeName="CarrierModel.Site_Profit">
+              <MappingFragment StoreEntitySet="Site_Profit">
+                <ScalarProperty Name="Sale_Channel" ColumnName="Sale_Channel" />
+                <ScalarProperty Name="Site_Stroage" ColumnName="Site_Stroage" />
+                <ScalarProperty Name="Costcenter" ColumnName="Costcenter" />
+                <ScalarProperty Name="Profit" ColumnName="Profit" />
+                <ScalarProperty Name="COMCODE" ColumnName="COMCODE" />
+                <ScalarProperty Name="Channel" ColumnName="Channel" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

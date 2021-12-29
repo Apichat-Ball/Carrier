@@ -426,12 +426,25 @@ namespace Carrier.Service
             }
             if(receive == "หน้าร้าน")
             {
-                if(item.siteStorage.Length < 8)
+                if(item.siteStorage.Length < 6)
                 {
-                    return "กรุณาใส่ Site Storage ให้ครบทั้ง 8 ตัวด้วยครับ";
+                    return "กรุณาใส่ siteStorage ให้ครบถ้วนครับ";
+                }
+                else
+                {
+                    var online = entities_Online_Lazada.PROVINCEs.Select(s => s.PROVINCE_ID).ToList();
+                    var siteId = item.siteStorage.ToUpper();
+
+                    var BG = (from ha in entities_InsideSFG_WF.BG_HApprove
+                              join haP in entities_InsideSFG_WF.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
+                              select haP.Depart_Short).ToList();
+                    var sitepro = entities_Carrier.Site_Profit.Where(w => w.Sale_Channel == receive && w.Channel == item.saleOn
+                    && w.Site_Stroage.Substring(0, siteId.Length).Contains(siteId)
+                    && BG.Contains(w.Brand))
+                        .Select(s => s.Site_Stroage).ToList();
                 }
             }
-
+            
             return "PASS";
         }
         public User Check_UserID()

@@ -10,31 +10,55 @@
             background-color: darkgrey;
         }
     </style>
+    
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
     <script type="text/javascript">
-            function pageLoad() {
-                $("#<%= txtSiteStorage.ClientID%>").on("input change", function () {
+        function pageLoad() {
+            
+            $(function () {
+                $('[id*=txtSiteStorage]').on("input", function () {
 
-                    var s = $('[id*=txtSiteStorage]').val();
-                    console.log(s);
-                    var da = { site: $('[id*=txtSiteStorage]').val() };
+                    var workOnline = $('input[id*=radioWorkOn]').is(":checked");
+                    var work = "";
+                    if (workOnline == true) {
+                        work = $('[id*=radioWorkOn]').siblings().text();
+                    } else {
+                        work = $('[id*=radioWorkOff]').siblings().text();
+                    }
+                    var da = { site: $('[id*=txtSiteStorage]').val(), saleChannel: $('[id*=ddlReceiveLocation]').val(), workon: work }
+                    console.log("da :" + JSON.stringify(da));
                     $.ajax({
                         url: "Transport_Form.aspx/AutoSearchSiteStorage",
                         data: JSON.stringify(da),
-                        dataType: 'json',
-                        type: 'POST',
+                        dataType: "json",
+                        method: "POST",
                         contentType: "application/json; charset=utf-8",
                         dataFilter: function (data) { return data; },
                         success: function (data) {
-                            console.log("success : " + data);
+                            console.log(JSON.stringify(data));
+
+                            $("#<% = txtSiteStorage.ClientID%>").autocomplete({
+                                source: function (request, response) {
+                                    response($.map(data.d, function (item) {
+                                        return {
+                                            label: item,
+                                            val: item,
+                                        }
+                                    }))
+                                }
+                            });
                         },
                         error: function (XMLHttpRequest, textStatus, errorThrown) {
                             var err = eval("(" + XMLHttpRequest.responseText + ")");
                             console.log("Ajax Error! :" + err.Message);
                         }
                     });
-                })
-            }
-        
+
+                });
+            });
+        };
+
     </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <asp:UpdatePanel ID="updatePanel1" runat="server">
@@ -165,7 +189,7 @@
                     <div class="row" runat="server" id="divSite" visible="false" style="margin-bottom: 10px;">
                         <div class="col-sm-2 w-100 input-group mb-2 ">
                             <asp:Label runat="server" ID="lbSite" Text="Site Storage" CssClass="input-group-text s-15px shadow"></asp:Label>
-                            <asp:TextBox runat="server" ID="txtSiteStorage" CssClass="form-control s-15px shadow"  MaxLength="8"></asp:TextBox>
+                            <asp:TextBox runat="server" ID="txtSiteStorage" CssClass="form-control s-15px shadow" MaxLength="8" OnTextChanged="txtSiteStorage_TextChanged" AutoPostBack="true"></asp:TextBox>
                         </div>
                     </div>
                     <asp:Label runat="server" ID="Label2" Text="ผู้รับ" CssClass="s-15px"></asp:Label>
@@ -277,7 +301,7 @@
                     </div>
                 </div>
             </div>
-                
+
 
             <div class="row">
 

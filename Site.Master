@@ -10,10 +10,12 @@
 
 
 
+    <script src="Scripts/jquery-3.5.1.min.js"></script>
     <link href="Content/bootstrap.min.css" rel="stylesheet" />
-    <link href="Content/Site.css" rel="stylesheet" />
+    <link href="Content/themes/base/jquery-ui.css" rel="stylesheet" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-
+    <link href="Content/themes/base/autocomplete.css" rel="stylesheet" />
+    <link href="Content/Site.css" rel="stylesheet" />
 </head>
 <body>
     <form runat="server">
