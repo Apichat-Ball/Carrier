@@ -22,19 +22,30 @@ namespace Carrier
         }
         protected void Page_Load(object sender, EventArgs e)
         {
+            var docno = Request.QueryString["Docno"];
             lbDocno.Text = Request.QueryString["Docno"];
             String originalPath = new Uri(HttpContext.Current.Request.Url.AbsoluteUri).OriginalString;
             string filePath = originalPath.Substring(0, originalPath.LastIndexOf("/Transport_bill")) + "/PDFFile/" + lbDocno.Text + ".pdf";
 
-            //เปิดไฟล์แบบเต็มหน้า
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+                var create = Service_Flash.Get_Docment(docno, "/Transport_bill");
+            }
+            else
+            {
+                var create = Service_Flash.Get_Docment(docno, "/Transport_bill");
+            }
+            #region //เปิดไฟล์แบบเต็มหน้า
             //string fileExtention = Path.GetExtension(filePath);
             //WebClient client = new WebClient();
             //Byte[] buffer = client.DownloadData(filePath);
             //Response.ContentType = Service_Flash.ReturnExtension(fileExtention);
             //Response.AddHeader("content-length", buffer.Length.ToString());
             //Response.BinaryWrite(buffer);
+            #endregion
 
-            //เปิดไฟล์ให้อยู่แค่ใน Frame
+            #region//เปิดไฟล์ให้อยู่แค่ใน Frame
             Page myPage = (Page)HttpContext.Current.Handler;
             myFrame.Src = filePath;
             myFrame.Visible = true;
@@ -42,6 +53,7 @@ namespace Carrier
             //ImageLabel.ImageUrl = filePath;
             //ClientScript.RegisterStartupScript(GetType(), "print", "window.print();", true);
             ScriptManager.RegisterStartupScript(myPage, myPage.GetType(), "CallMyFunction", "print_iFrame();", true);
+            #endregion
 
             Carrier_Entities.Orders.Where(w => w.Docno == lbDocno.Text).FirstOrDefault().status = "AP";
             Carrier_Entities.SaveChanges();

@@ -32,6 +32,7 @@ namespace Carrier
 
             service_Flashs = new Service_Flash();
         }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["_UserID"] == null)
@@ -278,6 +279,7 @@ namespace Carrier
                 }
             }
         }
+
         public void loadPage()
         {
             List<newList> express = new List<newList>();
@@ -310,130 +312,6 @@ namespace Carrier
 
         }
 
-        protected void btnSave_Click(object sender, EventArgs e)
-        {
-
-            var docno = Carrier_Entities.Orders.ToList().LastOrDefault();
-            var newId = "";
-            if (docno == null)
-            {
-                var id = "FL0000000001";
-                newId = id;
-            }
-            else
-            {
-                newId = docno.Docno;
-                var lastId = Convert.ToInt32(newId.Substring(2, 10)) + 1;
-                newId = newId.Substring(0, 2) + newId.Substring(2, 10 - lastId.ToString().Length) + lastId.ToString();
-            }
-
-            var siteCode = "";
-            if (txtSiteStorage.Text.Length >= 4)
-            {
-                siteCode = txtSiteStorage.Text.Substring(0, 4).ToUpper();
-            }
-            var online = Online_Lazada_Entities.PROVINCEs.Select(s => s.PROVINCE_ID).ToList();
-            var siteAddress = (from tax in InsideSFG_WF_Entities.Customer_Tax
-                               where online.Contains(tax.Province1) && tax.CustomerCode == siteCode
-                               select new
-                               {
-                                   NameTax = tax.NameTax,
-                                   srcDetail = tax.Address1 + " " + tax.lane1 + " " + tax.Road1,
-                                   srcProvince = tax.Province1,
-                                   srcCity = tax.Area1,
-                                   srcDistrict = tax.Zone1,
-                                   srcPostal = tax.Postal1
-
-                               }).ToList().FirstOrDefault();
-            //var siteId = "";
-            //if (siteAddress != null)
-            //{
-            //    if (siteAddress.srcDetail == txtsrcDetailAddress.Text && siteAddress.NameTax == txtsrcName.Text &&
-            //        siteAddress.srcProvince == ddlsrcProvinceName.SelectedValue && siteAddress.srcCity.Contains(ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text) &&
-            //        siteAddress.srcDistrict.Contains(ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text) && siteAddress.srcPostal == txtsrcPostalCode.Text)
-            //    {
-            //        siteId = txtSiteStorage.Text;
-            //    }
-            //    else
-            //    {
-            //        siteId = "";
-            //    }
-            //}
-            if(ddlReceiveLocation.SelectedValue == "Center")
-            {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ไม่พบ SiteStorage Center กรุณาติดต่อฝ่ายบัญชี')", true);
-            }
-            var item = new Order
-            {
-                Docno = newId,
-                Date_send = DateTime.Now,
-                UserID = Convert.ToInt32(Session["_UserID"].ToString()),
-                articleCategory = Convert.ToInt32(ddlarticleCategory.SelectedValue),
-                ExpressCategory = Convert.ToInt32(ddlExpress.SelectedValue),
-                srcName = txtsrcName.Text,
-                srcPhone = txtsrcPhone.Text,
-                srcProvinceName = ddlsrcProvinceName.SelectedItem.Text,
-                srcCityName = ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text,
-                srcDistrictName = ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text,
-                srcPostalCode = txtsrcPostalCode.Text,
-                srcDetailAddress = txtsrcDetailAddress.Text,
-                Ref_Order = "API",
-                dstName = txtdstName.Text,
-                dstPhone = txtdstPhone.Text,
-                dstHomePhone = txtdstHomePhone.Text,
-                dstProvinceName = ddldstProvinceName.SelectedItem.Text,
-                dstCityName = ddldstCityName.SelectedItem == null ? "" : ddldstCityName.SelectedItem.Text,
-                dstDistrictName = ddldstDistrictName.SelectedItem == null ? "" : ddldstDistrictName.SelectedItem.Text,
-                dstPostalCode = txtdstPostalCode.Text,
-                dstDetailAddress = txtdstDetailAddress.Text,
-                insured = 0,
-                Transport_Type = 1,
-                weight = Convert.ToInt32(txtweight.Text),
-                width = Convert.ToInt32(txtwidth.Text),
-                length = Convert.ToInt32(txtlength.Text),
-                height = Convert.ToInt32(txtheight.Text),
-                remark = txtremark.Text,
-                SDpart = ddlSDpart.SelectedValue,
-                siteStorage = txtSiteStorage.Text.ToUpper()
-            };
-            if (radioWorkOn.Checked)
-            {
-                item.saleOn = radioWorkOn.Text;
-            }
-            else
-            {
-                item.saleOn = radioWorkOff.Text;
-            }
-            var vali = service_Flashs.Validate_Transport(item, ddlReceiveLocation.SelectedValue);
-            if (vali == "PASS")
-            {
-                Carrier_Entities.Orders.Add(item);
-                Carrier_Entities.SaveChanges();
-                var res = service_Flashs.CreateOrderFLASH(newId);
-
-                if (res.success == true)
-                {
-                    var returnText = service_Flashs.Get_Docment(newId);
-                    btnSave.Visible = false;
-                    foreach(GridViewRow row in gv_Box.Rows)
-                    {
-                        Carrier_Entities.Order_Box.Add(new Order_Box { Docno = newId, Box_ID = Convert.ToInt32(((Label)row.FindControl("lbBox_ID")).Text), Box_Name = ((Label)row.FindControl("lbBox_Name")).Text ,Qty = Convert.ToInt32(((TextBox)row.FindControl("txtQty")).Text) });
-                    }
-                        Carrier_Entities.SaveChanges();
-                    ClientScript.RegisterStartupScript(this.GetType(), "Success", "<script type='text/javascript'>alert('succes : " + res.success + " Tracking NO : " + res.trackingno + "');window.location='Transport_Form?Docno=" + newId + "';</script>'");
-                }
-                else
-                {
-                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('succes : " + res.success + " Message : " + res.trackingno + "')", true);
-                }
-            }
-            else
-            {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + vali + "')", true);
-            }
-
-        }
-
         public void loadArticle()
         {
             var Article = Carrier_Entities.Article_Category.ToList();
@@ -441,6 +319,7 @@ namespace Carrier
             ddlarticleCategory.DataSource = Article;
             ddlarticleCategory.DataBind();
         }
+
         public void loadProvince()
         {
             //src
@@ -457,6 +336,8 @@ namespace Carrier
             ddldstCityName.Enabled = false;
             ddldstDistrictName.Enabled = false;
         }
+
+        #region DROPROWNLIST select changed
         protected void ddlsrcProvinceName_SelectedIndexChanged(object sender, EventArgs e)
         {
             ddlsrcCityName.Enabled = true;
@@ -560,19 +441,6 @@ namespace Carrier
             var district = Convert.ToInt32(ddldstDistrictName.SelectedValue);
             txtdstPostalCode.Text = Whale_Entities.Districts.Where(w => w.Distinct_ID == district).FirstOrDefault().Postcode.ToString();
         }
-
-        protected void btnCancel_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("Default.aspx");
-        }
-
-        protected void btnPrint_Click(object sender, EventArgs e)
-        {
-
-            Response.Redirect("Transport_bill?Docno=" + txtDocno.Text);
-        }
-
-
 
         protected void ddlFavorites_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -735,6 +603,74 @@ namespace Carrier
             divSite.Visible = false;
         }
 
+        protected void ddlReceiveLocation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selectReceive = ddlReceiveLocation.SelectedValue;
+            if (selectReceive == "Depart" )
+            {
+                divSite.Visible = true;
+            }
+            else
+            {
+                txtSiteStorage.Text = "";
+                divSite.Visible = false;
+                txtdstName.Enabled = true;
+                if (selectReceive != "select")
+                {
+                    switch (selectReceive)
+                    {
+                        case "บริษัท เอส.ดี.ซี วัน จำกัด":
+                            
+
+                            //ผู้รับ
+                            txtdstName.Text = "บริษัท เอส.ดี.ซี วัน จำกัด";
+                            txtdstPhone.Text = "0944764565";
+                            txtdstHomePhone.Text = "-";
+                            ddldstProvinceName.SelectedValue = "5";
+                            var provincedstSCD1 = Convert.ToInt32(ddldstProvinceName.SelectedValue);
+                            ddldstCityName.Enabled = true;
+                            ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provincedstSCD1).ToList();
+                            ddldstCityName.DataBind();
+                            ddldstCityName.SelectedValue = "755";
+
+                            ddldstDistrictName.Enabled = true;
+                            var citydstSCD1 = Convert.ToInt32(ddldstCityName.SelectedValue);
+                            ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citydstSCD1).ToList();
+                            ddldstDistrictName.DataBind();
+                            ddldstDistrictName.SelectedValue = "483";
+                            txtdstPostalCode.Text = "13170";
+                            txtdstDetailAddress.Text = "59/1 ม.1 ";
+                            break;
+                        case "บริษัท สตาร์แฟชั่น(2551) จำกัด":
+                            
+                            //ผู้รับ
+                            txtdstName.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด";
+                            txtdstPhone.Text = "0873078300";
+                            txtdstHomePhone.Text = "-";
+                            ddldstProvinceName.SelectedValue = "1";
+                            var provincedstSFG = Convert.ToInt32(ddldstProvinceName.SelectedValue);
+
+                            ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provincedstSFG).ToList();
+                            ddldstCityName.DataBind();
+                            ddldstCityName.SelectedValue = "20";
+                            ddldstCityName.Enabled = true;
+
+                            ddldstDistrictName.Enabled = true;
+                            var citydstSFG = Convert.ToInt32(ddldstCityName.SelectedValue);
+                            ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citydstSFG).ToList();
+                            ddldstDistrictName.DataBind();
+                            ddldstDistrictName.SelectedValue = "119";
+                            txtdstPostalCode.Text = "10120";
+                            txtdstDetailAddress.Text = "477 พระราม 3 ";
+                            break;
+                    }
+                }
+            }
+        }
+
+        #endregion
+
+
         protected void txtSiteStorage_TextChanged(object sender, EventArgs e)
         {
             var siteinput = (TextBox)sender;
@@ -760,6 +696,7 @@ namespace Carrier
             }
 
         }
+
         public void getAddressOnSite(string siteId)
         {
             var brand = ddlSDpart.SelectedValue;
@@ -882,71 +819,7 @@ namespace Carrier
 
         }
 
-        protected void ddlReceiveLocation_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var selectReceive = ddlReceiveLocation.SelectedValue;
-            if (selectReceive == "Depart" )
-            {
-                divSite.Visible = true;
-            }
-            else
-            {
-                txtSiteStorage.Text = "";
-                divSite.Visible = false;
-                txtdstName.Enabled = true;
-                if (selectReceive != "select")
-                {
-                    switch (selectReceive)
-                    {
-                        case "บริษัท เอส.ดี.ซี วัน จำกัด":
-                            
-
-                            //ผู้รับ
-                            txtdstName.Text = "บริษัท เอส.ดี.ซี วัน จำกัด";
-                            txtdstPhone.Text = "0944764565";
-                            txtdstHomePhone.Text = "-";
-                            ddldstProvinceName.SelectedValue = "5";
-                            var provincedstSCD1 = Convert.ToInt32(ddldstProvinceName.SelectedValue);
-                            ddldstCityName.Enabled = true;
-                            ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provincedstSCD1).ToList();
-                            ddldstCityName.DataBind();
-                            ddldstCityName.SelectedValue = "755";
-
-                            ddldstDistrictName.Enabled = true;
-                            var citydstSCD1 = Convert.ToInt32(ddldstCityName.SelectedValue);
-                            ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citydstSCD1).ToList();
-                            ddldstDistrictName.DataBind();
-                            ddldstDistrictName.SelectedValue = "483";
-                            txtdstPostalCode.Text = "13170";
-                            txtdstDetailAddress.Text = "59/1 ม.1 ";
-                            break;
-                        case "บริษัท สตาร์แฟชั่น(2551) จำกัด":
-                            
-                            //ผู้รับ
-                            txtdstName.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด";
-                            txtdstPhone.Text = "0873078300";
-                            txtdstHomePhone.Text = "-";
-                            ddldstProvinceName.SelectedValue = "1";
-                            var provincedstSFG = Convert.ToInt32(ddldstProvinceName.SelectedValue);
-
-                            ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provincedstSFG).ToList();
-                            ddldstCityName.DataBind();
-                            ddldstCityName.SelectedValue = "20";
-                            ddldstCityName.Enabled = true;
-
-                            ddldstDistrictName.Enabled = true;
-                            var citydstSFG = Convert.ToInt32(ddldstCityName.SelectedValue);
-                            ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citydstSFG).ToList();
-                            ddldstDistrictName.DataBind();
-                            ddldstDistrictName.SelectedValue = "119";
-                            txtdstPostalCode.Text = "10120";
-                            txtdstDetailAddress.Text = "477 พระราม 3 ";
-                            break;
-                    }
-                }
-            }
-        }
-
+        #region Button
         protected void btnAdd_Click(object sender, EventArgs e)
         {
             if(ddlBox.SelectedValue != "0" && (txtQty.Text != "" && txtQty.Text !="0"))
@@ -980,10 +853,160 @@ namespace Carrier
             gv_Box.DataSource = item;
             gv_Box.DataBind();
         }
-        
 
+        protected void btnCancel_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Default.aspx");
+        }
+
+        protected void btnPrint_Click(object sender, EventArgs e)
+        {
+            //เปิดหน้าแสดง PDF
+            Response.Redirect("Transport_bill?Docno=" + txtDocno.Text);
+        }
+
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+
+            var docno = Carrier_Entities.Orders.ToList().LastOrDefault();
+            var newId = "";
+            if (docno == null)
+            {
+                var id = "FL0000000001";
+                newId = id;
+            }
+            else
+            {
+                newId = docno.Docno;
+                var lastId = Convert.ToInt32(newId.Substring(2, 10)) + 1;
+                newId = newId.Substring(0, 2) + newId.Substring(2, 10 - lastId.ToString().Length) + lastId.ToString();
+            }
+
+            var siteCode = "";
+            if (txtSiteStorage.Text.Length >= 4)
+            {
+                siteCode = txtSiteStorage.Text.Substring(0, 4).ToUpper();
+            }
+            var online = Online_Lazada_Entities.PROVINCEs.Select(s => s.PROVINCE_ID).ToList();
+            var siteAddress = (from tax in InsideSFG_WF_Entities.Customer_Tax
+                               where online.Contains(tax.Province1) && tax.CustomerCode == siteCode
+                               select new
+                               {
+                                   NameTax = tax.NameTax,
+                                   srcDetail = tax.Address1 + " " + tax.lane1 + " " + tax.Road1,
+                                   srcProvince = tax.Province1,
+                                   srcCity = tax.Area1,
+                                   srcDistrict = tax.Zone1,
+                                   srcPostal = tax.Postal1
+
+                               }).ToList().FirstOrDefault();
+            #region not use
+            //var siteId = "";
+            //if (siteAddress != null)
+            //{
+            //    if (siteAddress.srcDetail == txtsrcDetailAddress.Text && siteAddress.NameTax == txtsrcName.Text &&
+            //        siteAddress.srcProvince == ddlsrcProvinceName.SelectedValue && siteAddress.srcCity.Contains(ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text) &&
+            //        siteAddress.srcDistrict.Contains(ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text) && siteAddress.srcPostal == txtsrcPostalCode.Text)
+            //    {
+            //        siteId = txtSiteStorage.Text;
+            //    }
+            //    else
+            //    {
+            //        siteId = "";
+            //    }
+            //}
+            #endregion
+            if (ddlReceiveLocation.SelectedValue == "Center")
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ไม่พบ SiteStorage Center กรุณาติดต่อฝ่ายบัญชี')", true);
+                return;
+            }
+
+            //เก็บข้อมูลทั้งหมดที่กรอกเพื่อไป check และไปใช้ส่ง api และเก็บเข้า base
+            var item = new Order
+            {
+                Docno = newId,
+                Date_send = DateTime.Now,
+                UserID = Convert.ToInt32(Session["_UserID"].ToString()),
+                articleCategory = Convert.ToInt32(ddlarticleCategory.SelectedValue),
+                ExpressCategory = Convert.ToInt32(ddlExpress.SelectedValue),
+                srcName = txtsrcName.Text,
+                srcPhone = txtsrcPhone.Text,
+                srcProvinceName = ddlsrcProvinceName.SelectedItem.Text,
+                srcCityName = ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text,
+                srcDistrictName = ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text,
+                srcPostalCode = txtsrcPostalCode.Text,
+                srcDetailAddress = txtsrcDetailAddress.Text,
+                Ref_Order = "API",
+                dstName = txtdstName.Text,
+                dstPhone = txtdstPhone.Text,
+                dstHomePhone = txtdstHomePhone.Text,
+                dstProvinceName = ddldstProvinceName.SelectedItem.Text,
+                dstCityName = ddldstCityName.SelectedItem == null ? "" : ddldstCityName.SelectedItem.Text,
+                dstDistrictName = ddldstDistrictName.SelectedItem == null ? "" : ddldstDistrictName.SelectedItem.Text,
+                dstPostalCode = txtdstPostalCode.Text,
+                dstDetailAddress = txtdstDetailAddress.Text,
+                insured = 0,
+                Transport_Type = 1,
+                weight = Convert.ToInt32(txtweight.Text),
+                width = Convert.ToInt32(txtwidth.Text),
+                length = Convert.ToInt32(txtlength.Text),
+                height = Convert.ToInt32(txtheight.Text),
+                remark = txtremark.Text,
+                SDpart = ddlSDpart.SelectedValue,
+                siteStorage = txtSiteStorage.Text.ToUpper()
+            };
+            if (radioWorkOn.Checked)
+            {
+                item.saleOn = radioWorkOn.Text;
+            }
+            else
+            {
+                item.saleOn = radioWorkOff.Text;
+            }
+            var vali = service_Flashs.Validate_Transport(item, ddlReceiveLocation.SelectedValue);
+            if (vali == "PASS")
+            {
+                Carrier_Entities.Orders.Add(item);
+                Carrier_Entities.SaveChanges();
+                var res = service_Flashs.CreateOrderFLASH(newId);
+                //Check การสร้าง order 
+                if (res.success == true)
+                {
+                    String originalPath = new Uri(HttpContext.Current.Request.Url.AbsoluteUri).OriginalString;
+                    string filePath = originalPath.Substring(0, originalPath.LastIndexOf("/Transport_Form")) + "/PDFFile/" + newId + ".pdf";
+                    //Check path ของไฟล์ที่จะเปิดว่าเปิดได้หรือเปล่าถ้าได้ให้ลบ
+                    if (File.Exists(filePath))
+                    {
+                        File.Delete(filePath);
+                    }
+                    //ทำการสร้างไฟล์ขึ้นมาใหม่
+                    var returnText = service_Flashs.Get_Docment(newId, "/Transport_Form");
+                    btnSave.Visible = false;
+                    foreach (GridViewRow row in gv_Box.Rows)
+                    {
+                        Carrier_Entities.Order_Box.Add(new Order_Box { Docno = newId, Box_ID = Convert.ToInt32(((Label)row.FindControl("lbBox_ID")).Text), Box_Name = ((Label)row.FindControl("lbBox_Name")).Text, Qty = Convert.ToInt32(((TextBox)row.FindControl("txtQty")).Text) });
+                    }
+                    Carrier_Entities.SaveChanges();
+                    ClientScript.RegisterStartupScript(this.GetType(), "Success", "<script type='text/javascript'>alert('succes : " + res.success + " Tracking NO : " + res.trackingno + "');window.location='Transport_Form?Docno=" + newId + "';</script>'");
+                }
+                else
+                {
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Process : " + res.success + " Message : " + res.trackingno + "')", true);
+                }
+            }
+            else
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + vali + "')", true);
+            }
+
+        }
+
+        #endregion
+
+        //คือการสร้างอีกหน้าเพื่อเรียกใช้งาน method static
         [WebMethod]
-        public static List<string> AutoSearchSiteStorage(string site, string saleChannel, string workon)
+        public static List<string> AutoSearchSiteStorage(string site, string saleChannel, string workon,string BrandId)
         {
             InsideSFG_WFEntities InsideSFG_WF_Entities = new InsideSFG_WFEntities();
             Online_LazadaEntities Online_Lazada_Entities = new Online_LazadaEntities();
@@ -993,11 +1016,12 @@ namespace Carrier
 
             var BG = (from ha in InsideSFG_WF_Entities.BG_HApprove
                       join haP in InsideSFG_WF_Entities.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
+                      where ha.departmentID == BrandId
                       select haP.Depart_Short).ToList();
             var sitepro = carrier_Entities.Site_Profit.Where(w => w.Sale_Channel == saleChannel && w.Channel == workon 
             && w.Site_Stroage.Substring(0, site.Length).Contains(siteId)
-            && BG.Contains(w.Brand))
-                .Select(s => s.Site_Stroage).ToList().Take(10);
+            && BG.Contains(w.Brand)
+           ).Select(s => s.Site_Stroage).ToList().Take(10);
            
 
             return sitepro.ToList();
@@ -1005,6 +1029,8 @@ namespace Carrier
         }   
         
     }
+
+    #region Model
     public class newList
     {
         public string val { get; set; }
@@ -1026,4 +1052,5 @@ namespace Carrier
         public string Box_Name { get; set; }
         public int Qty { get; set; }
     }
+    #endregion
 }

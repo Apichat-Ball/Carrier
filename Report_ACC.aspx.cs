@@ -74,7 +74,7 @@ namespace Carrier
                 var maxrow = 8;
                 double maxdata_gvData = (double)((decimal)Convert.ToDecimal(orderList.Count()) / Convert.ToDecimal(maxrow));
                 int pageCount_gvData = (int)Math.Ceiling(maxdata_gvData);
-                gv_Report.DataSource = orderList.OrderByDescending(x => x.dateCreate).Skip((page - 1) * maxrow).Take(maxrow);
+                gv_Report.DataSource = orderList.OrderBy(x => x.dateCreate).Skip((page - 1) * maxrow).Take(maxrow);
                 gv_Report.DataBind();
                 Page_gv(page, pageCount_gvData);
                 foreach (GridViewRow row in gv_Report.Rows)
@@ -104,22 +104,38 @@ namespace Carrier
                         Label lbProfit = (Label)row.FindControl("lbProfit");
                         Label lbCostCenter = (Label)row.FindControl("lbCostCenter");
                         Label lbSaleOn = (Label)row.FindControl("lbSaleOn");
+                        Label lbSiteStorage = (Label)row.FindControl("lbSiteStorage");
 
-                        if (ShotBand != null)
+                        if (ShotBand != null )
                         {
                             lbBrand.Text = ShotBand.Brand;
                             lbBrandShort.Text = ShotBand.Depart_Short;
-                            lbComcode.Text = ShotBand.ComCode;
-                            if (lbSaleOn.Text == "ONLINE")
-                            {
-                                lbProfit.Text = ShotBand.Profit_Online;
-                                lbCostCenter.Text = ShotBand.CostCenter_Online;
-                            }
-                            else if (lbSaleOn.Text == "OFFLINE")
-                            {
-                                lbProfit.Text = ShotBand.Profit_Offline;
-                                lbCostCenter.Text = ShotBand.CostCenter_Offline;
-                            }
+                                var Profit = (from pro in carrier_Entities.Site_Profit
+                                              where pro.Site_Stroage == lbSiteStorage.Text && pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.Depart_Short+"%")
+                                              select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
+                                if (Profit != null)
+                                {
+
+                                    lbComcode.Text = Profit.ComCode;
+                                    lbProfit.Text = Profit.profit;
+                                    lbCostCenter.Text = Profit.CostCenter;
+                                }
+                                else
+                                {
+                                    lbComcode.Text = ShotBand.ComCode;
+                                    if (lbSaleOn.Text == "ONLINE")
+                                    {
+                                        lbProfit.Text = ShotBand.Profit_Online;
+                                        lbCostCenter.Text = ShotBand.CostCenter_Online;
+                                    }
+                                    else if (lbSaleOn.Text == "OFFLINE")
+                                    {
+                                        lbProfit.Text = ShotBand.Profit_Offline;
+                                        lbCostCenter.Text = ShotBand.CostCenter_Offline;
+                                    }
+                                }
+                            
+
                         }
 
                     }
@@ -215,7 +231,8 @@ namespace Carrier
             }
             lkPrevious.CommandArgument = Convert.ToString(pageselect - 1);
             lkNext.CommandArgument = Convert.ToString(pageselect + 1);
-            if (pageselect <= (pageCount - 2)) { lkLast.Visible = true; }
+            var last = Convert.ToInt32(lkLast.Text);
+            if (pageselect <= (pageCount - (last - pageselect == 1 ? 1 : 2)) && pageCount != 2) { lkLast.Visible = true; }
             lkPrevious.CssClass = "btn btn-outline-primary";
             lkNext.CssClass = "btn btn-outline-primary";
             if (pageselect - 1 <= 0) { lkPrevious.CssClass = "btn btn-outline-secondary disabled"; }
@@ -231,92 +248,124 @@ namespace Carrier
             lk1.CommandArgument = lk1.Text; lk2.CommandArgument = lk2.Text; lk3.CommandArgument = lk3.Text;
 
         }
-        public class BrandPro : BG_HApprove_Profitcenter
-        {
-            public string Brand { get; set; }
-        }
-
         protected void btnClear_Click(object sender, EventArgs e)
         {
             lbFirstLoad.Text = "first";
+            txtDateStart.Text = DateTime.Now.ToString("dd/MM/yyyy");
+            txtDateEnd.Text = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy");
             loadTable(1);
             btnClear.Visible = false;
             btnExport.Visible = false;
         }
-
         protected void btnExport_Click(object sender, EventArgs e)
         {
-            var format = "dd/MM/yyyy";
-            var enUS = new CultureInfo("en-US");
-            var datestart = DateTime.ParseExact(txtDateStart.Text, format, enUS, DateTimeStyles.None);
-            var dateend = DateTime.ParseExact(txtDateEnd.Text, format, enUS, DateTimeStyles.None);
-            var orderList = (from order in carrier_Entities.Orders
-                             join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
-                             where order_Item.Status != "C" && order_Item.Date_Success >= datestart && order_Item.Date_Success <= dateend
-                             select new
-                             {
-                                 Docno = order.Docno,
-                                 pno = order_Item.pno,
-                                 srcName = order.srcName,
-                                 dstName = order.dstName,
-                                 ArticleCategory = carrier_Entities.Article_Category.Where(w => w.ArticleCode == order.articleCategory).ToList().FirstOrDefault().ArticleName,
-                                 dateCreate = order_Item.Date_Success,
-                                 TrackingPickup = order_Item.ticketPickupId,
-                                 TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
-                                 SaleOn = order.saleOn,
-                                 Brand = order.SDpart,
-                                 site = order.siteStorage
-                             }).ToList();
-            gv_Report.DataSource = orderList;
-            gv_Report.DataBind();
-            foreach (GridViewRow row in gv_Report.Rows)
-            {
-                Label lbBrand = (Label)row.FindControl("lbBrand");
-                Label lbBrandShort = (Label)row.FindControl("lbBrandShort");
-                Label lbDateCreate = (Label)row.FindControl("lbDateCreate");
-                lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
-                if (lbBrand.Text != "")
-                {
-                    var ShotBand = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
-                                    join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
-                                    where BG_HA.departmentID == lbBrand.Text
-                                    select new BrandPro
-                                    {
-                                        DepartmentID = BG_HA.departmentID,
-                                        Brand = BG_HA.department_,
-                                        Depart_Short = BG_HAPF.Depart_Short,
-                                        ComCode = BG_HAPF.ComCode,
-                                        CostCenter_Offline = BG_HAPF.CostCenter_Offline,
-                                        CostCenter_Online = BG_HAPF.CostCenter_Online,
-                                        Profit_Offline = BG_HAPF.Profit_Offline,
-                                        Profit_Online = BG_HAPF.Profit_Online
-                                    }
-                             ).ToList().FirstOrDefault();
-                    Label lbComcode = (Label)row.FindControl("lbComcode");
-                    Label lbProfit = (Label)row.FindControl("lbProfit");
-                    Label lbCostCenter = (Label)row.FindControl("lbCostCenter");
-                    Label lbSaleOn = (Label)row.FindControl("lbSaleOn");
+            #region OLD Load Table
+            //var format = "dd/MM/yyyy";
+            //var enUS = new CultureInfo("en-US");
+            //var datestart = DateTime.ParseExact(txtDateStart.Text, format, enUS, DateTimeStyles.None);
+            //var dateend = DateTime.ParseExact(txtDateEnd.Text, format, enUS, DateTimeStyles.None);
+            //var orderList = (from order in carrier_Entities.Orders
+            //                 join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
+            //                 where order_Item.Status != "C" && order_Item.Date_Success >= datestart && order_Item.Date_Success <= dateend
+            //                 orderby order.Docno
+            //                 select new
+            //                 {
+            //                     Docno = order.Docno,
+            //                     pno = order_Item.pno,
+            //                     srcName = order.srcName,
+            //                     dstName = order.dstName,
+            //                     ArticleCategory = carrier_Entities.Article_Category.Where(w => w.ArticleCode == order.articleCategory).ToList().FirstOrDefault().ArticleName,
+            //                     dateCreate = order_Item.Date_Success,
+            //                     TrackingPickup = order_Item.ticketPickupId,
+            //                     TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
+            //                     SaleOn = order.saleOn,
+            //                     Brand = order.SDpart,
+            //                     site = order.siteStorage
+            //                 }).ToList();
+            //gv_Report.DataSource = orderList;
+            //gv_Report.DataBind();
+            //foreach (GridViewRow row in gv_Report.Rows)
+            //{
+            //    Label lbBrand = (Label)row.FindControl("lbBrand");
+            //    Label lbBrandShort = (Label)row.FindControl("lbBrandShort");
+            //    Label lbDateCreate = (Label)row.FindControl("lbDateCreate");
+            //    lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
+            //    if (lbBrand.Text != "")
+            //    {
+            //        var ShotBand = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
+            //                        join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
+            //                        where BG_HA.departmentID == lbBrand.Text
+            //                        select new BrandPro
+            //                        {
+            //                            DepartmentID = BG_HA.departmentID,
+            //                            Brand = BG_HA.department_,
+            //                            Depart_Short = BG_HAPF.Depart_Short,
+            //                            ComCode = BG_HAPF.ComCode,
+            //                            CostCenter_Offline = BG_HAPF.CostCenter_Offline,
+            //                            CostCenter_Online = BG_HAPF.CostCenter_Online,
+            //                            Profit_Offline = BG_HAPF.Profit_Offline,
+            //                            Profit_Online = BG_HAPF.Profit_Online
+            //                        }
+            //                 ).ToList().FirstOrDefault();
+            //        Label lbComcode = (Label)row.FindControl("lbComcode");
+            //        Label lbProfit = (Label)row.FindControl("lbProfit");
+            //        Label lbCostCenter = (Label)row.FindControl("lbCostCenter");
+            //        Label lbSaleOn = (Label)row.FindControl("lbSaleOn");
+            //        Label lbSiteStorage = (Label)row.FindControl("lbSiteStorage");
 
-                    if (ShotBand != null)
-                    {
-                        lbBrand.Text = ShotBand.Brand;
-                        lbBrandShort.Text = ShotBand.Depart_Short;
-                        lbComcode.Text = ShotBand.ComCode;
-                        if (lbSaleOn.Text == "ONLINE")
-                        {
-                            lbProfit.Text = ShotBand.Profit_Online;
-                            lbCostCenter.Text = ShotBand.CostCenter_Online;
-                        }
-                        else if (lbSaleOn.Text == "OFFLINE")
-                        {
-                            lbProfit.Text = ShotBand.Profit_Offline;
-                            lbCostCenter.Text = ShotBand.CostCenter_Offline;
-                        }
-                    }
+            //        if (ShotBand != null)
+            //        {
+            //            lbBrand.Text = ShotBand.Brand;
+            //            lbBrandShort.Text = ShotBand.Depart_Short;
+            //            var Profit = (from pro in carrier_Entities.Site_Profit
+            //                          where pro.Site_Stroage == lbSiteStorage.Text && pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.Depart_Short + "%")
+            //                          select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
+            //            if (Profit != null)
+            //            {
 
-                }
-                 
-            }
+            //                lbComcode.Text = Profit.ComCode;
+            //                lbProfit.Text = Profit.profit;
+            //                lbCostCenter.Text = Profit.CostCenter;
+            //            }
+            //            else
+            //            {
+            //                lbComcode.Text = ShotBand.ComCode;
+            //                if (lbSaleOn.Text == "ONLINE")
+            //                {
+            //                    lbProfit.Text = ShotBand.Profit_Online;
+            //                    lbCostCenter.Text = ShotBand.CostCenter_Online;
+            //                }
+            //                else if (lbSaleOn.Text == "OFFLINE")
+            //                {
+            //                    lbProfit.Text = ShotBand.Profit_Offline;
+            //                    lbCostCenter.Text = ShotBand.CostCenter_Offline;
+            //                }
+            //            }
+
+
+            //        }
+            //        #region OLD
+            //        //if (ShotBand != null)
+            //        //{
+            //        //    lbBrand.Text = ShotBand.Brand;
+            //        //    lbBrandShort.Text = ShotBand.Depart_Short;
+            //        //    lbComcode.Text = ShotBand.ComCode;
+            //        //    if (lbSaleOn.Text == "ONLINE")
+            //        //    {
+            //        //        lbProfit.Text = ShotBand.Profit_Online;
+            //        //        lbCostCenter.Text = ShotBand.CostCenter_Online;
+            //        //    }
+            //        //    else if (lbSaleOn.Text == "OFFLINE")
+            //        //    {
+            //        //        lbProfit.Text = ShotBand.Profit_Offline;
+            //        //        lbCostCenter.Text = ShotBand.CostCenter_Offline;
+            //        //    }
+            //        //}
+            //        #endregion
+            //    }
+
+            //}
+            #endregion
             var fileName = "Report_" + DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss") + ".xls";
 
             ExportExel(gv_Report, fileName);
@@ -353,5 +402,10 @@ namespace Carrier
         {
 
         }
+        public class BrandPro : BG_HApprove_Profitcenter
+        {
+            public string Brand { get; set; }
+        }
+
     }
 }

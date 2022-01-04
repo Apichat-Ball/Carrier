@@ -28,8 +28,6 @@ namespace Carrier
         {
             Session.Clear();
 
-            //Session["_UserID"] = "942";
-
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();
@@ -87,23 +85,11 @@ namespace Carrier
                         if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
                         {
                             orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
-                            if (txtDocnoSearch.Text != "")
-                            {
-                                orderList = orderList.Where(w => w.Docno == txtDocnoSearch.Text).ToList();
-                            }
-                            if (txtPnoSearch.Text != "")
-                            {
-                                orderList = orderList.Where(w => w.pno == txtPnoSearch.Text).ToList();
-                            }
-                            if (txtDstNameSearch.Text != "")
-                            {
-                                orderList = orderList.Where(w => w.dstName == txtDstNameSearch.Text).ToList();
-                            }
-                            if (txtArticleSearch.Text != "")
-                            {
-                                orderList = orderList.Where(w => w.ArticleCategory == txtArticleSearch.Text).ToList();
-                            }
-
+                            orderList = orderList.Where(w => (w.Docno == txtDocnoSearch.Text || txtDocnoSearch.Text == "")
+                            && (w.pno == txtPnoSearch.Text || txtPnoSearch.Text == "")
+                            && (w.dstName == txtDstNameSearch.Text || txtDstNameSearch.Text == "")
+                            && (w.ArticleCategory == txtArticleSearch.Text || txtArticleSearch.Text == "")).ToList();
+                            
                         }
                         else
                         {
@@ -161,6 +147,7 @@ namespace Carrier
         }
         protected void Page_gv(int pageselect, int pageCount)
         {
+            //จัดจำนวน row in table เพื่อแสดง
             lkPrevious.Visible = true;
             lkNext.Visible = true;
             lk1.Visible = false;
@@ -231,7 +218,8 @@ namespace Carrier
             }
             lkPrevious.CommandArgument = Convert.ToString(pageselect - 1);
             lkNext.CommandArgument = Convert.ToString(pageselect + 1);
-            if (pageselect <= (pageCount - 2)) { lkLast.Visible = true; }
+            var last = Convert.ToInt32(lkLast.Text);
+            if (pageselect <= (pageCount - (last - pageselect == 1 ? 1 : 2))&& pageCount != 2) { lkLast.Visible = true; }
             lkPrevious.CssClass = "btn btn-outline-primary";
             lkNext.CssClass = "btn btn-outline-primary";
             if (pageselect - 1 <= 0) { lkPrevious.CssClass = "btn btn-outline-secondary disabled"; }
@@ -266,6 +254,27 @@ namespace Carrier
                     cbItem.Checked = false;
                 }
             }
+        }
+
+        protected void imgbtnCancelOrder_Click(object sender, ImageClickEventArgs e)
+        {
+            ImageButton imgbtnCancelOrder = (ImageButton)sender;
+            GridViewRow row = (GridViewRow)imgbtnCancelOrder.NamingContainer;
+            Label lbpno = (Label)row.FindControl("lbpno");
+            LinkButton lkbDocno = (LinkButton)row.FindControl("lkbDocno");
+            var res = service_Flashs.CancelOrder(lkbDocno.Text, lbpno.Text);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('succes : " + res + "')", true);
+            loadtable(1);
+        }
+        protected void lkbDocno_Click(object sender, EventArgs e)
+        {
+            LinkButton lkbDocno = (LinkButton)sender;
+            var lbDocnoss = lkbDocno.Text;
+            Response.Redirect("Transport_Form.aspx?Docno=" + lbDocnoss);
+        }
+        protected void selectPage(object sender, CommandEventArgs e)
+        {
+            loadtable(Convert.ToInt32(e.CommandArgument));
         }
 
         protected void btnNotifications_Click(object sender, ImageClickEventArgs e)
@@ -358,20 +367,9 @@ namespace Carrier
             }
 
         }
-
         protected void btnCreateOrder_Click(object sender, EventArgs e)
         {
             Response.Redirect("Transport_Form.aspx");
-        }
-        protected void imgbtnCancelOrder_Click(object sender, ImageClickEventArgs e)
-        {
-            ImageButton imgbtnCancelOrder = (ImageButton)sender;
-            GridViewRow row = (GridViewRow)imgbtnCancelOrder.NamingContainer;
-            Label lbpno = (Label)row.FindControl("lbpno");
-            LinkButton lkbDocno = (LinkButton)row.FindControl("lkbDocno");
-            var res = service_Flashs.CancelOrder(lkbDocno.Text, lbpno.Text);
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('succes : " + res + "')", true);
-            loadtable(1);
         }
         protected void btnSearch_Click(object sender, EventArgs e)
         {
@@ -379,21 +377,17 @@ namespace Carrier
             btnClear.Visible = true;
             loadtable(1);
         }
-        protected void selectPage(object sender, CommandEventArgs e)
-        {
-            loadtable(Convert.ToInt32(e.CommandArgument));
-        }
-        protected void lkbDocno_Click(object sender, EventArgs e)
-        {
-            LinkButton lkbDocno = (LinkButton)sender;
-            var lbDocnoss = lkbDocno.Text;
-            Response.Redirect("Transport_Form.aspx?Docno=" + lbDocnoss);
-        }
-
         protected void btnClear_Click(object sender, EventArgs e)
         {
             lbStatusSearch.Text = "First";
+            txtDateStart.Text = DateTime.Now.ToString("dd/MM/yyyy");
+            txtDateEnd.Text = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy");
             btnClear.Visible = false;
+            txtDocnoSearch.Text = "";
+            txtPnoSearch.Text = "";
+            txtDstNameSearch.Text = "";
+            txtArticleSearch.Text = "";
+
             loadtable(1);
         }
     }

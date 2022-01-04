@@ -26,7 +26,7 @@
                     } else {
                         work = $('[id*=radioWorkOff]').siblings().text();
                     }
-                    var da = { site: $('[id*=txtSiteStorage]').val(), saleChannel: $('[id*=ddlReceiveLocation]').val(), workon: work }
+                    var da = { site: $('[id*=txtSiteStorage]').val(), saleChannel: $('[id*=ddlReceiveLocation]').val(), workon: work, BrandId: $('[id*=ddlSDpart]').val()}
                     console.log("da :" + JSON.stringify(da));
                     $.ajax({
                         url: "Transport_Form.aspx/AutoSearchSiteStorage",
@@ -189,7 +189,7 @@
                     <div class="row" runat="server" id="divSite" visible="false" style="margin-bottom: 10px;">
                         <div class="col-sm-2 w-100 input-group mb-2 ">
                             <asp:Label runat="server" ID="lbSite" Text="Site Storage" CssClass="input-group-text s-15px shadow"></asp:Label>
-                            <asp:TextBox runat="server" ID="txtSiteStorage" CssClass="form-control s-15px shadow" MaxLength="8" OnTextChanged="txtSiteStorage_TextChanged" AutoPostBack="true"></asp:TextBox>
+                            <asp:TextBox runat="server" ID="txtSiteStorage" CssClass="form-control s-15px shadow " MaxLength="8" OnTextChanged="txtSiteStorage_TextChanged" AutoPostBack="true" AutoCompleteType="Disabled"></asp:TextBox>
                         </div>
                     </div>
                     <asp:Label runat="server" ID="Label2" Text="ผู้รับ" CssClass="s-15px"></asp:Label>

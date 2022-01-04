@@ -218,10 +218,11 @@ namespace Carrier
             }
             lkPrevious.CommandArgument = Convert.ToString(pageselect - 1);
             lkNext.CommandArgument = Convert.ToString(pageselect + 1);
-            if (pageselect <= (pageCount - 2)) { lkLast.Visible = true; }
+            var last = Convert.ToInt32(lkLast.Text);
+            if (pageselect <= (pageCount - (last - pageselect == 1 ? 1 : 2)) && pageCount != 2) { lkLast.Visible = true; }
             lkPrevious.CssClass = "btn btn-outline-primary"; 
-            lkNext.CssClass = "btn btn-outline-primary";
             if (pageselect - 1 <= 0) { lkPrevious.CssClass = "btn btn-outline-secondary disabled"; }
+            lkNext.CssClass = "btn btn-outline-primary";
             if (pageselect + 1 > pageCount) { lkNext.CssClass = "btn btn-outline-secondary disabled"; }
 
             
@@ -234,11 +235,16 @@ namespace Carrier
             lk1.CommandArgument = lk1.Text; lk2.CommandArgument = lk2.Text; lk3.CommandArgument = lk3.Text;
 
         }
-        protected void btnCreateOrder_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("Transport_Form.aspx");
-        }
 
+
+
+        protected void lkDocno_Click(object sender, EventArgs e)
+        {
+            LinkButton lkDocno = (LinkButton)sender;
+            var lbDocnoss = lkDocno.Text;
+
+            Response.Redirect("Transport_Form.aspx?Docno=" + lbDocnoss);
+        }
         protected void imgbtnCancelOrder_Click(object sender, ImageClickEventArgs e)
         {
             ImageButton imgbtnCancelOrder = (ImageButton)sender;
@@ -249,19 +255,20 @@ namespace Carrier
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('succes : " + res + "')", true);
             loadtable(1);
         }
-
-        protected void lkDocno_Click(object sender, EventArgs e)
+        protected void btnCreateOrder_Click(object sender, EventArgs e)
         {
-            LinkButton lkDocno = (LinkButton)sender;
-            var lbDocnoss = lkDocno.Text;
-
-            Response.Redirect("Transport_Form.aspx?Docno=" + lbDocnoss);
+            Response.Redirect("Transport_Form.aspx");
         }
-
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             lbstatusSearch.Text = "Second";
             btnClear.Visible = true;
+            loadtable(1);
+        }
+        protected void btnClear_Click(object sender, EventArgs e)
+        {
+            lbstatusSearch.Text = "First";
+            btnClear.Visible = false;
             loadtable(1);
         }
 
@@ -270,11 +277,5 @@ namespace Carrier
             loadtable(Convert.ToInt32(e.CommandArgument));
         }
 
-        protected void btnClear_Click(object sender, EventArgs e)
-        {
-            lbstatusSearch.Text = "First";
-            btnClear.Visible = false;
-            loadtable(1);
-        }
     }
 }
