@@ -128,6 +128,8 @@ namespace Carrier.Service
 
             return model_key;
         }
+
+        #region convert string to passKey
         public static String sha256_hash(String value)
         {
             StringBuilder Sb = new StringBuilder();
@@ -157,7 +159,9 @@ namespace Carrier.Service
             }
             return Sb.ToString();
         }
-        public string Get_Docment(string docno)
+        #endregion
+
+        public string Get_Docment(string docno, string lastfile)
         {
             var orderItem = entities_Carrier.Order_Item.Where(w => w.Docno == docno).FirstOrDefault();
             string trackingno = orderItem.pno;
@@ -174,7 +178,7 @@ namespace Carrier.Service
             DirectoryInfo d = new DirectoryInfo(filepath);
 
             String originalPath = new Uri(HttpContext.Current.Request.Url.AbsoluteUri).OriginalString;
-            String parentDirectory = originalPath.Substring(0, originalPath.LastIndexOf("/Transport_Form")) + "/PDFFile/" + docno + ".pdf?" + DateTime.Now.ToString();
+            String parentDirectory = originalPath.Substring(0, originalPath.LastIndexOf(lastfile)) + "/PDFFile/" + docno + ".pdf?" + DateTime.Now.ToString();
             string dataDir = HttpContext.Current.Server.MapPath("PDFFile/") + docno + ".pdf";
             if (File.Exists(dataDir))
             {
@@ -424,7 +428,7 @@ namespace Carrier.Service
             {
                 return "กรุณาเลือกประเภทพัสดุ";
             }
-            if(receive == "หน้าร้าน")
+            if(receive == "Depart")
             {
                 if(item.siteStorage.Length < 6)
                 {
@@ -434,14 +438,21 @@ namespace Carrier.Service
                 {
                     var online = entities_Online_Lazada.PROVINCEs.Select(s => s.PROVINCE_ID).ToList();
                     var siteId = item.siteStorage.ToUpper();
-
                     var BG = (from ha in entities_InsideSFG_WF.BG_HApprove
                               join haP in entities_InsideSFG_WF.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
+                              where ha.departmentID == item.SDpart
                               select haP.Depart_Short).ToList();
                     var sitepro = entities_Carrier.Site_Profit.Where(w => w.Sale_Channel == receive && w.Channel == item.saleOn
                     && w.Site_Stroage.Substring(0, siteId.Length).Contains(siteId)
                     && BG.Contains(w.Brand))
-                        .Select(s => s.Site_Stroage).ToList();
+                        .Select(s => s.Site_Stroage.Substring(0,4)).ToList();
+                    var custax = (from ct in entities_InsideSFG_WF.Customer_Tax
+                                  where online.Contains(ct.Province1) && sitepro.Contains(ct.CustomerCode)
+                                  select ct).ToList();
+                    if(custax.Count == 0)
+                    {
+                        return "ไม่พบ SiteStorage นี้ครับ";
+                    }
                 }
             }
             
@@ -469,7 +480,7 @@ namespace Carrier.Service
                 }
                 else { return null; }
             }
-            else { HttpContext.Current.Session["_UserID"] = "101635";  return null; }
+            else {  return null; }
         }
         public string CancelOrder(string lbDocno,string lkbpno)
         {
