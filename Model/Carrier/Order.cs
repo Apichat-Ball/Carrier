@@ -49,5 +49,6 @@ namespace Carrier.Model.Carrier
         public string SDpart { get; set; }
         public string saleOn { get; set; }
         public string siteStorage { get; set; }
+        public string saleChannel { get; set; }
     }
 }

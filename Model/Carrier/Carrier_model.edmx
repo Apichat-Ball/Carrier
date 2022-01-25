@@ -12,6 +12,16 @@
           <Property Name="ArticleCode" Type="int" Nullable="false" />
           <Property Name="ArticleName" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="Event_Shop">
+          <Key>
+            <PropertyRef Name="Event_ID" />
+          </Key>
+          <Property Name="Event_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Shop_Code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Event_Type" Type="nvarchar(max)" />
+          <Property Name="Event_Branch" Type="nvarchar(max)" />
+          <Property Name="Event_Name" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="Notify">
           <Key>
             <PropertyRef Name="TicketPickupId" />
@@ -23,6 +33,7 @@
           <Property Name="UpCountryNote" Type="nvarchar(max)" />
           <Property Name="TimeoutAtText" Type="nvarchar(max)" />
           <Property Name="TicketMessage" Type="nvarchar(max)" />
+          <Property Name="DateNotify" Type="datetime" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
@@ -63,6 +74,7 @@
           <Property Name="SDpart" Type="nvarchar" MaxLength="50" />
           <Property Name="saleOn" Type="nvarchar" MaxLength="20" />
           <Property Name="siteStorage" Type="nvarchar" MaxLength="20" />
+          <Property Name="saleChannel" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Order_Box">
           <Key>
@@ -125,6 +137,7 @@
         </EntityType>
         <EntityContainer Name="CarrierModelStoreContainer">
           <EntitySet Name="Article_Category" EntityType="Self.Article_Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Event_Shop" EntityType="Self.Event_Shop" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Notify" EntityType="Self.Notify" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order_Box" EntityType="Self.Order_Box" Schema="dbo" store:Type="Tables" />
@@ -146,6 +159,7 @@
           <EntitySet Name="Users" EntityType="CarrierModel.User" />
           <EntitySet Name="Order_Box" EntityType="CarrierModel.Order_Box" />
           <EntitySet Name="Site_Profit" EntityType="CarrierModel.Site_Profit" />
+          <EntitySet Name="Event_Shop" EntityType="CarrierModel.Event_Shop" />
         </EntityContainer>
         <EntityType Name="Article_Category">
           <Key>
@@ -193,6 +207,7 @@
           <Property Name="SDpart" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="saleOn" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="siteStorage" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="saleChannel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Status">
           <Key>
@@ -212,6 +227,7 @@
           <Property Name="UpCountryNote" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TimeoutAtText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TicketMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DateNotify" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="Order_Item">
           <Key>
@@ -265,6 +281,16 @@
           <Property Name="Site_Stroage" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Sale_Channel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="Event_Shop">
+          <Key>
+            <PropertyRef Name="Event_ID" />
+          </Key>
+          <Property Name="Event_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Shop_Code" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Event_Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Event_Branch" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Event_Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -282,6 +308,7 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="CarrierModel.Order">
               <MappingFragment StoreEntitySet="Order">
+                <ScalarProperty Name="saleChannel" ColumnName="saleChannel" />
                 <ScalarProperty Name="siteStorage" ColumnName="siteStorage" />
                 <ScalarProperty Name="saleOn" ColumnName="saleOn" />
                 <ScalarProperty Name="SDpart" ColumnName="SDpart" />
@@ -331,6 +358,7 @@
           <EntitySetMapping Name="Notifies">
             <EntityTypeMapping TypeName="CarrierModel.Notify">
               <MappingFragment StoreEntitySet="Notify">
+                <ScalarProperty Name="DateNotify" ColumnName="DateNotify" />
                 <ScalarProperty Name="TicketMessage" ColumnName="TicketMessage" />
                 <ScalarProperty Name="TimeoutAtText" ColumnName="TimeoutAtText" />
                 <ScalarProperty Name="UpCountryNote" ColumnName="UpCountryNote" />
@@ -392,6 +420,17 @@
                 <ScalarProperty Name="COMCODE" ColumnName="COMCODE" />
                 <ScalarProperty Name="Channel" ColumnName="Channel" />
                 <ScalarProperty Name="Brand" ColumnName="Brand" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Event_Shop">
+            <EntityTypeMapping TypeName="CarrierModel.Event_Shop">
+              <MappingFragment StoreEntitySet="Event_Shop">
+                <ScalarProperty Name="Event_Name" ColumnName="Event_Name" />
+                <ScalarProperty Name="Event_Branch" ColumnName="Event_Branch" />
+                <ScalarProperty Name="Event_Type" ColumnName="Event_Type" />
+                <ScalarProperty Name="Shop_Code" ColumnName="Shop_Code" />
+                <ScalarProperty Name="Event_ID" ColumnName="Event_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

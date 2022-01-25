@@ -267,6 +267,24 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.LinkButton lkNext;
 
         /// <summary>
+        /// btnSendFree control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSendFree;
+
+        /// <summary>
+        /// btnLalamove control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton btnLalamove;
+
+        /// <summary>
         /// btnNotify control.
         /// </summary>
         /// <remarks>

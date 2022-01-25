@@ -65,12 +65,14 @@ namespace Carrier
                                      TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
                                      SaleOn = order.saleOn,
                                      Brand = order.SDpart,
-                                     site = order.siteStorage
+                                     site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
                                  }).ToList();
-                if (lbFirstLoad.Text != "first")
-                {
-                    orderList = orderList.Where(w => w.dateCreate >= datestart && w.dateCreate <= dateend).ToList();
-                }
+                //if (lbFirstLoad.Text != "first")
+                //{
+                //    orderList = orderList.Where(w => w.dateCreate >= datestart && w.dateCreate <= dateend).ToList();
+                //}
+                orderList = orderList.Where(w => w.dateCreate >= datestart && w.dateCreate <= dateend).ToList();
+
                 var maxrow = 8;
                 double maxdata_gvData = (double)((decimal)Convert.ToDecimal(orderList.Count()) / Convert.ToDecimal(maxrow));
                 int pageCount_gvData = (int)Math.Ceiling(maxdata_gvData);
@@ -259,113 +261,7 @@ namespace Carrier
         }
         protected void btnExport_Click(object sender, EventArgs e)
         {
-            #region OLD Load Table
-            //var format = "dd/MM/yyyy";
-            //var enUS = new CultureInfo("en-US");
-            //var datestart = DateTime.ParseExact(txtDateStart.Text, format, enUS, DateTimeStyles.None);
-            //var dateend = DateTime.ParseExact(txtDateEnd.Text, format, enUS, DateTimeStyles.None);
-            //var orderList = (from order in carrier_Entities.Orders
-            //                 join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
-            //                 where order_Item.Status != "C" && order_Item.Date_Success >= datestart && order_Item.Date_Success <= dateend
-            //                 orderby order.Docno
-            //                 select new
-            //                 {
-            //                     Docno = order.Docno,
-            //                     pno = order_Item.pno,
-            //                     srcName = order.srcName,
-            //                     dstName = order.dstName,
-            //                     ArticleCategory = carrier_Entities.Article_Category.Where(w => w.ArticleCode == order.articleCategory).ToList().FirstOrDefault().ArticleName,
-            //                     dateCreate = order_Item.Date_Success,
-            //                     TrackingPickup = order_Item.ticketPickupId,
-            //                     TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
-            //                     SaleOn = order.saleOn,
-            //                     Brand = order.SDpart,
-            //                     site = order.siteStorage
-            //                 }).ToList();
-            //gv_Report.DataSource = orderList;
-            //gv_Report.DataBind();
-            //foreach (GridViewRow row in gv_Report.Rows)
-            //{
-            //    Label lbBrand = (Label)row.FindControl("lbBrand");
-            //    Label lbBrandShort = (Label)row.FindControl("lbBrandShort");
-            //    Label lbDateCreate = (Label)row.FindControl("lbDateCreate");
-            //    lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
-            //    if (lbBrand.Text != "")
-            //    {
-            //        var ShotBand = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
-            //                        join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
-            //                        where BG_HA.departmentID == lbBrand.Text
-            //                        select new BrandPro
-            //                        {
-            //                            DepartmentID = BG_HA.departmentID,
-            //                            Brand = BG_HA.department_,
-            //                            Depart_Short = BG_HAPF.Depart_Short,
-            //                            ComCode = BG_HAPF.ComCode,
-            //                            CostCenter_Offline = BG_HAPF.CostCenter_Offline,
-            //                            CostCenter_Online = BG_HAPF.CostCenter_Online,
-            //                            Profit_Offline = BG_HAPF.Profit_Offline,
-            //                            Profit_Online = BG_HAPF.Profit_Online
-            //                        }
-            //                 ).ToList().FirstOrDefault();
-            //        Label lbComcode = (Label)row.FindControl("lbComcode");
-            //        Label lbProfit = (Label)row.FindControl("lbProfit");
-            //        Label lbCostCenter = (Label)row.FindControl("lbCostCenter");
-            //        Label lbSaleOn = (Label)row.FindControl("lbSaleOn");
-            //        Label lbSiteStorage = (Label)row.FindControl("lbSiteStorage");
-
-            //        if (ShotBand != null)
-            //        {
-            //            lbBrand.Text = ShotBand.Brand;
-            //            lbBrandShort.Text = ShotBand.Depart_Short;
-            //            var Profit = (from pro in carrier_Entities.Site_Profit
-            //                          where pro.Site_Stroage == lbSiteStorage.Text && pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.Depart_Short + "%")
-            //                          select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
-            //            if (Profit != null)
-            //            {
-
-            //                lbComcode.Text = Profit.ComCode;
-            //                lbProfit.Text = Profit.profit;
-            //                lbCostCenter.Text = Profit.CostCenter;
-            //            }
-            //            else
-            //            {
-            //                lbComcode.Text = ShotBand.ComCode;
-            //                if (lbSaleOn.Text == "ONLINE")
-            //                {
-            //                    lbProfit.Text = ShotBand.Profit_Online;
-            //                    lbCostCenter.Text = ShotBand.CostCenter_Online;
-            //                }
-            //                else if (lbSaleOn.Text == "OFFLINE")
-            //                {
-            //                    lbProfit.Text = ShotBand.Profit_Offline;
-            //                    lbCostCenter.Text = ShotBand.CostCenter_Offline;
-            //                }
-            //            }
-
-
-            //        }
-            //        #region OLD
-            //        //if (ShotBand != null)
-            //        //{
-            //        //    lbBrand.Text = ShotBand.Brand;
-            //        //    lbBrandShort.Text = ShotBand.Depart_Short;
-            //        //    lbComcode.Text = ShotBand.ComCode;
-            //        //    if (lbSaleOn.Text == "ONLINE")
-            //        //    {
-            //        //        lbProfit.Text = ShotBand.Profit_Online;
-            //        //        lbCostCenter.Text = ShotBand.CostCenter_Online;
-            //        //    }
-            //        //    else if (lbSaleOn.Text == "OFFLINE")
-            //        //    {
-            //        //        lbProfit.Text = ShotBand.Profit_Offline;
-            //        //        lbCostCenter.Text = ShotBand.CostCenter_Offline;
-            //        //    }
-            //        //}
-            //        #endregion
-            //    }
-
-            //}
-            #endregion
+            
             var fileName = "Report_" + DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss") + ".xls";
 
             ExportExel(gv_Report, fileName);

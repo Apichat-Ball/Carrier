@@ -69,7 +69,7 @@ namespace Carrier
                                      DstPhone = order.dstPhone,
                                      DstHomePhone = order.dstHomePhone,
                                      DstProvinces = order.dstProvinceName,
-                                     DstCity = order.dstProvinceName,
+                                     DstCity = order.dstCityName,
                                      DstDistrict = order.dstDistrictName,
                                      DstPostal = order.dstPostalCode,
                                      DstDetailAddress = order.dstDetailAddress,
@@ -79,7 +79,8 @@ namespace Carrier
                                      TrackingNo = orderItem.pno,
                                      SDpart = order.SDpart,
                                      saleOn = order.saleOn,
-                                     SiteStorage = order.siteStorage
+                                     SiteStorage = order.siteStorage,
+                                     SaleChannel = order.saleChannel
                                  }).ToList().FirstOrDefault();
 
 
@@ -96,13 +97,15 @@ namespace Carrier
                     var srcprovince = Convert.ToInt32(ddlsrcProvinceName.SelectedValue);
                     ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == srcprovince).ToList();
                     ddlsrcCityName.DataBind();
-                    ddlsrcCityName.SelectedValue = query.SrcCity;
+                    var srccityTemp = Whale_Entities.Cities.Where(w => w.City_Name == query.SrcCity).FirstOrDefault().City_ID;
+                    ddlsrcCityName.SelectedValue = srccityTemp.ToString();
                     //ddlsrcCityName.Enabled = true;
 
                     var srccity = Convert.ToInt32(ddlsrcCityName.SelectedValue);
                     ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == srccity).ToList();
                     ddlsrcDistrictName.DataBind();
-                    ddlsrcDistrictName.SelectedItem.Text = query.SrcDistrict;
+                    var srcdistrictTemp = Whale_Entities.Districts.Where(w => w.Distinct_Name == query.SrcDistrict).FirstOrDefault().Distinct_ID;
+                    ddlsrcDistrictName.SelectedValue = srcdistrictTemp.ToString();
                     //ddlsrcDistrictName.Enabled = true;
 
                     txtdstName.Text = query.DstName;
@@ -114,13 +117,15 @@ namespace Carrier
                     var dstprovince = Convert.ToInt32(ddldstProvinceName.SelectedValue);
                     ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == dstprovince).ToList();
                     ddldstCityName.DataBind();
-                    ddldstCityName.SelectedValue = query.DstCity;
+                    var dstcityTemp = Whale_Entities.Cities.Where(w => w.City_Name == query.DstCity).FirstOrDefault().City_ID;
+                    ddldstCityName.SelectedValue = dstcityTemp.ToString();
                     //ddldstCityName.Enabled = true;
 
                     var dstcity = Convert.ToInt32(ddldstCityName.SelectedValue);
                     ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == dstcity).ToList();
                     ddldstDistrictName.DataBind();
-                    ddldstDistrictName.SelectedValue = query.DstDistrict;
+                    var dstdistrictTemp = Whale_Entities.Districts.Where(w => w.Distinct_Name == query.DstDistrict).FirstOrDefault().Distinct_ID;
+                    ddldstDistrictName.SelectedValue = dstdistrictTemp.ToString();
                     //ddldstDistrictName.Enabled = true;
 
                     txtdstPostalCode.Text = query.DstPostal;
@@ -204,7 +209,20 @@ namespace Carrier
                         txtSiteStorage.Enabled = false;
                         txtSiteStorage.Text = query.SiteStorage;
                     }
-                    
+                    List<newList> allFavorite = new List<newList>();
+                    allFavorite.Add( new newList { val = "select", text = "เลือกปลายทาง" });
+                    allFavorite.Add( new newList { val = "บริษัท สตาร์แฟชั่น(2551) จำกัด", text = "Star Fashion Group" });
+                    allFavorite.Add(new newList { val = "บริษัท เอส.ดี.ซี วัน จำกัด", text = "SDC1" });
+                    allFavorite.Add( new newList { val = "Depart", text = "หน้าร้าน" });
+                    allFavorite.Add( new newList { val = "CENTER", text = "ลูกค้า" });
+                    allFavorite.Add( new newList { val = "Event", text = "Event" });
+                    allFavorite.Add( new newList { val = "CENTER_Other", text = "อื่นๆ" });
+                    ddlReceiveLocation.DataSource = allFavorite;
+                    ddlReceiveLocation.DataBind();
+                    ddlReceiveLocation.SelectedValue = query.SaleChannel;
+                    ddlReceiveLocation.Enabled = false;
+                    lbGuidSiteStorage.Visible = false;
+                    //ddlTypeSend.SelectedValue = 
                 }
                 else
                 {
@@ -229,12 +247,12 @@ namespace Carrier
                         ddlFavorites.DataSource = allFavorite;
                         ddlFavorites.DataBind();
                         allFavorite.Insert(3, new newList { val = "Depart", text = "หน้าร้าน" });
-                        allFavorite.Insert(4, new newList { val = "Center", text = "ลูกค้า" });
-                        allFavorite.Insert(5, new newList { val = "อื่นๆ", text = "อื่นๆ" });
+                        allFavorite.Insert(4, new newList { val = "CENTER", text = "ลูกค้า" });
+                        allFavorite.Insert(5, new newList { val = "Event", text = "Event" });
+                        allFavorite.Insert(6, new newList { val = "CENTER_Other", text = "อื่นๆ" });
                         allFavorite.ForEach(f => { if (f.val == "select") { f.text = "เลือกปลายทาง"; } });
                         ddlReceiveLocation.DataSource = allFavorite;
                         ddlReceiveLocation.DataBind();
-                        div_Receive.Visible = true;
                         lbFavorites.Visible = true;
                         ddlFavorites.Visible = true;
                     }
@@ -267,11 +285,11 @@ namespace Carrier
                         allFavorite.Insert(1, new newList { val = "บริษัท สตาร์แฟชั่น(2551) จำกัด", text = "Star Fashion Group" });
                         allFavorite.Insert(2, new newList { val = "บริษัท เอส.ดี.ซี วัน จำกัด", text = "SDC1" });
                         allFavorite.Insert(3, new newList { val = "Depart", text = "หน้าร้าน" });
-                        allFavorite.Insert(4, new newList { val = "Center", text = "ลูกค้า" });
-                        allFavorite.Insert(5, new newList { val = "อื่นๆ", text = "อื่นๆ" });
+                        allFavorite.Insert(4, new newList { val = "CENTER", text = "ลูกค้า" });
+                        allFavorite.Insert(5, new newList { val = "Event", text = "Event" });
+                        allFavorite.Insert(6, new newList { val = "CENTER_Other", text = "อื่นๆ" });
                         ddlReceiveLocation.DataSource = allFavorite;
                         ddlReceiveLocation.DataBind();
-                        div_Receive.Visible = true;
                         lbFavorites.Visible = true;
                         ddlFavorites.Visible = true;
                     }
@@ -303,8 +321,8 @@ namespace Carrier
             depart.Insert(0, new { departmentID = "Select", department_ = "กรุณาเลือกแผนกที่ต้องการเบิก" });
             ddlSDpart.DataSource = depart;
             ddlSDpart.DataBind();
-
-            var box = Whale_Entities.Boxes.Where(w=>w.Flag_Active == true &&( w.Box_Name == "2A" || w.Box_Name == "4")).ToList();
+            
+            var box = Whale_Entities.Boxes.Where(w=>w.Flag_Active == true &&( w.Box_ID != 1 && w.Box_ID != 6 && w.Box_ID != 8 && w.Box_ID != 12 && w.Box_ID != 13 && w.Box_ID != 14 && w.Box_ID != 16 && w.Box_ID != 17)).ToList();
             box.Insert(0,new Box { Box_ID = 0, Box_Name = "เลือกขนาดกล่อง" });
             ddlBox.DataSource = box;
             ddlBox.DataBind();
@@ -600,20 +618,15 @@ namespace Carrier
                 txtdstDetailAddress.Text = "";
             }
             ddlReceiveLocation.SelectedValue = "select";
-            divSite.Visible = false;
+            
         }
 
         protected void ddlReceiveLocation_SelectedIndexChanged(object sender, EventArgs e)
         {
             var selectReceive = ddlReceiveLocation.SelectedValue;
-            if (selectReceive == "Depart" )
-            {
-                divSite.Visible = true;
-            }
-            else
-            {
+            
                 txtSiteStorage.Text = "";
-                divSite.Visible = false;
+                //divSite.Visible = false;
                 txtdstName.Enabled = true;
                 if (selectReceive != "select")
                 {
@@ -665,7 +678,7 @@ namespace Carrier
                             break;
                     }
                 }
-            }
+            
         }
 
         #endregion
@@ -678,22 +691,22 @@ namespace Carrier
             {
                 getAddressOnSite(siteinput.Text.ToUpper().Substring(0,4));
             }
-            else
-            {
-                txtdstName.Text = "";
-                txtdstName.Enabled = true;
-                txtdstPhone.Text = "";
-                txtdstHomePhone.Text = "";
-                txtdstPostalCode.Text = "";
-                ddldstProvinceName.SelectedValue = "0";
-                ddldstCityName.DataSource = new List<City>();
-                ddldstCityName.DataBind();
-                ddldstCityName.Enabled = false;
-                ddldstDistrictName.DataSource = new List<District>();
-                ddldstDistrictName.DataBind();
-                ddldstDistrictName.Enabled = false;
-                txtdstDetailAddress.Text = "";
-            }
+            //else
+            //{
+            //    txtdstName.Text = "";
+            //    txtdstName.Enabled = true;
+            //    txtdstPhone.Text = "";
+            //    txtdstHomePhone.Text = "";
+            //    txtdstPostalCode.Text = "";
+            //    ddldstProvinceName.SelectedValue = "0";
+            //    ddldstCityName.DataSource = new List<City>();
+            //    ddldstCityName.DataBind();
+            //    ddldstCityName.Enabled = false;
+            //    ddldstDistrictName.DataSource = new List<District>();
+            //    ddldstDistrictName.DataBind();
+            //    ddldstDistrictName.Enabled = false;
+            //    txtdstDetailAddress.Text = "";
+            //}
 
         }
 
@@ -715,7 +728,7 @@ namespace Carrier
                            }).ToList().FirstOrDefault();
             if (address != null)
             {
-                txtdstName.Text = address.NameTax;
+                
                 if(address.dstPhone.Length >= 8)
                 {
                     if (address.dstPhone.Substring(0, 2) == "08" || address.dstPhone.Substring(0, 2) == "09")
@@ -794,27 +807,26 @@ namespace Carrier
                 }
 
                 txtdstPostalCode.Text = address.dstPostal;
-                txtdstDetailAddress.Text = address.dstDetail;
-                txtdstName.Enabled = false;
+                txtdstDetailAddress.Text = address.NameTax +" "+ address.dstDetail;
             }
-            else
-            {
-                txtdstName.Text = "";
-                txtdstName.Enabled = true;
-                txtdstPhone.Text = "";
-                txtdstHomePhone.Text = "";
-                txtdstPostalCode.Text = "";
-                ddldstProvinceName.SelectedValue = "0";
-                ddldstCityName.DataSource = new List<City>();
-                ddldstCityName.DataBind();
-                //ddldstCityName.ClearSelection();
-                ddldstCityName.Enabled = false;
-                ddldstDistrictName.DataSource = new List<District>();
-                //ddldstDistrictName.ClearSelection();
-                ddldstDistrictName.DataBind();
-                ddldstDistrictName.Enabled = false;
-                txtdstDetailAddress.Text = "";
-            }
+            //else
+            //{
+            //    txtdstName.Text = "";
+            //    txtdstName.Enabled = true;
+            //    txtdstPhone.Text = "";
+            //    txtdstHomePhone.Text = "";
+            //    txtdstPostalCode.Text = "";
+            //    ddldstProvinceName.SelectedValue = "0";
+            //    ddldstCityName.DataSource = new List<City>();
+            //    ddldstCityName.DataBind();
+            //    //ddldstCityName.ClearSelection();
+            //    ddldstCityName.Enabled = false;
+            //    ddldstDistrictName.DataSource = new List<District>();
+            //    //ddldstDistrictName.ClearSelection();
+            //    ddldstDistrictName.DataBind();
+            //    ddldstDistrictName.Enabled = false;
+            //    txtdstDetailAddress.Text = "";
+            //}
             
 
         }
@@ -900,27 +912,11 @@ namespace Carrier
                                    srcPostal = tax.Postal1
 
                                }).ToList().FirstOrDefault();
-            #region not use
-            //var siteId = "";
-            //if (siteAddress != null)
+            //if (ddlReceiveLocation.SelectedValue == "Center")
             //{
-            //    if (siteAddress.srcDetail == txtsrcDetailAddress.Text && siteAddress.NameTax == txtsrcName.Text &&
-            //        siteAddress.srcProvince == ddlsrcProvinceName.SelectedValue && siteAddress.srcCity.Contains(ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text) &&
-            //        siteAddress.srcDistrict.Contains(ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text) && siteAddress.srcPostal == txtsrcPostalCode.Text)
-            //    {
-            //        siteId = txtSiteStorage.Text;
-            //    }
-            //    else
-            //    {
-            //        siteId = "";
-            //    }
+            //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ไม่พบ SiteStorage Center กรุณาติดต่อฝ่ายบัญชี')", true);
+            //    return;
             //}
-            #endregion
-            if (ddlReceiveLocation.SelectedValue == "Center")
-            {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ไม่พบ SiteStorage Center กรุณาติดต่อฝ่ายบัญชี')", true);
-                return;
-            }
 
             //เก็บข้อมูลทั้งหมดที่กรอกเพื่อไป check และไปใช้ส่ง api และเก็บเข้า base
             var item = new Order
@@ -954,7 +950,8 @@ namespace Carrier
                 height = Convert.ToInt32(txtheight.Text),
                 remark = txtremark.Text,
                 SDpart = ddlSDpart.SelectedValue,
-                siteStorage = txtSiteStorage.Text.ToUpper()
+                siteStorage = txtSiteStorage.Text.ToUpper(),
+                saleChannel = ddlReceiveLocation.SelectedValue == "select"?"": ddlReceiveLocation.SelectedValue
             };
             if (radioWorkOn.Checked)
             {
@@ -1018,13 +1015,22 @@ namespace Carrier
                       join haP in InsideSFG_WF_Entities.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
                       where ha.departmentID == BrandId
                       select haP.Depart_Short).ToList();
-            var sitepro = carrier_Entities.Site_Profit.Where(w => w.Sale_Channel == saleChannel && w.Channel == workon 
-            && w.Site_Stroage.Substring(0, site.Length).Contains(siteId)
-            && BG.Contains(w.Brand)
-           ).Select(s => s.Site_Stroage).ToList().Take(10);
+            List<string> sitepro  = new List<string>();
+            if (saleChannel == "Event")
+            {
+                sitepro = carrier_Entities.Event_Shop.Where(w => w.Shop_Code.Substring(0, site.Length).Contains(siteId)).Select(s=>s.Shop_Code).ToList();
+            }
+            else
+            {
+                sitepro = carrier_Entities.Site_Profit.Where(w => w.Sale_Channel == saleChannel && w.Channel == workon
+                    && w.Site_Stroage.Substring(0, site.Length).Contains(siteId)
+                    && BG.Contains(w.Brand)
+                ).Select(s => s.Site_Stroage).ToList();
+            }
+            
            
 
-            return sitepro.ToList();
+            return sitepro.Take(10).ToList();
             
         }   
         

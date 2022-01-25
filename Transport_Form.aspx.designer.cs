@@ -123,6 +123,33 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.DropDownList ddlFavorites;
 
         /// <summary>
+        /// div_TypeSend control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div_TypeSend;
+
+        /// <summary>
+        /// lbTypeSend control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbTypeSend;
+
+        /// <summary>
+        /// ddlTypeSend control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlTypeSend;
+
+        /// <summary>
         /// lbgroupSend control.
         /// </summary>
         /// <remarks>
@@ -427,6 +454,15 @@ namespace Carrier
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtSiteStorage;
+
+        /// <summary>
+        /// lbGuidSiteStorage control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbGuidSiteStorage;
 
         /// <summary>
         /// Label2 control.

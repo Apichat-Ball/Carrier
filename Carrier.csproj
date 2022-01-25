@@ -205,8 +205,10 @@
     <Content Include="Global.asax" />
     <Content Include="Home_Carrier.aspx" />
     <Content Include="Icon\cancellation.png" />
+    <Content Include="Icon\Lalamove.png" />
+    <Content Include="Icon\logo-thailandpost.jpg" />
     <Content Include="Icon\Logo_Courier.png" />
-    <Content Include="Icon\tracking.png" />
+    <Content Include="Icon\TrackingFlashExpress.png" />
     <Content Include="Icon\x-button.png" />
     <Content Include="Model\Carrier\Carrier_model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -506,6 +508,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Carrier_model.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Carrier\Event_Shop.cs">
+      <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Carrier\Notify.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>

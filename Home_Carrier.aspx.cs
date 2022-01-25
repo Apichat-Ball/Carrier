@@ -58,9 +58,11 @@ namespace Carrier
                                  ArticleCategory = carrier_Entities.Article_Category.Where(w => w.ArticleCode == order.articleCategory).ToList().FirstOrDefault().ArticleName,
                                  dateCreate = orderItem.Date_Success,
                                  TrackingPickup = orderItem.ticketPickupId,
-                                 TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == orderItem.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
+                                 TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == orderItem.ticketPickupId).Select(s => s.DateNotify).ToList().FirstOrDefault(),
+                                 TimeTrackingText = carrier_Entities.Notifies.Where(w => w.TicketPickupId == orderItem.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
                                  Brand = order.SDpart,
-                                 status = orderItem.Status
+                                 status = orderItem.Status,
+                                 Remark = order.remark
                              }).ToList();
            
             var format = "dd/MM/yyyy";
@@ -71,7 +73,7 @@ namespace Carrier
                 var end = DateTime.ParseExact(txtDateEnd.Text, format, enUS, DateTimeStyles.None);
                 if(lbstatusSearch.Text == "First")
                 {
-                    orderList = orderList.Where(w =>w.status != "A").ToList();
+                    orderList = orderList.Where(w =>w.status != "A" && w.status != "SP" && w.status != "SL").ToList();
                 }
                 else
                 {
@@ -114,14 +116,33 @@ namespace Carrier
                 {
                     Label lbDateCreate = (Label)row.FindControl("lbDateCreate");
                     Label lbStatus = (Label)row.FindControl("lbStatus");
+                    Label lbTimeTrackingText = (Label)row.FindControl("lbTimeTrackingText");
+                    Label lbTimeTracking = (Label)row.FindControl("lbTimeTracking");
+                    Label lbStatusItem = (Label)row.FindControl("lbStatusItem");
                     ImageButton imgbtnCancelOrder = (ImageButton)row.FindControl("imgbtnCancelOrder");
                     lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
                     if (lbStatus.Text != "")
                     {
+                        var date = DateTime.Parse(lbTimeTracking.Text);
+                        var statusTicket = service_Flashs.CheckNotify(date, lbStatus.Text);
+                        if(statusTicket == "รับพัสดุแล้ว" || statusTicket == "ยกเลิกแล้ว")
+                        {
+                            lbTimeTrackingText.Text = statusTicket;
+                        }
+                        else
+                        imgbtnCancelOrder.Visible = false;
+                    }
+                    if (lbStatusItem.Text == "SP")
+                    {
+                        lbTimeTrackingText.Text = "ส่งผ่านไปรษณีย์แล้ว";
+                        imgbtnCancelOrder.Visible = false;
+                    }
+                    if (lbStatusItem.Text == "SL")
+                    {
+                        lbTimeTrackingText.Text = "ส่งผ่าน Lalamove";
                         imgbtnCancelOrder.Visible = false;
                     }
                     Label lbBrand = (Label)row.FindControl("lbBrand");
-                    Label lbBrandShort = (Label)row.FindControl("lbBrandShort");
                     var Brand = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
                                  join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
                                  where BG_HA.departmentID == lbBrand.Text
@@ -129,12 +150,10 @@ namespace Carrier
                     if(Brand != null)
                     {
                         lbBrand.Text = Brand.Brand;
-                        lbBrandShort.Text = Brand.BrandShort;
                     }
                     else
                     {
                         lbBrand.Text = "";
-                        lbBrandShort.Text = "";
                     }
                     
                 }

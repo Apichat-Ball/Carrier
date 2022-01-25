@@ -12,15 +12,12 @@ namespace Carrier.Model.Carrier
     using System;
     using System.Collections.Generic;
     
-    public partial class Notify
+    public partial class Event_Shop
     {
-        public string TicketPickupId { get; set; }
-        public Nullable<int> StaffInfoId { get; set; }
-        public string StaffInfoName { get; set; }
-        public string StaffInfoPhone { get; set; }
-        public string UpCountryNote { get; set; }
-        public string TimeoutAtText { get; set; }
-        public string TicketMessage { get; set; }
-        public Nullable<System.DateTime> DateNotify { get; set; }
+        public int Event_ID { get; set; }
+        public string Shop_Code { get; set; }
+        public string Event_Type { get; set; }
+        public string Event_Branch { get; set; }
+        public string Event_Name { get; set; }
     }
 }

@@ -112,15 +112,6 @@
                 </asp:TemplateField>
                 <asp:TemplateField>
                     <HeaderTemplate>
-                        <asp:Label runat="server" ID="lbhBrandShort" Text="BrandShort"></asp:Label>
-                    </HeaderTemplate>
-                    <ItemTemplate>
-                        <asp:Label runat="server" ID="lbBrandShort"></asp:Label>
-                    </ItemTemplate>
-                    <ItemStyle CssClass="gj-text-align-center" />
-                </asp:TemplateField>
-                <asp:TemplateField>
-                    <HeaderTemplate>
                         <asp:Label runat="server" ID="lbhsrcName" Text="ชื่อผู้ส่ง"></asp:Label>
                     </HeaderTemplate>
                     <ItemTemplate>
@@ -146,6 +137,15 @@
                 </asp:TemplateField>
                 <asp:TemplateField>
                     <HeaderTemplate>
+                        <asp:Label runat="server" ID="lbhRemark" Text="หมายเหตุ"></asp:Label>
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:Label runat="server" ID="lbRemark" Text='<%# Bind("Remark") %>'></asp:Label>
+                    </ItemTemplate>
+                    <ItemStyle CssClass="gj-text-align-center" />
+                </asp:TemplateField>
+                <asp:TemplateField>
+                    <HeaderTemplate>
                         <asp:Label runat="server" ID="lbhDateCreate" Text="Date Create"></asp:Label>
                     </HeaderTemplate>
                     <ItemTemplate>
@@ -159,6 +159,7 @@
                     </HeaderTemplate>
                     <ItemTemplate>
                         <asp:Label runat="server" ID="lbStatus" Text='<%# Bind("TrackingPickup") %>'></asp:Label>
+                        <asp:Label runat="server" ID="lbStatusItem" Text='<%# Bind("status") %>' Visible="false"></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField>
@@ -166,7 +167,8 @@
                         <asp:Label runat="server" ID="lbhTimeTracking" Text="เวลารถมารับ"></asp:Label>
                     </HeaderTemplate>
                     <ItemTemplate>
-                        <asp:Label runat="server" ID="lbTimeTracking" Text='<%# Bind("TimeTracking") %>'></asp:Label>
+                        <asp:Label runat="server" ID="lbTimeTrackingText" Text='<%# Bind("TimeTrackingText") %>'></asp:Label>
+                        <asp:Label runat="server" ID="lbTimeTracking" Text='<%# Bind("TimeTracking") %>' Visible="false"></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField>

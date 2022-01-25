@@ -5,6 +5,13 @@
         .s-15px{
             font-size: 15px;
         }
+        .img-mt--12px{
+            margin-top: -26px;
+            margin-left:-52px;
+        }
+        .mg-Lala{
+                margin: 0px 0px 0px 26px;
+        }
     </style>
      <script type="text/javascript">
 
@@ -113,15 +120,6 @@
                 </asp:TemplateField>
                 <asp:TemplateField>
                     <HeaderTemplate>
-                        <asp:Label runat="server" ID="lbhBrandShort" Text="BrandShort"></asp:Label>
-                    </HeaderTemplate>
-                    <ItemTemplate>
-                        <asp:Label runat="server" ID="lbBrandShort"></asp:Label>
-                    </ItemTemplate>
-                    <ItemStyle CssClass="gj-text-align-center" />
-                </asp:TemplateField>
-                <asp:TemplateField>
-                    <HeaderTemplate>
                         <asp:Label runat="server" ID="lbhsrcName" Text="ชื่อผู้ส่ง"></asp:Label>
                     </HeaderTemplate>
                     <ItemTemplate>
@@ -147,6 +145,15 @@
                 </asp:TemplateField>
                 <asp:TemplateField>
                     <HeaderTemplate>
+                        <asp:Label runat="server" ID="lbhRemark" Text="หมายเหตุ"></asp:Label>
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:Label runat="server" ID="lbRemark" Text='<%# Bind("Remark") %>'></asp:Label>
+                    </ItemTemplate>
+                    <ItemStyle CssClass="gj-text-align-center" />
+                </asp:TemplateField>
+                <asp:TemplateField>
+                    <HeaderTemplate>
                         <asp:Label runat="server" ID="lbhDateCreate" Text="Date Create"></asp:Label>
                     </HeaderTemplate>
                     <ItemTemplate>
@@ -160,6 +167,7 @@
                     </HeaderTemplate>
                     <ItemTemplate>
                         <asp:Label runat="server" ID="lbStatus" Text='<%# Bind("TrackingPickup") %>'></asp:Label>
+                        <asp:Label runat="server" ID="lbStatusItem" Text='<%# Bind("status") %>' Visible="false"></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField>
@@ -167,7 +175,8 @@
                         <asp:Label runat="server" ID="lbhTimeTracking" Text="เวลารถมารับ"></asp:Label>
                     </HeaderTemplate>
                     <ItemTemplate>
-                        <asp:Label runat="server" ID="lbTimeTracking" Text='<%# Bind("TimeTracking") %>'></asp:Label>
+                        <asp:Label runat="server" ID="lbTimeTrackingText" Text='<%# Bind("TimeTrackingText") %>'></asp:Label>
+                        <asp:Label runat="server" ID="lbTimeTracking" Text='<%# Bind("TimeTracking") %>' Visible="false"></asp:Label>
                     </ItemTemplate>
                     <ItemStyle CssClass="gj-text-align-center" />
                 </asp:TemplateField>
@@ -194,9 +203,18 @@
             <asp:LinkButton runat="server" ID="lkNext"  CssClass="btn btn-outline-primary" OnCommand="selectPage" Visible="false" >NEXT</asp:LinkButton>
         </div>
     </div>
-    <div class ="row">
-        <div >
-            <asp:ImageButton runat="server" id="btnNotify" OnClick="btnNotifications_Click" Width="80px" CssClass="float-end" ImageUrl="~/Icon/tracking.png"/>
+    <div style="margin-bottom:90px">
+        <div class="row float-right " style="flex-wrap:nowrap; margin-right:100px">
+            <div class="col-5">
+                <asp:Button runat="server" ID="btnSendFree" OnClick="btnSendFree_Click" CssClass="btn btn-primary mt-4" Text="ส่งไปรษณีย์/ส่งเอง"/>
+            </div>
+            <div class="col-5">
+                <asp:ImageButton runat="server" ID="btnLalamove" OnClick="btnLalamove_Click" Width="110px" CssClass="mt-2 mg-Lala" ImageUrl="~/Icon/Lalamove.png" />
+            </div>
+            <div class="col-5">
+                <asp:ImageButton runat="server" ID="btnNotify" OnClick="btnNotifications_Click" Width="180px" CssClass="img-mt--12px" ImageUrl="~/Icon/TrackingFlashExpress.png" />
+            </div>
         </div>
     </div>
+    
 </asp:Content>

@@ -33,5 +33,6 @@ namespace Carrier.Model.Carrier
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Order_Box> Order_Box { get; set; }
         public virtual DbSet<Site_Profit> Site_Profit { get; set; }
+        public virtual DbSet<Event_Shop> Event_Shop { get; set; }
     }
 }
