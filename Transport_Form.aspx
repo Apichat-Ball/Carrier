@@ -99,7 +99,7 @@
                             <asp:DropDownList runat="server" ID="ddlFavorites" CssClass="btn dropdown-toggle s-15px shadow" Visible="false" DataValueField="val" DataTextField="text" OnSelectedIndexChanged="ddlFavorites_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                         </div>
                     </div>
-                    <div class="row" runat="server" id="div_TypeSend" visible="false">
+                    <div class="row" runat="server" id="div_TypeSend"  visible="false">
                         <div class="col-sm-2 w-100 input-group mb-2 ">
                             <asp:Label runat="server" ID="lbTypeSend" Text="ประเภทการส่ง" CssClass="input-group-text s-15px shadow"></asp:Label>
                             <asp:DropDownList runat="server" ID="ddlTypeSend" CssClass="btn dropdown-toggle s-15px shadow" AutoPostBack="true">
