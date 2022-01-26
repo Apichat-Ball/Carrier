@@ -331,8 +331,8 @@ D:\Work\CarrierNew\Carrier\bin\Microsoft.AspNet.FriendlyUrls.xml
 D:\Work\CarrierNew\Carrier\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 D:\Work\CarrierNew\Carrier\bin\de\PdfSharp.resources.dll
 D:\Work\CarrierNew\Carrier\bin\de\PdfSharp.Charting.resources.dll
-D:\Work\CarrierNew\Carrier\obj\Debug\Carrier.csproj.AssemblyReference.cache
 D:\Work\CarrierNew\Carrier\obj\Debug\Carrier.csproj.CoreCompileInputs.cache
 D:\Work\CarrierNew\Carrier\obj\Debug\Carrier.csproj.CopyComplete
 D:\Work\CarrierNew\Carrier\obj\Debug\Carrier.dll
 D:\Work\CarrierNew\Carrier\obj\Debug\Carrier.pdb
+D:\Work\CarrierNew\Carrier\obj\Debug\Carrier.csproj.AssemblyReference.cache

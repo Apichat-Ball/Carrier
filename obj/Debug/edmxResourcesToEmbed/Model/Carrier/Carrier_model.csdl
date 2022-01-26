@@ -7,6 +7,9 @@
     <EntitySet Name="Notifies" EntityType="CarrierModel.Notify" />
     <EntitySet Name="Order_Item" EntityType="CarrierModel.Order_Item" />
     <EntitySet Name="Users" EntityType="CarrierModel.User" />
+    <EntitySet Name="Order_Box" EntityType="CarrierModel.Order_Box" />
+    <EntitySet Name="Site_Profit" EntityType="CarrierModel.Site_Profit" />
+    <EntitySet Name="Event_Shop" EntityType="CarrierModel.Event_Shop" />
   </EntityContainer>
   <EntityType Name="Article_Category">
     <Key>
@@ -52,6 +55,10 @@
     <Property Name="status" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
     <Property Name="Transport_Type" Type="Int32" />
     <Property Name="SDpart" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="saleOn" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="siteStorage" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="saleChannel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TypeSend" Type="Int32" />
   </EntityType>
   <EntityType Name="Status">
     <Key>
@@ -71,6 +78,8 @@
     <Property Name="UpCountryNote" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="TimeoutAtText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="TicketMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="DateNotify" Type="DateTime" Precision="3" />
+    <Property Name="warehouseNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="Order_Item">
     <Key>
@@ -100,5 +109,38 @@
     <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="Permission" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Order_Box">
+    <Key>
+      <PropertyRef Name="Docno" />
+      <PropertyRef Name="Box_ID" />
+    </Key>
+    <Property Name="Docno" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Box_ID" Type="Int32" Nullable="false" />
+    <Property Name="Box_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Qty" Type="Int32" />
+  </EntityType>
+  <EntityType Name="Site_Profit">
+    <Key>
+      <PropertyRef Name="Brand" />
+      <PropertyRef Name="Site_Stroage" />
+    </Key>
+    <Property Name="Brand" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Channel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="COMCODE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Profit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Costcenter" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Site_Stroage" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Sale_Channel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Event_Shop">
+    <Key>
+      <PropertyRef Name="Event_ID" />
+    </Key>
+    <Property Name="Event_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Shop_Code" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="Event_Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Event_Branch" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Event_Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
   </EntityType>
 </Schema>

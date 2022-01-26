@@ -151,5 +151,75 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Customer_Tax">
+      <EntityTypeMapping TypeName="InsideSFG_WFModel.Customer_Tax">
+        <MappingFragment StoreEntitySet="Customer_Tax">
+          <ScalarProperty Name="Branch_Acc" ColumnName="Branch_Acc" />
+          <ScalarProperty Name="Province1" ColumnName="Province1" />
+          <ScalarProperty Name="fax1" ColumnName="fax1" />
+          <ScalarProperty Name="phone1" ColumnName="phone1" />
+          <ScalarProperty Name="Postal1" ColumnName="Postal1" />
+          <ScalarProperty Name="Area1" ColumnName="Area1" />
+          <ScalarProperty Name="Zone1" ColumnName="Zone1" />
+          <ScalarProperty Name="Road1" ColumnName="Road1" />
+          <ScalarProperty Name="lane1" ColumnName="lane1" />
+          <ScalarProperty Name="Address1" ColumnName="Address1" />
+          <ScalarProperty Name="TaxID" ColumnName="TaxID" />
+          <ScalarProperty Name="BranchCode" ColumnName="BranchCode" />
+          <ScalarProperty Name="NameTax" ColumnName="NameTax" />
+          <ScalarProperty Name="CustomerCode" ColumnName="CustomerCode" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BG_HApprove_Profitcenter">
+      <EntityTypeMapping TypeName="InsideSFG_WFModel.BG_HApprove_Profitcenter">
+        <MappingFragment StoreEntitySet="BG_HApprove_Profitcenter">
+          <ScalarProperty Name="CostCenter_Online" ColumnName="CostCenter_Online" />
+          <ScalarProperty Name="Profit_Online" ColumnName="Profit_Online" />
+          <ScalarProperty Name="CostCenter_Offline" ColumnName="CostCenter_Offline" />
+          <ScalarProperty Name="Profit_Offline" ColumnName="Profit_Offline" />
+          <ScalarProperty Name="ComCode" ColumnName="ComCode" />
+          <ScalarProperty Name="Depart_Short" ColumnName="Depart_Short" />
+          <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="WSHeadApproveBrands">
+      <EntityTypeMapping TypeName="InsideSFG_WFModel.WSHeadApproveBrand">
+        <MappingFragment StoreEntitySet="WSHeadApproveBrand">
+          <ScalarProperty Name="UserID_Approve_Online_Com" ColumnName="UserID_Approve_Online_Com" />
+          <ScalarProperty Name="UserID_Online_Commission" ColumnName="UserID_Online_Commission" />
+          <ScalarProperty Name="Flag_Clear" ColumnName="Flag_Clear" />
+          <ScalarProperty Name="UserID_MD_PS" ColumnName="UserID_MD_PS" />
+          <ScalarProperty Name="UserID_Senior_PS" ColumnName="UserID_Senior_PS" />
+          <ScalarProperty Name="UserID_BM_PS" ColumnName="UserID_BM_PS" />
+          <ScalarProperty Name="UserID_Asst_PS" ColumnName="UserID_Asst_PS" />
+          <ScalarProperty Name="Sale_UserID" ColumnName="Sale_UserID" />
+          <ScalarProperty Name="UserID_Approve_FingerScan" ColumnName="UserID_Approve_FingerScan" />
+          <ScalarProperty Name="UserID_Claim" ColumnName="UserID_Claim" />
+          <ScalarProperty Name="Daily_Sales_Flag" ColumnName="Daily_Sales_Flag" />
+          <ScalarProperty Name="Daily_Sales_Permission_UserID" ColumnName="Daily_Sales_Permission_UserID" />
+          <ScalarProperty Name="EForm_SCE_BM_UserID" ColumnName="EForm_SCE_BM_UserID" />
+          <ScalarProperty Name="EForm_SCE_Sale_UserID" ColumnName="EForm_SCE_Sale_UserID" />
+          <ScalarProperty Name="Cost_Center" ColumnName="Cost_Center" />
+          <ScalarProperty Name="Date_Save" ColumnName="Date_Save" />
+          <ScalarProperty Name="EmpSave" ColumnName="EmpSave" />
+          <ScalarProperty Name="UserID_Asst" ColumnName="UserID_Asst" />
+          <ScalarProperty Name="UserID_BM" ColumnName="UserID_BM" />
+          <ScalarProperty Name="BM" ColumnName="BM" />
+          <ScalarProperty Name="Flag_SalesShop" ColumnName="Flag_SalesShop" />
+          <ScalarProperty Name="Flag_WF" ColumnName="Flag_WF" />
+          <ScalarProperty Name="Flag_Sales" ColumnName="Flag_Sales" />
+          <ScalarProperty Name="Flag" ColumnName="Flag" />
+          <ScalarProperty Name="Remark" ColumnName="Remark" />
+          <ScalarProperty Name="UserID_Approve" ColumnName="UserID_Approve" />
+          <ScalarProperty Name="ComCode" ColumnName="ComCode" />
+          <ScalarProperty Name="BRANDABB" ColumnName="BRANDABB" />
+          <ScalarProperty Name="Brand_Welfare" ColumnName="Brand_Welfare" />
+          <ScalarProperty Name="Brand" ColumnName="Brand" />
+          <ScalarProperty Name="ID_Brand" ColumnName="ID_Brand" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

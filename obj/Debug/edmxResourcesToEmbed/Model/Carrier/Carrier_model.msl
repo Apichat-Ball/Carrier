@@ -12,6 +12,10 @@
     <EntitySetMapping Name="Orders">
       <EntityTypeMapping TypeName="CarrierModel.Order">
         <MappingFragment StoreEntitySet="Order">
+          <ScalarProperty Name="TypeSend" ColumnName="TypeSend" />
+          <ScalarProperty Name="saleChannel" ColumnName="saleChannel" />
+          <ScalarProperty Name="siteStorage" ColumnName="siteStorage" />
+          <ScalarProperty Name="saleOn" ColumnName="saleOn" />
           <ScalarProperty Name="SDpart" ColumnName="SDpart" />
           <ScalarProperty Name="Transport_Type" ColumnName="Transport_Type" />
           <ScalarProperty Name="status" ColumnName="status" />
@@ -59,6 +63,8 @@
     <EntitySetMapping Name="Notifies">
       <EntityTypeMapping TypeName="CarrierModel.Notify">
         <MappingFragment StoreEntitySet="Notify">
+          <ScalarProperty Name="warehouseNo" ColumnName="warehouseNo" />
+          <ScalarProperty Name="DateNotify" ColumnName="DateNotify" />
           <ScalarProperty Name="TicketMessage" ColumnName="TicketMessage" />
           <ScalarProperty Name="TimeoutAtText" ColumnName="TimeoutAtText" />
           <ScalarProperty Name="UpCountryNote" ColumnName="UpCountryNote" />
@@ -97,6 +103,40 @@
           <ScalarProperty Name="Email" ColumnName="Email" />
           <ScalarProperty Name="Username" ColumnName="Username" />
           <ScalarProperty Name="UserID" ColumnName="UserID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Order_Box">
+      <EntityTypeMapping TypeName="CarrierModel.Order_Box">
+        <MappingFragment StoreEntitySet="Order_Box">
+          <ScalarProperty Name="Qty" ColumnName="Qty" />
+          <ScalarProperty Name="Box_Name" ColumnName="Box_Name" />
+          <ScalarProperty Name="Box_ID" ColumnName="Box_ID" />
+          <ScalarProperty Name="Docno" ColumnName="Docno" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Site_Profit">
+      <EntityTypeMapping TypeName="CarrierModel.Site_Profit">
+        <MappingFragment StoreEntitySet="Site_Profit">
+          <ScalarProperty Name="Sale_Channel" ColumnName="Sale_Channel" />
+          <ScalarProperty Name="Site_Stroage" ColumnName="Site_Stroage" />
+          <ScalarProperty Name="Costcenter" ColumnName="Costcenter" />
+          <ScalarProperty Name="Profit" ColumnName="Profit" />
+          <ScalarProperty Name="COMCODE" ColumnName="COMCODE" />
+          <ScalarProperty Name="Channel" ColumnName="Channel" />
+          <ScalarProperty Name="Brand" ColumnName="Brand" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Event_Shop">
+      <EntityTypeMapping TypeName="CarrierModel.Event_Shop">
+        <MappingFragment StoreEntitySet="Event_Shop">
+          <ScalarProperty Name="Event_Name" ColumnName="Event_Name" />
+          <ScalarProperty Name="Event_Branch" ColumnName="Event_Branch" />
+          <ScalarProperty Name="Event_Type" ColumnName="Event_Type" />
+          <ScalarProperty Name="Shop_Code" ColumnName="Shop_Code" />
+          <ScalarProperty Name="Event_ID" ColumnName="Event_ID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

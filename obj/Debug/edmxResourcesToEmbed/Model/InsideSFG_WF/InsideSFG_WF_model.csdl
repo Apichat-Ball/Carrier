@@ -121,6 +121,9 @@
     <EntitySet Name="BG_HApprove" EntityType="Self.BG_HApprove" />
     <EntitySet Name="Employees" EntityType="Self.Employee" />
     <EntitySet Name="BG_ForeCast" EntityType="InsideSFG_WFModel.BG_ForeCast" />
+    <EntitySet Name="Customer_Tax" EntityType="InsideSFG_WFModel.Customer_Tax" />
+    <EntitySet Name="BG_HApprove_Profitcenter" EntityType="InsideSFG_WFModel.BG_HApprove_Profitcenter" />
+    <EntitySet Name="WSHeadApproveBrands" EntityType="InsideSFG_WFModel.WSHeadApproveBrand" />
   </EntityContainer>
   <EntityType Name="BG_ForeCast">
     <Key>
@@ -154,5 +157,72 @@
     <Property Name="ActiveDate" Type="DateTime" Precision="3" />
     <Property Name="Flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
     <Property Name="Remark" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Customer_Tax">
+    <Key>
+      <PropertyRef Name="CustomerCode" />
+    </Key>
+    <Property Name="CustomerCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="NameTax" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="BranchCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="TaxID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Address1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="lane1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Road1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Zone1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Area1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Postal1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="phone1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="fax1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Province1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Branch_Acc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="BG_HApprove_Profitcenter">
+    <Key>
+      <PropertyRef Name="DepartmentID" />
+    </Key>
+    <Property Name="DepartmentID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Depart_Short" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="ComCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Profit_Offline" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CostCenter_Offline" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Profit_Online" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CostCenter_Online" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="WSHeadApproveBrand">
+    <Key>
+      <PropertyRef Name="ID_Brand" />
+    </Key>
+    <Property Name="ID_Brand" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="true" />
+    <Property Name="Brand" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Brand_Welfare" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="BRANDABB" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Name="ComCode" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Name="UserID_Approve" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Flag" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="Flag_Sales" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="Flag_WF" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="Flag_SalesShop" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+    <Property Name="BM" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="UserID_BM" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
+    <Property Name="UserID_Asst" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="EmpSave" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="Date_Save" Type="DateTime" Precision="3" />
+    <Property Name="Cost_Center" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="EForm_SCE_Sale_UserID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="EForm_SCE_BM_UserID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="Daily_Sales_Permission_UserID" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Name="Daily_Sales_Flag" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+    <Property Name="UserID_Claim" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+    <Property Name="UserID_Approve_FingerScan" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="Sale_UserID" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+    <Property Name="UserID_Asst_PS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Name="UserID_BM_PS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Name="UserID_Senior_PS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Name="UserID_MD_PS" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+    <Property Name="Flag_Clear" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+    <Property Name="UserID_Online_Commission" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="UserID_Approve_Online_Com" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
   </EntityType>
 </Schema>

@@ -7,6 +7,16 @@
     <Property Name="ArticleCode" Type="int" Nullable="false" />
     <Property Name="ArticleName" Type="nvarchar" MaxLength="50" />
   </EntityType>
+  <EntityType Name="Event_Shop">
+    <Key>
+      <PropertyRef Name="Event_ID" />
+    </Key>
+    <Property Name="Event_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Shop_Code" Type="nvarchar" MaxLength="10" Nullable="false" />
+    <Property Name="Event_Type" Type="nvarchar(max)" />
+    <Property Name="Event_Branch" Type="nvarchar(max)" />
+    <Property Name="Event_Name" Type="nvarchar(max)" />
+  </EntityType>
   <EntityType Name="Notify">
     <Key>
       <PropertyRef Name="TicketPickupId" />
@@ -18,6 +28,8 @@
     <Property Name="UpCountryNote" Type="nvarchar(max)" />
     <Property Name="TimeoutAtText" Type="nvarchar(max)" />
     <Property Name="TicketMessage" Type="nvarchar(max)" />
+    <Property Name="DateNotify" Type="datetime" />
+    <Property Name="warehouseNo" Type="nvarchar(max)" />
   </EntityType>
   <EntityType Name="Order">
     <Key>
@@ -56,6 +68,20 @@
     <Property Name="status" Type="nvarchar" MaxLength="5" />
     <Property Name="Transport_Type" Type="int" />
     <Property Name="SDpart" Type="nvarchar" MaxLength="50" />
+    <Property Name="saleOn" Type="nvarchar" MaxLength="20" />
+    <Property Name="siteStorage" Type="nvarchar" MaxLength="20" />
+    <Property Name="saleChannel" Type="nvarchar" MaxLength="50" />
+    <Property Name="TypeSend" Type="int" />
+  </EntityType>
+  <EntityType Name="Order_Box">
+    <Key>
+      <PropertyRef Name="Docno" />
+      <PropertyRef Name="Box_ID" />
+    </Key>
+    <Property Name="Docno" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="Box_ID" Type="int" Nullable="false" />
+    <Property Name="Box_Name" Type="nvarchar" MaxLength="50" />
+    <Property Name="Qty" Type="int" />
   </EntityType>
   <EntityType Name="Order_Item">
     <Key>
@@ -77,6 +103,19 @@
     <Property Name="CodeResponse" Type="int" />
     <Property Name="ticketPickupId" Type="nvarchar" MaxLength="20" />
   </EntityType>
+  <EntityType Name="Site_Profit">
+    <Key>
+      <PropertyRef Name="Brand" />
+      <PropertyRef Name="Site_Stroage" />
+    </Key>
+    <Property Name="Brand" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Channel" Type="nvarchar" MaxLength="50" />
+    <Property Name="COMCODE" Type="nvarchar" MaxLength="50" />
+    <Property Name="Profit" Type="nvarchar" MaxLength="50" />
+    <Property Name="Costcenter" Type="nvarchar" MaxLength="50" />
+    <Property Name="Site_Stroage" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Sale_Channel" Type="nvarchar" MaxLength="50" />
+  </EntityType>
   <EntityType Name="Status">
     <Key>
       <PropertyRef Name="StatusID" />
@@ -95,9 +134,12 @@
   </EntityType>
   <EntityContainer Name="CarrierModelStoreContainer">
     <EntitySet Name="Article_Category" EntityType="Self.Article_Category" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Event_Shop" EntityType="Self.Event_Shop" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Notify" EntityType="Self.Notify" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Order_Box" EntityType="Self.Order_Box" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Order_Item" EntityType="Self.Order_Item" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Site_Profit" EntityType="Self.Site_Profit" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
   </EntityContainer>

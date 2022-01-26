@@ -77,6 +77,39 @@
     <Property Name="UserID_Shoes" Type="varchar(max)" />
     <Property Name="SAP_Ref" Type="nvarchar" MaxLength="100" />
   </EntityType>
+  <EntityType Name="BG_HApprove_Profitcenter">
+    <Key>
+      <PropertyRef Name="DepartmentID" />
+    </Key>
+    <Property Name="DepartmentID" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Depart_Short" Type="nvarchar" MaxLength="100" />
+    <Property Name="ComCode" Type="nvarchar" MaxLength="50" />
+    <Property Name="Profit_Offline" Type="nvarchar" MaxLength="50" />
+    <Property Name="CostCenter_Offline" Type="nvarchar" MaxLength="50" />
+    <Property Name="Profit_Online" Type="nvarchar" MaxLength="50" />
+    <Property Name="CostCenter_Online" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Customer_Tax">
+    <Key>
+      <PropertyRef Name="CustomerCode" />
+    </Key>
+    <Property Name="CustomerCode" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="NameTax" Type="nvarchar(max)" />
+    <Property Name="BranchCode" Type="nvarchar(max)" />
+    <Property Name="TaxID" Type="nvarchar(max)" />
+    <Property Name="Address1" Type="nvarchar(max)" />
+    <Property Name="lane1" Type="nvarchar(max)" />
+    <Property Name="Road1" Type="nvarchar(max)" />
+    <Property Name="Zone1" Type="nvarchar(max)" />
+    <Property Name="Area1" Type="nvarchar(max)" />
+    <Property Name="Postal1" Type="nvarchar(max)" />
+    <Property Name="phone1" Type="nvarchar(max)" />
+    <Property Name="fax1" Type="nvarchar(max)" />
+    <Property Name="Province1" Type="nvarchar(max)" />
+    <Property Name="Branch_Acc" Type="varchar" MaxLength="50" />
+  </EntityType>
   <EntityType Name="Employee">
     <Key>
       <PropertyRef Name="userID" />
@@ -150,9 +183,65 @@
     <Property Name="ISContact" Type="varchar" MaxLength="5" />
     <Property Name="ISContact_Leave" Type="varchar" MaxLength="5" />
   </EntityType>
+  <EntityType Name="WSHeadApproveBrand">
+    <Key>
+      <PropertyRef Name="ID_Brand" />
+    </Key>
+    <Property Name="ID_Brand" Type="nvarchar" MaxLength="6" Nullable="false" />
+    <Property Name="Brand" Type="varchar" MaxLength="50" />
+    <Property Name="Brand_Welfare" Type="nvarchar" MaxLength="50" />
+    <Property Name="BRANDABB" Type="nvarchar" MaxLength="4" />
+    <Property Name="ComCode" Type="nvarchar" MaxLength="4" />
+    <Property Name="UserID_Approve" Type="nvarchar" MaxLength="10" />
+    <Property Name="Remark" Type="nvarchar(max)" />
+    <Property Name="Flag" Type="nvarchar" MaxLength="1" />
+    <Property Name="Flag_Sales" Type="nvarchar" MaxLength="1" />
+    <Property Name="Flag_WF" Type="nvarchar" MaxLength="1" />
+    <Property Name="Flag_SalesShop" Type="nvarchar" MaxLength="1" />
+    <Property Name="BM" Type="nvarchar" MaxLength="10" />
+    <Property Name="UserID_BM" Type="nvarchar" MaxLength="9" />
+    <Property Name="UserID_Asst" Type="nvarchar(max)" />
+    <Property Name="EmpSave" Type="nvarchar" MaxLength="10" />
+    <Property Name="Date_Save" Type="datetime" />
+    <Property Name="Cost_Center" Type="nvarchar" MaxLength="20" />
+    <Property Name="EForm_SCE_Sale_UserID" Type="nvarchar(max)" />
+    <Property Name="EForm_SCE_BM_UserID" Type="nvarchar" MaxLength="10" />
+    <Property Name="Daily_Sales_Permission_UserID" Type="nvarchar" MaxLength="300" />
+    <Property Name="Daily_Sales_Flag" Type="nvarchar" MaxLength="5" />
+    <Property Name="UserID_Claim" Type="nvarchar" MaxLength="10" />
+    <Property Name="UserID_Approve_FingerScan" Type="nvarchar" MaxLength="200" />
+    <Property Name="Sale_UserID" Type="varchar" MaxLength="300" />
+    <Property Name="UserID_Asst_PS" Type="nvarchar" MaxLength="300" />
+    <Property Name="UserID_BM_PS" Type="nvarchar" MaxLength="300" />
+    <Property Name="UserID_Senior_PS" Type="nvarchar" MaxLength="300" />
+    <Property Name="UserID_MD_PS" Type="nvarchar" MaxLength="300" />
+    <Property Name="Flag_Clear" Type="char" MaxLength="5" />
+    <Property Name="UserID_Online_Commission" Type="nvarchar(max)" />
+    <Property Name="UserID_Approve_Online_Com" Type="varchar" MaxLength="100" />
+  </EntityType>
   <EntityContainer Name="InsideSFG_WFModelStoreContainer">
     <EntitySet Name="BG_ForeCast" EntityType="Self.BG_ForeCast" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="BG_HApprove" EntityType="Self.BG_HApprove" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BG_HApprove_Profitcenter" EntityType="Self.BG_HApprove_Profitcenter" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="WSHeadApproveBrand" EntityType="Self.WSHeadApproveBrand" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Customer_Tax" EntityType="Self.Customer_Tax" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Customer_Tax].[CustomerCode] AS [CustomerCode], 
+    [Customer_Tax].[NameTax] AS [NameTax], 
+    [Customer_Tax].[BranchCode] AS [BranchCode], 
+    [Customer_Tax].[TaxID] AS [TaxID], 
+    [Customer_Tax].[Address1] AS [Address1], 
+    [Customer_Tax].[lane1] AS [lane1], 
+    [Customer_Tax].[Road1] AS [Road1], 
+    [Customer_Tax].[Zone1] AS [Zone1], 
+    [Customer_Tax].[Area1] AS [Area1], 
+    [Customer_Tax].[Postal1] AS [Postal1], 
+    [Customer_Tax].[phone1] AS [phone1], 
+    [Customer_Tax].[fax1] AS [fax1], 
+    [Customer_Tax].[Province1] AS [Province1], 
+    [Customer_Tax].[Branch_Acc] AS [Branch_Acc]
+    FROM [dbo].[Customer_Tax] AS [Customer_Tax]</DefiningQuery>
+    </EntitySet>
   </EntityContainer>
 </Schema>

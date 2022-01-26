@@ -23,5 +23,18 @@
   </EntityType>
   <EntityContainer Name="Online_LazadaEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="API_Key" EntityType="Self.API_Key" />
+    <EntitySet Name="PROVINCEs" EntityType="Online_LazadaModel.PROVINCE" />
   </EntityContainer>
+  <EntityType Name="PROVINCE">
+    <Key>
+      <PropertyRef Name="PROVINCE_ID" />
+      <PropertyRef Name="PROVINCE_CODE" />
+      <PropertyRef Name="PROVINCE_NAME" />
+      <PropertyRef Name="GEO_ID" />
+    </Key>
+    <Property Name="PROVINCE_ID" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+    <Property Name="PROVINCE_CODE" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+    <Property Name="PROVINCE_NAME" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="GEO_ID" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+  </EntityType>
 </Schema>

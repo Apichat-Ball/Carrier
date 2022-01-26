@@ -21,7 +21,29 @@
     <Property Name="refresh_create" Type="datetime" />
     <Property Name="refresh_in" Type="datetime" />
   </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'Online_Lazada.dbo.PROVINCE' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="PROVINCE">
+    <Key>
+      <PropertyRef Name="PROVINCE_ID" />
+      <PropertyRef Name="PROVINCE_CODE" />
+      <PropertyRef Name="PROVINCE_NAME" />
+      <PropertyRef Name="GEO_ID" />
+    </Key>
+    <Property Name="PROVINCE_ID" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="PROVINCE_CODE" Type="varchar" MaxLength="2" Nullable="false" />
+    <Property Name="PROVINCE_NAME" Type="varchar" MaxLength="150" Nullable="false" />
+    <Property Name="GEO_ID" Type="varchar" MaxLength="5" Nullable="false" />
+  </EntityType>
   <EntityContainer Name="Online_LazadaModelStoreContainer">
     <EntitySet Name="API_Key" EntityType="Self.API_Key" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PROVINCE" EntityType="Self.PROVINCE" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [PROVINCE].[PROVINCE_ID] AS [PROVINCE_ID], 
+    [PROVINCE].[PROVINCE_CODE] AS [PROVINCE_CODE], 
+    [PROVINCE].[PROVINCE_NAME] AS [PROVINCE_NAME], 
+    [PROVINCE].[GEO_ID] AS [GEO_ID]
+    FROM [dbo].[PROVINCE] AS [PROVINCE]</DefiningQuery>
+    </EntitySet>
   </EntityContainer>
 </Schema>
