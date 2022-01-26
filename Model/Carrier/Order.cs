@@ -50,5 +50,6 @@ namespace Carrier.Model.Carrier
         public string saleOn { get; set; }
         public string siteStorage { get; set; }
         public string saleChannel { get; set; }
+        public Nullable<int> TypeSend { get; set; }
     }
 }

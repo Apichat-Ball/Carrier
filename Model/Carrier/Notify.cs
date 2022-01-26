@@ -22,5 +22,6 @@ namespace Carrier.Model.Carrier
         public string TimeoutAtText { get; set; }
         public string TicketMessage { get; set; }
         public Nullable<System.DateTime> DateNotify { get; set; }
+        public string warehouseNo { get; set; }
     }
 }

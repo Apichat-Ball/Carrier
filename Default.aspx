@@ -82,7 +82,7 @@
 
     </div>
     <div class="row mt-3">
-        <asp:GridView runat="server" ID="gv_OrderAll" Width="100%" EmptyDataText="ไม่มีการสร้างรายการ" AutoGenerateColumns="false" CssClass="table table-striped table-bordered table-hover small"
+        <asp:GridView runat="server" ID="gv_OrderAll" Width="100%" EmptyDataText="ไม่มีการสร้างรายการ" AutoGenerateColumns="false" CssClass="table table-striped table-bordered table-hover table-sm small"
             HeaderStyle-HorizontalAlign="Center">
             <Columns>
                 <asp:TemplateField>
@@ -163,11 +163,20 @@
                 </asp:TemplateField>
                 <asp:TemplateField>
                     <HeaderTemplate>
-                        <asp:Label runat="server" ID="lbhTrackingPickup" Text="Tracking Picup ID"></asp:Label>
+                        <asp:Label runat="server" ID="lbhTrackingPickup" Text="รูปแบบการจัดส่ง"></asp:Label>
                     </HeaderTemplate>
                     <ItemTemplate>
-                        <asp:Label runat="server" ID="lbStatus" Text='<%# Bind("TrackingPickup") %>'></asp:Label>
+                        <asp:Label runat="server" ID="lbTransport_Type" Text='<%# Bind("Transport_Type") %>'></asp:Label>
+                        <asp:Label runat="server" ID="lbStatus" Text='<%# Bind("TrackingPickup") %>' Visible="false"></asp:Label>
                         <asp:Label runat="server" ID="lbStatusItem" Text='<%# Bind("status") %>' Visible="false"></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField>
+                    <HeaderTemplate>
+                        <asp:Label runat="server" ID="lbhStaffinfoId" Text="เลขที่พนักงานคูเรีย"></asp:Label>
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:Label runat="server" ID="lbStaffinfoId" Text='<%# Bind("StaffInfoName") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField>
@@ -185,6 +194,7 @@
                         <asp:Label runat="server" ID="lbProcess" Text="การดำเนินการ"></asp:Label>
                     </HeaderTemplate>
                     <ItemTemplate>
+                        <asp:Label runat="server" ID="lbTypeSend" Text='<%# Bind("TypeSend") %>' Visible="false"></asp:Label>
                         <asp:ImageButton runat="server" ID="imgbtnCancelOrder" Width="30px" ImageUrl="~/Icon/x-button.png" OnClick="imgbtnCancelOrder_Click"/>
                     </ItemTemplate>
                     <ItemStyle CssClass="gj-text-align-center" />

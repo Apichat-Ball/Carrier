@@ -28,6 +28,8 @@ namespace Carrier.Info
         public string upCountryNote { get; set; }
         public string timeoutAtText { get; set; }
         public string ticketMessage { get; set; }
+        public DateTime dateSuccess { get; set; }
+        public string warehouseNo { get; set; }
         public responseNotify()
         {
             pno = new List<string>();

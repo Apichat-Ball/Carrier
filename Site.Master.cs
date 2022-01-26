@@ -32,21 +32,21 @@ namespace Carrier
         }
         protected void Check_UserID()
         {
-            if (string.IsNullOrEmpty(Session["_UserID"] as string))
+            if (string.IsNullOrEmpty(HttpContext.Current.Session["_UserID"] as string))
             {
-                if ((Request.Cookies["sfgweb"] != null))
+                if ((HttpContext.Current.Request.Cookies["sfgweb"] != null))
                 {
-                    if ((Request.Cookies["sfgweb"]["uname"] != null))
+                    if ((HttpContext.Current.Request.Cookies["sfgweb"]["uname"] != null))
                     {
                         string username = Request.Cookies["sfgweb"]["uname"].Trim();
                         var objuser = (from tEmployee in entities_InsideSFG_WF.Employees
-                                       where tEmployee.username_ == username
+                                       where ( tEmployee.username_ == username || tEmployee.uCode == username)
                                        && tEmployee.StatWork == "Y"
                                        select tEmployee
                                           ).FirstOrDefault();
                         if (objuser != null)
                         {
-                            Session["_UserID"] = objuser.userID.ToString();
+                            HttpContext.Current.Session["_UserID"] = objuser.userID.ToString();
                             lblName.Text = "<span style='line-height:1;'>" + objuser.name + " " + objuser.surname + "</span>";
                             
                         }

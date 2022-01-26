@@ -99,10 +99,10 @@
                             <asp:DropDownList runat="server" ID="ddlFavorites" CssClass="btn dropdown-toggle s-15px shadow" Visible="false" DataValueField="val" DataTextField="text" OnSelectedIndexChanged="ddlFavorites_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                         </div>
                     </div>
-                    <div class="row" runat="server" id="div_TypeSend"  visible="false">
+                    <div class="row" runat="server" id="div_TypeSend" >
                         <div class="col-sm-2 w-100 input-group mb-2 ">
                             <asp:Label runat="server" ID="lbTypeSend" Text="ประเภทการส่ง" CssClass="input-group-text s-15px shadow"></asp:Label>
-                            <asp:DropDownList runat="server" ID="ddlTypeSend" CssClass="btn dropdown-toggle s-15px shadow" AutoPostBack="true">
+                            <asp:DropDownList runat="server" ID="ddlTypeSend" CssClass="btn dropdown-toggle s-15px shadow" AutoPostBack="true" Enabled="false">
                                 <asp:ListItem Text="ส่ง" Value="1"></asp:ListItem>
                                 <asp:ListItem Text="รับ" Value="2"></asp:ListItem>
                             </asp:DropDownList>
@@ -173,8 +173,8 @@
                     <div class="row " style="margin-bottom: 10px;">
                         <div class="col-sm-2 w-50 input-group mb-2 ">
                             <asp:Label runat="server" ID="lbExpress" Text="รูปแบบการจัดส่ง" CssClass="input-group-text s-15px shadow"></asp:Label>
-                            <asp:DropDownList runat="server" ID="ddlExpress" CssClass="btn   dropdown-toggle s-15px shadow" DataTextField="text" DataValueField="val" Enabled="false" Visible="false"></asp:DropDownList>
-                            <asp:TextBox runat="server" Text="Flash Express" Enabled="false" CssClass="form-control s-15px shadow text-center"></asp:TextBox>
+                            <asp:DropDownList runat="server" ID="ddlExpress" CssClass="btn   dropdown-toggle s-15px shadow" DataTextField="text" DataValueField="val" ></asp:DropDownList>
+                            <%--<asp:TextBox runat="server" Text="Flash Express" Enabled="false" CssClass="form-control s-15px shadow text-center"></asp:TextBox>--%>
                         </div>
                     </div>
                     <div class="row " style="margin-bottom: 10px;">

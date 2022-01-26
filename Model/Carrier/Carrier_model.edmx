@@ -34,6 +34,7 @@
           <Property Name="TimeoutAtText" Type="nvarchar(max)" />
           <Property Name="TicketMessage" Type="nvarchar(max)" />
           <Property Name="DateNotify" Type="datetime" />
+          <Property Name="warehouseNo" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Order">
           <Key>
@@ -75,6 +76,7 @@
           <Property Name="saleOn" Type="nvarchar" MaxLength="20" />
           <Property Name="siteStorage" Type="nvarchar" MaxLength="20" />
           <Property Name="saleChannel" Type="nvarchar" MaxLength="50" />
+          <Property Name="TypeSend" Type="int" />
         </EntityType>
         <EntityType Name="Order_Box">
           <Key>
@@ -208,6 +210,7 @@
           <Property Name="saleOn" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="siteStorage" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="saleChannel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TypeSend" Type="Int32" />
         </EntityType>
         <EntityType Name="Status">
           <Key>
@@ -228,6 +231,7 @@
           <Property Name="TimeoutAtText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TicketMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="DateNotify" Type="DateTime" Precision="3" />
+          <Property Name="warehouseNo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Order_Item">
           <Key>
@@ -308,6 +312,7 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="CarrierModel.Order">
               <MappingFragment StoreEntitySet="Order">
+                <ScalarProperty Name="TypeSend" ColumnName="TypeSend" />
                 <ScalarProperty Name="saleChannel" ColumnName="saleChannel" />
                 <ScalarProperty Name="siteStorage" ColumnName="siteStorage" />
                 <ScalarProperty Name="saleOn" ColumnName="saleOn" />
@@ -358,6 +363,7 @@
           <EntitySetMapping Name="Notifies">
             <EntityTypeMapping TypeName="CarrierModel.Notify">
               <MappingFragment StoreEntitySet="Notify">
+                <ScalarProperty Name="warehouseNo" ColumnName="warehouseNo" />
                 <ScalarProperty Name="DateNotify" ColumnName="DateNotify" />
                 <ScalarProperty Name="TicketMessage" ColumnName="TicketMessage" />
                 <ScalarProperty Name="TimeoutAtText" ColumnName="TimeoutAtText" />
