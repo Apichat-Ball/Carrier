@@ -40,7 +40,7 @@ namespace Carrier
                     {
                         string username = Request.Cookies["sfgweb"]["uname"].Trim();
                         var objuser = (from tEmployee in entities_InsideSFG_WF.Employees
-                                       where tEmployee.username_ == username
+                                       where (tEmployee.username_ == username || tEmployee.uCode==username)
                                        && tEmployee.StatWork == "Y"
                                        select tEmployee
                                           ).FirstOrDefault();
