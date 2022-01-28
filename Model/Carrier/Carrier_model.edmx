@@ -107,6 +107,14 @@
           <Property Name="Status" Type="nvarchar" MaxLength="10" />
           <Property Name="CodeResponse" Type="int" />
           <Property Name="ticketPickupId" Type="nvarchar" MaxLength="20" />
+          <Property Name="TypeSendKO" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Site_Center">
+          <Key>
+            <PropertyRef Name="Brand_Center_Short" />
+          </Key>
+          <Property Name="Brand_Center_Short" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Brand_Center_Name_Full" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Site_Profit">
           <Key>
@@ -144,6 +152,7 @@
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order_Box" EntityType="Self.Order_Box" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order_Item" EntityType="Self.Order_Item" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Site_Center" EntityType="Self.Site_Center" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Site_Profit" EntityType="Self.Site_Profit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
@@ -162,6 +171,7 @@
           <EntitySet Name="Order_Box" EntityType="CarrierModel.Order_Box" />
           <EntitySet Name="Site_Profit" EntityType="CarrierModel.Site_Profit" />
           <EntitySet Name="Event_Shop" EntityType="CarrierModel.Event_Shop" />
+          <EntitySet Name="Site_Center" EntityType="CarrierModel.Site_Center" />
         </EntityContainer>
         <EntityType Name="Article_Category">
           <Key>
@@ -252,6 +262,7 @@
           <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="CodeResponse" Type="Int32" />
           <Property Name="ticketPickupId" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TypeSendKO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -294,6 +305,13 @@
           <Property Name="Event_Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Event_Branch" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Event_Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Site_Center">
+          <Key>
+            <PropertyRef Name="Brand_Center_Short" />
+          </Key>
+          <Property Name="Brand_Center_Short" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Brand_Center_Name_Full" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -378,6 +396,7 @@
           <EntitySetMapping Name="Order_Item">
             <EntityTypeMapping TypeName="CarrierModel.Order_Item">
               <MappingFragment StoreEntitySet="Order_Item">
+                <ScalarProperty Name="TypeSendKO" ColumnName="TypeSendKO" />
                 <ScalarProperty Name="ticketPickupId" ColumnName="ticketPickupId" />
                 <ScalarProperty Name="CodeResponse" ColumnName="CodeResponse" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
@@ -437,6 +456,14 @@
                 <ScalarProperty Name="Event_Type" ColumnName="Event_Type" />
                 <ScalarProperty Name="Shop_Code" ColumnName="Shop_Code" />
                 <ScalarProperty Name="Event_ID" ColumnName="Event_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Site_Center">
+            <EntityTypeMapping TypeName="CarrierModel.Site_Center">
+              <MappingFragment StoreEntitySet="Site_Center">
+                <ScalarProperty Name="Brand_Center_Name_Full" ColumnName="Brand_Center_Name_Full" />
+                <ScalarProperty Name="Brand_Center_Short" ColumnName="Brand_Center_Short" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

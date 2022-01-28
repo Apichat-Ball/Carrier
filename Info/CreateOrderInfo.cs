@@ -15,6 +15,7 @@ namespace Carrier.Info
         public int estimateParcelNumber { get; set; }
         public string mchId { get; set; }
         public string pno { get; set; }
+        public string TypeSendKo { get; set; }
     }
     public class responseNotify
     {
@@ -34,5 +35,18 @@ namespace Carrier.Info
         {
             pno = new List<string>();
         }
+    }
+    public class Warehouse
+    {
+        public string warehouseNo { get; set; }
+        public string name { get; set; }
+        public string countryName { get; set; }
+        public string provinceName { get; set; }
+        public string cityName { get; set; }
+        public string districtName { get; set; }
+        public string postalCode { get; set; }
+        public string detailAddress { get; set; }
+        public string phone { get; set; }
+        public string srcName { get; set; }
     }
 }

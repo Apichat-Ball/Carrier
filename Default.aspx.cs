@@ -27,7 +27,7 @@ namespace Carrier
         protected void Page_Load(object sender, EventArgs e)
         {
             Session.Clear();
-            HttpContext.Current.Session["_UserID"] = "101635";
+            //HttpContext.Current.Session["_UserID"] = "101635";
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();
@@ -81,12 +81,13 @@ namespace Carrier
                 {
                     var start = DateTime.ParseExact(txtDateStart.Text, format, enUS, DateTimeStyles.None);
                     var end = DateTime.ParseExact(txtDateEnd.Text, format, enUS, DateTimeStyles.None);
-                    if (lbStatusSearch.Text == "First")
+                    if (/*lbStatusSearch.Text == "First" &&*/ ddlStatusOrder.SelectedValue == "1")
                     {
                         orderList = orderList.Where(w => w.status != "A" && w.status != "SP" && w.status != "SL").ToList();
                     }
                     else
                     {
+                        orderList = orderList.Where(w => w.status != null).ToList();
                         if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
                         {
                             orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
@@ -382,7 +383,8 @@ namespace Carrier
                             UpCountryNote = responseNotify.upCountryNote,
                             TimeoutAtText = responseNotify.timeoutAtText,
                             TicketMessage = responseNotify.ticketMessage,
-                            DateNotify = responseNotify.dateSuccess
+                            DateNotify = responseNotify.dateSuccess,
+                            warehouseNo = responseNotify.warehouseNo
                         });
 
                         carrier_Entities.SaveChanges();
@@ -392,7 +394,7 @@ namespace Carrier
                     {
                         if (responseNotify.code == 1010)
                         {
-                            var notiOld = carrier_Entities.Notifies.Where(w => w.warehouseNo == responseNotify.warehouseNo).OrderBy(r => r.DateNotify).LastOrDefault();
+                            var notiOld = carrier_Entities.Notifies.Where(w => w.warehouseNo == responseNotify.warehouseNo).OrderByDescending(r => r.DateNotify).ToList();
                             foreach (var pno in responseNotify.pno)
                             {
 
@@ -408,7 +410,7 @@ namespace Carrier
                                 {
                                     orderItem.Status = "A";
                                     orderItem.CodeResponse = 1;
-                                    orderItem.ticketPickupId = notiOld.TicketPickupId;
+                                    orderItem.ticketPickupId = notiOld.Select(s=>s.TicketPickupId).FirstOrDefault();
                                     carrier_Entities.SaveChanges();
                                 }
                                 
@@ -456,7 +458,7 @@ namespace Carrier
     }
     protected void btnSearch_Click(object sender, EventArgs e)
     {
-        lbStatusSearch.Text = "Second";
+        //lbStatusSearch.Text = "Second";
         btnClear.Visible = true;
         loadtable(1);
     }

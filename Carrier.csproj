@@ -203,6 +203,7 @@
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Guide_Carrier.aspx" />
     <Content Include="Home_Carrier.aspx" />
     <Content Include="Icon\cancellation.png" />
     <Content Include="Icon\Lalamove.png" />
@@ -210,6 +211,9 @@
     <Content Include="Icon\Logo_Courier.png" />
     <Content Include="Icon\TrackingFlashExpress.png" />
     <Content Include="Icon\x-button.png" />
+    <Content Include="Image\6196.jpg" />
+    <Content Include="Image\6197.jpg" />
+    <Content Include="Image\6198.jpg" />
     <Content Include="Model\Carrier\Carrier_model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Carrier_model.edmx</DependentUpon>
@@ -483,6 +487,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Guide_Carrier.aspx.cs">
+      <DependentUpon>Guide_Carrier.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Guide_Carrier.aspx.designer.cs">
+      <DependentUpon>Guide_Carrier.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Home_Carrier.aspx.cs">
       <DependentUpon>Home_Carrier.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -522,6 +533,9 @@
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Carrier\Order_Item.cs">
+      <DependentUpon>Carrier_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Carrier\Site_Center.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Carrier\Site_Profit.cs">

@@ -29,5 +29,6 @@ namespace Carrier.Model.Carrier
         public string Status { get; set; }
         public Nullable<int> CodeResponse { get; set; }
         public string ticketPickupId { get; set; }
+        public string TypeSendKO { get; set; }
     }
 }
