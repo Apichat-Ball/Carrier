@@ -238,7 +238,26 @@ namespace Carrier
                 }
                 else
                 {
-
+                    //string username = HttpContext.Current.Request.Cookies["sfgweb"]["uname"].Trim();
+                    string username = "9012400";
+                    var objuser = (from tEmployee in InsideSFG_WF_Entities.Employees
+                                   where (tEmployee.username_ == username || tEmployee.uCode == username)
+                                   && tEmployee.StatWork == "Y"
+                                   select tEmployee
+                                      ).FirstOrDefault();
+                    if (objuser != null)
+                    {
+                        txtsrcName.Text = objuser.name + " " + objuser.surname ;
+                        if(objuser.Mobile != null && objuser.Mobile.Contains(" "))
+                        {
+                            txtsrcPhone.Text = objuser.Mobile.Replace(" ", "");
+                        }
+                        else if(objuser.Mobile != null)
+                        {
+                            txtsrcPhone.Text = objuser.Mobile.Replace("-", "");
+                        }
+                        
+                    }
                     radioWorkOn.Checked = true;
                     List<newList> allFavorite = new List<newList>();
 
@@ -531,19 +550,19 @@ namespace Carrier
                 txtsrcPostalCode.Text = "";
                 txtsrcDetailAddress.Text = "";
 
-                txtdstName.Text = "";
-                txtdstPhone.Text = "";
-                txtdstHomePhone.Text = "";
-                ddldstProvinceName.SelectedValue = "0";
+                //txtdstName.Text = "";
+                //txtdstPhone.Text = "";
+                //txtdstHomePhone.Text = "";
+                //ddldstProvinceName.SelectedValue = "0";
 
-                ddldstCityName.DataSource = defaultCity;
-                ddldstCityName.DataBind();
-                ddldstCityName.Enabled = false;
-                ddldstDistrictName.Enabled = false;
-                ddldstDistrictName.DataSource = defaultDistrict;
-                ddldstDistrictName.DataBind();
-                txtdstPostalCode.Text = "";
-                txtdstDetailAddress.Text = "";
+                //ddldstCityName.DataSource = defaultCity;
+                //ddldstCityName.DataBind();
+                //ddldstCityName.Enabled = false;
+                //ddldstDistrictName.Enabled = false;
+                //ddldstDistrictName.DataSource = defaultDistrict;
+                //ddldstDistrictName.DataBind();
+                //txtdstPostalCode.Text = "";
+                //txtdstDetailAddress.Text = "";
             }
             ddlReceiveLocation.SelectedValue = "select";
             
@@ -620,34 +639,19 @@ namespace Carrier
                 txtdstName.Text = "";
                 getAddressOnSite(siteinput.Text.ToUpper().Substring(0,4));
                 #region NEW
-                var siteProFit = Carrier_Entities.Site_Profit.Where(w => w.Site_Stroage.StartsWith(siteinput.Text.ToUpper())).Select(s => s.Brand).Distinct().ToList();
-                var FC = InsideSFG_WF_Entities.BG_ForeCast.Where(w => w.ActiveStatus == 1).GroupBy(g => g.DepartmentID).Select(s => new Forecasts { DepartmentID = s.Key });
-                var depart = (from BG_HA in InsideSFG_WF_Entities.BG_HApprove
-                              join BG_HAPF in InsideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
-                              where FC.Select(s => s.DepartmentID).Contains(BG_HA.departmentID) && (BG_HA.Sta == "B" || BG_HA.Sta == "S" || BG_HA.Sta == "N") && siteProFit.Contains(BG_HAPF.Depart_Short)
-                              select new { departmentID = BG_HA.departmentID, department_ = BG_HA.department_ }
-                          ).OrderBy(r => r.department_).ToList();
-                depart.Insert(0, new { departmentID = "Select", department_ = "กรุณาเลือกแผนกที่ต้องการเบิก" });
-                ddlSDpart.DataSource = depart;
-                ddlSDpart.DataBind();
+                //var siteProFit = Carrier_Entities.Site_Profit.Where(w => w.Site_Stroage.StartsWith(siteinput.Text.ToUpper())).Select(s => s.Brand).Distinct().ToList();
+                //var FC = InsideSFG_WF_Entities.BG_ForeCast.Where(w => w.ActiveStatus == 1).GroupBy(g => g.DepartmentID).Select(s => new Forecasts { DepartmentID = s.Key });
+                //var depart = (from BG_HA in InsideSFG_WF_Entities.BG_HApprove
+                //              join BG_HAPF in InsideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
+                //              where FC.Select(s => s.DepartmentID).Contains(BG_HA.departmentID) && (BG_HA.Sta == "B" || BG_HA.Sta == "S" || BG_HA.Sta == "N") && siteProFit.Contains(BG_HAPF.Depart_Short)
+                //              select new { departmentID = BG_HA.departmentID, department_ = BG_HA.department_ }
+                //          ).OrderBy(r => r.department_).ToList();
+                //depart.Insert(0, new { departmentID = "Select", department_ = "กรุณาเลือกแผนกที่ต้องการเบิก" });
+                //ddlSDpart.DataSource = depart;
+                //ddlSDpart.DataBind();
                 #endregion
             }
-            //else
-            //{
-            //    txtdstName.Text = "";
-            //    txtdstName.Enabled = true;
-            //    txtdstPhone.Text = "";
-            //    txtdstHomePhone.Text = "";
-            //    txtdstPostalCode.Text = "";
-            //    ddldstProvinceName.SelectedValue = "0";
-            //    ddldstCityName.DataSource = new List<City>();
-            //    ddldstCityName.DataBind();
-            //    ddldstCityName.Enabled = false;
-            //    ddldstDistrictName.DataSource = new List<District>();
-            //    ddldstDistrictName.DataBind();
-            //    ddldstDistrictName.Enabled = false;
-            //    txtdstDetailAddress.Text = "";
-            //}
+            
 
         }
 
@@ -948,7 +952,7 @@ namespace Carrier
                         earlyFlightEnabled = null,
                         packEnabled = null,
                         upcountryCharge = null,
-                        TypeSendKO = ddlFavorites.SelectedValue
+                        TypeSendKO = ddlFavorites.SelectedValue == "select" ? "SFG" : ddlFavorites.SelectedValue
                     };
                     Carrier_Entities.Order_Item.Add(order);
                     Carrier_Entities.SaveChanges();

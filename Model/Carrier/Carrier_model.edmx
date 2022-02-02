@@ -22,6 +22,17 @@
           <Property Name="Event_Branch" Type="nvarchar(max)" />
           <Property Name="Event_Name" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="History_Notify_Order">
+          <Key>
+            <PropertyRef Name="History_ID" />
+          </Key>
+          <Property Name="History_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="History_NO" Type="nvarchar" MaxLength="20" />
+          <Property Name="Date_Notify" Type="datetime" />
+          <Property Name="pno" Type="nvarchar(max)" />
+          <Property Name="Docno" Type="nvarchar(max)" />
+          <Property Name="Type_Send_KA" Type="nvarchar" MaxLength="20" />
+        </EntityType>
         <EntityType Name="Notify">
           <Key>
             <PropertyRef Name="TicketPickupId" />
@@ -148,6 +159,7 @@
         <EntityContainer Name="CarrierModelStoreContainer">
           <EntitySet Name="Article_Category" EntityType="Self.Article_Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event_Shop" EntityType="Self.Event_Shop" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="History_Notify_Order" EntityType="Self.History_Notify_Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Notify" EntityType="Self.Notify" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order_Box" EntityType="Self.Order_Box" Schema="dbo" store:Type="Tables" />
@@ -172,6 +184,7 @@
           <EntitySet Name="Site_Profit" EntityType="CarrierModel.Site_Profit" />
           <EntitySet Name="Event_Shop" EntityType="CarrierModel.Event_Shop" />
           <EntitySet Name="Site_Center" EntityType="CarrierModel.Site_Center" />
+          <EntitySet Name="History_Notify_Order" EntityType="CarrierModel.History_Notify_Order" />
         </EntityContainer>
         <EntityType Name="Article_Category">
           <Key>
@@ -312,6 +325,17 @@
           </Key>
           <Property Name="Brand_Center_Short" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Brand_Center_Name_Full" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="History_Notify_Order">
+          <Key>
+            <PropertyRef Name="History_ID" />
+          </Key>
+          <Property Name="History_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="History_NO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Notify" Type="DateTime" Precision="3" />
+          <Property Name="pno" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Docno" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Type_Send_KA" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -464,6 +488,18 @@
               <MappingFragment StoreEntitySet="Site_Center">
                 <ScalarProperty Name="Brand_Center_Name_Full" ColumnName="Brand_Center_Name_Full" />
                 <ScalarProperty Name="Brand_Center_Short" ColumnName="Brand_Center_Short" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="History_Notify_Order">
+            <EntityTypeMapping TypeName="CarrierModel.History_Notify_Order">
+              <MappingFragment StoreEntitySet="History_Notify_Order">
+                <ScalarProperty Name="Type_Send_KA" ColumnName="Type_Send_KA" />
+                <ScalarProperty Name="Docno" ColumnName="Docno" />
+                <ScalarProperty Name="pno" ColumnName="pno" />
+                <ScalarProperty Name="Date_Notify" ColumnName="Date_Notify" />
+                <ScalarProperty Name="History_NO" ColumnName="History_NO" />
+                <ScalarProperty Name="History_ID" ColumnName="History_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

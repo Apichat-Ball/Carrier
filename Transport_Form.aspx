@@ -190,6 +190,12 @@
                             <asp:DropDownList runat="server" ID="ddlReceiveLocation" CssClass="btn dropdown-toggle s-15px shadow" DataValueField="val" DataTextField="text" OnSelectedIndexChanged="ddlReceiveLocation_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                         </div>
                     </div>
+                    <div class="row " style="margin-bottom: 10px;">
+                        <div class="col-sm-2 w-100 input-group mb-2 ">
+                            <asp:Label runat="server" ID="Label4" Text="เบิกเพื่อใช้ในแผนก" CssClass="input-group-text s-15px shadow"></asp:Label>
+                            <asp:DropDownList ID="ddlSDpart" runat="server" DataTextField="department_" DataValueField="departmentID" CssClass="btn text-start s-15px shadow "></asp:DropDownList>
+                        </div>
+                    </div>
                     <div class="row" runat="server" id="divSite"  style="margin-bottom: 10px;">
                         <div class="col-sm-2 w-100 input-group mb-2 ">
                             <asp:Label runat="server" ID="lbSite" Text="Site Storage" CssClass="input-group-text s-15px shadow"></asp:Label>
@@ -200,12 +206,6 @@
                     <div class="row mb-2 ml-2">
                         <asp:Label runat="server" ID="lbGuidSiteStorage" Text=" - กรุณากรอก SiteStorage ถ้าไม่มีให้ใส่ CENTER" Font-Names="Comic Sans MS" Font-Size="Small" ForeColor="Red"></asp:Label>
                     </div>  
-                    <div class="row " style="margin-bottom: 10px;">
-                        <div class="col-sm-2 w-100 input-group mb-2 ">
-                            <asp:Label runat="server" ID="Label4" Text="เบิกเพื่อใช้ในแผนก" CssClass="input-group-text s-15px shadow"></asp:Label>
-                            <asp:DropDownList ID="ddlSDpart" runat="server" DataTextField="department_" DataValueField="departmentID" CssClass="btn text-start s-15px shadow "></asp:DropDownList>
-                        </div>
-                    </div>
                     <asp:Label runat="server" ID="Label2" Text="ผู้รับ" CssClass="s-15px"></asp:Label>
                     <div class="border border-1 " style="border-radius: 15px; padding: 20px; width: 80%">
                         <div class="row">

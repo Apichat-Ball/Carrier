@@ -213,6 +213,15 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.Label lbStatusSearch;
 
         /// <summary>
+        /// btnExport control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnExport;
+
+        /// <summary>
         /// gv_OrderAll control.
         /// </summary>
         /// <remarks>
@@ -220,6 +229,15 @@ namespace Carrier
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gv_OrderAll;
+
+        /// <summary>
+        /// div_Page_Bar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div_Page_Bar;
 
         /// <summary>
         /// lkPrevious control.

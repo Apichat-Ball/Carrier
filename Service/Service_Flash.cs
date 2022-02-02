@@ -92,7 +92,7 @@ namespace Carrier.Service
                         earlyFlightEnabled = j["data"]["earlyFlightEnabled"].ToString(),
                         packEnabled = j["data"]["packEnabled"].ToString(),
                         upcountryCharge = j["data"]["upcountryCharge"].ToString(),
-                        TypeSendKO = favor
+                        TypeSendKO = favor == "select" ? "SFG" : favor
                     };
                     entities_Carrier.Order_Item.Add(order);
                     entities_Carrier.SaveChanges();
@@ -284,7 +284,6 @@ namespace Carrier.Service
             //            srcName = r["srcName"].ToString()
             //        });
             //    }
-
             //}
 
             List<OrderToNoti> Order_Noti = new List<OrderToNoti>();
@@ -414,9 +413,9 @@ namespace Carrier.Service
             }
             return listResnotify;
         }
-        public string CheckNotify(DateTime datesend, string TrackingPickup)
+        public string CheckNotify(DateTime datesend, string Docno)
         {
-            var mchId = entities_Carrier.Order_Item.Where(w => w.ticketPickupId == TrackingPickup).Select(s => s.mchId).ToList().FirstOrDefault();
+            var mchId = entities_Carrier.Order_Item.Where(w => w.Docno == Docno).Select(s => s.mchId).ToList().FirstOrDefault();
             var keyFlash = Get_Key("FLASH", "FLASH");
             var date = datesend.ToString("yyyy-MM-dd");
             var random = "date=" + date + "mchId=" + mchId;
@@ -434,7 +433,17 @@ namespace Carrier.Service
             {
                 foreach (var i in j["data"])
                 {
-
+                    //var warehouse = i["kaWarehouseNo"].ToString();
+                    //var nodate = entities_Carrier.Notifies.Where(w => w.warehouseNo == warehouse).OrderByDescending(o => o.DateNotify).FirstOrDefault();
+                    //var typeSend = entities_Carrier.Order_Item.Where(w => w.Docno == Docno).Select(s => s.TypeSendKO).ToList().FirstOrDefault();
+                    //if (typeSend == "SFG" && nodate.warehouseNo == "SFG")
+                    //{
+                    //    d = i["stateText"].ToString();
+                    //}
+                    //else if(typeSend == "SDC1" && nodate.warehouseNo == "Wangnoi")
+                    //{
+                    //    d = i["stateText"].ToString();
+                    //}
                     var dt = datesend.ToString("yyyy-MM-dd HH:mm:ss");
                     var dtf = DateTime.Parse(dt).AddHours(-7);
                     var dateUnix = new DateTimeOffset(dtf).ToUnixTimeSeconds();
@@ -664,30 +673,31 @@ namespace Carrier.Service
                               join haP in entities_InsideSFG_WF.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
                               where ha.departmentID == item.SDpart
                               select haP).ToList();
-                    if(item.siteStorage == "CENTER")
+                    if (item.siteStorage == "CENTER")
                     {
                         var BGShort = BG.Select(s => s.Depart_Short).FirstOrDefault();
                         var centerSite = entities_Carrier.Site_Center.Where(w => BGShort == w.Brand_Center_Short).ToList();
                         if (centerSite.Count == 0)
                         {
-                            var pro = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn && w.Brand == BGShort).ToList();
-                            if(pro.Count == 0)
+                            var pro = entities_Carrier.Site_Profit.Where(w =>  w.Channel == item.saleOn && w.Brand == BGShort).ToList();
+                            if (pro.Count == 0)
                             {
-                                return "ไม่พบ SiteStorage นี้ครับ";
+                                return "Brand นี้ไม่พบ Profit โปรดแจ้งแผนก MIS";
                             }
                         }
                     }
-                    
-                    var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
-                    if (brandProfit.Count == 0)
+                    else
                     {
-                        return "ไม่พบ SiteStorage นี้ครับ";
-                    }
-
-                    BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
-                    if (BG.Count() == 0)
-                    {
-                        return "SiteStorage นี้ไม่พบ Brand";
+                        var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
+                        if (brandProfit.Count == 0)
+                        {
+                            return "ไม่พบ SiteStorage นี้ครับ";
+                        }
+                        BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
+                        if (BG.Count() == 0)
+                        {
+                            return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit โปรดแจ้งแผนก MIS";
+                        }
                     }
                 }
             }

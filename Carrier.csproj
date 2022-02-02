@@ -523,6 +523,9 @@
     <Compile Include="Model\Carrier\Event_Shop.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\Carrier\History_Notify_Order.cs">
+      <DependentUpon>Carrier_model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Carrier\Notify.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>

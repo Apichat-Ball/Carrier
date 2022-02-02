@@ -55,7 +55,7 @@
             </div>
              <div class="col-sm-3 input-group w-25">
                 <asp:Label runat="server" ID="Label1" Text="สถานะเอกสาร" CssClass="input-group-text ml-2"></asp:Label>
-                <asp:DropDownList runat="server" ID="ddlStatusOrder"  CssClass="btn dropdown-item-text">
+                <asp:DropDownList runat="server" ID="ddlStatusOrder"  CssClass="btn dropdown-item-text s-15px shadow">
                     <asp:ListItem Text="ยังไม่ได้เรียกรถ" Value="1" Selected="True"></asp:ListItem>
                     <asp:ListItem Text="เรียกรถแล้ว" Value="2" ></asp:ListItem>
                 </asp:DropDownList>
@@ -88,6 +88,9 @@
                 <asp:Button runat="server" ID="btnClear" Text="CLEAR" CssClass="btn btn-primary" OnClick="btnClear_Click" Visible="false" UseSubmitBehavior="false" />
                 <asp:Label runat="server" ID="lbStatusSearch" Text="First" Visible="false"></asp:Label>
             </div>
+            <div class="col-sm-1">
+                <asp:Button runat="server" ID="btnExport" Text="Export/Day" CssClass="btn btn-primary" OnClick="btnExport_Click" UseSubmitBehavior="false"/>
+            </div>
         </div>
 
     </div>
@@ -106,17 +109,10 @@
                 </asp:TemplateField>
                 <asp:TemplateField>
                     <HeaderTemplate>
-                        <asp:Label runat="server" ID="lbhDocno" Text="เลขที่เอกสาร"></asp:Label>
+                        <asp:Label runat="server" ID="lbhDocno" Text="เลขที่เอกสาร/เลขที่พัสดุ"></asp:Label>
                     </HeaderTemplate>
                     <ItemTemplate>
                         <asp:LinkButton runat="server" ID="lkbDocno" Text='<%# Bind("Docno") %>' OnClick="lkbDocno_Click"></asp:LinkButton>
-                    </ItemTemplate>
-                </asp:TemplateField>
-                <asp:TemplateField>
-                    <HeaderTemplate>
-                        <asp:Label runat="server" ID="lbhpno" Text="รหัสพัสดุ"></asp:Label>
-                    </HeaderTemplate>
-                    <ItemTemplate>
                         <asp:Label runat="server" ID="lbpno" Text='<%# Bind("pno") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
@@ -144,7 +140,7 @@
                         <asp:Label runat="server" ID="lbdstName" Text='<%# Bind("dstName") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField>
+                <asp:TemplateField Visible="false">
                     <HeaderTemplate>
                         <asp:Label runat="server" ID="lbhCategory" Text="ประเภทพัสดุ"></asp:Label>
                     </HeaderTemplate>
@@ -212,7 +208,7 @@
             </Columns>
         </asp:GridView>
     </div>
-    <div aria-label="nav Page navigation example">
+    <div aria-label="nav Page navigation example" runat="server" id="div_Page_Bar">
         <div class="btn-group" role="group" aria-label="Basic outlined example">
             <asp:LinkButton runat="server" ID="lkPrevious" CssClass="btn btn-outline-primary " OnCommand="selectPage" Visible="false">PREVIOUS</asp:LinkButton>
             <asp:LinkButton runat="server" ID="lkFirst" CssClass="btn btn-outline-primary" OnCommand="selectPage" Visible="false"></asp:LinkButton>
