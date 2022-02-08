@@ -93,12 +93,7 @@
                             <asp:TextBox runat="server" ID="txtTrackingID" Width="100%" CssClass="form-control s-15px shadow" Enabled="false" Visible="false"></asp:TextBox>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-2 w-100 input-group mb-2 ">
-                            <asp:Label runat="server" ID="lbFavorites" Text="Favorites" CssClass="input-group-text s-15px shadow" Visible="false"></asp:Label>
-                            <asp:DropDownList runat="server" ID="ddlFavorites" CssClass="btn dropdown-toggle s-15px shadow" Visible="false" DataValueField="val" DataTextField="text" OnSelectedIndexChanged="ddlFavorites_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-                        </div>
-                    </div>
+                    
                     <div class="row" runat="server" id="div_TypeSend" >
                         <div class="col-sm-2 w-100 input-group mb-2 ">
                             <asp:Label runat="server" ID="lbTypeSend" Text="ประเภทการส่ง" CssClass="input-group-text s-15px shadow"></asp:Label>
@@ -111,6 +106,12 @@
 
                     <asp:Label runat="server" ID="lbgroupSend" Text="ผู้ส่ง" CssClass=" s-15px "></asp:Label>
                     <div class="border border-1 " style="border-radius: 15px; padding: 20px; width: 80%">
+                        <div class="row">
+                        <div class="col-sm-2 w-100 input-group mb-2 ">
+                            <asp:Label runat="server" ID="lbFavorites" Text="Favorites" CssClass="input-group-text s-15px shadow" Visible="false"></asp:Label>
+                            <asp:DropDownList runat="server" ID="ddlFavorites" CssClass="btn dropdown-toggle s-15px shadow" Visible="false" DataValueField="val" DataTextField="text" OnSelectedIndexChanged="ddlFavorites_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                        </div>
+                    </div>
                         <div class="row">
                             <div class="col-sm-2 w-100 input-group mb-2">
                                 <asp:Label runat="server" ID="lbsrcName" Text="ชื่อ" CssClass=" input-group-text s-15px shadow"></asp:Label>
@@ -196,11 +197,15 @@
                             <asp:DropDownList ID="ddlSDpart" runat="server" DataTextField="department_" DataValueField="departmentID" CssClass="btn text-start s-15px shadow "></asp:DropDownList>
                         </div>
                     </div>
-                    <div class="row" runat="server" id="divSite"  style="margin-bottom: 10px;">
-                        <div class="col-sm-2 w-100 input-group mb-2 ">
+                    <div class="row" runat="server" id="divSite"  style="margin-bottom: 10px;flex-wrap: nowrap;">
+                        <div class="col-sm-2  input-group mb-2 " style="width:50%">
                             <asp:Label runat="server" ID="lbSite" Text="Site Storage" CssClass="input-group-text s-15px shadow"></asp:Label>
-                            <asp:TextBox runat="server" ID="txtSiteStorage" CssClass="form-control s-15px shadow " MaxLength="8" OnTextChanged="txtSiteStorage_TextChanged" AutoPostBack="true" AutoCompleteType="Disabled" ToolTip="กรุณากรอก SiteStorage ถ้าไม่มีให้ใส่ CENTER"></asp:TextBox>
+                            <asp:TextBox runat="server" ID="txtSiteStorage" CssClass="form-control s-15px shadow " MaxLength="14" OnTextChanged="txtSiteStorage_TextChanged"  AutoCompleteType="Disabled" ToolTip="กรุณากรอก SiteStorage ถ้าไม่มีให้ใส่ CENTER"></asp:TextBox>
                             
+                        </div>
+                        <div class="col-sm-2 input-group h-50">
+                            <asp:Button runat="server" ID="btnSearchSite" CssClass="btn btn-primary input-group-text shadow" Text="Search" UseSubmitBehavior="false" OnClick="btnSearchSite_Click" />
+                            <asp:Button runat="server" ID="btnClearSite" CssClass="btn btn-danger input-group-text shadow" Text="Clear" UseSubmitBehavior="false" OnClick="btnClearSite_Click" />
                         </div>
                     </div>
                     <div class="row mb-2 ml-2">
@@ -219,7 +224,7 @@
                             <div class="col-sm-2 w-100 input-group mb-2">
                                 <asp:Label runat="server" ID="lbdstPhone" Text="เบอร์โทรศัพท์มือถือ" CssClass="input-group-text s-15px shadow"></asp:Label>
                                 <asp:TextBox runat="server" ID="txtdstPhone" Width="100%" CssClass="form-control s-15px shadow" MaxLength="12" AutoCompleteType="Disabled"></asp:TextBox>
-                                <asp:RegularExpressionValidator ID="RegularExpressionValidator2" runat="server" ControlToValidate="txtdstPhone" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง"  ValidationExpression="([0]{1}[6,8,9,5]{1}[0-9]\w{7,9})" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
+                                <asp:RegularExpressionValidator ID="RegularExpressionValidator2" runat="server" ControlToValidate="txtdstPhone" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง"  ValidationExpression="([0]{1}[4,6,8,9,5]{1}[0-9]\w{7,9})|([-]{1})" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
                                 <%--                        <asp:RequiredFieldValidator ID="RequiredFieldValidator5" ControlToValidate="txtdstPhone" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1" />--%>
                             </div>
                         </div>
@@ -227,7 +232,7 @@
                             <div class="col-sm-2 w-100 input-group mb-2">
                                 <asp:Label runat="server" ID="lbdstHomePhone" Text="เบอร์โทรศัพท์บ้าน" CssClass="input-group-text s-15px shadow"></asp:Label>
                                 <asp:TextBox runat="server" ID="txtdstHomePhone" Width="100%" CssClass="form-control s-15px shadow" MaxLength="9" AutoCompleteType="Disabled"></asp:TextBox>
-                                <asp:RegularExpressionValidator ID="RegularExpressionValidator3" runat="server" ControlToValidate="txtdstHomePhone" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์บ้านให้ถูกต้อง" ValidationExpression="([0]{1}[2]{1}[0-9]{7})|([-]{1})" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
+                                <%--<asp:RegularExpressionValidator ID="RegularExpressionValidator3" runat="server" ControlToValidate="txtdstHomePhone" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์บ้านให้ถูกต้อง" ValidationExpression="([0]{1}[2,4]{1}[0-9]{7})|([-]{1})" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>--%>
                             </div>
                         </div>
                         <div class="row">

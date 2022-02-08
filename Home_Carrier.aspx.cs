@@ -82,15 +82,15 @@ namespace Carrier
                         orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
                         if (txtDocnoSearch.Text != "")
                         {
-                            orderList = orderList.Where(w => w.Docno == txtDocnoSearch.Text).ToList();
+                            orderList = orderList.Where(w => w.Docno.Contains(txtDocnoSearch.Text)).ToList();
                         }
                         if (txtPnoSearch.Text != "")
                         {
-                            orderList = orderList.Where(w => w.pno == txtPnoSearch.Text).ToList();
+                            orderList = orderList.Where(w => w.pno.Contains(txtPnoSearch.Text)).ToList();
                         }
                         if (txtDstNameSearch.Text != "")
                         {
-                            orderList = orderList.Where(w => w.dstName == txtDstNameSearch.Text).ToList();
+                            orderList = orderList.Where(w => w.dstName.Contains(txtDstNameSearch.Text)).ToList();
                         }
                         if (txtArticleSearch.Text != "")
                         {
@@ -268,8 +268,8 @@ namespace Carrier
         {
             ImageButton imgbtnCancelOrder = (ImageButton)sender;
             GridViewRow row = (GridViewRow)imgbtnCancelOrder.NamingContainer;
-            LinkButton lkbpno = (LinkButton)row.FindControl("lkbpno");
-            Label lbDocno = (Label)row.FindControl("lbDocno");
+            Label lkbpno = (Label)row.FindControl("lbpno");
+            LinkButton lbDocno = (LinkButton)row.FindControl("lkDocno");
             var res = service_Flashs.CancelOrder(lbDocno.Text, lkbpno.Text);
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('succes : " + res + "')", true);
             loadtable(1);

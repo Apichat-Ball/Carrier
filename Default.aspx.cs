@@ -27,7 +27,8 @@ namespace Carrier
         protected void Page_Load(object sender, EventArgs e)
         {
             Session.Clear();
-            HttpContext.Current.Session["_UserID"] = "101635";
+            //HttpContext.Current.Session["_UserID"] = "101635";
+            //HttpContext.Current.Session["_UserID"] = "100395";
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();
@@ -48,16 +49,17 @@ namespace Carrier
         public void loadtable(int page)
         {
             var user = Convert.ToInt32(Session["_UserID"].ToString());
-            var permission = carrier_Entities.Users.Where(w => w.UserID == user).Select(s => s.Permission).FirstOrDefault();
-            if (permission != null && permission == "Admin")
+            var permission = carrier_Entities.Users.Where(w => w.UserID == user).FirstOrDefault();
+            if (permission != null && permission.Permission == "Admin")
             {
                 var maxrow = 10;
                 var orderList = (from orderItem in carrier_Entities.Order_Item
                                  join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
-                                 where orderItem.Status != "C"
+                                 where orderItem.Status != "C" 
                                  select new
                                  {
                                      Docno = orderItem.Docno,
+                                     nameCreate = order.UserID,
                                      pno = orderItem.pno,
                                      srcName = order.srcName,
                                      dstName = order.dstName,
@@ -71,12 +73,24 @@ namespace Carrier
                                      Remark = order.remark,
                                      TypeSend = order.TypeSend,
                                      StaffInfoName = carrier_Entities.Notifies.Where(w => w.TicketPickupId == orderItem.ticketPickupId).Select(s => s.StaffInfoName).ToList().FirstOrDefault(),
-                                     Transport_Type = order.Transport_Type
+                                     Transport_Type = order.Transport_Type,
+                                     TypeSendKa = orderItem.TypeSendKO
                                  }).ToList();
 
                 var format = "dd/MM/yyyy";
                 var enUS = new CultureInfo("en-US");
+                if(permission.TypeWarehouse != null)
+                {
+                    if(permission.TypeWarehouse == "SFG")
+                    {
+                        orderList = orderList.Where(w => w.TypeSendKa != "SDC1").ToList();
+                    }
+                    else
+                    {
 
+                    orderList = orderList.Where(w => w.TypeSendKa == permission.TypeWarehouse).ToList();
+                    }
+                }
                 if (txtDateStart.Text != "" && txtDateEnd.Text != "")
                 {
                     var start = DateTime.ParseExact(txtDateStart.Text, format, enUS, DateTimeStyles.None);
@@ -84,17 +98,38 @@ namespace Carrier
                     if (/*lbStatusSearch.Text == "First" &&*/ ddlStatusOrder.SelectedValue == "1")
                     {
                         orderList = orderList.Where(w => w.status != "A" && w.status != "SP" && w.status != "SL").ToList();
+                        if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
+                        {
+                            //orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
+                            orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
+                            && (w.pno.Contains(txtPnoSearch.Text.ToUpper()) || txtPnoSearch.Text == "")
+                            && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
+                            && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
+
+                        }
+                        
                     }
                     else
                     {
                         orderList = orderList.Where(w => w.status != null).ToList();
                         if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
                         {
-                            orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
-                            orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
-                            && (w.pno.Contains(txtPnoSearch.Text.ToUpper()) || txtPnoSearch.Text == "")
-                            && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
-                            && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
+                            //orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
+                            if(txtPnoSearch.Text != "")
+                            {
+                                orderList = orderList.Where(w => w.pno != null).ToList();
+                                orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
+                                && (w.pno.StartsWith(txtPnoSearch.Text.ToUpper()) || txtPnoSearch.Text == "")
+                                && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
+                                && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
+                            }
+                            else
+                            {
+                                orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
+                                && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
+                                && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
+                            }
+                            
 
                         }
                         else
@@ -122,6 +157,11 @@ namespace Carrier
                         Label lbTypeSend = (Label)row.FindControl("lbTypeSend");
                         Label lbTransport_Type = (Label)row.FindControl("lbTransport_Type");
                         lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
+                        Label lbUserCreate = (Label)row.FindControl("lbUserCreate");
+                        
+                        var userid = Convert.ToInt32(lbUserCreate.Text);
+                        var emp = insideSFG_WF_Entities.Employees.Where(w => w.userID == userid).FirstOrDefault();
+                        lbUserCreate.Text = emp.name+" "+ emp.surname+"("+ emp.nick+ ")";
                         if (lbTransport_Type.Text == "1")
                         {
                             lbTransport_Type.Text = "FlashExpress";
@@ -148,8 +188,20 @@ namespace Carrier
                                 if (dateNoti.ToShortDateString() != DateTime.Now.ToShortDateString())
                                 {
                                     var date = DateTime.Parse(lbTimeTracking.Text);
-                                    lbTimeTrackingText.Text = service_Flashs.CheckNotify(date, lbStatus.Text);
+                                    lbTimeTrackingText.Text = service_Flashs.CheckNotify(date, lkbDocno.Text);
                                 }
+                            }
+                            if (lbTimeTrackingText.Text.Contains("ยกเลิกแล้ว"))
+                            {
+                                lbTimeTrackingText.BackColor = System.Drawing.Color.PaleVioletRed;
+                                lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                lbTimeTrackingText.CssClass = "status-tracking";
+                            }
+                            else
+                            {
+                                lbTimeTrackingText.BackColor = System.Drawing.Color.LimeGreen;
+                                lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                lbTimeTrackingText.CssClass = "status-tracking";
                             }
                             cbItem.Visible = false;
                             imgbtnCancelOrder.Visible = false;
@@ -158,12 +210,16 @@ namespace Carrier
                         {
                             lbTimeTrackingText.Text = "ส่งผ่านไปรษณีย์แล้ว";
                             cbItem.Visible = false;
+                            lbTimeTrackingText.BackColor = System.Drawing.Color.Gray;
+                            lbTimeTrackingText.CssClass = "status-tracking";
                             imgbtnCancelOrder.Visible = false;
                         }
                         if (lbStatusItem.Text == "SL")
                         {
                             lbTimeTrackingText.Text = "ส่งผ่าน Lalamove";
                             cbItem.Visible = false;
+                            lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
+                            lbTimeTrackingText.CssClass = "status-tracking";
                             imgbtnCancelOrder.Visible = false;
                         }
                         if (lbTypeSend.Text == "2")
@@ -200,6 +256,8 @@ namespace Carrier
         }
         public void LoadAllTableCheckAll()
         {
+            var user = Convert.ToInt32(Session["_UserID"].ToString());
+            var permission = carrier_Entities.Users.Where(w => w.UserID == user).FirstOrDefault();
             var orderList = (from orderItem in carrier_Entities.Order_Item
                              join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
                              where orderItem.Status != "C"
@@ -207,6 +265,7 @@ namespace Carrier
                              {
                                  Docno = orderItem.Docno,
                                  pno = orderItem.pno,
+                                 nameCreate = order.UserID,
                                  srcName = order.srcName,
                                  dstName = order.dstName,
                                  ArticleCategory = carrier_Entities.Article_Category.Where(w => w.ArticleCode == order.articleCategory).ToList().FirstOrDefault().ArticleName,
@@ -219,8 +278,13 @@ namespace Carrier
                                  Remark = order.remark,
                                  TypeSend = order.TypeSend,
                                  StaffInfoName = carrier_Entities.Notifies.Where(w => w.TicketPickupId == orderItem.ticketPickupId).Select(s => s.StaffInfoName).ToList().FirstOrDefault(),
-                                 Transport_Type = order.Transport_Type
+                                 Transport_Type = order.Transport_Type,
+                                 TypeSendKa = orderItem.TypeSendKO
                              }).ToList();
+            if(permission.TypeWarehouse != null)
+            {
+                orderList = orderList.Where(w => w.TypeSendKa == permission.TypeWarehouse).ToList();
+            }
             orderList = orderList.Where(w => w.status != "A" && w.status != "SP" && w.status != "SL").ToList();
             gv_OrderAll.DataSource = orderList.OrderByDescending(x => x.dateCreate);
             gv_OrderAll.DataBind();
@@ -239,6 +303,10 @@ namespace Carrier
                 Label lbTypeSend = (Label)row.FindControl("lbTypeSend");
                 Label lbTransport_Type = (Label)row.FindControl("lbTransport_Type");
                 lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
+                Label lbUserCreate = (Label)row.FindControl("lbUserCreate");
+                var userid = Convert.ToInt32(lbUserCreate.Text);
+                var emp = insideSFG_WF_Entities.Employees.Where(w => w.userID == userid).FirstOrDefault();
+                lbUserCreate.Text = emp.name + " " + emp.surname + "(" + emp.nick + ")";
                 cbItem.Checked = true;
                 if (lbTransport_Type.Text == "1")
                 {
@@ -266,7 +334,7 @@ namespace Carrier
                         if (dateNoti.ToShortDateString() != DateTime.Now.ToShortDateString())
                         {
                             var date = DateTime.Parse(lbTimeTracking.Text);
-                            lbTimeTrackingText.Text = service_Flashs.CheckNotify(date, lbStatus.Text);
+                            lbTimeTrackingText.Text = service_Flashs.CheckNotify(date, lkbDocno.Text);
                         }
                     }
                     cbItem.Visible = false;
@@ -427,7 +495,10 @@ namespace Carrier
             Label lbpno = (Label)row.FindControl("lbpno");
             LinkButton lkbDocno = (LinkButton)row.FindControl("lkbDocno");
             var res = service_Flashs.CancelOrder(lkbDocno.Text, lbpno.Text);
+            
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('succes : " + res + "')", true);
+
+            
             loadtable(1);
         }
         protected void lkbDocno_Click(object sender, EventArgs e)
@@ -676,18 +747,47 @@ namespace Carrier
         protected void btnExport_Click(object sender, EventArgs e)
         {
             var dateNow = DateTime.Now;
-            var dateOld = new DateTime(dateNow.Year,dateNow.Month,dateNow.AddDays(-1).Day,15,0,1 );
-            var dateNew = new DateTime(dateNow.Year, dateNow.Month, dateNow.Day, 15, 0, 0);
-            var listHistory = carrier_Entities.History_Notify_Order.Where(w => w.Date_Notify >= dateOld && w.Date_Notify <= dateNew).ToList();
-            GridView history = new GridView();
-            if(listHistory.Count == 0)
+            var dateOld = new DateTime(dateNow.Year,dateNow.Month,dateNow.AddDays(-1).Day,16,30,1 );
+            var dateNew = new DateTime(dateNow.Year, dateNow.Month, dateNow.Day, 16, 30, 0);
+            var user = Convert.ToInt32(Session["_UserID"].ToString());
+            var permission = carrier_Entities.Users.Where(w => w.UserID == user).FirstOrDefault();
+            List<History_Notify_Order> his = new List<History_Notify_Order>();
+            if(permission.TypeWarehouse == "SFG")
             {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('วันนี้ไม่พบการเรียกรถ Flash มารับตั้งแต่ 15.00 น. ของเมื่อวานถึง 15.00 น. ของวันนี้')", true);
+                his = carrier_Entities.History_Notify_Order.Where(w => w.Date_Notify >= dateOld && w.Date_Notify <= dateNew &&( w.Type_Send_KA == permission.TypeWarehouse||w.Type_Send_KA == null)).ToList();
+            }
+            else if(permission.TypeWarehouse == "SDC1")
+            {
+                his = carrier_Entities.History_Notify_Order.Where(w => w.Date_Notify >= dateOld && w.Date_Notify <= dateNew && w.Type_Send_KA == permission.TypeWarehouse).ToList();
+            }
+            else
+            {
+                his = carrier_Entities.History_Notify_Order.Where(w => w.Date_Notify >= dateOld && w.Date_Notify <= dateNew ).ToList();
+            }
+            var listHistory = his.Select(s=>new
+                {
+                    History_NO = s.History_NO,
+                    Date_Notify = s.Date_Notify,
+                    Pno = s.pno,
+                    Docno = s.Docno,
+                    Type_Send_KA = s.Type_Send_KA
+                }).ToList();
+            GridView history = new GridView();
+            
+            if (listHistory.Count == 0)
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('วันนี้ไม่พบการเรียกรถ Flash มารับตั้งแต่ 16.30 น. ของเมื่อวานถึง 16.30 น. ของวันนี้')", true);
             }
             else
             {
                 history.DataSource = listHistory;
                 history.DataBind();
+                //GridViewRow rowHead = (GridViewRow)history.HeaderRow;
+                //Label History_NO = (Label)rowHead.FindControl("History_NO");
+                //Label Date_Notify = (Label)rowHead.FindControl("Date_Notify");
+                //Label Pno = (Label)rowHead.FindControl("Pno");
+                //Label Docno = (Label)rowHead.FindControl("Docno");
+                //Label Type_Send_KA = (Label)rowHead.FindControl("Type_Send_KA");
                 //Export Excel
                 Page.Response.ClearContent();
                 Page.Response.AddHeader("Content-Disposition", "attachment;filename=" + "KA_Per_Day_" + DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss") + ".xls");
@@ -708,6 +808,12 @@ namespace Carrier
                 }
             }
             
+        }
+
+        protected void ddlStatusOrder_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            loadtable(1);
+            div_Page_Bar.Visible = true;
         }
     }
     public class messageNotify

@@ -155,6 +155,7 @@
           <Property Name="Username" Type="nvarchar" MaxLength="50" />
           <Property Name="Email" Type="nvarchar(max)" />
           <Property Name="Permission" Type="nvarchar" MaxLength="20" />
+          <Property Name="TypeWarehouse" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityContainer Name="CarrierModelStoreContainer">
           <EntitySet Name="Article_Category" EntityType="Self.Article_Category" Schema="dbo" store:Type="Tables" />
@@ -285,6 +286,7 @@
           <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Permission" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TypeWarehouse" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Order_Box">
           <Key>
@@ -442,6 +444,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="CarrierModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="TypeWarehouse" ColumnName="TypeWarehouse" />
                 <ScalarProperty Name="Permission" ColumnName="Permission" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Username" ColumnName="Username" />

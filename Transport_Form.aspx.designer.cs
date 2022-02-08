@@ -105,24 +105,6 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.TextBox txtTrackingID;
 
         /// <summary>
-        /// lbFavorites control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbFavorites;
-
-        /// <summary>
-        /// ddlFavorites control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlFavorites;
-
-        /// <summary>
         /// div_TypeSend control.
         /// </summary>
         /// <remarks>
@@ -157,6 +139,24 @@ namespace Carrier
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbgroupSend;
+
+        /// <summary>
+        /// lbFavorites control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbFavorites;
+
+        /// <summary>
+        /// ddlFavorites control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlFavorites;
 
         /// <summary>
         /// lbsrcName control.
@@ -456,6 +456,24 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.TextBox txtSiteStorage;
 
         /// <summary>
+        /// btnSearchSite control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSearchSite;
+
+        /// <summary>
+        /// btnClearSite control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnClearSite;
+
+        /// <summary>
         /// lbGuidSiteStorage control.
         /// </summary>
         /// <remarks>
@@ -535,15 +553,6 @@ namespace Carrier
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtdstHomePhone;
-
-        /// <summary>
-        /// RegularExpressionValidator3 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RegularExpressionValidator RegularExpressionValidator3;
 
         /// <summary>
         /// lbdstProvinceName control.

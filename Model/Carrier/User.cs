@@ -18,5 +18,6 @@ namespace Carrier.Model.Carrier
         public string Username { get; set; }
         public string Email { get; set; }
         public string Permission { get; set; }
+        public string TypeWarehouse { get; set; }
     }
 }

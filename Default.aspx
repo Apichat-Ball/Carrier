@@ -15,6 +15,17 @@
         .mg-Lala {
             margin: 0px 0px 0px 26px;
         }
+
+        .status-tracking{
+            border-radius: 7px;
+            padding: 3px;
+        }
+        .w-7{
+            width:7%;
+        }
+        .w-10{
+            width:10%;
+        }
     </style>
     <script type="text/javascript">
 
@@ -28,6 +39,7 @@
                     uiLibrary: 'bootstrap4',
                     format: 'dd/mm/yyyy'
                 });
+            
         }
     </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -55,7 +67,7 @@
             </div>
              <div class="col-sm-3 input-group w-25">
                 <asp:Label runat="server" ID="Label1" Text="สถานะเอกสาร" CssClass="input-group-text ml-2"></asp:Label>
-                <asp:DropDownList runat="server" ID="ddlStatusOrder"  CssClass="btn dropdown-item-text s-15px shadow">
+                <asp:DropDownList runat="server" ID="ddlStatusOrder"  CssClass="btn dropdown-item-text s-15px shadow" OnSelectedIndexChanged="ddlStatusOrder_SelectedIndexChanged" AutoPostBack="true">
                     <asp:ListItem Text="ยังไม่ได้เรียกรถ" Value="1" Selected="True"></asp:ListItem>
                     <asp:ListItem Text="เรียกรถแล้ว" Value="2" ></asp:ListItem>
                 </asp:DropDownList>
@@ -89,8 +101,11 @@
                 <asp:Label runat="server" ID="lbStatusSearch" Text="First" Visible="false"></asp:Label>
             </div>
             <div class="col-sm-1">
-                <asp:Button runat="server" ID="btnExport" Text="Export/Day" CssClass="btn btn-primary" OnClick="btnExport_Click" UseSubmitBehavior="false"/>
+                <asp:Button runat="server" ID="btnExport" Text="Export/Day" CssClass="btn btn-primary" OnClick="btnExport_Click" UseSubmitBehavior="false" ToolTip=""/>
             </div>
+        </div>
+        <div class="row mt-2">
+            <asp:Label runat="server" ID="lbAlert" Text="* ปุ่ม Export/Day เป็นรายงานของการเรียกรถ Flash ให้มารับที่จุดรับของ ซึ่งจะรวมรายการตั้งแต่ 16.30 น. ของเมื่อวานถึง 16.30น. ของวันนี้ *" ForeColor="Red"></asp:Label>
         </div>
 
     </div>
@@ -112,8 +127,16 @@
                         <asp:Label runat="server" ID="lbhDocno" Text="เลขที่เอกสาร/เลขที่พัสดุ"></asp:Label>
                     </HeaderTemplate>
                     <ItemTemplate>
-                        <asp:LinkButton runat="server" ID="lkbDocno" Text='<%# Bind("Docno") %>' OnClick="lkbDocno_Click"></asp:LinkButton>
+                        <asp:LinkButton runat="server" ID="lkbDocno" Text='<%# Bind("Docno") %>' OnClick="lkbDocno_Click"></asp:LinkButton><br />
                         <asp:Label runat="server" ID="lbpno" Text='<%# Bind("pno") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField>
+                    <HeaderTemplate>
+                        <asp:Label runat="server" ID="lbhUserCreate" Text="ผู้สร้าง"></asp:Label>
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:Label runat="server" ID="lbUserCreate" Text='<%# Bind("nameCreate") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:TemplateField>
@@ -156,7 +179,7 @@
                     <ItemTemplate>
                         <asp:Label runat="server" ID="lbRemark" Text='<%# Bind("Remark") %>'></asp:Label>
                     </ItemTemplate>
-                    <ItemStyle CssClass="gj-text-align-center" />
+                    <ItemStyle CssClass="gj-text-align-center w-10" />
                 </asp:TemplateField>
                 <asp:TemplateField>
                     <HeaderTemplate>
@@ -189,9 +212,12 @@
                     <HeaderTemplate>
                         <asp:Label runat="server" ID="lbhTimeTracking" Text="เวลารถมารับ"></asp:Label>
                     </HeaderTemplate>
+                    <ItemStyle CssClass="w-10" />
                     <ItemTemplate>
-                        <asp:Label runat="server" ID="lbTimeTrackingText" Text='<%# Bind("TimeTrackingText") %>'></asp:Label>
-                        <asp:Label runat="server" ID="lbTimeTracking" Text='<%# Bind("TimeTracking") %>' Visible="false"></asp:Label>
+                        <div class="align-center" style="padding-top: 11%;">
+                            <asp:Label runat="server" ID="lbTimeTrackingText" Text='<%# Bind("TimeTrackingText") %>'></asp:Label>
+                            <asp:Label runat="server" ID="lbTimeTracking" Text='<%# Bind("TimeTracking") %>' Visible="false"></asp:Label>
+                        </div>
                     </ItemTemplate>
                     <ItemStyle CssClass="gj-text-align-center" />
                 </asp:TemplateField>

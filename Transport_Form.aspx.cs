@@ -238,8 +238,8 @@ namespace Carrier
                 }
                 else
                 {
-                    //string username = HttpContext.Current.Request.Cookies["sfgweb"]["uname"].Trim();
-                    string username = "9012400";
+                    string username = HttpContext.Current.Request.Cookies["sfgweb"]["uname"].Trim();
+                    //string username = "9012400";
                     var objuser = (from tEmployee in InsideSFG_WF_Entities.Employees
                                    where (tEmployee.username_ == username || tEmployee.uCode == username)
                                    && tEmployee.StatWork == "Y"
@@ -446,8 +446,7 @@ namespace Carrier
         {
             var selectFavorite = ddlFavorites.SelectedValue;
             var user = Convert.ToInt32(Session["_UserID"].ToString());
-            if (selectFavorite != "select")
-            {
+            
                 switch (selectFavorite)
                 {
                     case "SFG":
@@ -469,24 +468,6 @@ namespace Carrier
                         txtsrcPostalCode.Text = "10120";
                         txtsrcDetailAddress.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด "+"477 พระราม 3 ";
 
-                        //ผู้รับ
-                        //txtdstName.Text = "บริษัท เอส.ดี.ซี วัน จำกัด";
-                        //txtdstPhone.Text = "0944764565";
-                        txtdstHomePhone.Text = "-";
-                        ddldstProvinceName.SelectedValue = "5";
-                        var provincedstSCD1 = Convert.ToInt32(ddldstProvinceName.SelectedValue);
-                        ddldstCityName.Enabled = true;
-                        ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provincedstSCD1).ToList();
-                        ddldstCityName.DataBind();
-                        ddldstCityName.SelectedValue = "755";
-
-                        ddldstDistrictName.Enabled = true;
-                        var citydstSCD1 = Convert.ToInt32(ddldstCityName.SelectedValue);
-                        ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citydstSCD1).ToList();
-                        ddldstDistrictName.DataBind();
-                        ddldstDistrictName.SelectedValue = "483";
-                        txtdstPostalCode.Text = "13170";
-                        txtdstDetailAddress.Text = "บริษัท เอส.ดี.ซี วัน จำกัด "+ "59/1 ม.1 ";
                         break;
                     case "SDC1":
                         //ผู้ส่ง
@@ -509,62 +490,10 @@ namespace Carrier
                         ddlsrcDistrictName.SelectedValue = "483";
                         txtsrcPostalCode.Text = "13170";
                         txtsrcDetailAddress.Text = "บริษัท เอส.ดี.ซี วัน จำกัด "+"59/1 ม.1 ";
-                        //ผู้รับ
-                        //txtdstName.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด";
-                        //txtdstPhone.Text = "0873078300";
-                        txtdstHomePhone.Text = "-";
-                        ddldstProvinceName.SelectedValue = "1";
-                        var provincedstSFG = Convert.ToInt32(ddldstProvinceName.SelectedValue);
-
-                        ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provincedstSFG).ToList();
-                        ddldstCityName.DataBind();
-                        ddldstCityName.SelectedValue = "20";
-                        ddldstCityName.Enabled = true;
-
-                        ddldstDistrictName.Enabled = true;
-                        var citydstSFG = Convert.ToInt32(ddldstCityName.SelectedValue);
-                        ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citydstSFG).ToList();
-                        ddldstDistrictName.DataBind();
-                        ddldstDistrictName.SelectedValue = "119";
-                        txtdstPostalCode.Text = "10120";
-                        txtdstDetailAddress.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด "+"477 พระราม 3 ";
+                        
                         break;
                     
                 }
-            }
-            else
-            {
-                txtsrcName.Text = "";
-                txtsrcPhone.Text = "";
-                ddlsrcProvinceName.SelectedValue = "0";
-                List<City> defaultCity = new List<City>();
-                defaultCity.Add(new City { City_ID = 0, City_Name = "" });
-                ddlsrcCityName.DataSource = defaultCity;
-                ddlsrcCityName.DataBind();
-                ddlsrcCityName.Enabled = false;
-                List<District> defaultDistrict = new List<District>();
-                defaultDistrict.Add(new District { Distinct_ID = 0, Distinct_Name = "" });
-                ddlsrcDistrictName.DataSource = defaultDistrict;
-                ddlsrcDistrictName.DataBind();
-                ddlsrcDistrictName.Enabled = false;
-                txtsrcPostalCode.Text = "";
-                txtsrcDetailAddress.Text = "";
-
-                //txtdstName.Text = "";
-                //txtdstPhone.Text = "";
-                //txtdstHomePhone.Text = "";
-                //ddldstProvinceName.SelectedValue = "0";
-
-                //ddldstCityName.DataSource = defaultCity;
-                //ddldstCityName.DataBind();
-                //ddldstCityName.Enabled = false;
-                //ddldstDistrictName.Enabled = false;
-                //ddldstDistrictName.DataSource = defaultDistrict;
-                //ddldstDistrictName.DataBind();
-                //txtdstPostalCode.Text = "";
-                //txtdstDetailAddress.Text = "";
-            }
-            ddlReceiveLocation.SelectedValue = "select";
             
         }
 
@@ -572,7 +501,6 @@ namespace Carrier
         {
             var selectReceive = ddlReceiveLocation.SelectedValue;
             
-                txtSiteStorage.Text = "";
                 //divSite.Visible = false;
                 txtdstName.Enabled = true;
                 if (selectReceive != "select")
@@ -585,7 +513,7 @@ namespace Carrier
                             //ผู้รับ
                             //txtdstName.Text = "บริษัท เอส.ดี.ซี วัน จำกัด";
                             //txtdstPhone.Text = "0944764565";
-                            txtdstHomePhone.Text = "-";
+                            //txtdstHomePhone.Text = "-";
                             ddldstProvinceName.SelectedValue = "5";
                             var provincedstSCD1 = Convert.ToInt32(ddldstProvinceName.SelectedValue);
                             ddldstCityName.Enabled = true;
@@ -599,14 +527,14 @@ namespace Carrier
                             ddldstDistrictName.DataBind();
                             ddldstDistrictName.SelectedValue = "483";
                             txtdstPostalCode.Text = "13170";
-                            txtdstDetailAddress.Text = "บริษัท เอส.ดี.ซี วัน จำกัด"+"59/1 ม.1 ";
+                            txtdstDetailAddress.Text = "บริษัท เอส.ดี.ซี วัน จำกัด "+"59/1 ม.1 ";
                             break;
                         case "SFG":
                             
                             //ผู้รับ
                             //txtdstName.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด";
                             //txtdstPhone.Text = "0873078300";
-                            txtdstHomePhone.Text = "-";
+                            //txtdstHomePhone.Text = "-";
                             ddldstProvinceName.SelectedValue = "1";
                             var provincedstSFG = Convert.ToInt32(ddldstProvinceName.SelectedValue);
 
@@ -621,7 +549,7 @@ namespace Carrier
                             ddldstDistrictName.DataBind();
                             ddldstDistrictName.SelectedValue = "119";
                             txtdstPostalCode.Text = "10120";
-                            txtdstDetailAddress.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด"+ "477 พระราม 3 ";
+                            txtdstDetailAddress.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด "+ "477 พระราม 3 ";
                             break;
                     }
                 }
@@ -636,8 +564,8 @@ namespace Carrier
             var siteinput = (TextBox)sender;
             if (siteinput.Text.Length >= 4)
             {
-                txtdstName.Text = "";
-                getAddressOnSite(siteinput.Text.ToUpper().Substring(0,4));
+                //txtdstName.Text = "";
+                //getAddressOnSite(siteinput.Text.ToUpper().Substring(0,4));
                 #region NEW
                 //var siteProFit = Carrier_Entities.Site_Profit.Where(w => w.Site_Stroage.StartsWith(siteinput.Text.ToUpper())).Select(s => s.Brand).Distinct().ToList();
                 //var FC = InsideSFG_WF_Entities.BG_ForeCast.Where(w => w.ActiveStatus == 1).GroupBy(g => g.DepartmentID).Select(s => new Forecasts { DepartmentID = s.Key });
@@ -674,39 +602,39 @@ namespace Carrier
             if (address != null)
             {
                 
-                if(address.dstPhone.Length >= 8)
-                {
-                    if (address.dstPhone.Substring(0, 2) == "08" || address.dstPhone.Substring(0, 2) == "09")
-                    {
-                        txtdstPhone.Text = address.dstPhone;
-                        txtdstHomePhone.Text = "-";
-                    }
-                    else if ( address.dstPhone.Substring(0) == "8" || address.dstPhone.Substring(0) == "9")
-                    {
-                        txtdstPhone.Text = "0" + address.dstPhone;
-                        txtdstHomePhone.Text = "-";
-                    }
-                    else if (address.dstPhone.Substring(0, 2) == "02")
-                    {
-                        txtdstPhone.Text = "-";
-                        txtdstHomePhone.Text = address.dstPhone;
-                    }
-                    else if(address.dstPhone.Substring(0) == "2" )
-                    {
-                        txtdstPhone.Text = "-"; 
-                        txtdstHomePhone.Text = "0" + address.dstPhone;
-                    }
-                    else
-                    {
-                        txtdstPhone.Text = "-";
-                        txtdstHomePhone.Text = "-";
-                    }
+                //if(address.dstPhone.Length >= 8)
+                //{
+                //    if (address.dstPhone.Substring(0, 2) == "08" || address.dstPhone.Substring(0, 2) == "09")
+                //    {
+                //        txtdstPhone.Text = address.dstPhone;
+                //        txtdstHomePhone.Text = "-";
+                //    }
+                //    else if ( address.dstPhone.Substring(0) == "8" || address.dstPhone.Substring(0) == "9")
+                //    {
+                //        txtdstPhone.Text = "0" + address.dstPhone;
+                //        txtdstHomePhone.Text = "-";
+                //    }
+                //    else if (address.dstPhone.Substring(0, 2) == "02")
+                //    {
+                //        txtdstPhone.Text = "-";
+                //        txtdstHomePhone.Text = address.dstPhone;
+                //    }
+                //    else if(address.dstPhone.Substring(0) == "2" )
+                //    {
+                //        txtdstPhone.Text = "-"; 
+                //        txtdstHomePhone.Text = "0" + address.dstPhone;
+                //    }
+                //    else
+                //    {
+                //        txtdstPhone.Text = "-";
+                //        txtdstHomePhone.Text = "-";
+                //    }
                     
-                }
-                else
-                {
-                    txtdstPhone.Text = "-";
-                }
+                //}
+                //else
+                //{
+                //    txtdstPhone.Text = "-";
+                //}
                 
                 ddldstProvinceName.SelectedValue = address.dstProvince;
                 var provinceSDC1 = Convert.ToInt32(ddldstProvinceName.SelectedValue);
@@ -772,7 +700,7 @@ namespace Carrier
             //    ddldstDistrictName.Enabled = false;
             //    txtdstDetailAddress.Text = "";
             //}
-            
+
 
         }
 
@@ -875,7 +803,7 @@ namespace Carrier
                 srcDetailAddress = txtsrcDetailAddress.Text,
                 Ref_Order = "API",
                 dstName = txtdstName.Text,
-                dstPhone = txtdstPhone.Text,
+                dstPhone = (txtdstPhone.Text.Contains(" ")?"-": txtdstPhone.Text),
                 dstHomePhone = txtdstHomePhone.Text,
                 dstProvinceName = ddldstProvinceName.SelectedItem.Text,
                 dstCityName = ddldstCityName.SelectedItem == null ? "" : ddldstCityName.SelectedItem.Text,
@@ -903,7 +831,7 @@ namespace Carrier
             {
                 item.saleOn = radioWorkOff.Text;
             }
-            var vali = service_Flashs.Validate_Transport(item, ddlReceiveLocation.SelectedValue);
+            var vali = service_Flashs.Validate_Transport(item, ddlReceiveLocation.SelectedValue, ddlFavorites.SelectedValue);
             if (vali == "PASS")
             {
                 Carrier_Entities.Orders.Add(item);
@@ -952,7 +880,8 @@ namespace Carrier
                         earlyFlightEnabled = null,
                         packEnabled = null,
                         upcountryCharge = null,
-                        TypeSendKO = ddlFavorites.SelectedValue == "select" ? "SFG" : ddlFavorites.SelectedValue
+                        TypeSendKO = ddlFavorites.SelectedValue == "select" ? "SFG" : ddlFavorites.SelectedValue,
+                        Status = "SL"
                     };
                     Carrier_Entities.Order_Item.Add(order);
                     Carrier_Entities.SaveChanges();
@@ -999,7 +928,7 @@ namespace Carrier
                 else
                 {
                     sitepro = carrier_Entities.Site_Profit.Where(w => w.Channel == workon
-                        && w.Site_Stroage.Substring(0, site.Length).Contains(siteId)
+                        && w.Site_Stroage.StartsWith(siteId)
                     //&& BG.Contains(w.Brand)
                     ).Select(s => s.Site_Stroage).Distinct().ToList();
                 }
@@ -1018,10 +947,6 @@ namespace Carrier
                     ).Select(s => s.Site_Stroage).Distinct().ToList();
                 }
             }
-            
-            
-           
-
             return sitepro.Take(10).ToList();
             
         }
@@ -1039,6 +964,26 @@ namespace Carrier
                 ddlTypeSend.SelectedValue = "1";
                 ddlTypeSend.Enabled = true;
             }
+        }
+
+        protected void btnSearchSite_Click(object sender, EventArgs e)
+        {
+            getAddressOnSite(txtSiteStorage.Text.ToUpper().Substring(0, 4));
+        }
+
+        protected void btnClearSite_Click(object sender, EventArgs e)
+        {
+            txtdstPostalCode.Text = "";
+            ddldstProvinceName.SelectedValue = "0";
+            ddldstCityName.DataSource = new List<City>();
+            ddldstCityName.DataBind();
+            //ddldstCityName.ClearSelection();
+            ddldstCityName.Enabled = false;
+            ddldstDistrictName.DataSource = new List<District>();
+            //ddldstDistrictName.ClearSelection();
+            ddldstDistrictName.DataBind();
+            ddldstDistrictName.Enabled = false;
+            txtdstDetailAddress.Text = "";
         }
     }
 

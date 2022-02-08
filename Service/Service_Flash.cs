@@ -39,7 +39,6 @@ namespace Carrier.Service
             {
 
                 var objOrder = obj.FirstOrDefault();
-
                 Model_Key model_key = Get_Key("FLASH", "FLASH");
                 string headerpara = "articleCategory=" + objOrder.articleCategory +
                                     "&codEnabled=0" +
@@ -47,10 +46,25 @@ namespace Carrier.Service
                                     "&dstDetailAddress=" + (objOrder.dstDetailAddress == null ? "" : objOrder.dstDetailAddress)
                                         + (objOrder.dstDistrictName != null && objOrder.dstDistrictName != "" ? " " + objOrder.dstDistrictName : "")
                                         + (objOrder.dstCityName != null && objOrder.dstCityName != "" ? " " + objOrder.dstCityName : "")
-                                        + (objOrder.dstProvinceName != null && objOrder.dstProvinceName != "" ? " " + objOrder.dstProvinceName : "") +
-                                    "&dstName=" + objOrder.dstName +
-                                    "&dstPhone=" + objOrder.dstPhone +
-                                    "&dstPostalCode=" + (objOrder.dstPostalCode != null ? objOrder.dstPostalCode.ToString() : "") +
+                                        + (objOrder.dstProvinceName != null && objOrder.dstProvinceName != "" ? " " + objOrder.dstProvinceName : "");
+                if (objOrder.dstPhone == "" || objOrder.dstPhone == "-" || objOrder.dstPhone == " ")
+                {
+                    headerpara += "&dstName=" + objOrder.dstName +
+                                    "&dstPhone=" + objOrder.dstHomePhone;
+                }
+                else
+                {
+                    if (objOrder.dstHomePhone == "" || objOrder.dstHomePhone == "-" || objOrder.dstHomePhone == " ")
+                    {
+                        headerpara += "&dstName=" + objOrder.dstName + "&dstPhone=" + objOrder.dstPhone;
+                    }
+                    else
+                    {
+                        headerpara += "&dstHomePhone=" + objOrder.dstHomePhone + "&dstName=" + objOrder.dstName + "&dstPhone=" + objOrder.dstPhone;
+
+                    }
+                }
+                headerpara +=  "&dstPostalCode=" + (objOrder.dstPostalCode != null ? objOrder.dstPostalCode.ToString() : "") +
                                     "&dstProvinceName=" + objOrder.dstProvinceName +
                                     "&expressCategory=1" +
                                     "&insured=0" +
@@ -94,6 +108,7 @@ namespace Carrier.Service
                         upcountryCharge = j["data"]["upcountryCharge"].ToString(),
                         TypeSendKO = favor == "select" ? "SFG" : favor
                     };
+                    
                     entities_Carrier.Order_Item.Add(order);
                     entities_Carrier.SaveChanges();
                     return new Model_Trackingno { success = true, trackingno = j["data"]["pno"].ToString() };
@@ -429,26 +444,22 @@ namespace Carrier.Service
             IRestResponse response = client.Execute(request);
             JObject j = JObject.Parse(response.Content);
             var d = "";
+            var booking = (from OI in entities_Carrier.Order_Item
+                             join NT in entities_Carrier.Notifies on OI.ticketPickupId equals NT.TicketPickupId
+                             where OI.Docno == Docno
+                             select new { warehouseNo = NT.warehouseNo  , dateNotify = NT.DateNotify}).FirstOrDefault() ;
             if (Convert.ToInt32(j["code"]) == 1)
             {
                 foreach (var i in j["data"])
                 {
-                    //var warehouse = i["kaWarehouseNo"].ToString();
-                    //var nodate = entities_Carrier.Notifies.Where(w => w.warehouseNo == warehouse).OrderByDescending(o => o.DateNotify).FirstOrDefault();
-                    //var typeSend = entities_Carrier.Order_Item.Where(w => w.Docno == Docno).Select(s => s.TypeSendKO).ToList().FirstOrDefault();
-                    //if (typeSend == "SFG" && nodate.warehouseNo == "SFG")
-                    //{
-                    //    d = i["stateText"].ToString();
-                    //}
-                    //else if(typeSend == "SDC1" && nodate.warehouseNo == "Wangnoi")
-                    //{
-                    //    d = i["stateText"].ToString();
-                    //}
-                    var dt = datesend.ToString("yyyy-MM-dd HH:mm:ss");
-                    var dtf = DateTime.Parse(dt).AddHours(-7);
-                    var dateUnix = new DateTimeOffset(dtf).ToUnixTimeSeconds();
-                    var createAt = i["createdAt"].ToString();
-                    if (dateUnix.ToString() == createAt)
+                    
+                    var dtf = (booking.dateNotify ?? DateTime.Now).AddHours(-7);
+                    var dtfNew = dtf.AddMinutes(+10);
+                    dtf = dtf.AddMinutes(-10);
+                    //var dateUnix = new DateTimeOffset(dtf).ToUnixTimeSeconds();
+                    var createAt = Convert.ToInt32(i["createdAt"].ToString());
+                    var createAtFromEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(createAt);
+                    if (dtf <= createAtFromEpoch && createAtFromEpoch <= dtfNew && (booking.warehouseNo == i["kaWarehouseNo"].ToString() || booking.warehouseNo == " "))
                     {
                         d = i["stateText"].ToString();
                     }
@@ -457,7 +468,7 @@ namespace Carrier.Service
             }
             return d;
         }
-        public string Validate_Transport(Order item, string receive)
+        public string Validate_Transport(Order item, string receive , string favorites)
         {
             if (item.srcName == "")
             {
@@ -475,9 +486,12 @@ namespace Carrier.Service
             {
                 return "กรุณากรอกชื่อผู้รับ";
             }
-            else if ((item.dstPhone == "" || item.dstPhone == "-") && item.dstHomePhone == "")
+            else if (item.dstPhone == "" || item.dstPhone == "-" )
             {
-                return "กรุณากรอกเบอร์โทรศัพท์ผู้รับอย่างใดอย่างหนึ่งหรือทั้ง 2 เบอร์";
+                if(item.dstHomePhone == "" || item.dstHomePhone == "-")
+                {
+                    return "กรุณากรอกเบอร์โทรศัพท์ผู้รับอย่างใดอย่างหนึ่งหรือทั้ง 2 เบอร์";
+                }
             }
             else if (item.dstProvinceName == "เลือกจังหวัด")
             {
@@ -502,153 +516,10 @@ namespace Carrier.Service
             {
                 return "กรุณาเลือกปลายทาง";
             }
-            #region MARK
-            //if (receive == "Depart")
-            //{
-            //    if (item.siteStorage.Length < 6)
-            //    {
-
-            //        return "กรุณาใส่ siteStorage ให้ครบถ้วนครับ";
-            //    }
-            //    else
-            //    {
-            //        var siteId = item.siteStorage.ToUpper();
-            //        var BG = (from ha in entities_InsideSFG_WF.BG_HApprove
-            //                  join haP in entities_InsideSFG_WF.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
-            //                  where ha.departmentID == item.SDpart
-            //                  select haP.Depart_Short).ToList();
-                    
-            //        var sp = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn && BG.Contains(w.Brand) && w.Site_Stroage == item.siteStorage).ToList();
-            //        if (sp.Count == 0)
-            //        {
-            //            return "ไม่พบ SiteStorage นี้ครับ";
-            //        }
-            //    }
-            //}
-            //else if (receive != "Event" && receive != "บริษัท เอส.ดี.ซี วัน จำกัด" && receive != "บริษัท สตาร์แฟชั่น(2551) จำกัด")
-            //{
-            //    if (item.siteStorage.Contains(" "))
-            //    {
-            //        return "ห้ามเว้นวรรค";
-            //    }
-            //    else if (item.siteStorage.Length < 6)
-            //    {
-            //        if (item.siteStorage == "")
-            //        {
-            //            return "กรุณาใส่ siteStorage ถ้าไม่มี siteStorage ให้ใส่คำว่า CENTER";
-            //        }
-            //    }
-            //    else
-            //    {
-            //        var siteId = item.siteStorage.ToUpper();
-            //        var BG = (from ha in entities_InsideSFG_WF.BG_HApprove
-            //                  join haP in entities_InsideSFG_WF.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
-            //                  where ha.departmentID == item.SDpart
-            //                  select haP.Depart_Short).ToList();
-            //        var sitepro = entities_Carrier.Site_Profit.Where(w => (w.Sale_Channel == "CENTER") && w.Channel == item.saleOn
-            //        && BG.Contains(w.Brand)).ToList();
-            //        if (sitepro.Count == 0)
-            //        {
-            //            if (BG.Count != 0)
-            //            {
-            //                if (item.siteStorage == "CENTER")
-            //                {
-            //                    //var sp = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn && BG.Contains(w.Brand)).ToList();
-            //                    //var spOn = sp.Where(w => w.Sale_Channel == "WebSite" || w.Sale_Channel == "Social").ToList();
-            //                    //var spOff = sp.Where(w => w.Sale_Channel == "Depart" || w.Sale_Channel == "Shop" || w.Sale_Channel == "INHO").ToList();
-            //                    //if (item.saleOn == "ONLINE" && spOn.Count == 0)
-            //                    //{
-            //                    //    return "ไม่พบ SiteStorage นี้ครับ";
-            //                    //}
-            //                    //else if (item.saleOn == "OFFLINE" && spOff.Count == 0)
-            //                    //{
-            //                    //    return "ไม่พบ SiteStorage นี้ครับ";
-            //                    //}
-            //                    var sp = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn && BG.Contains(w.Brand)).ToList();
-            //                    if (sp.Count == 0)
-            //                    {
-            //                        return "ไม่พบ SiteStorage นี้ครับ";
-            //                    }
-            //                }
-            //                else
-            //                {
-            //                    var sp = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn && BG.Contains(w.Brand) && w.Site_Stroage == item.siteStorage).ToList();
-            //                    if (sp.Count == 0)
-            //                    {
-            //                        return "ไม่พบ SiteStorage นี้ครับ";
-            //                    }
-
-            //                }
-
-            //            }
-            //        }
-            //        else
-            //        {
-            //            if (item.siteStorage == "CENTER")
-            //            {
-            //                sitepro = sitepro.Where(w => w.Site_Stroage.Substring(0, siteId.Length).Contains(siteId)).ToList();
-            //                if (sitepro.Count == 0)
-            //                {
-            //                    return "ไม่พบ SiteStorage นี้ครับ";
-            //                }
-            //            }
-            //            else
-            //            {
-            //                return "กรุณาใส่ siteStorage ถ้าไม่มี siteStorage ให้ใส่คำว่า CENTER";
-            //            }
-
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    if (item.siteStorage.Contains(" "))
-            //    {
-            //        return "ห้ามเว้นวรรค";
-            //    }
-            //    else if (item.siteStorage.Length < 6)
-            //    {
-            //        if (item.siteStorage == "-")
-            //        {
-            //            return "กรุณาใส่ siteStorage ให้ถูกต้อง";
-            //        }
-            //        else if (item.siteStorage == "")
-            //        {
-            //            return "กรุณาใส่ siteStorage";
-            //        }
-            //        else
-            //        {
-            //            return "กรุณาใส่ siteStorage ครบถ้วน";
-            //        }
-            //    }
-            //    else
-            //    {
-            //        var siteId = item.siteStorage.ToUpper();
-            //        var sitepro = entities_Carrier.Event_Shop.Where(w => w.Shop_Code == siteId).ToList();
-            //        if (sitepro.Count == 0)
-            //        {
-            //            if (receive == "บริษัท เอส.ดี.ซี วัน จำกัด" || receive == "บริษัท สตาร์แฟชั่น(2551) จำกัด")
-            //            {
-            //                var BG = (from ha in entities_InsideSFG_WF.BG_HApprove
-            //                          join haP in entities_InsideSFG_WF.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
-            //                          where ha.departmentID == item.SDpart
-            //                          select haP.Depart_Short).ToList();
-            //                var siteproTest = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn
-            //                && BG.Contains(w.Brand)).ToList();
-            //                if (siteproTest.Count == 0)
-            //                {
-            //                    return "ไม่พบ SiteStorage นี้ครับ";
-            //                }
-            //            }
-            //            else
-            //            {
-
-            //                return "ไม่พบ SiteStorage นี้ครับ";
-            //            }
-            //        }
-            //    }
-            //}
-            #endregion
+            if(favorites == "select")
+            {
+                return "กรุณาเลือกผุ้ส่ง";
+            }
             if (item.siteStorage.Length < 6)
             {
                 return "กรุณาใส่ SiteStorage ไม่ต่ำกว่า 6 ตัวครับ";
@@ -673,7 +544,7 @@ namespace Carrier.Service
                               join haP in entities_InsideSFG_WF.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
                               where ha.departmentID == item.SDpart
                               select haP).ToList();
-                    if (item.siteStorage == "CENTER")
+                    if (item.siteStorage.StartsWith("CENTER"))
                     {
                         var BGShort = BG.Select(s => s.Depart_Short).FirstOrDefault();
                         var centerSite = entities_Carrier.Site_Center.Where(w => BGShort == w.Brand_Center_Short).ToList();
@@ -701,6 +572,7 @@ namespace Carrier.Service
                     }
                 }
             }
+            
 
             return "PASS";
         }
@@ -757,10 +629,64 @@ namespace Carrier.Service
             }
             else
             {
-                return "Cancel Order NOT Success.";
+                var order = entities_Carrier.Order_Item.Where(w => w.Docno == lbDocno).ToList().FirstOrDefault();
+                order.Status = "C";
+                entities_Carrier.SaveChanges();
+                return "Cancel Order Success.";
             }
         }
+        public string EditOrder(Order item, string pno)
+        {
+            Model_Key model_key = Get_Key("FLASH", "FLASH");
+            string headerpara = "articleCategory=" + item.articleCategory +
+                                "&codEnabled=0" +
+                                "&dstCityName=" + item.dstCityName +
+                                "&dstDetailAddress=" + (item.dstDetailAddress == null ? "" : item.dstDetailAddress)
+                                    + (item.dstDistrictName != null && item.dstDistrictName != "" ? " " + item.dstDistrictName : "")
+                                    + (item.dstCityName != null && item.dstCityName != "" ? " " + item.dstCityName : "")
+                                    + (item.dstProvinceName != null && item.dstProvinceName != "" ? " " + item.dstProvinceName : "");
+            if (item.dstPhone == "" || item.dstPhone == "-" || item.dstPhone == " ")
+            {
+                headerpara += "&dstName=" + item.dstName +
+                                "&dstPhone=" + item.dstHomePhone;
+            }
+            else
+            {
+                if(item.dstHomePhone == "" || item.dstHomePhone == "-" || item.dstHomePhone == " ")
+                {
+                    headerpara += "&dstName=" + item.dstName + "&dstPhone=" + item.dstPhone;
+                }
+                else
+                {
+                    headerpara += "&dstHomePhone" + item.dstHomePhone+"&dstName=" + item.dstName + "&dstPhone=" + item.dstPhone;
 
+                }
+            }
+            headerpara += "&dstPostalCode=" + (item.dstPostalCode != null ? item.dstPostalCode.ToString() : "") +
+                                "&dstProvinceName=" + item.dstProvinceName +
+                                "&expressCategory=1" +
+                                "&insured=0" +
+                                "&mchId=" + model_key.mchId +
+                                "&nonceStr=" + item.Docno +
+                                "&outTradeNo=" + item.Docno +
+                                "&pno="+ pno+
+                                "&remark=" + (item.remark != "" ? item.remark : "-") +
+                                "&srcDetailAddress=" + (item.srcDetailAddress != null && item.srcDetailAddress != "" ? item.srcDetailAddress : "")
+                                + (item.srcDistrictName != null && item.srcDistrictName != "" ? " " + item.srcDistrictName : "")
+                                + (item.srcCityName != null && item.srcCityName != "" ? " " + item.srcCityName : "")
+                                + (item.srcProvinceName != null && item.srcProvinceName != "" ? " " + item.srcProvinceName : "") +
+                                "&srcName=" + item.srcName +
+                                "&srcPhone=" + item.srcPhone +
+                                "&weight=1";
+            string sign = sha256_hash(headerpara + "&key=" + model_key.key).ToUpper();
+            var client = new RestClient("https://api.flashexpress.com/open/v3/orders?" + headerpara + "&sign=" + sign);
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AlwaysMultipartFormData = true;
+            IRestResponse response = client.Execute(request);
+            JObject j = JObject.Parse(response.Content);
+            return "";
+        }
     }
     public class Model_Key
     {
