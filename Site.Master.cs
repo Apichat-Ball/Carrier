@@ -48,7 +48,9 @@ namespace Carrier
                         {
                             HttpContext.Current.Session["_UserID"] = objuser.userID.ToString();
                             lblName.Text = "<span style='line-height:1;'>" + objuser.name + " " + objuser.surname + "</span>";
-                            
+                            var depart = entities_InsideSFG_WF.DEPARTMENTs.Where(w => w.departmentID == objuser.departmentID).Select(s => s.department_).FirstOrDefault();
+                            var position = entities_InsideSFG_WF.POSITIONs.Where(w => w.positionID == objuser.positionID).Select(s => s.position_).FirstOrDefault();
+                            lblDepartmentID.Text = "<span style='line-height:1;'>แผนก : " + depart +" ตำแหน่ง : "+ position + "</span>";
                         }
                         else { Response.Redirect("Home_Carrier.aspx"); }
                     }
@@ -67,6 +69,9 @@ namespace Carrier
                 if (objuser != null)
                 {
                     lblName.Text = "<span style='line-height:1;'>" + objuser.name + " " + objuser.surname + "</span>";
+                    var depart = entities_InsideSFG_WF.DEPARTMENTs.Where(w => w.departmentID == objuser.departmentID).Select(s => s.department_).FirstOrDefault();
+                    var position = entities_InsideSFG_WF.POSITIONs.Where(w => w.positionID == objuser.positionID).Select(s => s.position_).FirstOrDefault();
+                    lblDepartmentID.Text = "<span style='line-height:1;'>แผนก : " + depart + " ตำแหน่ง : " + position + "</span>";
                 }
                 else { Response.Redirect("Home_Carrier.aspx"); }
             }

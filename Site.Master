@@ -66,8 +66,8 @@
                         <ul class="navbar-nav">
                             <li class="nav-item">
                                 <a class="nav-link text-white" style="display: contents;">
-                                <asp:Label ID="lblName" runat="server"></asp:Label>
-                                <asp:Label ID="lblDepartmentID" runat="server" Visible="false"></asp:Label>
+                                <asp:Label ID="lblName" runat="server"></asp:Label><br />
+                                <asp:Label ID="lblDepartmentID" runat="server" ></asp:Label>
                             </a></li>
                         </ul>
                     </div>

@@ -39,5 +39,17 @@ namespace Carrier.Model.InsideSFG_WF
         public Nullable<System.DateTime> ActiveDate { get; set; }
         public string Flag { get; set; }
         public string Remark { get; set; }
+        public Nullable<double> M01_o { get; set; }
+        public Nullable<double> M02_o { get; set; }
+        public Nullable<double> M03_o { get; set; }
+        public Nullable<double> M04_o { get; set; }
+        public Nullable<double> M05_o { get; set; }
+        public Nullable<double> M06_o { get; set; }
+        public Nullable<double> M07_o { get; set; }
+        public Nullable<double> M08_o { get; set; }
+        public Nullable<double> M09_o { get; set; }
+        public Nullable<double> M10_o { get; set; }
+        public Nullable<double> M11_o { get; set; }
+        public Nullable<double> M12_o { get; set; }
     }
 }

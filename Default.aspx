@@ -43,7 +43,7 @@
         }
     </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <div class="mt-3">
+    <div class="mt-5">
 
         <asp:Label runat="server" ID="lbForm" Text="Transportation Outsource(Admin)" CssClass="h1"></asp:Label>
         <asp:Label runat="server" ID="lbuserid" Visible="false"></asp:Label>
@@ -70,6 +70,7 @@
                 <asp:DropDownList runat="server" ID="ddlStatusOrder"  CssClass="btn dropdown-item-text s-15px shadow" OnSelectedIndexChanged="ddlStatusOrder_SelectedIndexChanged" AutoPostBack="true">
                     <asp:ListItem Text="ยังไม่ได้เรียกรถ" Value="1" Selected="True"></asp:ListItem>
                     <asp:ListItem Text="เรียกรถแล้ว" Value="2" ></asp:ListItem>
+                    <asp:ListItem Text="ยกเลิก" Value="3" ></asp:ListItem>
                 </asp:DropDownList>
             </div>
         </div>

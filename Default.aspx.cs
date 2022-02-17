@@ -28,7 +28,7 @@ namespace Carrier
         {
             Session.Clear();
             //HttpContext.Current.Session["_UserID"] = "101635";
-            //HttpContext.Current.Session["_UserID"] = "100395";
+            //HttpContext.Current.Session["_UserID"] = "101629";
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();
@@ -55,7 +55,6 @@ namespace Carrier
                 var maxrow = 10;
                 var orderList = (from orderItem in carrier_Entities.Order_Item
                                  join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
-                                 where orderItem.Status != "C" 
                                  select new
                                  {
                                      Docno = orderItem.Docno,
@@ -95,47 +94,74 @@ namespace Carrier
                 {
                     var start = DateTime.ParseExact(txtDateStart.Text, format, enUS, DateTimeStyles.None);
                     var end = DateTime.ParseExact(txtDateEnd.Text, format, enUS, DateTimeStyles.None);
-                    if (/*lbStatusSearch.Text == "First" &&*/ ddlStatusOrder.SelectedValue == "1")
+                    switch (ddlStatusOrder.SelectedValue)
                     {
-                        orderList = orderList.Where(w => w.status != "A" && w.status != "SP" && w.status != "SL").ToList();
-                        if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
-                        {
-                            //orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
-                            orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
-                            && (w.pno.Contains(txtPnoSearch.Text.ToUpper()) || txtPnoSearch.Text == "")
-                            && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
-                            && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
-
-                        }
-                        
-                    }
-                    else
-                    {
-                        orderList = orderList.Where(w => w.status != null).ToList();
-                        if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
-                        {
-                            //orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
-                            if(txtPnoSearch.Text != "")
+                        case "1":
+                            orderList = orderList.Where(w => w.status != "A" && w.status != "SP" && w.status != "SL" && w.status != "C").ToList();
+                            if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
                             {
-                                orderList = orderList.Where(w => w.pno != null).ToList();
+                                //orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
                                 orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
-                                && (w.pno.StartsWith(txtPnoSearch.Text.ToUpper()) || txtPnoSearch.Text == "")
+                                && (w.pno.Contains(txtPnoSearch.Text.ToUpper()) || txtPnoSearch.Text == "")
                                 && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
                                 && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
+
+                            }
+                            break;
+                        case "2":
+                            orderList = orderList.Where(w => w.status != null && w.status != "C").ToList();
+                            if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
+                            {
+                                //orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
+                                if (txtPnoSearch.Text != "")
+                                {
+                                    orderList = orderList.Where(w => w.pno != null).ToList();
+                                    orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
+                                    && (w.pno.StartsWith(txtPnoSearch.Text.ToUpper()) || txtPnoSearch.Text == "")
+                                    && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
+                                    && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
+                                }
+                                else
+                                {
+                                    orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
+                                    && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
+                                    && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
+                                }
+
+
                             }
                             else
                             {
-                                orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
-                                && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
-                                && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
+                                orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
                             }
-                            
+                            break;
+                        case "3":
+                            orderList = orderList.Where(w =>w.status == "C").ToList();
+                            if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
+                            {
+                                //orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
+                                if (txtPnoSearch.Text != "")
+                                {
+                                    orderList = orderList.Where(w => w.pno != null).ToList();
+                                    orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
+                                    && (w.pno.StartsWith(txtPnoSearch.Text.ToUpper()) || txtPnoSearch.Text == "")
+                                    && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
+                                    && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
+                                }
+                                else
+                                {
+                                    orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
+                                    && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
+                                    && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
+                                }
 
-                        }
-                        else
-                        {
-                            orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
-                        }
+
+                            }
+                            else
+                            {
+                                orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
+                            }
+                            break;
                     }
 
                     double maxdata_gvData = (double)((decimal)Convert.ToDecimal(orderList.Count()) / Convert.ToDecimal(maxrow));
@@ -206,6 +232,10 @@ namespace Carrier
                             cbItem.Visible = false;
                             imgbtnCancelOrder.Visible = false;
                         }
+                        gv_OrderAll.Columns[0].Visible = true;
+                        gv_OrderAll.Columns[10].Visible = true;
+                        gv_OrderAll.Columns[11].Visible = true;
+                        gv_OrderAll.Columns[12].Visible = true;
                         if (lbStatusItem.Text == "SP")
                         {
                             lbTimeTrackingText.Text = "ส่งผ่านไปรษณีย์แล้ว";
@@ -221,6 +251,16 @@ namespace Carrier
                             lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
                             lbTimeTrackingText.CssClass = "status-tracking";
                             imgbtnCancelOrder.Visible = false;
+                        }
+                        if(lbStatusItem.Text == "C")
+                        {
+                            cbItem.Visible = false;
+                            imgbtnCancelOrder.Visible = false;
+                            gv_OrderAll.Columns[0].Visible = false;
+                            gv_OrderAll.Columns[10].Visible = false;
+                            gv_OrderAll.Columns[11].Visible = false;
+                            gv_OrderAll.Columns[12].Visible = false;
+
                         }
                         if (lbTypeSend.Text == "2")
                         {
@@ -622,14 +662,18 @@ namespace Carrier
                                 {
                                     mess += pno + ",";
                                 }
-                                his.Add(new History_Notify_Order
+                                var hisNoti = carrier_Entities.History_Notify_Order.Where(w => w.pno == pno).FirstOrDefault();
+                                if(hisNoti == null)
                                 {
-                                    History_NO = newNo,
-                                    Docno = orderItem.Docno,
-                                    Date_Notify = dateSuccess,
-                                    pno = pno,
-                                    Type_Send_KA = orderItem.TypeSendKO
-                                });
+                                    his.Add(new History_Notify_Order
+                                    {
+                                        History_NO = newNo,
+                                        Docno = orderItem.Docno,
+                                        Date_Notify = dateSuccess,
+                                        pno = pno,
+                                        Type_Send_KA = orderItem.TypeSendKO
+                                    });
+                                }
                             }
                         }
                         else
@@ -655,8 +699,12 @@ namespace Carrier
                         }
                     }
                 }
-                carrier_Entities.History_Notify_Order.AddRange(his);
-                carrier_Entities.SaveChanges();
+                if(his.Count != 0)
+                {
+                    carrier_Entities.History_Notify_Order.AddRange(his);
+                    carrier_Entities.SaveChanges();
+                }
+                
                 var messageAlert = "";
                 foreach (var listmess in messageNoti)
                 {
@@ -665,8 +713,8 @@ namespace Carrier
 
 
                 ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + messageAlert + "')", true);
-                loadtable(1);
                 div_Page_Bar.Visible = true;
+                Response.Redirect("Default.aspx");
             }
 
         }

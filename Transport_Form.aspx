@@ -5,6 +5,9 @@
         .s-15px {
             font-size: 15px;
         }
+        .s-22px {
+            font-size: 22px;
+        }
 
         .drop-grey {
             background-color: darkgrey;
@@ -65,10 +68,10 @@
         <ContentTemplate>
             <div class="mt-5">
                 <div style="position: absolute; left: 50%;" class="float-end">
-                    <asp:Button runat="server" ID="btnPrint" Text="พิมพ์ใบปะหน้ากล่อง" Visible="false" CssClass="btn btn-primary" OnClick="btnPrint_Click" />
+                    <asp:Button runat="server" ID="btnPrint" Text="พิมพ์ใบปะหน้ากล่อง" Visible="false" CssClass="btn btn-primary" OnClick="btnPrint_Click" UseSubmitBehavior="false"/>
                 </div>
                 <div style="position: absolute; left: 80%;" class="float-end">
-                    <asp:Button runat="server" ID="btnCancel" CssClass="btn btn-primary " Text="กลับหน้าหลัก" OnClick="btnCancel_Click" />
+                    <asp:Button runat="server" ID="btnCancel" CssClass="btn btn-primary " Text="กลับหน้าหลัก" OnClick="btnCancel_Click" UseSubmitBehavior="false"/>
                 </div>
                 <asp:Label runat="server" ID="lbForm" Text="Transportation" CssClass="h1"></asp:Label>
             </div>
@@ -104,7 +107,7 @@
                         </div>
                     </div>
 
-                    <asp:Label runat="server" ID="lbgroupSend" Text="ผู้ส่ง" CssClass=" s-15px "></asp:Label>
+                    <asp:Label runat="server" ID="lbgroupSend" Text="ผู้ส่ง" CssClass="s-22px "></asp:Label>
                     <div class="border border-1 " style="border-radius: 15px; padding: 20px; width: 80%">
                         <div class="row">
                         <div class="col-sm-2 w-100 input-group mb-2 ">
@@ -211,7 +214,7 @@
                     <div class="row mb-2 ml-2">
                         <asp:Label runat="server" ID="lbGuidSiteStorage" Text=" - กรุณากรอก SiteStorage ถ้าไม่มีให้ใส่ CENTER" Font-Names="Comic Sans MS" Font-Size="Small" ForeColor="Red"></asp:Label>
                     </div>  
-                    <asp:Label runat="server" ID="Label2" Text="ผู้รับ" CssClass="s-15px"></asp:Label>
+                    <asp:Label runat="server" ID="Label2" Text="ผู้รับ" CssClass="s-22px"></asp:Label>
                     <div class="border border-1 " style="border-radius: 15px; padding: 20px; width: 80%">
                         <div class="row">
                             <div class="col-sm-2 w-100 input-group mb-2">

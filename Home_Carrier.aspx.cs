@@ -296,5 +296,13 @@ namespace Carrier
             loadtable(Convert.ToInt32(e.CommandArgument));
         }
 
+        //protected void imgbtnEditOrder_Click(object sender, ImageClickEventArgs e)
+        //{
+        //    ImageButton imgbtnEditOrder = (ImageButton)sender;
+        //    GridViewRow row = (GridViewRow)imgbtnEditOrder.NamingContainer;
+        //    LinkButton lkDocno = (LinkButton)row.FindControl("lkDocno");
+        //    Label lbpno = (Label)row.FindControl("lbpno");
+        //    Response.Redirect("Transport_Form.aspx?Docno=" + lkDocno.Text + "&pno=" + lbpno.Text);
+        //}
     }
 }

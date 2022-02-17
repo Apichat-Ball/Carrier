@@ -31,5 +31,8 @@ namespace Carrier.Model.InsideSFG_WF
         public virtual DbSet<Customer_Tax> Customer_Tax { get; set; }
         public virtual DbSet<BG_HApprove_Profitcenter> BG_HApprove_Profitcenter { get; set; }
         public virtual DbSet<WSHeadApproveBrand> WSHeadApproveBrands { get; set; }
+        public virtual DbSet<DEPARTMENT> DEPARTMENTs { get; set; }
+        public virtual DbSet<Employee_Level> Employee_Level { get; set; }
+        public virtual DbSet<POSITION> POSITIONs { get; set; }
     }
 }

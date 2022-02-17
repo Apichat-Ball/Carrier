@@ -82,7 +82,8 @@ namespace Carrier
                                      SiteStorage = order.siteStorage,
                                      SaleChannel = order.saleChannel,
                                      Transport_Type = order.Transport_Type,
-                                     TypeSendKO = orderItem.TypeSendKO
+                                     TypeSendKO = orderItem.TypeSendKO,
+                                     TypeSend = order.TypeSend
                                  }).ToList().FirstOrDefault();
 
                     if (query.Transport_Type == 1)
@@ -90,10 +91,17 @@ namespace Carrier
                         txtTrackingID.Text = query.TrackingNo;
                         lbTrackingID.Visible = true;
                         txtTrackingID.Visible = true;
+                        btnPrint.Visible = true;
                     }
-
+                    else
+                    {
+                        btnPrint.Visible = false;
+                    }
+                    ddlTypeSend.SelectedValue = query.TypeSend.ToString();
+                    ddlTypeSend.Enabled = false;
                     ddlExpress.SelectedValue = query.Transport_Type.ToString();
                     ddlExpress.Enabled = false;
+
                     txtsrcName.Text = query.SrcName;
                     txtsrcPhone.Text = query.SrcPhone;
                     var srcpro = Whale_Entities.Provinces.Where(w => w.Province_Name == query.SrcProvinces).FirstOrDefault();
@@ -111,7 +119,7 @@ namespace Carrier
                     var srccity = Convert.ToInt32(ddlsrcCityName.SelectedValue);
                     ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == srccity).ToList();
                     ddlsrcDistrictName.DataBind();
-                    var srcdistrictTemp = Whale_Entities.Districts.Where(w => w.Distinct_Name == query.SrcDistrict).FirstOrDefault().Distinct_ID;
+                    var srcdistrictTemp = Whale_Entities.Districts.Where(w =>w.City_ID == srccity && w.Distinct_Name == query.SrcDistrict).FirstOrDefault().Distinct_ID;
                     ddlsrcDistrictName.SelectedValue = srcdistrictTemp.ToString();
                     //ddlsrcDistrictName.Enabled = true;
 
@@ -131,13 +139,13 @@ namespace Carrier
                     var dstcity = Convert.ToInt32(ddldstCityName.SelectedValue);
                     ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == dstcity).ToList();
                     ddldstDistrictName.DataBind();
-                    var dstdistrictTemp = Whale_Entities.Districts.Where(w => w.Distinct_Name == query.DstDistrict).FirstOrDefault().Distinct_ID;
+                    var dstdistrictTemp = Whale_Entities.Districts.Where(w =>w.City_ID == dstcity && w.Distinct_Name == query.DstDistrict).FirstOrDefault().Distinct_ID;
                     ddldstDistrictName.SelectedValue = dstdistrictTemp.ToString();
                     //ddldstDistrictName.Enabled = true;
 
                     txtdstPostalCode.Text = query.DstPostal;
                     txtdstDetailAddress.Text = query.DstDetailAddress;
-                    btnPrint.Visible = true;
+                    
 
                     //Enable false
                     ddldstProvinceName.Enabled = false;
@@ -275,7 +283,11 @@ namespace Carrier
                     ddlReceiveLocation.DataBind();
                     lbFavorites.Visible = true;
                     ddlFavorites.Visible = true;
-
+                    if(ddlExpress.SelectedValue == "1")
+                    {
+                        ddlTypeSend.SelectedValue = "1";
+                        ddlTypeSend.Enabled = false;
+                    }
                 }
             }
         }
@@ -956,13 +968,13 @@ namespace Carrier
             var express = ddlExpress.SelectedValue;
             if (express == "2")
             {
-                ddlTypeSend.SelectedValue = "2";
-                ddlTypeSend.Enabled = false;
+                ddlTypeSend.SelectedValue = "1";
+                ddlTypeSend.Enabled = true;
             }
             else
             {
                 ddlTypeSend.SelectedValue = "1";
-                ddlTypeSend.Enabled = true;
+                ddlTypeSend.Enabled = false;
             }
         }
 

@@ -206,6 +206,7 @@
     <Content Include="Guide_Carrier.aspx" />
     <Content Include="Home_Carrier.aspx" />
     <Content Include="Icon\cancellation.png" />
+    <Content Include="Icon\edit.png" />
     <Content Include="Icon\Lalamove.png" />
     <Content Include="Icon\logo-thailandpost.jpg" />
     <Content Include="Icon\Logo_Courier.png" />
@@ -562,7 +563,13 @@
     <Compile Include="Model\InsideSFG_WF\Customer_Tax.cs">
       <DependentUpon>InsideSFG_WF_model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\InsideSFG_WF\DEPARTMENT.cs">
+      <DependentUpon>InsideSFG_WF_model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\InsideSFG_WF\Employee.cs">
+      <DependentUpon>InsideSFG_WF_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\InsideSFG_WF\Employee_Level.cs">
       <DependentUpon>InsideSFG_WF_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\InsideSFG_WF\InsideSFG_WF_model.Context.cs">
@@ -579,6 +586,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>InsideSFG_WF_model.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\InsideSFG_WF\POSITION.cs">
+      <DependentUpon>InsideSFG_WF_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\InsideSFG_WF\WSHeadApproveBrand.cs">
       <DependentUpon>InsideSFG_WF_model.tt</DependentUpon>

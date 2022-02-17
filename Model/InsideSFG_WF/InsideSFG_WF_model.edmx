@@ -28,6 +28,18 @@
           <Property Name="M10" Type="float" />
           <Property Name="M11" Type="float" />
           <Property Name="M12" Type="float" />
+          <Property Name="M01_o" Type="float" />
+          <Property Name="M02_o" Type="float" />
+          <Property Name="M03_o" Type="float" />
+          <Property Name="M04_o" Type="float" />
+          <Property Name="M05_o" Type="float" />
+          <Property Name="M06_o" Type="float" />
+          <Property Name="M07_o" Type="float" />
+          <Property Name="M08_o" Type="float" />
+          <Property Name="M09_o" Type="float" />
+          <Property Name="M10_o" Type="float" />
+          <Property Name="M11_o" Type="float" />
+          <Property Name="M12_o" Type="float" />
           <Property Name="UserID_Save" Type="nvarchar" MaxLength="10" />
           <Property Name="SaveID" Type="varchar" MaxLength="10" />
           <Property Name="SaveDate" Type="datetime" />
@@ -115,6 +127,16 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
           <Property Name="Province1" Type="nvarchar(max)" />
           <Property Name="Branch_Acc" Type="varchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="DEPARTMENT">
+          <Key>
+            <PropertyRef Name="departmentID" />
+            <PropertyRef Name="divisionID" />
+          </Key>
+          <Property Name="departmentID" Type="int" Nullable="false" />
+          <Property Name="divisionID" Type="int" Nullable="false" />
+          <Property Name="department_" Type="varchar" MaxLength="50" />
+          <Property Name="Flag" Type="nvarchar" MaxLength="1" />
+        </EntityType>
         <EntityType Name="Employee">
           <Key>
             <PropertyRef Name="userID" />
@@ -188,6 +210,29 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
           <Property Name="ISContact" Type="varchar" MaxLength="5" />
           <Property Name="ISContact_Leave" Type="varchar" MaxLength="5" />
         </EntityType>
+        <EntityType Name="Employee_Level">
+          <Key>
+            <PropertyRef Name="Type_Level" />
+          </Key>
+          <Property Name="Type_Level" Type="nvarchar" MaxLength="4" Nullable="false" />
+          <Property Name="Type_Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="Type_Value" Type="int" />
+          <Property Name="Type_Head" Type="nvarchar" MaxLength="100" />
+          <Property Name="FC_Approve" Type="float" />
+          <Property Name="FC_Brand_Approve" Type="float" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'InsideSFG_WF.dbo.POSITION' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="POSITION">
+          <Key>
+            <PropertyRef Name="positionID" />
+          </Key>
+          <Property Name="positionID" Type="int" Nullable="false" />
+          <Property Name="position_" Type="varchar" MaxLength="50" />
+          <Property Name="ePosition" Type="varchar" MaxLength="50" />
+          <Property Name="limitPay" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Flag" Type="char" MaxLength="1" />
+        </EntityType>
         <EntityType Name="WSHeadApproveBrand">
           <Key>
             <PropertyRef Name="ID_Brand" />
@@ -228,7 +273,9 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
           <EntitySet Name="BG_ForeCast" EntityType="Self.BG_ForeCast" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BG_HApprove" EntityType="Self.BG_HApprove" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BG_HApprove_Profitcenter" EntityType="Self.BG_HApprove_Profitcenter" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DEPARTMENT" EntityType="Self.DEPARTMENT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Employee_Level" EntityType="Self.Employee_Level" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WSHeadApproveBrand" EntityType="Self.WSHeadApproveBrand" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customer_Tax" EntityType="Self.Customer_Tax" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -247,6 +294,15 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
     [Customer_Tax].[Province1] AS [Province1], 
     [Customer_Tax].[Branch_Acc] AS [Branch_Acc]
     FROM [dbo].[Customer_Tax] AS [Customer_Tax]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="POSITION" EntityType="Self.POSITION" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [POSITION].[positionID] AS [positionID], 
+    [POSITION].[position_] AS [position_], 
+    [POSITION].[ePosition] AS [ePosition], 
+    [POSITION].[limitPay] AS [limitPay], 
+    [POSITION].[Flag] AS [Flag]
+    FROM [dbo].[POSITION] AS [POSITION]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -377,6 +433,9 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
           <EntitySet Name="Customer_Tax" EntityType="InsideSFG_WFModel.Customer_Tax" />
           <EntitySet Name="BG_HApprove_Profitcenter" EntityType="InsideSFG_WFModel.BG_HApprove_Profitcenter" />
           <EntitySet Name="WSHeadApproveBrands" EntityType="InsideSFG_WFModel.WSHeadApproveBrand" />
+          <EntitySet Name="DEPARTMENTs" EntityType="InsideSFG_WFModel.DEPARTMENT" />
+          <EntitySet Name="Employee_Level" EntityType="InsideSFG_WFModel.Employee_Level" />
+          <EntitySet Name="POSITIONs" EntityType="InsideSFG_WFModel.POSITION" />
         </EntityContainer>
         <EntityType Name="BG_ForeCast">
           <Key>
@@ -410,6 +469,18 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
           <Property Name="ActiveDate" Type="DateTime" Precision="3" />
           <Property Name="Flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="Remark" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="M01_o" Type="Double" />
+          <Property Name="M02_o" Type="Double" />
+          <Property Name="M03_o" Type="Double" />
+          <Property Name="M04_o" Type="Double" />
+          <Property Name="M05_o" Type="Double" />
+          <Property Name="M06_o" Type="Double" />
+          <Property Name="M07_o" Type="Double" />
+          <Property Name="M08_o" Type="Double" />
+          <Property Name="M09_o" Type="Double" />
+          <Property Name="M10_o" Type="Double" />
+          <Property Name="M11_o" Type="Double" />
+          <Property Name="M12_o" Type="Double" />
         </EntityType>
         <EntityType Name="Customer_Tax">
           <Key>
@@ -477,6 +548,37 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
           <Property Name="Flag_Clear" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
           <Property Name="UserID_Online_Commission" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="UserID_Approve_Online_Com" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="DEPARTMENT">
+          <Key>
+            <PropertyRef Name="departmentID" />
+            <PropertyRef Name="divisionID" />
+          </Key>
+          <Property Name="departmentID" Type="Int32" Nullable="false" />
+          <Property Name="divisionID" Type="Int32" Nullable="false" />
+          <Property Name="department_" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Flag" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Employee_Level">
+          <Key>
+            <PropertyRef Name="Type_Level" />
+          </Key>
+          <Property Name="Type_Level" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Type_Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Type_Value" Type="Int32" />
+          <Property Name="Type_Head" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FC_Approve" Type="Double" />
+          <Property Name="FC_Brand_Approve" Type="Double" />
+        </EntityType>
+        <EntityType Name="POSITION">
+          <Key>
+            <PropertyRef Name="positionID" />
+          </Key>
+          <Property Name="positionID" Type="Int32" Nullable="false" />
+          <Property Name="position_" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ePosition" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="limitPay" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Flag" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -606,6 +708,18 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
           <EntitySetMapping Name="BG_ForeCast">
             <EntityTypeMapping TypeName="InsideSFG_WFModel.BG_ForeCast">
               <MappingFragment StoreEntitySet="BG_ForeCast">
+                <ScalarProperty Name="M12_o" ColumnName="M12_o" />
+                <ScalarProperty Name="M11_o" ColumnName="M11_o" />
+                <ScalarProperty Name="M10_o" ColumnName="M10_o" />
+                <ScalarProperty Name="M09_o" ColumnName="M09_o" />
+                <ScalarProperty Name="M08_o" ColumnName="M08_o" />
+                <ScalarProperty Name="M07_o" ColumnName="M07_o" />
+                <ScalarProperty Name="M06_o" ColumnName="M06_o" />
+                <ScalarProperty Name="M05_o" ColumnName="M05_o" />
+                <ScalarProperty Name="M04_o" ColumnName="M04_o" />
+                <ScalarProperty Name="M03_o" ColumnName="M03_o" />
+                <ScalarProperty Name="M02_o" ColumnName="M02_o" />
+                <ScalarProperty Name="M01_o" ColumnName="M01_o" />
                 <ScalarProperty Name="Remark" ColumnName="Remark" />
                 <ScalarProperty Name="Flag" ColumnName="Flag" />
                 <ScalarProperty Name="ActiveDate" ColumnName="ActiveDate" />
@@ -701,6 +815,39 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
                 <ScalarProperty Name="Brand_Welfare" ColumnName="Brand_Welfare" />
                 <ScalarProperty Name="Brand" ColumnName="Brand" />
                 <ScalarProperty Name="ID_Brand" ColumnName="ID_Brand" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DEPARTMENTs">
+            <EntityTypeMapping TypeName="InsideSFG_WFModel.DEPARTMENT">
+              <MappingFragment StoreEntitySet="DEPARTMENT">
+                <ScalarProperty Name="Flag" ColumnName="Flag" />
+                <ScalarProperty Name="department_" ColumnName="department_" />
+                <ScalarProperty Name="divisionID" ColumnName="divisionID" />
+                <ScalarProperty Name="departmentID" ColumnName="departmentID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Employee_Level">
+            <EntityTypeMapping TypeName="InsideSFG_WFModel.Employee_Level">
+              <MappingFragment StoreEntitySet="Employee_Level">
+                <ScalarProperty Name="FC_Brand_Approve" ColumnName="FC_Brand_Approve" />
+                <ScalarProperty Name="FC_Approve" ColumnName="FC_Approve" />
+                <ScalarProperty Name="Type_Head" ColumnName="Type_Head" />
+                <ScalarProperty Name="Type_Value" ColumnName="Type_Value" />
+                <ScalarProperty Name="Type_Name" ColumnName="Type_Name" />
+                <ScalarProperty Name="Type_Level" ColumnName="Type_Level" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="POSITIONs">
+            <EntityTypeMapping TypeName="InsideSFG_WFModel.POSITION">
+              <MappingFragment StoreEntitySet="POSITION">
+                <ScalarProperty Name="Flag" ColumnName="Flag" />
+                <ScalarProperty Name="limitPay" ColumnName="limitPay" />
+                <ScalarProperty Name="ePosition" ColumnName="ePosition" />
+                <ScalarProperty Name="position_" ColumnName="position_" />
+                <ScalarProperty Name="positionID" ColumnName="positionID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

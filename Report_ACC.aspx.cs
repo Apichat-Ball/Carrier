@@ -112,8 +112,32 @@ namespace Carrier
                         {
                             lbBrand.Text = ShotBand.Brand;
                             lbBrandShort.Text = ShotBand.Depart_Short;
+                            if(lbSiteStorage.Text == "CENTER")
+                            {
+                                var centerSite = carrier_Entities.Site_Center.Where(w => ShotBand.Depart_Short == w.Brand_Center_Short).ToList().FirstOrDefault();
+                                if (centerSite == null)
+                                {
+                                    var pro = carrier_Entities.Site_Profit.Where(w => w.Channel == lbSaleOn.Text && w.Brand == ShotBand.Depart_Short 
+                                    && (w.Sale_Channel == "Depart" || w.Sale_Channel == "Shop" || w.Sale_Channel == "WebSite")).ToList().FirstOrDefault();
+                                    if (pro != null)
+                                    {
+                                        lbProfit.Text = pro.Profit;
+                                        lbComcode.Text = pro.COMCODE;
+                                        lbCostCenter.Text = pro.Costcenter;
+                                    }
+                                }
+                                else
+                                {
+                                    var pro = carrier_Entities.Site_Profit.Where(w => w.Brand == centerSite.Brand_Center_Name_Full).FirstOrDefault();
+                                    lbProfit.Text = pro.Profit;
+                                    lbComcode.Text = pro.COMCODE;
+                                    lbCostCenter.Text = pro.Costcenter;
+                                }
+                            }
+                            else
+                            {
                                 var Profit = (from pro in carrier_Entities.Site_Profit
-                                              where pro.Site_Stroage == lbSiteStorage.Text && pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.Depart_Short+"%")
+                                              where pro.Site_Stroage == lbSiteStorage.Text && pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.Depart_Short)
                                               select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
                                 if (Profit != null)
                                 {
@@ -124,19 +148,46 @@ namespace Carrier
                                 }
                                 else
                                 {
-                                    lbComcode.Text = ShotBand.ComCode;
-                                    if (lbSaleOn.Text == "ONLINE")
+                                    if(lbSiteStorage.Text == "CENTER_ONLINE" || lbSiteStorage.Text == "CENTER_OFFLINE")
                                     {
-                                        lbProfit.Text = ShotBand.Profit_Online;
-                                        lbCostCenter.Text = ShotBand.CostCenter_Online;
-                                    }
-                                    else if (lbSaleOn.Text == "OFFLINE")
-                                    {
-                                        lbProfit.Text = ShotBand.Profit_Offline;
-                                        lbCostCenter.Text = ShotBand.CostCenter_Offline;
+                                        var ProfitNoSiteCenter = (from pro in carrier_Entities.Site_Profit
+                                                      where  pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.Depart_Short) && (pro.Sale_Channel == "Depart" || pro.Sale_Channel == "Shop" || pro.Sale_Channel == "WebSite")
+                                                                  select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
+                                        if(ProfitNoSiteCenter != null)
+                                        {
+                                            lbComcode.Text = ProfitNoSiteCenter.ComCode;
+                                            lbProfit.Text = ProfitNoSiteCenter.profit;
+                                            lbCostCenter.Text = ProfitNoSiteCenter.CostCenter;
+                                        }
                                     }
                                 }
-                            
+                            }
+                            #region OLD
+                            //var Profit = (from pro in carrier_Entities.Site_Profit
+                            //              where pro.Site_Stroage == lbSiteStorage.Text && pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.Depart_Short+"%")
+                            //              select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
+                            //if (Profit != null)
+                            //{
+
+                            //    lbComcode.Text = Profit.ComCode;
+                            //    lbProfit.Text = Profit.profit;
+                            //    lbCostCenter.Text = Profit.CostCenter;
+                            //}
+                            //else
+                            //{
+                            //    lbComcode.Text = ShotBand.ComCode;
+                            //    if (lbSaleOn.Text == "ONLINE")
+                            //    {
+                            //        lbProfit.Text = ShotBand.Profit_Online;
+                            //        lbCostCenter.Text = ShotBand.CostCenter_Online;
+                            //    }
+                            //    else if (lbSaleOn.Text == "OFFLINE")
+                            //    {
+                            //        lbProfit.Text = ShotBand.Profit_Offline;
+                            //        lbCostCenter.Text = ShotBand.CostCenter_Offline;
+                            //    }
+                            //}
+                            #endregion
 
                         }
 
