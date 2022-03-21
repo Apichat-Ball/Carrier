@@ -79,22 +79,19 @@ namespace Carrier
                 {
                     if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
                     {
-                        orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
-                        if (txtDocnoSearch.Text != "")
-                        {
-                            orderList = orderList.Where(w => w.Docno.Contains(txtDocnoSearch.Text)).ToList();
-                        }
                         if (txtPnoSearch.Text != "")
                         {
-                            orderList = orderList.Where(w => w.pno.Contains(txtPnoSearch.Text)).ToList();
+                            orderList = orderList.Where(w => w.pno != null).ToList();
+                            orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
+                            && (w.pno.StartsWith(txtPnoSearch.Text.ToUpper()) || txtPnoSearch.Text == "")
+                            && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
+                            && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
                         }
-                        if (txtDstNameSearch.Text != "")
+                        else
                         {
-                            orderList = orderList.Where(w => w.dstName.Contains(txtDstNameSearch.Text)).ToList();
-                        }
-                        if (txtArticleSearch.Text != "")
-                        {
-                            orderList = orderList.Where(w => w.ArticleCategory == txtArticleSearch.Text).ToList();
+                            orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
+                            && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
+                            && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
                         }
 
                     }
@@ -114,6 +111,7 @@ namespace Carrier
 
                 foreach (GridViewRow row in gv_OrderAll.Rows)
                 {
+                    LinkButton lkDocno = (LinkButton)row.FindControl("lkDocno");
                     Label lbDateCreate = (Label)row.FindControl("lbDateCreate");
                     Label lbStatus = (Label)row.FindControl("lbStatus");
                     Label lbTimeTrackingText = (Label)row.FindControl("lbTimeTrackingText");
@@ -121,26 +119,70 @@ namespace Carrier
                     Label lbStatusItem = (Label)row.FindControl("lbStatusItem");
                     ImageButton imgbtnCancelOrder = (ImageButton)row.FindControl("imgbtnCancelOrder");
                     lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
-                    if (lbStatus.Text != "")
+                    if (lbStatusItem.Text == "A")
                     {
-                        var date = DateTime.Parse(lbTimeTracking.Text);
-                        var statusTicket = service_Flashs.CheckNotify(date, lbStatus.Text);
-                        if(statusTicket == "รับพัสดุแล้ว" || statusTicket == "ยกเลิกแล้ว")
+                        var dateNotiDate = new DateTime();
+                        if (lbTimeTrackingText.Text.Contains("พรุ่งนี้"))
                         {
-                            lbTimeTrackingText.Text = statusTicket;
+                            var dateRaw = DateTime.Parse(lbTimeTracking.Text).AddDays(1);
+                            dateNotiDate = DateTime.Parse(dateRaw.ToShortDateString());
+                            var dateToUpdate = dateNotiDate.AddHours(17).AddMinutes(30);
+                            if (DateTime.Now >= dateToUpdate)
+                            {
+                                var date = DateTime.Parse(lbTimeTracking.Text);
+                                var a = service_Flashs.CheckNotify(lkDocno.Text);
+                                if (a != "")
+                                {
+                                    lbTimeTrackingText.Text = service_Flashs.CheckNotify(lkDocno.Text);
+                                }
+                            }
+                            else
+                            {
+                                lbTimeTrackingText.Text = "วันนี้" + lbTimeTrackingText.Text.Substring(8);
+                            }
+                        }
+                        else if (lbTimeTrackingText.Text.Contains("วันนี้"))
+                        {
+                            var dateRaw = DateTime.Parse(lbTimeTracking.Text);
+                            dateNotiDate = DateTime.Parse(dateRaw.ToShortDateString());
+                            var dateToUpdate = dateNotiDate.AddHours(17).AddMinutes(30);
+                            if (DateTime.Now >= dateToUpdate)
+                            {
+                                var date = DateTime.Parse(lbTimeTracking.Text);
+                                var a = service_Flashs.CheckNotify(lkDocno.Text);
+                                if (a != "")
+                                {
+                                    lbTimeTrackingText.Text = service_Flashs.CheckNotify(lkDocno.Text);
+                                }
+                            }
+                        }
+                        if (lbTimeTrackingText.Text.Contains("ยกเลิกแล้ว"))
+                        {
+                            lbTimeTrackingText.BackColor = System.Drawing.Color.PaleVioletRed;
+                            lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                            lbTimeTrackingText.CssClass = "status-tracking";
                         }
                         else
+                        {
+                            lbTimeTrackingText.BackColor = System.Drawing.Color.LimeGreen;
+                            lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                            lbTimeTrackingText.CssClass = "status-tracking";
+                        }
                         imgbtnCancelOrder.Visible = false;
                     }
                     if (lbStatusItem.Text == "SP")
                     {
                         lbTimeTrackingText.Text = "ส่งผ่านไปรษณีย์แล้ว";
                         imgbtnCancelOrder.Visible = false;
+                        lbTimeTrackingText.BackColor = System.Drawing.Color.Gray;
+                        lbTimeTrackingText.CssClass = "status-tracking";
                     }
                     if (lbStatusItem.Text == "SL")
                     {
                         lbTimeTrackingText.Text = "ส่งผ่าน Lalamove";
                         imgbtnCancelOrder.Visible = false;
+                        lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
+                        lbTimeTrackingText.CssClass = "status-tracking";
                     }
                     Label lbBrand = (Label)row.FindControl("lbBrand");
                     var Brand = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
@@ -286,8 +328,14 @@ namespace Carrier
         }
         protected void btnClear_Click(object sender, EventArgs e)
         {
+            txtDateStart.Text = DateTime.Now.ToString("dd/MM/yyyy");
+            txtDateEnd.Text = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy");
             lbstatusSearch.Text = "First";
             btnClear.Visible = false;
+            txtDocnoSearch.Text = "";
+            txtPnoSearch.Text = "";
+            txtDstNameSearch.Text = "";
+            txtArticleSearch.Text = "";
             loadtable(1);
         }
 

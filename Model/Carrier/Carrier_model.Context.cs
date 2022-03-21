@@ -36,5 +36,6 @@ namespace Carrier.Model.Carrier
         public virtual DbSet<Event_Shop> Event_Shop { get; set; }
         public virtual DbSet<Site_Center> Site_Center { get; set; }
         public virtual DbSet<History_Notify_Order> History_Notify_Order { get; set; }
+        public virtual DbSet<Status_Notify_Order> Status_Notify_Order { get; set; }
     }
 }

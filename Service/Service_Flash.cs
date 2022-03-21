@@ -324,148 +324,190 @@ namespace Carrier.Service
                                      remark = order.remark != "" ? order.remark : "-",
                                      TypeSendKo = orderItem.TypeSendKO
                                  }).ToList().FirstOrDefault();
-                Order_Noti.Add(orderData);
-
+                var check = CheckNotify(orderData.Docno);
+                if(check == "")
+                {
+                    Order_Noti.Add(orderData);
+                }
             }
 
-
-            var SDC1 = Order_Noti.Where(w => w.TypeSendKo == "SDC1").ToList();
-            foreach (var sd in SDC1)
-            {
-                Order_Noti.Remove(sd);
-            }
             List<responseNotify> listResnotify = new List<responseNotify>();
-            responseNotify resnotity = new responseNotify();
-            if (SDC1.Count != 0)
-            {
-                var last = SDC1.LastOrDefault();
-                var random = "mdchId=" + last.mchId + "&sendTime=" + DateTime.Now;
-                var Md5 = MD5_hash(random);
-                var header =
-                    "estimateParcelNumber=" + SDC1.Count() +
-                    "&mchId=" + last.mchId +
-                    "&nonceStr=" + Md5 +
-                    "&warehouseNo=" + "Wangnoi";
-
-                string sign = sha256_hash(header + "&key=" + keyFlash.key).ToUpper();
-                var client = new RestClient("https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign);
-                client.Timeout = -1;
-                var request = new RestRequest(Method.POST);
-                request.AlwaysMultipartFormData = true;
-                IRestResponse response = client.Execute(request);
-                JObject j = JObject.Parse(response.Content);
-                var pno = SDC1.Select(s => s.pno).ToList();
-                if (Convert.ToInt32(j["code"]) == 1)
-                {
-                    resnotity.pno = pno;
-                    resnotity.code = Convert.ToInt32(j["code"]);
-                    resnotity.message = j["message"].ToString();
-                    resnotity.ticketPickupId = j["data"]["ticketPickupId"].ToString();
-                    resnotity.staffInfoId = Convert.ToInt32(j["data"]["staffInfoId"]);
-                    resnotity.staffInfoName = j["data"]["staffInfoName"].ToString();
-                    resnotity.staffInfoPhone = j["data"]["staffInfoPhone"].ToString();
-                    resnotity.upCountryNote = j["data"]["upCountryNote"].ToString();
-                    resnotity.timeoutAtText = j["data"]["timeoutAtText"].ToString();
-                    resnotity.ticketMessage = j["data"]["ticketMessage"].ToString();
-                    resnotity.dateSuccess = DateTime.Now;
-                    resnotity.warehouseNo = "Wangnoi";
-                }
-                else
-                {
-                    resnotity.pno = pno;
-                    resnotity.code = Convert.ToInt32(j["code"]);
-                    resnotity.message = j["message"].ToString();
-                    resnotity.warehouseNo = "Wangnoi";
-
-                }
-                listResnotify.Add(resnotity);
-            }
-            resnotity = new responseNotify();
-
             if (Order_Noti.Count != 0)
             {
-                var last = Order_Noti.LastOrDefault();
-                var random = "mdchId=" + last.mchId + "&sendTime=" + DateTime.Now;
-                var Md5 = MD5_hash(random);
-                var header =
-                    "estimateParcelNumber=" + Order_Noti.Count() +
-                    "&mchId=" + last.mchId +
-                    "&nonceStr=" + Md5 +
-                    "&warehouseNo=" + "SFG";
-
-                string sign = sha256_hash(header + "&key=" + keyFlash.key).ToUpper();
-                var client = new RestClient("https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign);
-                client.Timeout = -1;
-                var request = new RestRequest(Method.POST);
-                request.AlwaysMultipartFormData = true;
-                IRestResponse response = client.Execute(request);
-                JObject j = JObject.Parse(response.Content);
-                var pno = Order_Noti.Select(s => s.pno).ToList();
-                if (Convert.ToInt32(j["code"]) == 1)
+                var SDC1 = Order_Noti.Where(w => w.TypeSendKo == "SDC1").ToList();
+                foreach (var sd in SDC1)
                 {
-                    resnotity.pno = pno;
-                    resnotity.code = Convert.ToInt32(j["code"]);
-                    resnotity.message = j["message"].ToString();
-                    resnotity.ticketPickupId = j["data"]["ticketPickupId"].ToString();
-                    resnotity.staffInfoId = Convert.ToInt32(j["data"]["staffInfoId"]);
-                    resnotity.staffInfoName = j["data"]["staffInfoName"].ToString();
-                    resnotity.staffInfoPhone = j["data"]["staffInfoPhone"].ToString();
-                    resnotity.upCountryNote = j["data"]["upCountryNote"].ToString();
-                    resnotity.timeoutAtText = j["data"]["timeoutAtText"].ToString();
-                    resnotity.ticketMessage = j["data"]["ticketMessage"].ToString();
-                    resnotity.dateSuccess = DateTime.Now;
-                    resnotity.warehouseNo = "SFG";
+                    Order_Noti.Remove(sd);
                 }
-                else
+                responseNotify resnotity = new responseNotify();
+                if (SDC1.Count != 0)
                 {
-                    resnotity.pno = pno;
-                    resnotity.code = Convert.ToInt32(j["code"]);
-                    resnotity.message = j["message"].ToString();
-                    resnotity.warehouseNo = "SFG";
+                    var last = SDC1.LastOrDefault();
+                    var random = "mdchId=" + last.mchId + "&sendTime=" + DateTime.Now;
+                    var Md5 = MD5_hash(random);
+                    var header =
+                        "estimateParcelNumber=" + SDC1.Count() +
+                        "&mchId=" + last.mchId +
+                        "&nonceStr=" + Md5 +
+                        "&warehouseNo=" + "Wangnoi";
 
+                    string sign = sha256_hash(header + "&key=" + keyFlash.key).ToUpper();
+                    var client = new RestClient("https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign);
+                    client.Timeout = -1;
+                    var request = new RestRequest(Method.POST);
+                    request.AlwaysMultipartFormData = true;
+                    IRestResponse response = client.Execute(request);
+                    JObject j = JObject.Parse(response.Content);
+                    var pno = SDC1.Select(s => s.pno).ToList();
+                    if (Convert.ToInt32(j["code"]) == 1)
+                    {
+                        resnotity.pno = pno;
+                        resnotity.code = Convert.ToInt32(j["code"]);
+                        resnotity.message = j["message"].ToString();
+                        resnotity.ticketPickupId = j["data"]["ticketPickupId"].ToString();
+                        resnotity.staffInfoId = Convert.ToInt32(j["data"]["staffInfoId"]);
+                        resnotity.staffInfoName = j["data"]["staffInfoName"].ToString();
+                        resnotity.staffInfoPhone = j["data"]["staffInfoPhone"].ToString();
+                        resnotity.upCountryNote = j["data"]["upCountryNote"].ToString();
+                        resnotity.timeoutAtText = j["data"]["timeoutAtText"].ToString();
+                        resnotity.ticketMessage = j["data"]["ticketMessage"].ToString();
+                        resnotity.dateSuccess = DateTime.Now;
+                        resnotity.warehouseNo = "Wangnoi";
+                    }
+                    else
+                    {
+                        resnotity.pno = pno;
+                        resnotity.code = Convert.ToInt32(j["code"]);
+                        resnotity.message = j["message"].ToString();
+                        resnotity.warehouseNo = "Wangnoi";
+
+                    }
+                    listResnotify.Add(resnotity);
                 }
-                listResnotify.Add(resnotity);
+                resnotity = new responseNotify();
+
+                if (Order_Noti.Count != 0)
+                {
+                    var last = Order_Noti.LastOrDefault();
+                    var random = "mdchId=" + last.mchId + "&sendTime=" + DateTime.Now;
+                    var Md5 = MD5_hash(random);
+                    var header =
+                        "estimateParcelNumber=" + Order_Noti.Count() +
+                        "&mchId=" + last.mchId +
+                        "&nonceStr=" + Md5 +
+                        "&warehouseNo=" + "SFG";
+
+                    string sign = sha256_hash(header + "&key=" + keyFlash.key).ToUpper();
+                    var client = new RestClient("https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign);
+                    client.Timeout = -1;
+                    var request = new RestRequest(Method.POST);
+                    request.AlwaysMultipartFormData = true;
+                    IRestResponse response = client.Execute(request);
+                    JObject j = JObject.Parse(response.Content);
+                    var pno = Order_Noti.Select(s => s.pno).ToList();
+                    if (Convert.ToInt32(j["code"]) == 1)
+                    {
+                        resnotity.pno = pno;
+                        resnotity.code = Convert.ToInt32(j["code"]);
+                        resnotity.message = j["message"].ToString();
+                        resnotity.ticketPickupId = j["data"]["ticketPickupId"].ToString();
+                        resnotity.staffInfoId = Convert.ToInt32(j["data"]["staffInfoId"]);
+                        resnotity.staffInfoName = j["data"]["staffInfoName"].ToString();
+                        resnotity.staffInfoPhone = j["data"]["staffInfoPhone"].ToString();
+                        resnotity.upCountryNote = j["data"]["upCountryNote"].ToString();
+                        resnotity.timeoutAtText = j["data"]["timeoutAtText"].ToString();
+                        resnotity.ticketMessage = j["data"]["ticketMessage"].ToString();
+                        resnotity.dateSuccess = DateTime.Now;
+                        resnotity.warehouseNo = "SFG";
+                    }
+                    else
+                    {
+                        resnotity.pno = pno;
+                        resnotity.code = Convert.ToInt32(j["code"]);
+                        resnotity.message = j["message"].ToString();
+                        resnotity.warehouseNo = "SFG";
+
+                    }
+                    listResnotify.Add(resnotity);
+                }
             }
+            
             return listResnotify;
         }
-        public string CheckNotify(DateTime datesend, string Docno)
+        public string CheckNotify( string Docno)
         {
-            var mchId = entities_Carrier.Order_Item.Where(w => w.Docno == Docno).Select(s => s.mchId).ToList().FirstOrDefault();
+            #region v1
+            //var mchId = entities_Carrier.Order_Item.Where(w => w.Docno == Docno).Select(s => s.mchId).ToList().FirstOrDefault();
+            //var keyFlash = Get_Key("FLASH", "FLASH");
+            //var date = datesend.ToString("yyyy-MM-dd");
+            //var random = "date=" + date + "mchId=" + mchId;
+            //var Md5 = MD5_hash(random);
+            //var header = "date=" + date + "&mchId=" + mchId + "&nonceStr=" + Md5;
+            //string sign = sha256_hash(header + "&key=" + keyFlash.key).ToUpper();
+            //var client = new RestClient("https://api.flashexpress.com/open/v1/notifications?" + header + "&sign=" + sign);
+            //client.Timeout = -1;
+            //var request = new RestRequest(Method.POST);
+            //request.AlwaysMultipartFormData = true;
+            //IRestResponse response = client.Execute(request);
+            //JObject j = JObject.Parse(response.Content);
+            //var d = "";
+            //var booking = (from OI in entities_Carrier.Order_Item
+            //                 join NT in entities_Carrier.Notifies on OI.ticketPickupId equals NT.TicketPickupId
+            //                 where OI.Docno == Docno
+            //                 select new { warehouseNo = NT.warehouseNo  , dateNotify = NT.DateNotify}).FirstOrDefault() ;
+            //if (Convert.ToInt32(j["code"]) == 1)
+            //{
+            //    foreach (var i in j["data"])
+            //    {
+
+            //        var dtf = (booking.dateNotify ?? DateTime.Now).AddHours(-7);
+            //        var dtfNew = dtf.AddMinutes(+15);
+            //        dtf = dtf.AddMinutes(-15);
+            //        //var dateUnix = new DateTimeOffset(dtf).ToUnixTimeSeconds();
+            //        var createAt = Convert.ToInt32(i["createdAt"].ToString());
+            //        var createAtFromEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(createAt);
+            //        if (dtf <= createAtFromEpoch && createAtFromEpoch <= dtfNew && (booking.warehouseNo == i["kaWarehouseNo"].ToString() || booking.warehouseNo == " "))
+            //        {
+            //            d = i["stateText"].ToString();
+            //        }
+
+            //    }
+            //    if(d == "")
+            //    {
+
+            //    }
+            //}
+            #endregion
+            #region V2
+            var d = "";
+
+            var mchId = entities_Carrier.Order_Item.Where(w => w.Docno == Docno).ToList().FirstOrDefault();
             var keyFlash = Get_Key("FLASH", "FLASH");
-            var date = datesend.ToString("yyyy-MM-dd");
-            var random = "date=" + date + "mchId=" + mchId;
+            var random = "pno=" + mchId.pno + "mchId=" + mchId.mchId;
             var Md5 = MD5_hash(random);
-            var header = "date=" + date + "&mchId=" + mchId + "&nonceStr=" + Md5;
+            var header = "mchId=" + mchId.mchId + "&nonceStr=" + Md5;
             string sign = sha256_hash(header + "&key=" + keyFlash.key).ToUpper();
-            var client = new RestClient("https://api.flashexpress.com/open/v1/notifications?" + header + "&sign=" + sign);
+            var client = new RestClient("https://api.flashexpress.com/open/v1/orders/"+mchId.pno+"/routes?" + header + "&sign=" + sign);
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
             request.AlwaysMultipartFormData = true;
             IRestResponse response = client.Execute(request);
             JObject j = JObject.Parse(response.Content);
-            var d = "";
-            var booking = (from OI in entities_Carrier.Order_Item
-                             join NT in entities_Carrier.Notifies on OI.ticketPickupId equals NT.TicketPickupId
-                             where OI.Docno == Docno
-                             select new { warehouseNo = NT.warehouseNo  , dateNotify = NT.DateNotify}).FirstOrDefault() ;
-            if (Convert.ToInt32(j["code"]) == 1)
+            if(j["code"].ToString() == "1")
             {
-                foreach (var i in j["data"])
+                var code = Convert.ToInt32(j["data"]["state"].ToString());
+                var a = entities_Carrier.Status_Notify_Order.Where(w => w.statusId == code).ToList(); 
+                if(a.Count() == 0)
                 {
-                    
-                    var dtf = (booking.dateNotify ?? DateTime.Now).AddHours(-7);
-                    var dtfNew = dtf.AddMinutes(+10);
-                    dtf = dtf.AddMinutes(-10);
-                    //var dateUnix = new DateTimeOffset(dtf).ToUnixTimeSeconds();
-                    var createAt = Convert.ToInt32(i["createdAt"].ToString());
-                    var createAtFromEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddSeconds(createAt);
-                    if (dtf <= createAtFromEpoch && createAtFromEpoch <= dtfNew && (booking.warehouseNo == i["kaWarehouseNo"].ToString() || booking.warehouseNo == " "))
-                    {
-                        d = i["stateText"].ToString();
-                    }
-
+                    entities_Carrier.Status_Notify_Order.Add(new Status_Notify_Order { statusId = code, statusName = j["data"]["stateText"].ToString() });
+                    entities_Carrier.SaveChanges();
+                }
+                if (j["data"]["state"].ToString() != "0")
+                {
+                    d = j["data"]["stateText"].ToString();
                 }
             }
+            #endregion
             return d;
         }
         public string Validate_Transport(Order item, string receive , string favorites)
@@ -716,6 +758,37 @@ namespace Carrier.Service
             IRestResponse response = client.Execute(request);
             JObject j = JObject.Parse(response.Content);
             return "";
+        }
+        public List<ReportBrand> Get_Report_Brand(string departOrShop, string SDpart)
+        {
+            
+            var order = (from or in entities_Carrier.Orders
+                         join orItem in entities_Carrier.Order_Item on or.Docno equals orItem.Docno
+                         where orItem.Status == "A" || orItem.Status == "SL"
+                         select new ReportBrand
+                         {
+                             Docno = or.Docno,
+                             Date_send = or.Date_send,
+                             saleOn = or.saleOn,
+                             SDpart = or.SDpart,
+                             siteStorage = or.siteStorage,
+                             status = or.status,
+                             TypeSend = or.TypeSend,
+                             saleChannel = entities_Carrier.Site_Profit.Where(w=>w.Site_Stroage.StartsWith(or.siteStorage)).FirstOrDefault().Sale_Channel,
+                             Qty = orItem.Qty ?? 0
+                         }).ToList();
+            foreach(var i in order)
+            {
+                var BG = (from ha in entities_InsideSFG_WF.BG_HApprove
+                          join haP in entities_InsideSFG_WF.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
+                          where ha.departmentID == i.SDpart
+                          select new { ha = ha,haP = haP}).ToList();
+                i.SDpart_Name = BG.FirstOrDefault().haP.Depart_Short;
+                i.SDpart_Name_Full = BG.FirstOrDefault().ha.department_;
+            }
+            var ss = order.Where(w => w.saleChannel == departOrShop && w.saleOn == "OFFLINE" && w.SDpart == SDpart).ToList();
+            return ss;
+            
         }
     }
     public class Model_Key

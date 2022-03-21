@@ -205,7 +205,9 @@
     <Content Include="Global.asax" />
     <Content Include="Guide_Carrier.aspx" />
     <Content Include="Home_Carrier.aspx" />
+    <Content Include="Icon\add.png" />
     <Content Include="Icon\cancellation.png" />
+    <Content Include="Icon\correct.png" />
     <Content Include="Icon\edit.png" />
     <Content Include="Icon\Lalamove.png" />
     <Content Include="Icon\logo-thailandpost.jpg" />
@@ -256,6 +258,7 @@
       <LastGenOutput>Whale_model.cs</LastGenOutput>
     </Content>
     <Content Include="Report_ACC.aspx" />
+    <Content Include="Report_Brand.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -548,6 +551,9 @@
     <Compile Include="Model\Carrier\Status.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\Carrier\Status_Notify_Order.cs">
+      <DependentUpon>Carrier_model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Carrier\User.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
@@ -651,6 +657,13 @@
     </Compile>
     <Compile Include="Report_ACC.aspx.designer.cs">
       <DependentUpon>Report_ACC.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Report_Brand.aspx.cs">
+      <DependentUpon>Report_Brand.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Report_Brand.aspx.designer.cs">
+      <DependentUpon>Report_Brand.aspx</DependentUpon>
     </Compile>
     <Compile Include="Service\Service_Flash.cs" />
     <Compile Include="Site.Master.cs">

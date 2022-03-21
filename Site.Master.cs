@@ -5,15 +5,18 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Carrier.Model.InsideSFG_WF;
+using Carrier.Model.Carrier;
 
 namespace Carrier
 {
     public partial class SiteMaster : MasterPage
     {
         InsideSFG_WFEntities entities_InsideSFG_WF;
+        CarrierEntities carrier_Entities;
         public SiteMaster()
         {
             entities_InsideSFG_WF = new InsideSFG_WFEntities();
+            carrier_Entities = new CarrierEntities();
         }
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -72,6 +75,12 @@ namespace Carrier
                     var depart = entities_InsideSFG_WF.DEPARTMENTs.Where(w => w.departmentID == objuser.departmentID).Select(s => s.department_).FirstOrDefault();
                     var position = entities_InsideSFG_WF.POSITIONs.Where(w => w.positionID == objuser.positionID).Select(s => s.position_).FirstOrDefault();
                     lblDepartmentID.Text = "<span style='line-height:1;'>แผนก : " + depart + " ตำแหน่ง : " + position + "</span>";
+                    var permision = carrier_Entities.Users.Where(w => w.UserID == userid && w.Permission == "Admin").ToList();
+                    if(permision.Count == 1)
+                    {
+                        div_Member.Visible = false;
+                        div_Admin.Visible = true;
+                    }
                 }
                 else { Response.Redirect("Home_Carrier.aspx"); }
             }

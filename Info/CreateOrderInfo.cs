@@ -49,4 +49,18 @@ namespace Carrier.Info
         public string phone { get; set; }
         public string srcName { get; set; }
     }
+    public class ReportBrand 
+    {
+        public string Docno { get; set; }
+        public DateTime? Date_send { get; set; }
+        public string status { get; set; }
+        public string SDpart { get; set; }
+        public string SDpart_Name { get; set; }
+        public string SDpart_Name_Full { get; set; }
+        public string saleOn { get; set; }
+        public string siteStorage { get; set; }
+        public string saleChannel { get; set; }
+        public int? TypeSend { get; set; }
+        public int Qty { get; set; }
+    }
 }

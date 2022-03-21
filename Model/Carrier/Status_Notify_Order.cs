@@ -12,14 +12,9 @@ namespace Carrier.Model.Carrier
     using System;
     using System.Collections.Generic;
     
-    public partial class History_Notify_Order
+    public partial class Status_Notify_Order
     {
-        public int History_ID { get; set; }
-        public string History_NO { get; set; }
-        public Nullable<System.DateTime> Date_Notify { get; set; }
-        public string pno { get; set; }
-        public string Docno { get; set; }
-        public string Type_Send_KA { get; set; }
-        public string SaveFrom { get; set; }
+        public int statusId { get; set; }
+        public string statusName { get; set; }
     }
 }

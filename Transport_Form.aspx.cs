@@ -482,11 +482,11 @@ namespace Carrier
 
                         break;
                     case "SDC1":
-                        //ผู้ส่ง
-                        //var  user = HttpContext.Current.Session[]
-                        //var fromUser = InsideSFG_WF_Entities.Employees.Where(w=>w.userID == )
-                        //txtsrcName.Text = "บริษัท เอส.ดี.ซี วัน จำกัด";
-                        //txtsrcPhone.Text = "0944764565";
+                    //ผู้ส่ง
+                    //var  user = HttpContext.Current.Session[]
+                    //var fromUser = InsideSFG_WF_Entities.Employees.Where(w=>w.userID == )
+                    txtsrcName.Text = "ณัฐชยา พงศ์ทองกุล";
+                    txtsrcPhone.Text = "0988325926";
                         ddlsrcProvinceName.SelectedValue = "5";
                         var provinceSDC1 = Convert.ToInt32(ddlsrcProvinceName.SelectedValue);
 

@@ -11,70 +11,97 @@ namespace Carrier
 {
 
 
-    public partial class SiteMaster
+    public partial class Report_Brand
     {
 
         /// <summary>
-        /// lblUserID control.
+        /// lbForm control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblUserID;
+        protected global::System.Web.UI.WebControls.Label lbForm;
 
         /// <summary>
-        /// div_Member control.
+        /// lbuserid control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div_Member;
+        protected global::System.Web.UI.WebControls.Label lbuserid;
 
         /// <summary>
-        /// div_Admin control.
+        /// lbDateStart control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div_Admin;
+        protected global::System.Web.UI.WebControls.Label lbDateStart;
 
         /// <summary>
-        /// divmenu control.
+        /// txtDateStart control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divmenu;
+        protected global::System.Web.UI.WebControls.TextBox txtDateStart;
 
         /// <summary>
-        /// lblName control.
+        /// RegularExpressionValidatorDateStart control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblName;
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator RegularExpressionValidatorDateStart;
 
         /// <summary>
-        /// lblDepartmentID control.
+        /// lbDateEnd control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDepartmentID;
+        protected global::System.Web.UI.WebControls.Label lbDateEnd;
 
         /// <summary>
-        /// MainContent control.
+        /// txtDateEnd control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.WebControls.TextBox txtDateEnd;
+
+        /// <summary>
+        /// RegularExpressionValidatorDateEnd control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator RegularExpressionValidatorDateEnd;
+
+        /// <summary>
+        /// imgbtnAdd control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton imgbtnAdd;
+
+        /// <summary>
+        /// gv_Head control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gv_Head;
     }
 }

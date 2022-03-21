@@ -50,9 +50,16 @@ namespace Carrier
                 var enUS = new CultureInfo("en-US");
                 var datestart = DateTime.ParseExact(txtDateStart.Text, format, enUS, DateTimeStyles.None);
                 var dateend = DateTime.ParseExact(txtDateEnd.Text, format, enUS, DateTimeStyles.None);
+
+                var HistoryNoti = carrier_Entities.History_Notify_Order.Where(w => w.Date_Notify >= datestart && w.Date_Notify <= dateend).ToList();
+                List<string> docno = new List<string>();
+                if (HistoryNoti.Count != 0)
+                {
+                    docno = HistoryNoti.Select(s => s.Docno).Distinct().ToList();
+                }
                 var orderList = (from order in carrier_Entities.Orders
                                  join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
-                                 where order_Item.Status != "C"
+                                 where order_Item.Status != "C" && order_Item.Status != "A" && order_Item.Status != null && order_Item.Date_Success >= datestart && order_Item.Date_Success <= dateend
                                  select new
                                  {
                                      Docno = order.Docno,
@@ -67,12 +74,25 @@ namespace Carrier
                                      Brand = order.SDpart,
                                      site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
                                  }).ToList();
-                //if (lbFirstLoad.Text != "first")
-                //{
-                //    orderList = orderList.Where(w => w.dateCreate >= datestart && w.dateCreate <= dateend).ToList();
-                //}
-                orderList = orderList.Where(w => w.dateCreate >= datestart && w.dateCreate <= dateend).ToList();
 
+                var orderListTrue = (from order in carrier_Entities.Orders
+                                     join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
+                                     where order_Item.Status != "C" && order_Item.Status != null && docno.Contains(order_Item.Docno)
+                                     select new
+                                     {
+                                         Docno = order.Docno,
+                                         pno = order_Item.pno,
+                                         srcName = order.srcName,
+                                         dstName = order.dstName,
+                                         ArticleCategory = carrier_Entities.Article_Category.Where(w => w.ArticleCode == order.articleCategory).ToList().FirstOrDefault().ArticleName,
+                                         dateCreate = order_Item.Date_Success,
+                                         TrackingPickup = order_Item.ticketPickupId,
+                                         TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
+                                         SaleOn = order.saleOn,
+                                         Brand = order.SDpart,
+                                         site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
+                                     }).ToList();
+                orderList.AddRange(orderListTrue);
                 var maxrow = 8;
                 double maxdata_gvData = (double)((decimal)Convert.ToDecimal(orderList.Count()) / Convert.ToDecimal(maxrow));
                 int pageCount_gvData = (int)Math.Ceiling(maxdata_gvData);
@@ -108,16 +128,16 @@ namespace Carrier
                         Label lbSaleOn = (Label)row.FindControl("lbSaleOn");
                         Label lbSiteStorage = (Label)row.FindControl("lbSiteStorage");
 
-                        if (ShotBand != null )
+                        if (ShotBand != null)
                         {
                             lbBrand.Text = ShotBand.Brand;
                             lbBrandShort.Text = ShotBand.Depart_Short;
-                            if(lbSiteStorage.Text == "CENTER")
+                            if (lbSiteStorage.Text == "CENTER")
                             {
                                 var centerSite = carrier_Entities.Site_Center.Where(w => ShotBand.Depart_Short == w.Brand_Center_Short).ToList().FirstOrDefault();
                                 if (centerSite == null)
                                 {
-                                    var pro = carrier_Entities.Site_Profit.Where(w => w.Channel == lbSaleOn.Text && w.Brand == ShotBand.Depart_Short 
+                                    var pro = carrier_Entities.Site_Profit.Where(w => w.Channel == lbSaleOn.Text && w.Brand == ShotBand.Depart_Short
                                     && (w.Sale_Channel == "Depart" || w.Sale_Channel == "Shop" || w.Sale_Channel == "WebSite")).ToList().FirstOrDefault();
                                     if (pro != null)
                                     {
@@ -148,17 +168,35 @@ namespace Carrier
                                 }
                                 else
                                 {
-                                    if(lbSiteStorage.Text == "CENTER_ONLINE" || lbSiteStorage.Text == "CENTER_OFFLINE")
+                                    if (lbSiteStorage.Text == "CENTER_ONLINE" || lbSiteStorage.Text == "CENTER_OFFLINE")
                                     {
                                         var ProfitNoSiteCenter = (from pro in carrier_Entities.Site_Profit
-                                                      where  pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.Depart_Short) && (pro.Sale_Channel == "Depart" || pro.Sale_Channel == "Shop" || pro.Sale_Channel == "WebSite")
+                                                                  where pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.Depart_Short) && (pro.Sale_Channel == "Depart" || pro.Sale_Channel == "Shop" || pro.Sale_Channel == "WebSite")
                                                                   select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
-                                        if(ProfitNoSiteCenter != null)
+                                        if (ProfitNoSiteCenter != null)
                                         {
                                             lbComcode.Text = ProfitNoSiteCenter.ComCode;
                                             lbProfit.Text = ProfitNoSiteCenter.profit;
                                             lbCostCenter.Text = ProfitNoSiteCenter.CostCenter;
                                         }
+                                    }
+                                    else if (lbSiteStorage.Text.StartsWith("EV"))
+                                    {
+                                        var site = lbSiteStorage.Text;
+                                        var eventCheck = carrier_Entities.Event_Shop.Where(w => w.Shop_Code == site).FirstOrDefault();
+                                        if (eventCheck != null)
+                                        {
+                                            var ProfitNoSiteCenter = (from pro in carrier_Entities.Site_Profit
+                                                                      where pro.Channel == "OFFLINE" && pro.Brand.Contains(ShotBand.Depart_Short) && (pro.Sale_Channel == "Depart" || pro.Sale_Channel == "Shop")
+                                                                      select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
+                                            if (ProfitNoSiteCenter != null)
+                                            {
+                                                lbComcode.Text = ProfitNoSiteCenter.ComCode;
+                                                lbProfit.Text = ProfitNoSiteCenter.profit;
+                                                lbCostCenter.Text = ProfitNoSiteCenter.CostCenter;
+                                            }
+                                        }
+
                                     }
                                 }
                             }
@@ -194,6 +232,7 @@ namespace Carrier
                     }
 
                 }
+
             }
             else
             {
@@ -316,89 +355,211 @@ namespace Carrier
             var enUS = new CultureInfo("en-US");
             var datestart = DateTime.ParseExact(txtDateStart.Text, format, enUS, DateTimeStyles.None);
             var dateend = DateTime.ParseExact(txtDateEnd.Text, format, enUS, DateTimeStyles.None);
-            var orderList = (from order in carrier_Entities.Orders
-                             join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
-                             where order_Item.Status != "C"
-                             select new
-                             {
-                                 Docno = order.Docno,
-                                 pno = order_Item.pno,
-                                 srcName = order.srcName,
-                                 dstName = order.dstName,
-                                 ArticleCategory = carrier_Entities.Article_Category.Where(w => w.ArticleCode == order.articleCategory).ToList().FirstOrDefault().ArticleName,
-                                 dateCreate = order_Item.Date_Success,
-                                 TrackingPickup = order_Item.ticketPickupId,
-                                 TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
-                                 SaleOn = order.saleOn,
-                                 Brand = order.SDpart,
-                                 site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
-                             }).ToList();
-            orderList = orderList.Where(w => w.dateCreate >= datestart && w.dateCreate <= dateend).ToList();
-            gv_Report.DataSource = orderList;
-            gv_Report.DataBind();
-            foreach (GridViewRow row in gv_Report.Rows)
+            var HistoryNoti = carrier_Entities.History_Notify_Order.Where(w => w.Date_Notify >= datestart && w.Date_Notify <= dateend).ToList();
+            if (HistoryNoti.Count != 0)
             {
-                Label lbBrand = (Label)row.FindControl("lbBrand");
-                Label lbBrandShort = (Label)row.FindControl("lbBrandShort");
-                Label lbDateCreate = (Label)row.FindControl("lbDateCreate");
-                lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
-                if (lbBrand.Text != "")
+                var docno = HistoryNoti.Select(s => s.Docno).Distinct();
+                var orderList = (from order in carrier_Entities.Orders
+                                 join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
+                                 where order_Item.Status != "C" && order_Item.Status != "A" && order_Item.Status != null && order_Item.Date_Success >= datestart && order_Item.Date_Success <= dateend
+                                 select new
+                                 {
+                                     Docno = order.Docno,
+                                     pno = order_Item.pno,
+                                     srcName = order.srcName,
+                                     dstName = order.dstName,
+                                     ArticleCategory = carrier_Entities.Article_Category.Where(w => w.ArticleCode == order.articleCategory).ToList().FirstOrDefault().ArticleName,
+                                     dateCreate = order_Item.Date_Success,
+                                     TrackingPickup = order_Item.ticketPickupId,
+                                     TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
+                                     SaleOn = order.saleOn,
+                                     Brand = order.SDpart,
+                                     site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
+                                 }).ToList();
+                var orderListNotNoti = (from order in carrier_Entities.Orders
+                                        join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
+                                        where order_Item.Status == null && order_Item.Date_Success >= datestart && order_Item.Date_Success <= dateend
+                                        select new
+                                        {
+                                            Docno = order.Docno,
+                                            pno = order_Item.pno,
+                                            srcName = order.srcName,
+                                            dstName = order.dstName,
+                                            ArticleCategory = carrier_Entities.Article_Category.Where(w => w.ArticleCode == order.articleCategory).ToList().FirstOrDefault().ArticleName,
+                                            dateCreate = order_Item.Date_Success,
+                                            TrackingPickup = order_Item.ticketPickupId,
+                                            TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
+                                            SaleOn = order.saleOn,
+                                            Brand = order.SDpart,
+                                            site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
+                                        }).ToList();
+                List<string> doc = new List<string>();
+                foreach (var i in orderListNotNoti)
                 {
-                    var ShotBand = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
-                                    join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
-                                    where BG_HA.departmentID == lbBrand.Text
-                                    select new BrandPro
-                                    {
-                                        DepartmentID = BG_HA.departmentID,
-                                        Brand = BG_HA.department_,
-                                        Depart_Short = BG_HAPF.Depart_Short,
-                                        ComCode = BG_HAPF.ComCode,
-                                        CostCenter_Offline = BG_HAPF.CostCenter_Offline,
-                                        CostCenter_Online = BG_HAPF.CostCenter_Online,
-                                        Profit_Offline = BG_HAPF.Profit_Offline,
-                                        Profit_Online = BG_HAPF.Profit_Online
-                                    }
-                             ).ToList().FirstOrDefault();
-                    Label lbComcode = (Label)row.FindControl("lbComcode");
-                    Label lbProfit = (Label)row.FindControl("lbProfit");
-                    Label lbCostCenter = (Label)row.FindControl("lbCostCenter");
-                    Label lbSaleOn = (Label)row.FindControl("lbSaleOn");
-                    Label lbSiteStorage = (Label)row.FindControl("lbSiteStorage");
-
-                    if (ShotBand != null)
+                    var res = service_Flashs.CheckNotify(i.Docno);
+                    if (res != "")
                     {
-                        lbBrand.Text = ShotBand.Brand;
-                        lbBrandShort.Text = ShotBand.Depart_Short;
-                        var Profit = (from pro in carrier_Entities.Site_Profit
-                                      where pro.Site_Stroage == lbSiteStorage.Text && pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.Depart_Short + "%")
-                                      select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
-                        if (Profit != null)
-                        {
+                        doc.Add(i.Docno);
+                    }
+                }
+                orderListNotNoti = orderListNotNoti.Where(w => doc.Contains(w.Docno)).ToList();
+                var orderListTrue = (from order in carrier_Entities.Orders
+                                     join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
+                                     where order_Item.Status != "C" && order_Item.Status != null && docno.Contains(order_Item.Docno)
+                                     select new
+                                     {
+                                         Docno = order.Docno,
+                                         pno = order_Item.pno,
+                                         srcName = order.srcName,
+                                         dstName = order.dstName,
+                                         ArticleCategory = carrier_Entities.Article_Category.Where(w => w.ArticleCode == order.articleCategory).ToList().FirstOrDefault().ArticleName,
+                                         dateCreate = order_Item.Date_Success,
+                                         TrackingPickup = order_Item.ticketPickupId,
+                                         TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
+                                         SaleOn = order.saleOn,
+                                         Brand = order.SDpart,
+                                         site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
+                                     }).ToList();
+                orderList.AddRange(orderListNotNoti);
+                orderList.AddRange(orderListTrue);
+                orderList = orderList.OrderBy(o => o.Docno).ToList();
+                gv_Report.DataSource = orderList;
+                gv_Report.DataBind();
+                foreach (GridViewRow row in gv_Report.Rows)
+                {
+                    Label lbBrand = (Label)row.FindControl("lbBrand");
+                    Label lbBrandShort = (Label)row.FindControl("lbBrandShort");
+                    Label lbDateCreate = (Label)row.FindControl("lbDateCreate");
+                    lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
+                    if (lbBrand.Text != "")
+                    {
+                        var ShotBand = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
+                                        join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
+                                        where BG_HA.departmentID == lbBrand.Text
+                                        select new BrandPro
+                                        {
+                                            DepartmentID = BG_HA.departmentID,
+                                            Brand = BG_HA.department_,
+                                            Depart_Short = BG_HAPF.Depart_Short,
+                                            ComCode = BG_HAPF.ComCode,
+                                            CostCenter_Offline = BG_HAPF.CostCenter_Offline,
+                                            CostCenter_Online = BG_HAPF.CostCenter_Online,
+                                            Profit_Offline = BG_HAPF.Profit_Offline,
+                                            Profit_Online = BG_HAPF.Profit_Online
+                                        }
+                                 ).ToList().FirstOrDefault();
+                        Label lbComcode = (Label)row.FindControl("lbComcode");
+                        Label lbProfit = (Label)row.FindControl("lbProfit");
+                        Label lbCostCenter = (Label)row.FindControl("lbCostCenter");
+                        Label lbSaleOn = (Label)row.FindControl("lbSaleOn");
+                        Label lbSiteStorage = (Label)row.FindControl("lbSiteStorage");
 
-                            lbComcode.Text = Profit.ComCode;
-                            lbProfit.Text = Profit.profit;
-                            lbCostCenter.Text = Profit.CostCenter;
-                        }
-                        else
+                        if (ShotBand != null)
                         {
-                            lbComcode.Text = ShotBand.ComCode;
-                            if (lbSaleOn.Text == "ONLINE")
+                            lbBrand.Text = ShotBand.Brand;
+                            lbBrandShort.Text = ShotBand.Depart_Short;
+                            if (lbSiteStorage.Text == "CENTER")
                             {
-                                lbProfit.Text = ShotBand.Profit_Online;
-                                lbCostCenter.Text = ShotBand.CostCenter_Online;
+                                var centerSite = carrier_Entities.Site_Center.Where(w => ShotBand.Depart_Short == w.Brand_Center_Short).ToList().FirstOrDefault();
+                                if (centerSite == null)
+                                {
+                                    var pro = carrier_Entities.Site_Profit.Where(w => w.Channel == lbSaleOn.Text && w.Brand == ShotBand.Depart_Short
+                                    && (w.Sale_Channel == "Depart" || w.Sale_Channel == "Shop" || w.Sale_Channel == "WebSite")).ToList().FirstOrDefault();
+                                    if (pro != null)
+                                    {
+                                        lbProfit.Text = pro.Profit;
+                                        lbComcode.Text = pro.COMCODE;
+                                        lbCostCenter.Text = pro.Costcenter;
+                                    }
+                                }
+                                else
+                                {
+                                    var pro = carrier_Entities.Site_Profit.Where(w => w.Brand == centerSite.Brand_Center_Name_Full).FirstOrDefault();
+                                    lbProfit.Text = pro.Profit;
+                                    lbComcode.Text = pro.COMCODE;
+                                    lbCostCenter.Text = pro.Costcenter;
+                                }
                             }
-                            else if (lbSaleOn.Text == "OFFLINE")
+                            else
                             {
-                                lbProfit.Text = ShotBand.Profit_Offline;
-                                lbCostCenter.Text = ShotBand.CostCenter_Offline;
-                            }
-                        }
+                                var Profit = (from pro in carrier_Entities.Site_Profit
+                                              where pro.Site_Stroage == lbSiteStorage.Text && pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.Depart_Short)
+                                              select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
+                                if (Profit != null)
+                                {
 
+                                    lbComcode.Text = Profit.ComCode;
+                                    lbProfit.Text = Profit.profit;
+                                    lbCostCenter.Text = Profit.CostCenter;
+                                }
+                                else
+                                {
+                                    if (lbSiteStorage.Text == "CENTER_ONLINE" || lbSiteStorage.Text == "CENTER_OFFLINE")
+                                    {
+                                        var ProfitNoSiteCenter = (from pro in carrier_Entities.Site_Profit
+                                                                  where pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.Depart_Short) && (pro.Sale_Channel == "Depart" || pro.Sale_Channel == "Shop" || pro.Sale_Channel == "WebSite")
+                                                                  select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
+                                        if (ProfitNoSiteCenter != null)
+                                        {
+                                            lbComcode.Text = ProfitNoSiteCenter.ComCode;
+                                            lbProfit.Text = ProfitNoSiteCenter.profit;
+                                            lbCostCenter.Text = ProfitNoSiteCenter.CostCenter;
+                                        }
+                                    }
+                                    else if (lbSiteStorage.Text.StartsWith("EV"))
+                                    {
+                                        var site = lbSiteStorage.Text;
+                                        var eventCheck = carrier_Entities.Event_Shop.Where(w => w.Shop_Code == site).FirstOrDefault();
+                                        if(eventCheck != null)
+                                        {
+                                            var ProfitNoSiteCenter = (from pro in carrier_Entities.Site_Profit
+                                                                      where pro.Channel == "OFFLINE" && pro.Brand.Contains(ShotBand.Depart_Short) && (pro.Sale_Channel == "Depart" || pro.Sale_Channel == "Shop" )
+                                                                      select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
+                                            if (ProfitNoSiteCenter != null)
+                                            {
+                                                lbComcode.Text = ProfitNoSiteCenter.ComCode;
+                                                lbProfit.Text = ProfitNoSiteCenter.profit;
+                                                lbCostCenter.Text = ProfitNoSiteCenter.CostCenter;
+                                            }
+                                        }
+                                        
+                                    }
+                                }
+                            }
+                            #region OLD
+                            //lbBrand.Text = ShotBand.Brand;
+                            //lbBrandShort.Text = ShotBand.Depart_Short;
+                            //var Profit = (from pro in carrier_Entities.Site_Profit
+                            //              where pro.Site_Stroage == lbSiteStorage.Text && pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.Depart_Short + "%")
+                            //              select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
+                            //if (Profit != null)
+                            //{
+
+                            //    lbComcode.Text = Profit.ComCode;
+                            //    lbProfit.Text = Profit.profit;
+                            //    lbCostCenter.Text = Profit.CostCenter;
+                            //}
+                            //else
+                            //{
+                            //    lbComcode.Text = ShotBand.ComCode;
+                            //    if (lbSaleOn.Text == "ONLINE")
+                            //    {
+                            //        lbProfit.Text = ShotBand.Profit_Online;
+                            //        lbCostCenter.Text = ShotBand.CostCenter_Online;
+                            //    }
+                            //    else if (lbSaleOn.Text == "OFFLINE")
+                            //    {
+                            //        lbProfit.Text = ShotBand.Profit_Offline;
+                            //        lbCostCenter.Text = ShotBand.CostCenter_Offline;
+                            //    }
+                            //}
+                            #endregion
+
+                        }
 
                     }
 
                 }
-
             }
             var fileName = "Report_" + DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss") + ".xls";
             ExportExel(gv_Report, fileName);
@@ -429,7 +590,7 @@ namespace Carrier
                     Page.Response.End();
                 }
             }
-           
+
         }
         public override void VerifyRenderingInServerForm(Control control)
         {

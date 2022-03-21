@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Carrier" Language="C#" AutoEventWireup="true" CodeBehind="Report_ACC.aspx.cs" MasterPageFile="~/Site.Master" Inherits="Carrier.Report_ACC" %>
+﻿<%@ Page Title="Courier" Language="C#" AutoEventWireup="true" CodeBehind="Report_ACC.aspx.cs" MasterPageFile="~/Site.Master" Inherits="Carrier.Report_ACC" %>
 
 <asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="MainContent">
     <script type="text/javascript">
@@ -16,52 +16,40 @@
         }
     </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <div class="mt-3">
+    <div style="margin-top:80px;">
         <asp:Label runat="server" ID="lbForm" Text="Transportation Report(ACC)" CssClass="h1"></asp:Label>
         <asp:Label runat="server" ID="lbuserid" Visible="false"></asp:Label>
     </div>
-    <div class="mt-2">
         <asp:Label runat="server" ID="lbFirstLoad" Text="first" Visible="false"></asp:Label>
-        <div class="row">
-            <div class="col-sm-3">
-                <div class="row " style="margin-bottom: 10px;">
-                    <div class="col-sm-2 w-100 input-group mb-2 ">
-                        <asp:Label runat="server" ID="lbDateStart" Text="เริ่มวันที่ " CssClass="input-group-text ml-2">
+        <div class="row mb-3">
+            <div class="col-sm-12 col-md-6 col-lg-3 gy-3">
+                    <div class="input-group ">
+                        <asp:Label runat="server" ID="lbDateStart" Text="เริ่มวันที่ " CssClass="input-group-text ">
                             <asp:TextBox runat="server" ID="txtDateStart" CssClass="ml-2 form-control" BackColor="White" AutoCompleteType="Disabled"></asp:TextBox>
                         </asp:Label>
-
                     </div>
-                </div>
             </div>
-            <div class="col-sm-3">
-                <div class="row " style="margin-bottom: 10px;">
-                    <div class="col-sm-2 w-100 input-group mb-2 ">
-                        <asp:Label runat="server" ID="lbDateEnd" Text="สิ้นสุดวันที่" CssClass="input-group-text ml-2">
+            <div class="col-sm-12 col-md-6 col-lg-3 gy-3">
+                    <div class="input-group ">
+                        <asp:Label runat="server" ID="lbDateEnd" Text="สิ้นสุดวันที่" CssClass="input-group-text ">
                             <asp:TextBox runat="server" ID="txtDateEnd" CssClass="ml-2 form-control" BackColor="White" AutoCompleteType="Disabled"></asp:TextBox>
                         </asp:Label>
                     </div>
-                </div>
             </div>
-            <div class="col-sm-2">
-                <div class="row " style="margin-bottom: 10px;">
-                    <div class="col-sm-2 w-100 input-group" style="margin-top: 9px;">
+            <div class="col-sm-12 col-md-4 col-lg-2 gy-3">
+                    <div class="input-group h-100" >
                         <asp:Button runat="server" ID="btnSearch" Text="SEARCH" OnClick="btnSearch_Click" CssClass="btn w-100 btn-primary " />
                     </div>
-                </div>
             </div>
-            <div class="col-sm-2">
-                <div class="row " style="margin-bottom: 10px;">
-                    <div class="col-sm-2 w-100 input-group" style="margin-top: 9px;">
+            <div class="col-sm-12 col-md-4 col-lg-2 gy-3">
+                    <div class=" input-group h-100" >
                         <asp:Button runat="server" ID="btnClear" Text="Clear" OnClick="btnClear_Click" CssClass="btn w-100 btn-primary " Visible="false"/>
                     </div>
-                </div>
             </div>
-            <div class="col-sm-2">
-                <div class="row " style="margin-bottom: 10px;">
-                    <div class="col-sm-2 w-100 input-group" style="margin-top: 9px;">
+            <div class="col-sm-12 col-md-4 col-lg-2 gy-3">
+                    <div class="input-group h-100" >
                         <asp:Button runat="server" ID="btnExport" Text="EXPORT" OnClick="btnExport_Click" CssClass="btn w-100 btn-primary " Visible="false"/>
                     </div>
-                </div>
             </div>
         </div>
         <div class="row overflow-auto">

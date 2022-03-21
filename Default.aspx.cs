@@ -28,7 +28,6 @@ namespace Carrier
         {
             Session.Clear();
             //HttpContext.Current.Session["_UserID"] = "101635";
-            //HttpContext.Current.Session["_UserID"] = "101629";
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();
@@ -106,6 +105,10 @@ namespace Carrier
                                 && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
                                 && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
 
+                            }
+                            else if(lbStatusSearch.Text != "First")
+                            {
+                                orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
                             }
                             break;
                         case "2":
@@ -198,28 +201,57 @@ namespace Carrier
                         }
                         if (lbStatus.Text != "")
                         {
-                            var dateNoti = new DateTime();
+                            var dateNotiDate = new DateTime();
                             if (lbTimeTrackingText.Text.Contains("พรุ่งนี้"))
                             {
-                                dateNoti = DateTime.Parse((DateTime.Parse(lbTimeTracking.Text).AddDays(1)).ToShortDateString());
-                                if (dateNoti <= DateTime.Now)
+                                var dateRaw = DateTime.Parse(lbTimeTracking.Text).AddDays(1);
+                                dateNotiDate = DateTime.Parse(dateRaw.ToShortDateString());
+                                var dateToUpdate = dateNotiDate.AddHours(16).AddMinutes(45);
+                                if (DateTime.Now >= dateToUpdate)
                                 {
                                     var date = DateTime.Parse(lbTimeTracking.Text);
-                                    lbTimeTrackingText.Text = service_Flashs.CheckNotify(date, lkbDocno.Text);
+                                    var a  = service_Flashs.CheckNotify(lkbDocno.Text);
+                                    if(a != "")
+                                    {
+                                        lbTimeTrackingText.Text = service_Flashs.CheckNotify( lkbDocno.Text);
+                                    }
+                                }
+                                else
+                                {
+                                    if (DateTime.Now.ToShortDateString() == dateToUpdate.ToShortDateString()) { 
+                                        lbTimeTrackingText.Text = "วันนี้" + lbTimeTrackingText.Text.Substring(8);
+                                    }
                                 }
                             }
                             else if (lbTimeTrackingText.Text.Contains("วันนี้"))
                             {
-                                dateNoti = DateTime.Parse(lbTimeTracking.Text);
-                                if (dateNoti.ToShortDateString() != DateTime.Now.ToShortDateString())
+                                var dateRaw = DateTime.Parse(lbTimeTracking.Text);
+                                dateNotiDate = DateTime.Parse(dateRaw.ToShortDateString());
+                                var dateToUpdate = dateNotiDate.AddHours(17).AddMinutes(30);
+                                if (DateTime.Now >= dateToUpdate)
                                 {
                                     var date = DateTime.Parse(lbTimeTracking.Text);
-                                    lbTimeTrackingText.Text = service_Flashs.CheckNotify(date, lkbDocno.Text);
+                                    var a = service_Flashs.CheckNotify(lkbDocno.Text);
+                                    if (a != "")
+                                    {
+                                        lbTimeTrackingText.Text = service_Flashs.CheckNotify(lkbDocno.Text);
+                                    }
+                                    else
+                                    {
+                                        lbTimeTrackingText.Text = "ยังไม่ได้มารับของ";
+                                        
+                                    }
                                 }
                             }
                             if (lbTimeTrackingText.Text.Contains("ยกเลิกแล้ว"))
                             {
                                 lbTimeTrackingText.BackColor = System.Drawing.Color.PaleVioletRed;
+                                lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                lbTimeTrackingText.CssClass = "status-tracking";
+                            }
+                            else if (lbTimeTrackingText.Text.Contains("ยังไม่ได้มารับของ"))
+                                {
+                                lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
                                 lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
                                 lbTimeTrackingText.CssClass = "status-tracking";
                             }
@@ -231,6 +263,31 @@ namespace Carrier
                             }
                             cbItem.Visible = false;
                             imgbtnCancelOrder.Visible = false;
+                        }
+                        else
+                        {
+                            if(lbStatusItem.Text == "A")
+                            {
+                                var a = service_Flashs.CheckNotify(lkbDocno.Text);
+                                if (a != "")
+                                {
+                                    lbTimeTrackingText.Text = service_Flashs.CheckNotify(lkbDocno.Text);
+                                }
+                                if (lbTimeTrackingText.Text.Contains("ยกเลิกแล้ว"))
+                                {
+                                    lbTimeTrackingText.BackColor = System.Drawing.Color.PaleVioletRed;
+                                    lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                    lbTimeTrackingText.CssClass = "status-tracking";
+                                }
+                                else
+                                {
+                                    lbTimeTrackingText.BackColor = System.Drawing.Color.LimeGreen;
+                                    lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                    lbTimeTrackingText.CssClass = "status-tracking";
+                                }
+                                cbItem.Visible = false;
+                                imgbtnCancelOrder.Visible = false;
+                            }
                         }
                         gv_OrderAll.Columns[0].Visible = true;
                         gv_OrderAll.Columns[10].Visible = true;
@@ -275,6 +332,7 @@ namespace Carrier
                         if (Brand != null)
                         {
                             lbBrand.Text = Brand.Brand;
+                            lbBrand.ToolTip = Brand.Brand;
                         }
                         else
                         {
@@ -365,7 +423,15 @@ namespace Carrier
                         if (dateNoti <= DateTime.Now)
                         {
                             var date = DateTime.Parse(lbTimeTracking.Text);
-                            lbTimeTrackingText.Text = service_Flashs.CheckNotify(date, lkbDocno.Text);
+                            var a = service_Flashs.CheckNotify(lkbDocno.Text);
+                            if (a != "")
+                            {
+                                lbTimeTrackingText.Text = service_Flashs.CheckNotify(lkbDocno.Text);
+                            }
+                        }
+                        else
+                        {
+                            lbTimeTrackingText.Text = "วันนี้" + lbTimeTrackingText.Text.Substring(8);
                         }
                     }
                     else if (lbTimeTrackingText.Text.Contains("วันนี้"))
@@ -374,7 +440,11 @@ namespace Carrier
                         if (dateNoti.ToShortDateString() != DateTime.Now.ToShortDateString())
                         {
                             var date = DateTime.Parse(lbTimeTracking.Text);
-                            lbTimeTrackingText.Text = service_Flashs.CheckNotify(date, lkbDocno.Text);
+                            var a = service_Flashs.CheckNotify(lkbDocno.Text);
+                            if (a != "")
+                            {
+                                lbTimeTrackingText.Text = service_Flashs.CheckNotify(lkbDocno.Text);
+                            }
                         }
                     }
                     cbItem.Visible = false;
@@ -725,7 +795,7 @@ namespace Carrier
         }
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            //lbStatusSearch.Text = "Second";
+            lbStatusSearch.Text = "Second";
             btnClear.Visible = true;
             loadtable(1);
             div_Page_Bar.Visible = true;
@@ -794,23 +864,25 @@ namespace Carrier
 
         protected void btnExport_Click(object sender, EventArgs e)
         {
+            var dateYesterday = DateTime.Now.AddDays(-1);
             var dateNow = DateTime.Now;
-            var dateOld = new DateTime(dateNow.Year,dateNow.Month,dateNow.AddDays(-1).Day,16,30,1 );
+            var dateOld = new DateTime(dateYesterday.Year, dateYesterday.Month, dateYesterday.Day,16,30,1 );
             var dateNew = new DateTime(dateNow.Year, dateNow.Month, dateNow.Day, 16, 30, 0);
             var user = Convert.ToInt32(Session["_UserID"].ToString());
             var permission = carrier_Entities.Users.Where(w => w.UserID == user).FirstOrDefault();
             List<History_Notify_Order> his = new List<History_Notify_Order>();
             if(permission.TypeWarehouse == "SFG")
             {
-                his = carrier_Entities.History_Notify_Order.Where(w => w.Date_Notify >= dateOld && w.Date_Notify <= dateNew &&( w.Type_Send_KA == permission.TypeWarehouse||w.Type_Send_KA == null)).ToList();
+                his = carrier_Entities.History_Notify_Order.Where(w =>w.SaveFrom == null && w.Date_Notify >= dateOld && w.Date_Notify <= dateNew &&( w.Type_Send_KA == permission.TypeWarehouse||w.Type_Send_KA == null)).ToList();
             }
             else if(permission.TypeWarehouse == "SDC1")
             {
-                his = carrier_Entities.History_Notify_Order.Where(w => w.Date_Notify >= dateOld && w.Date_Notify <= dateNew && w.Type_Send_KA == permission.TypeWarehouse).ToList();
+                his = carrier_Entities.History_Notify_Order.Where(w => w.SaveFrom == null && w.Date_Notify >= dateOld && w.Date_Notify <= dateNew && w.Type_Send_KA == permission.TypeWarehouse).ToList();
             }
             else
             {
-                his = carrier_Entities.History_Notify_Order.Where(w => w.Date_Notify >= dateOld && w.Date_Notify <= dateNew ).ToList();
+                var ss = carrier_Entities.History_Notify_Order.ToList();
+                his = carrier_Entities.History_Notify_Order.Where(w => w.SaveFrom == null && w.Date_Notify >= dateOld && w.Date_Notify <= dateNew ).ToList();
             }
             var listHistory = his.Select(s=>new
                 {
@@ -819,7 +891,7 @@ namespace Carrier
                     Pno = s.pno,
                     Docno = s.Docno,
                     Type_Send_KA = s.Type_Send_KA
-                }).ToList();
+                }).OrderBy(o=>o.Docno).ToList();
             GridView history = new GridView();
             
             if (listHistory.Count == 0)
@@ -862,6 +934,45 @@ namespace Carrier
         {
             loadtable(1);
             div_Page_Bar.Visible = true;
+        }
+
+        protected void btnUpdatePno_Click(object sender, EventArgs e)
+        {
+            var orderList = (from orderItem in carrier_Entities.Order_Item
+                             join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
+                             where orderItem.Status == null
+                             select order.Docno).ToList();
+            foreach(var i in orderList)
+            {
+                var hi = carrier_Entities.History_Notify_Order.Where(w => w.Docno == i).ToList();
+                var res = service_Flashs.CheckNotify(i);
+                if(res != "" && hi.Count == 0)
+                {
+                    var order = carrier_Entities.Order_Item.Where(w => w.Docno == i).ToList();
+                    order.FirstOrDefault().Status = "A";
+                    order.FirstOrDefault().CodeResponse = 1;
+                    var his = carrier_Entities.History_Notify_Order.Where(w => w.Docno == i).ToList();
+                    var lastNolist = carrier_Entities.History_Notify_Order.ToList();
+                    var lastNo = "";
+                    if (lastNolist.Count == 0)
+                    {
+                        lastNo = "HIS00001";
+                    }
+                    else
+                    {
+                        lastNo = carrier_Entities.History_Notify_Order.OrderByDescending(o => o.History_ID).FirstOrDefault().History_NO;
+                    }
+                    var lenght = (Convert.ToInt32(lastNo.Substring(3, 5)) + 1).ToString().Length;
+                    var newNo = lastNo.Substring(0, 8 - lenght) + (Convert.ToInt32(lastNo.Substring(3, 5)) + 1).ToString();
+                    if (his.Count == 0)
+                    {
+                        carrier_Entities.History_Notify_Order.Add(new History_Notify_Order { Date_Notify = DateTime.Now, Docno = order.FirstOrDefault().Docno, pno = order.FirstOrDefault().pno, Type_Send_KA = order.FirstOrDefault().TypeSendKO, History_NO = newNo ,SaveFrom = "Update"});
+                        carrier_Entities.SaveChanges();
+                    }
+
+                }
+            }
+            ClientScript.RegisterStartupScript(this.GetType(), "Success", "<script type='text/javascript'>alert('อัพเดท Order สำเร็จ');window.location='Default';</script>'");
         }
     }
     public class messageNotify

@@ -32,6 +32,7 @@
           <Property Name="pno" Type="nvarchar(max)" />
           <Property Name="Docno" Type="nvarchar(max)" />
           <Property Name="Type_Send_KA" Type="nvarchar" MaxLength="20" />
+          <Property Name="SaveFrom" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Notify">
           <Key>
@@ -147,6 +148,13 @@
           <Property Name="StatusID" Type="nvarchar" MaxLength="5" Nullable="false" />
           <Property Name="StatusName" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="Status_Notify_Order">
+          <Key>
+            <PropertyRef Name="statusId" />
+          </Key>
+          <Property Name="statusId" Type="int" Nullable="false" />
+          <Property Name="statusName" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="UserID" />
@@ -168,6 +176,7 @@
           <EntitySet Name="Site_Center" EntityType="Self.Site_Center" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Site_Profit" EntityType="Self.Site_Profit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Status_Notify_Order" EntityType="Self.Status_Notify_Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -186,6 +195,7 @@
           <EntitySet Name="Event_Shop" EntityType="CarrierModel.Event_Shop" />
           <EntitySet Name="Site_Center" EntityType="CarrierModel.Site_Center" />
           <EntitySet Name="History_Notify_Order" EntityType="CarrierModel.History_Notify_Order" />
+          <EntitySet Name="Status_Notify_Order" EntityType="CarrierModel.Status_Notify_Order" />
         </EntityContainer>
         <EntityType Name="Article_Category">
           <Key>
@@ -338,6 +348,14 @@
           <Property Name="pno" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Docno" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Type_Send_KA" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SaveFrom" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Status_Notify_Order">
+          <Key>
+            <PropertyRef Name="statusId" />
+          </Key>
+          <Property Name="statusId" Type="Int32" Nullable="false" />
+          <Property Name="statusName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -497,12 +515,21 @@
           <EntitySetMapping Name="History_Notify_Order">
             <EntityTypeMapping TypeName="CarrierModel.History_Notify_Order">
               <MappingFragment StoreEntitySet="History_Notify_Order">
+                <ScalarProperty Name="SaveFrom" ColumnName="SaveFrom" />
                 <ScalarProperty Name="Type_Send_KA" ColumnName="Type_Send_KA" />
                 <ScalarProperty Name="Docno" ColumnName="Docno" />
                 <ScalarProperty Name="pno" ColumnName="pno" />
                 <ScalarProperty Name="Date_Notify" ColumnName="Date_Notify" />
                 <ScalarProperty Name="History_NO" ColumnName="History_NO" />
                 <ScalarProperty Name="History_ID" ColumnName="History_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Status_Notify_Order">
+            <EntityTypeMapping TypeName="CarrierModel.Status_Notify_Order">
+              <MappingFragment StoreEntitySet="Status_Notify_Order">
+                <ScalarProperty Name="statusName" ColumnName="statusName" />
+                <ScalarProperty Name="statusId" ColumnName="statusId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
