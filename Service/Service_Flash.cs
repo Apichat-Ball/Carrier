@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
@@ -565,6 +566,14 @@ namespace Carrier.Service
                     return "กรุณาเลือกผุ้ส่ง";
                 }
             }
+            if( item.srcName.Length >50)
+            {
+                return "ชื่อผู้ส่งต้องมีความยาวไม่เกิน 50 ตัวอักษร";
+            }
+            if(item.dstName.Length > 50)
+            {
+                return "ชื่อผู้รับต้องมีความยาวไม่เกิน 50 ตัวอักษร";
+            }
             
             if (item.siteStorage.Length < 6)
             {
@@ -707,7 +716,7 @@ namespace Carrier.Service
                 return "Cancel Order Success.";
             }
         }
-        public string EditOrder(Order item, string pno)
+        public string EditOrder(Order item, string pno,string typeSentKo)
         {
             Model_Key model_key = Get_Key("FLASH", "FLASH");
             string headerpara = "articleCategory=" + item.articleCategory +
@@ -751,13 +760,48 @@ namespace Carrier.Service
                                 "&srcPhone=" + item.srcPhone +
                                 "&weight=1";
             string sign = sha256_hash(headerpara + "&key=" + model_key.key).ToUpper();
-            var client = new RestClient("https://api.flashexpress.com/open/v3/orders?" + headerpara + "&sign=" + sign);
+            var client = new RestClient("https://api.flashexpress.com/open/v1/orders/modify?" + headerpara + "&sign=" + sign);
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
             request.AlwaysMultipartFormData = true;
             IRestResponse response = client.Execute(request);
             JObject j = JObject.Parse(response.Content);
-            return "";
+            if(Convert.ToInt32(j["code"]) == 1)
+            {
+                var order = entities_Carrier.Orders.Where(w => w.Docno == item.Docno).FirstOrDefault();
+                order.dstName = item.dstName;
+                order.dstPhone = item.dstPhone;
+                order.dstHomePhone = item.dstHomePhone;
+                order.dstProvinceName = item.dstProvinceName;
+                order.dstCityName = item.dstCityName;
+                order.dstDistrictName = item.dstDistrictName;
+                order.dstDetailAddress = item.dstDetailAddress;
+                order.dstPostalCode = item.dstPostalCode;
+                order.srcName = item.srcName;
+                order.srcPhone = item.srcPhone;
+                order.srcProvinceName = item.srcProvinceName;
+                order.srcCityName = item.srcCityName;
+                order.srcDistrictName = item.srcDistrictName;
+                order.srcDetailAddress = item.srcDistrictName;
+                order.srcPostalCode = item.srcPostalCode;
+                order.remark = item.remark;
+                order.saleOn = item.saleOn;
+                order.saleChannel = item.saleChannel;
+                order.SDpart = item.SDpart;
+                order.Transport_Type = item.Transport_Type;
+                order.TypeSend = item.TypeSend;
+                order.siteStorage = item.siteStorage;
+                
+                var orderItem = entities_Carrier.Order_Item.Where(w => w.Docno == item.Docno).FirstOrDefault();
+                orderItem.TypeSendKO = typeSentKo;
+                entities_Carrier.SaveChanges();
+                return "สำเร็จ";
+            }
+            else
+            {
+                return "ไม่สำเร็จ";
+            }
+            
         }
         public List<ReportBrand> Get_Report_Brand(string departOrShop, string SDpart)
         {
@@ -789,6 +833,46 @@ namespace Carrier.Service
             var ss = order.Where(w => w.saleChannel == departOrShop && w.saleOn == "OFFLINE" && w.SDpart == SDpart).ToList();
             return ss;
             
+        }
+
+
+        readonly System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient();
+        System.Net.Mail.MailMessage objMail;
+        public string SendMail(string addressTo,string[] addressCC,string subject, string body)
+        {
+            var res = "";
+            try
+            {
+                smtp.Host = "smtp.gmail.com";
+                smtp.EnableSsl = true;
+                smtp.Port = 587;
+                smtp.Credentials = new NetworkCredential("Online.starfashiongroup2551@gmail.com", "Star2009");
+                using (objMail = new System.Net.Mail.MailMessage("Online.starfashiongroup2551@gmail.com", addressTo))
+                {
+                    objMail.From = new System.Net.Mail.MailAddress("Online.starfashiongroup2551@gmail.com", "Starfashion Group");
+                    if (addressCC != null)
+                    {
+                        foreach(var i in addressCC)
+                        {
+                            objMail.Bcc.Add(i);
+                        }
+                    }
+                    objMail.Priority = MailPriority.Normal;
+                    objMail.IsBodyHtml = true;
+                    objMail.SubjectEncoding = Encoding.GetEncoding("windows-874");
+                    objMail.BodyEncoding = Encoding.GetEncoding("windows-874");
+                    objMail.Subject = subject;
+                    objMail.Body = body;
+                    smtp.Send(objMail);
+                }
+                res = "success";
+            }
+            catch (Exception ex)
+            {
+                res = ex.Message;
+            }
+            return res;
+
         }
     }
     public class Model_Key

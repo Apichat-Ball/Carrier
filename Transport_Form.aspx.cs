@@ -243,11 +243,12 @@ namespace Carrier
                     ddlReceiveLocation.SelectedValue = query.SaleChannel;
                     ddlReceiveLocation.Enabled = false;
                     lbGuidSiteStorage.Visible = false;
+                    
                 }
                 else
                 {
-                    string username = HttpContext.Current.Request.Cookies["sfgweb"]["uname"].Trim();
-                    //string username = "9012400";
+                    //string username = HttpContext.Current.Request.Cookies["sfgweb"]["uname"].Trim();
+                    string username = "9012400";
                     var objuser = (from tEmployee in InsideSFG_WF_Entities.Employees
                                    where (tEmployee.username_ == username || tEmployee.uCode == username)
                                    && tEmployee.StatWork == "Y"
@@ -573,24 +574,7 @@ namespace Carrier
 
         protected void txtSiteStorage_TextChanged(object sender, EventArgs e)
         {
-            var siteinput = (TextBox)sender;
-            if (siteinput.Text.Length >= 4)
-            {
-                //txtdstName.Text = "";
-                //getAddressOnSite(siteinput.Text.ToUpper().Substring(0,4));
-                #region NEW
-                //var siteProFit = Carrier_Entities.Site_Profit.Where(w => w.Site_Stroage.StartsWith(siteinput.Text.ToUpper())).Select(s => s.Brand).Distinct().ToList();
-                //var FC = InsideSFG_WF_Entities.BG_ForeCast.Where(w => w.ActiveStatus == 1).GroupBy(g => g.DepartmentID).Select(s => new Forecasts { DepartmentID = s.Key });
-                //var depart = (from BG_HA in InsideSFG_WF_Entities.BG_HApprove
-                //              join BG_HAPF in InsideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
-                //              where FC.Select(s => s.DepartmentID).Contains(BG_HA.departmentID) && (BG_HA.Sta == "B" || BG_HA.Sta == "S" || BG_HA.Sta == "N") && siteProFit.Contains(BG_HAPF.Depart_Short)
-                //              select new { departmentID = BG_HA.departmentID, department_ = BG_HA.department_ }
-                //          ).OrderBy(r => r.department_).ToList();
-                //depart.Insert(0, new { departmentID = "Select", department_ = "กรุณาเลือกแผนกที่ต้องการเบิก" });
-                //ddlSDpart.DataSource = depart;
-                //ddlSDpart.DataBind();
-                #endregion
-            }
+            
             
 
         }
@@ -764,154 +748,153 @@ namespace Carrier
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
-
-            var docno = Carrier_Entities.Orders.ToList().LastOrDefault();
-            var newId = "";
-            if (docno == null)
-            {
-                var id = "FL0000000001";
-                newId = id;
-            }
-            else
-            {
-                newId = docno.Docno;
-                var lastId = Convert.ToInt32(newId.Substring(2, 10)) + 1;
-                newId = newId.Substring(0, 2) + newId.Substring(2, 10 - lastId.ToString().Length) + lastId.ToString();
-            }
-
-            var siteCode = "";
-            if (txtSiteStorage.Text.Length >= 4)
-            {
-                siteCode = txtSiteStorage.Text.Substring(0, 4).ToUpper();
-            }
-            var online = Online_Lazada_Entities.PROVINCEs.Select(s => s.PROVINCE_ID).ToList();
-            var siteAddress = (from tax in InsideSFG_WF_Entities.Customer_Tax
-                               where online.Contains(tax.Province1) && tax.CustomerCode == siteCode
-                               select new
-                               {
-                                   NameTax = tax.NameTax,
-                                   srcDetail = tax.Address1 + " " + tax.lane1 + " " + tax.Road1,
-                                   srcProvince = tax.Province1,
-                                   srcCity = tax.Area1,
-                                   srcDistrict = tax.Zone1,
-                                   srcPostal = tax.Postal1
-
-                               }).ToList().FirstOrDefault();
-
-            //เก็บข้อมูลทั้งหมดที่กรอกเพื่อไป check และไปใช้ส่ง api และเก็บเข้า base
-            var item = new Order
-            {
-                Docno = newId,
-                Date_send = DateTime.Now,
-                UserID = Convert.ToInt32(Session["_UserID"].ToString()),
-                articleCategory = Convert.ToInt32(ddlarticleCategory.SelectedValue),
-                ExpressCategory = Convert.ToInt32(ddlExpress.SelectedValue),
-                srcName = txtsrcName.Text,
-                srcPhone = txtsrcPhone.Text,
-                srcProvinceName = ddlsrcProvinceName.SelectedItem.Text,
-                srcCityName = ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text,
-                srcDistrictName = ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text,
-                srcPostalCode = txtsrcPostalCode.Text,
-                srcDetailAddress = txtsrcDetailAddress.Text,
-                Ref_Order = "API",
-                dstName = txtdstName.Text,
-                dstPhone = (txtdstPhone.Text.Contains(" ")?"-": txtdstPhone.Text),
-                dstHomePhone = txtdstHomePhone.Text,
-                dstProvinceName = ddldstProvinceName.SelectedItem.Text,
-                dstCityName = ddldstCityName.SelectedItem == null ? "" : ddldstCityName.SelectedItem.Text,
-                dstDistrictName = ddldstDistrictName.SelectedItem == null ? "" : ddldstDistrictName.SelectedItem.Text,
-                dstPostalCode = txtdstPostalCode.Text,
-                dstDetailAddress = txtdstDetailAddress.Text,
-                insured = 0,
-                Transport_Type = Convert.ToInt32(ddlExpress.SelectedValue),
-                weight = Convert.ToInt32(txtweight.Text),
-                width = Convert.ToInt32(txtwidth.Text),
-                length = Convert.ToInt32(txtlength.Text),
-                height = Convert.ToInt32(txtheight.Text),
-                remark = txtremark.Text,
-                SDpart = ddlSDpart.SelectedValue,
-                siteStorage = txtSiteStorage.Text.ToUpper(),
-                saleChannel = ddlReceiveLocation.SelectedValue == "select" ? "" : ddlReceiveLocation.SelectedValue,
-                TypeSend = Convert.ToInt32(ddlTypeSend.SelectedValue),
-
-            };
-            if (radioWorkOn.Checked)
-            {
-                item.saleOn = radioWorkOn.Text;
-            }
-            else
-            {
-                item.saleOn = radioWorkOff.Text;
-            }
-            var vali = service_Flashs.Validate_Transport(item, ddlReceiveLocation.SelectedValue, ddlFavorites.SelectedValue);
-            if (vali == "PASS")
-            {
-                Carrier_Entities.Orders.Add(item);
-                Carrier_Entities.SaveChanges();
-                if (item.Transport_Type == 1)
+                var docno = Carrier_Entities.Orders.ToList().LastOrDefault();
+                var newId = "";
+                if (docno == null)
                 {
-                    var res = service_Flashs.CreateOrderFLASH(newId, ddlFavorites.SelectedValue);
-                    //Check การสร้าง order 
-                    if (res.success == true)
+                    var id = "FL0000000001";
+                    newId = id;
+                }
+                else
+                {
+                    newId = docno.Docno;
+                    var lastId = Convert.ToInt32(newId.Substring(2, 10)) + 1;
+                    newId = newId.Substring(0, 2) + newId.Substring(2, 10 - lastId.ToString().Length) + lastId.ToString();
+                }
+
+                var siteCode = "";
+                if (txtSiteStorage.Text.Length >= 4)
+                {
+                    siteCode = txtSiteStorage.Text.Substring(0, 4).ToUpper();
+                }
+                var online = Online_Lazada_Entities.PROVINCEs.Select(s => s.PROVINCE_ID).ToList();
+                var siteAddress = (from tax in InsideSFG_WF_Entities.Customer_Tax
+                                   where online.Contains(tax.Province1) && tax.CustomerCode == siteCode
+                                   select new
+                                   {
+                                       NameTax = tax.NameTax,
+                                       srcDetail = tax.Address1 + " " + tax.lane1 + " " + tax.Road1,
+                                       srcProvince = tax.Province1,
+                                       srcCity = tax.Area1,
+                                       srcDistrict = tax.Zone1,
+                                       srcPostal = tax.Postal1
+
+                                   }).ToList().FirstOrDefault();
+
+                //เก็บข้อมูลทั้งหมดที่กรอกเพื่อไป check และไปใช้ส่ง api และเก็บเข้า base
+                var item = new Order
+                {
+                    Docno = newId,
+                    Date_send = DateTime.Now,
+                    UserID = Convert.ToInt32(Session["_UserID"].ToString()),
+                    articleCategory = Convert.ToInt32(ddlarticleCategory.SelectedValue),
+                    ExpressCategory = Convert.ToInt32(ddlExpress.SelectedValue),
+                    srcName = txtsrcName.Text,
+                    srcPhone = txtsrcPhone.Text,
+                    srcProvinceName = ddlsrcProvinceName.SelectedItem.Text,
+                    srcCityName = ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text,
+                    srcDistrictName = ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text,
+                    srcPostalCode = txtsrcPostalCode.Text,
+                    srcDetailAddress = txtsrcDetailAddress.Text,
+                    Ref_Order = "API",
+                    dstName = txtdstName.Text,
+                    dstPhone = (txtdstPhone.Text.Contains(" ") ? "-" : txtdstPhone.Text),
+                    dstHomePhone = txtdstHomePhone.Text,
+                    dstProvinceName = ddldstProvinceName.SelectedItem.Text,
+                    dstCityName = ddldstCityName.SelectedItem == null ? "" : ddldstCityName.SelectedItem.Text,
+                    dstDistrictName = ddldstDistrictName.SelectedItem == null ? "" : ddldstDistrictName.SelectedItem.Text,
+                    dstPostalCode = txtdstPostalCode.Text,
+                    dstDetailAddress = txtdstDetailAddress.Text,
+                    insured = 0,
+                    Transport_Type = Convert.ToInt32(ddlExpress.SelectedValue),
+                    weight = Convert.ToInt32(txtweight.Text),
+                    width = Convert.ToInt32(txtwidth.Text),
+                    length = Convert.ToInt32(txtlength.Text),
+                    height = Convert.ToInt32(txtheight.Text),
+                    remark = txtremark.Text,
+                    SDpart = ddlSDpart.SelectedValue,
+                    siteStorage = txtSiteStorage.Text.ToUpper(),
+                    saleChannel = ddlReceiveLocation.SelectedValue == "select" ? "" : ddlReceiveLocation.SelectedValue,
+                    TypeSend = Convert.ToInt32(ddlTypeSend.SelectedValue),
+
+                };
+                if (radioWorkOn.Checked)
+                {
+                    item.saleOn = radioWorkOn.Text;
+                }
+                else
+                {
+                    item.saleOn = radioWorkOff.Text;
+                }
+                var vali = service_Flashs.Validate_Transport(item, ddlReceiveLocation.SelectedValue, ddlFavorites.SelectedValue);
+                if (vali == "PASS")
+                {
+                    Carrier_Entities.Orders.Add(item);
+                    Carrier_Entities.SaveChanges();
+                    if (item.Transport_Type == 1)
                     {
-                        String originalPath = new Uri(HttpContext.Current.Request.Url.AbsoluteUri).OriginalString;
-                        string filePath = originalPath.Substring(0, originalPath.LastIndexOf("/Transport_Form")) + "/PDFFile/" + newId + ".pdf";
-                        //Check path ของไฟล์ที่จะเปิดว่าเปิดได้หรือเปล่าถ้าได้ให้ลบ
-                        if (File.Exists(filePath))
+                        var res = service_Flashs.CreateOrderFLASH(newId, ddlFavorites.SelectedValue);
+                        //Check การสร้าง order 
+                        if (res.success == true)
                         {
-                            File.Delete(filePath);
+                            String originalPath = new Uri(HttpContext.Current.Request.Url.AbsoluteUri).OriginalString;
+                            string filePath = originalPath.Substring(0, originalPath.LastIndexOf("/Transport_Form")) + "/PDFFile/" + newId + ".pdf";
+                            //Check path ของไฟล์ที่จะเปิดว่าเปิดได้หรือเปล่าถ้าได้ให้ลบ
+                            if (File.Exists(filePath))
+                            {
+                                File.Delete(filePath);
+                            }
+                            //ทำการสร้างไฟล์ขึ้นมาใหม่
+                            var returnText = service_Flashs.Get_Docment(newId, "/Transport_Form");
+                            btnSave.Visible = false;
+                            foreach (GridViewRow row in gv_Box.Rows)
+                            {
+                                Carrier_Entities.Order_Box.Add(new Order_Box { Docno = newId, Box_ID = Convert.ToInt32(((Label)row.FindControl("lbBox_ID")).Text), Box_Name = ((Label)row.FindControl("lbBox_Name")).Text, Qty = Convert.ToInt32(((TextBox)row.FindControl("txtQty")).Text) });
+                            }
+                            Carrier_Entities.SaveChanges();
+                            ClientScript.RegisterStartupScript(this.GetType(), "Success", "<script type='text/javascript'>alert('succes : " + res.success + " Tracking NO : " + res.trackingno + "');window.location='Transport_Form?Docno=" + newId + "';</script>'");
                         }
-                        //ทำการสร้างไฟล์ขึ้นมาใหม่
-                        var returnText = service_Flashs.Get_Docment(newId, "/Transport_Form");
-                        btnSave.Visible = false;
+                        else
+                        {
+                            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Process : " + res.success + " Message : " + res.trackingno + "')", true);
+                        }
+                    }
+                    else
+                    {
+                        Order_Item order = new Order_Item
+                        {
+                            Docno = item.Docno,
+                            Date_Success = DateTime.Now,
+                            sign = null,
+                            pno = null,
+                            mchId = null,
+                            sortCode = null,
+                            dstStoreName = null,
+                            sortingLineCode = null,
+                            Qty = 1,
+                            earlyFlightEnabled = null,
+                            packEnabled = null,
+                            upcountryCharge = null,
+                            TypeSendKO = ddlFavorites.SelectedValue == "select" ? "SFG" : ddlFavorites.SelectedValue,
+                            Status = "SL"
+                        };
+                        Carrier_Entities.Order_Item.Add(order);
+                        Carrier_Entities.SaveChanges();
                         foreach (GridViewRow row in gv_Box.Rows)
                         {
                             Carrier_Entities.Order_Box.Add(new Order_Box { Docno = newId, Box_ID = Convert.ToInt32(((Label)row.FindControl("lbBox_ID")).Text), Box_Name = ((Label)row.FindControl("lbBox_Name")).Text, Qty = Convert.ToInt32(((TextBox)row.FindControl("txtQty")).Text) });
                         }
                         Carrier_Entities.SaveChanges();
-                        ClientScript.RegisterStartupScript(this.GetType(), "Success", "<script type='text/javascript'>alert('succes : " + res.success + " Tracking NO : " + res.trackingno + "');window.location='Transport_Form?Docno=" + newId + "';</script>'");
+                        ClientScript.RegisterStartupScript(this.GetType(), "Success", "<script type='text/javascript'>alert('succes : Succes ');window.location='Transport_Form?Docno=" + newId + "';</script>'");
                     }
-                    else
-                    {
-                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Process : " + res.success + " Message : " + res.trackingno + "')", true);
-                    }
+
+
                 }
                 else
                 {
-                    Order_Item order = new Order_Item
-                    {
-                        Docno = item.Docno,
-                        Date_Success = DateTime.Now,
-                        sign = null,
-                        pno = null,
-                        mchId = null,
-                        sortCode = null,
-                        dstStoreName = null,
-                        sortingLineCode = null,
-                        Qty = 1,
-                        earlyFlightEnabled = null,
-                        packEnabled = null,
-                        upcountryCharge = null,
-                        TypeSendKO = ddlFavorites.SelectedValue == "select" ? "SFG" : ddlFavorites.SelectedValue,
-                        Status = "SL"
-                    };
-                    Carrier_Entities.Order_Item.Add(order);
-                    Carrier_Entities.SaveChanges();
-                    foreach (GridViewRow row in gv_Box.Rows)
-                    {
-                        Carrier_Entities.Order_Box.Add(new Order_Box { Docno = newId, Box_ID = Convert.ToInt32(((Label)row.FindControl("lbBox_ID")).Text), Box_Name = ((Label)row.FindControl("lbBox_Name")).Text, Qty = Convert.ToInt32(((TextBox)row.FindControl("txtQty")).Text) });
-                    }
-                    Carrier_Entities.SaveChanges();
-                    ClientScript.RegisterStartupScript(this.GetType(), "Success", "<script type='text/javascript'>alert('succes : Succes ');window.location='Transport_Form?Docno=" + newId + "';</script>'");
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + vali + "')", true);
                 }
-                    
-                
-            }
-            else
-            {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + vali + "')", true);
-            }
-
+           
         }
 
         #endregion
@@ -996,6 +979,66 @@ namespace Carrier
             ddldstDistrictName.DataBind();
             ddldstDistrictName.Enabled = false;
             txtdstDetailAddress.Text = "";
+        }
+
+        protected void lkSendMail_Click(object sender, EventArgs e)
+        {
+            div_main.Style.Add("filter","blur(15px)");
+            div_main.Style.Add("position", "absolute");
+            div_mail.Visible = true;
+            
+            List<newList> allFavorite = new List<newList>();
+            allFavorite.Add(new newList { val = "select", text = "--" });
+            allFavorite.Add(new newList { val = "Depart", text = "หน้าร้าน" });
+            allFavorite.Add(new newList { val = "CENTER", text = "ลูกค้า" });
+            allFavorite.Add(new newList { val = "Event", text = "Event" });
+            allFavorite.Add(new newList { val = "CENTER_Other", text = "อื่นๆ" });
+            allFavorite.ForEach(f => { if (f.val == "select") { f.text = "เลือกปลายทาง"; } });
+            ddlTo.DataSource = allFavorite;
+            ddlTo.DataBind();
+            var FC = InsideSFG_WF_Entities.BG_ForeCast.Where(w => w.ActiveStatus == 1).GroupBy(g => g.DepartmentID).Select(s => new Forecasts { DepartmentID = s.Key });
+            var depart = (from BG_HA in InsideSFG_WF_Entities.BG_HApprove
+                          join BG_HAPF in InsideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
+                          where FC.Select(s => s.DepartmentID).Contains(BG_HA.departmentID) && (BG_HA.Sta == "B" || BG_HA.Sta == "S" || BG_HA.Sta == "N")
+                          select new { departmentShot = BG_HAPF.Depart_Short, department_ = BG_HA.department_ }
+                          ).OrderBy(r => r.department_).ToList();
+            depart.Insert(0, new { departmentShot = "Select", department_ = "กรุณาเลือกแผนกที่ต้องการเบิก" });
+            ddlBrand.DataSource = depart;
+            ddlBrand.DataBind();
+        }
+
+        protected void btnSendMail_Click(object sender, EventArgs e)
+        {
+            var on = "";
+            if (RadioWork1.Checked)
+            {
+                on = RadioWork1.Text;
+            }
+            else if(RadioWork2.Checked)
+            {
+                on = RadioWork2.Text;
+            }
+            var res = service_Flashs.SendMail("apichat.f@sfg-th.com",new string[] {"apichat_075@hotmail.com"},"เพิ่ม SiteStorage", 
+                "<HTML>"+
+                "<body>"+
+                "<p>SiteStorage : "+ txtSiteAdd.Text+ "</p>"+
+                "<p>Brand : "+ ddlBrand.SelectedItem.Text+ "("+ ddlBrand.SelectedValue+")"+ "</p>"+
+                "<p>Channel : "+on+"</p>"+
+                "<p>Sale_Channel : "+ ddlTo.SelectedValue+"</p>"
+                + "</body>"
+                +"</HTML>"
+                );
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + res + "')", true);
+            div_main.Style.Remove("filter");
+            div_main.Style.Remove("position");
+            div_mail.Visible = false ;
+        }
+
+        protected void btnClose_Click(object sender, EventArgs e)
+        {
+            div_main.Style.Remove("filter");
+            div_main.Style.Remove("position");
+            div_mail.Visible = false;
         }
     }
 

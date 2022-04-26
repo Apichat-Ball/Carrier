@@ -27,7 +27,7 @@ namespace Carrier
         protected void Page_Load(object sender, EventArgs e)
         {
             Session.Clear();
-            //HttpContext.Current.Session["_UserID"] = "101635";
+            HttpContext.Current.Session["_UserID"] = "101635";
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();
@@ -110,6 +110,7 @@ namespace Carrier
                             {
                                 orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
                             }
+                            
                             break;
                         case "2":
                             orderList = orderList.Where(w => w.status != null && w.status != "C").ToList();
@@ -266,7 +267,7 @@ namespace Carrier
                         }
                         else
                         {
-                            if(lbStatusItem.Text == "A")
+                            if (lbStatusItem.Text == "A")
                             {
                                 var a = service_Flashs.CheckNotify(lkbDocno.Text);
                                 if (a != "")
@@ -974,6 +975,7 @@ namespace Carrier
             }
             ClientScript.RegisterStartupScript(this.GetType(), "Success", "<script type='text/javascript'>alert('อัพเดท Order สำเร็จ');window.location='Default';</script>'");
         }
+
     }
     public class messageNotify
     {

@@ -118,6 +118,7 @@ namespace Carrier
                     Label lbTimeTracking = (Label)row.FindControl("lbTimeTracking");
                     Label lbStatusItem = (Label)row.FindControl("lbStatusItem");
                     ImageButton imgbtnCancelOrder = (ImageButton)row.FindControl("imgbtnCancelOrder");
+                    ImageButton imgbtnEdit = (ImageButton)row.FindControl("imgbtnEdit");
                     lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
                     if (lbStatusItem.Text == "A")
                     {
@@ -197,7 +198,12 @@ namespace Carrier
                     {
                         lbBrand.Text = "";
                     }
-                    
+
+                    var orderListnull = (from orderItem in carrier_Entities.Order_Item
+                                     join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
+                                     where orderItem.Status == null
+                                     select order.Docno).ToList();
+
                 }
             }
             else
@@ -344,13 +350,5 @@ namespace Carrier
             loadtable(Convert.ToInt32(e.CommandArgument));
         }
 
-        //protected void imgbtnEditOrder_Click(object sender, ImageClickEventArgs e)
-        //{
-        //    ImageButton imgbtnEditOrder = (ImageButton)sender;
-        //    GridViewRow row = (GridViewRow)imgbtnEditOrder.NamingContainer;
-        //    LinkButton lkDocno = (LinkButton)row.FindControl("lkDocno");
-        //    Label lbpno = (Label)row.FindControl("lbpno");
-        //    Response.Redirect("Transport_Form.aspx?Docno=" + lkDocno.Text + "&pno=" + lbpno.Text);
-        //}
     }
 }
