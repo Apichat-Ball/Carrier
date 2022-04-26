@@ -27,7 +27,7 @@ namespace Carrier
         protected void Page_Load(object sender, EventArgs e)
         {
             Session.Clear();
-            HttpContext.Current.Session["_UserID"] = "101635";
+            //HttpContext.Current.Session["_UserID"] = "101635";
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();

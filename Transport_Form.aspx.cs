@@ -247,8 +247,8 @@ namespace Carrier
                 }
                 else
                 {
-                    //string username = HttpContext.Current.Request.Cookies["sfgweb"]["uname"].Trim();
-                    string username = "9012400";
+                    string username = HttpContext.Current.Request.Cookies["sfgweb"]["uname"].Trim();
+                    //string username = "9012400";
                     var objuser = (from tEmployee in InsideSFG_WF_Entities.Employees
                                    where (tEmployee.username_ == username || tEmployee.uCode == username)
                                    && tEmployee.StatWork == "Y"
@@ -1018,7 +1018,7 @@ namespace Carrier
             {
                 on = RadioWork2.Text;
             }
-            var res = service_Flashs.SendMail("apichat.f@sfg-th.com",new string[] {"apichat_075@hotmail.com"},"เพิ่ม SiteStorage", 
+            var res = service_Flashs.SendMail("apichat.f@sfg-th.com",new string[] {"apichat_075@hotmail.com","apigtazoon@gmail.com"},"เพิ่ม SiteStorage จากระบบ Courier", 
                 "<HTML>"+
                 "<body>"+
                 "<p>SiteStorage : "+ txtSiteAdd.Text+ "</p>"+
