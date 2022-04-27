@@ -244,7 +244,7 @@ namespace Carrier
                     ddlReceiveLocation.SelectedValue = query.SaleChannel;
                     ddlReceiveLocation.Enabled = false;
                     lbGuidSiteStorage.Visible = false;
-                    if(Act == "Edit")
+                    /*if(Act == "Edit")
                     {
                         txtsrcName.Enabled = true;
                         txtsrcPhone.Enabled = true;
@@ -277,7 +277,7 @@ namespace Carrier
                         }
                         btnSave.Visible = true;
                         ddlarticleCategory.Enabled = true;
-                    }
+                    }*/
                 }
                 else
                 {
