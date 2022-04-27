@@ -317,7 +317,7 @@
                 <asp:AsyncPostBackTrigger ControlID="Time1" />
             </Triggers>
             <ContentTemplate>
-                <asp:Label runat="server" ID="lbTime" Visible="true"></asp:Label>
+                <asp:Label runat="server" ID="lbTime" Visible="false"></asp:Label>
             </ContentTemplate>
         </asp:UpdatePanel>
     </div>
