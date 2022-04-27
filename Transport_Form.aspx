@@ -13,8 +13,20 @@
         .drop-grey {
             background-color: darkgrey;
         }
+        /* Fade-In Effect */
+        .visible {
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 2s linear;
+        }
+        /* Fade-Out Effect */
+        .hidden {
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s 2s, opacity 2s linear;
+        }
     </style>
-
+    
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
     <script type="text/javascript">
@@ -217,7 +229,7 @@
                                 <asp:Button runat="server" ID="btnClearSite" CssClass="btn btn-danger input-group-text shadow" Text="Clear" UseSubmitBehavior="false" OnClick="btnClearSite_Click" />
                             </div>
                         </div>
-                        <div class="row col-sm-12 my-2">
+                        <div class="row col-sm-12 my-2" runat="server" id="div_sendMail" visible="false">
                             <asp:LinkButton runat="server" ID="lkSendMail" Text="เพิ่ม SiteStorage" OnClick="lkSendMail_Click"></asp:LinkButton>
                         </div>
                         <div class="row mb-2 ml-2">
@@ -359,7 +371,7 @@
                     </div>
                 </div>
             </div>
-            <div class="container" runat="server" id="div_mail" style="margin-top: 80px; position: absolute; backdrop-filter: contrast(0.5);padding-bottom:10px;border-radius:8px; ">
+            <div class="container" runat="server" id="div_mail" visible ="false" style="margin-top: 80px; position: absolute; backdrop-filter: contrast(0.5);padding-bottom:10px;border-radius:8px; ">
                 <div class="position-absolute" style=" width: 100%;text-align: right; z-index:2" >
                     <asp:Button runat="server" ID="btnClose" CssClass="btn-close mt-2 mr-4" OnClick="btnClose_Click"/>
                 </div>

@@ -123,6 +123,18 @@
     <EntitySetMapping Name="BG_ForeCast">
       <EntityTypeMapping TypeName="InsideSFG_WFModel.BG_ForeCast">
         <MappingFragment StoreEntitySet="BG_ForeCast">
+          <ScalarProperty Name="M12_o" ColumnName="M12_o" />
+          <ScalarProperty Name="M11_o" ColumnName="M11_o" />
+          <ScalarProperty Name="M10_o" ColumnName="M10_o" />
+          <ScalarProperty Name="M09_o" ColumnName="M09_o" />
+          <ScalarProperty Name="M08_o" ColumnName="M08_o" />
+          <ScalarProperty Name="M07_o" ColumnName="M07_o" />
+          <ScalarProperty Name="M06_o" ColumnName="M06_o" />
+          <ScalarProperty Name="M05_o" ColumnName="M05_o" />
+          <ScalarProperty Name="M04_o" ColumnName="M04_o" />
+          <ScalarProperty Name="M03_o" ColumnName="M03_o" />
+          <ScalarProperty Name="M02_o" ColumnName="M02_o" />
+          <ScalarProperty Name="M01_o" ColumnName="M01_o" />
           <ScalarProperty Name="Remark" ColumnName="Remark" />
           <ScalarProperty Name="Flag" ColumnName="Flag" />
           <ScalarProperty Name="ActiveDate" ColumnName="ActiveDate" />
@@ -218,6 +230,39 @@
           <ScalarProperty Name="Brand_Welfare" ColumnName="Brand_Welfare" />
           <ScalarProperty Name="Brand" ColumnName="Brand" />
           <ScalarProperty Name="ID_Brand" ColumnName="ID_Brand" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DEPARTMENTs">
+      <EntityTypeMapping TypeName="InsideSFG_WFModel.DEPARTMENT">
+        <MappingFragment StoreEntitySet="DEPARTMENT">
+          <ScalarProperty Name="Flag" ColumnName="Flag" />
+          <ScalarProperty Name="department_" ColumnName="department_" />
+          <ScalarProperty Name="divisionID" ColumnName="divisionID" />
+          <ScalarProperty Name="departmentID" ColumnName="departmentID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Employee_Level">
+      <EntityTypeMapping TypeName="InsideSFG_WFModel.Employee_Level">
+        <MappingFragment StoreEntitySet="Employee_Level">
+          <ScalarProperty Name="FC_Brand_Approve" ColumnName="FC_Brand_Approve" />
+          <ScalarProperty Name="FC_Approve" ColumnName="FC_Approve" />
+          <ScalarProperty Name="Type_Head" ColumnName="Type_Head" />
+          <ScalarProperty Name="Type_Value" ColumnName="Type_Value" />
+          <ScalarProperty Name="Type_Name" ColumnName="Type_Name" />
+          <ScalarProperty Name="Type_Level" ColumnName="Type_Level" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="POSITIONs">
+      <EntityTypeMapping TypeName="InsideSFG_WFModel.POSITION">
+        <MappingFragment StoreEntitySet="POSITION">
+          <ScalarProperty Name="Flag" ColumnName="Flag" />
+          <ScalarProperty Name="limitPay" ColumnName="limitPay" />
+          <ScalarProperty Name="ePosition" ColumnName="ePosition" />
+          <ScalarProperty Name="position_" ColumnName="position_" />
+          <ScalarProperty Name="positionID" ColumnName="positionID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

@@ -78,6 +78,7 @@
     <EntitySetMapping Name="Order_Item">
       <EntityTypeMapping TypeName="CarrierModel.Order_Item">
         <MappingFragment StoreEntitySet="Order_Item">
+          <ScalarProperty Name="TypeSendKO" ColumnName="TypeSendKO" />
           <ScalarProperty Name="ticketPickupId" ColumnName="ticketPickupId" />
           <ScalarProperty Name="CodeResponse" ColumnName="CodeResponse" />
           <ScalarProperty Name="Status" ColumnName="Status" />
@@ -99,6 +100,7 @@
     <EntitySetMapping Name="Users">
       <EntityTypeMapping TypeName="CarrierModel.User">
         <MappingFragment StoreEntitySet="User">
+          <ScalarProperty Name="TypeWarehouse" ColumnName="TypeWarehouse" />
           <ScalarProperty Name="Permission" ColumnName="Permission" />
           <ScalarProperty Name="Email" ColumnName="Email" />
           <ScalarProperty Name="Username" ColumnName="Username" />
@@ -137,6 +139,35 @@
           <ScalarProperty Name="Event_Type" ColumnName="Event_Type" />
           <ScalarProperty Name="Shop_Code" ColumnName="Shop_Code" />
           <ScalarProperty Name="Event_ID" ColumnName="Event_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Site_Center">
+      <EntityTypeMapping TypeName="CarrierModel.Site_Center">
+        <MappingFragment StoreEntitySet="Site_Center">
+          <ScalarProperty Name="Brand_Center_Name_Full" ColumnName="Brand_Center_Name_Full" />
+          <ScalarProperty Name="Brand_Center_Short" ColumnName="Brand_Center_Short" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="History_Notify_Order">
+      <EntityTypeMapping TypeName="CarrierModel.History_Notify_Order">
+        <MappingFragment StoreEntitySet="History_Notify_Order">
+          <ScalarProperty Name="SaveFrom" ColumnName="SaveFrom" />
+          <ScalarProperty Name="Type_Send_KA" ColumnName="Type_Send_KA" />
+          <ScalarProperty Name="Docno" ColumnName="Docno" />
+          <ScalarProperty Name="pno" ColumnName="pno" />
+          <ScalarProperty Name="Date_Notify" ColumnName="Date_Notify" />
+          <ScalarProperty Name="History_NO" ColumnName="History_NO" />
+          <ScalarProperty Name="History_ID" ColumnName="History_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Status_Notify_Order">
+      <EntityTypeMapping TypeName="CarrierModel.Status_Notify_Order">
+        <MappingFragment StoreEntitySet="Status_Notify_Order">
+          <ScalarProperty Name="statusName" ColumnName="statusName" />
+          <ScalarProperty Name="statusId" ColumnName="statusId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

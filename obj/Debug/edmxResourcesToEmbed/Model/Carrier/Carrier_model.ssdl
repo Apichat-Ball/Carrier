@@ -17,6 +17,18 @@
     <Property Name="Event_Branch" Type="nvarchar(max)" />
     <Property Name="Event_Name" Type="nvarchar(max)" />
   </EntityType>
+  <EntityType Name="History_Notify_Order">
+    <Key>
+      <PropertyRef Name="History_ID" />
+    </Key>
+    <Property Name="History_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="History_NO" Type="nvarchar" MaxLength="20" />
+    <Property Name="Date_Notify" Type="datetime" />
+    <Property Name="pno" Type="nvarchar(max)" />
+    <Property Name="Docno" Type="nvarchar(max)" />
+    <Property Name="Type_Send_KA" Type="nvarchar" MaxLength="20" />
+    <Property Name="SaveFrom" Type="nvarchar" MaxLength="50" />
+  </EntityType>
   <EntityType Name="Notify">
     <Key>
       <PropertyRef Name="TicketPickupId" />
@@ -102,6 +114,14 @@
     <Property Name="Status" Type="nvarchar" MaxLength="10" />
     <Property Name="CodeResponse" Type="int" />
     <Property Name="ticketPickupId" Type="nvarchar" MaxLength="20" />
+    <Property Name="TypeSendKO" Type="nvarchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="Site_Center">
+    <Key>
+      <PropertyRef Name="Brand_Center_Short" />
+    </Key>
+    <Property Name="Brand_Center_Short" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Brand_Center_Name_Full" Type="nvarchar(max)" />
   </EntityType>
   <EntityType Name="Site_Profit">
     <Key>
@@ -123,6 +143,13 @@
     <Property Name="StatusID" Type="nvarchar" MaxLength="5" Nullable="false" />
     <Property Name="StatusName" Type="nvarchar(max)" />
   </EntityType>
+  <EntityType Name="Status_Notify_Order">
+    <Key>
+      <PropertyRef Name="statusId" />
+    </Key>
+    <Property Name="statusId" Type="int" Nullable="false" />
+    <Property Name="statusName" Type="nvarchar(max)" />
+  </EntityType>
   <EntityType Name="User">
     <Key>
       <PropertyRef Name="UserID" />
@@ -131,16 +158,20 @@
     <Property Name="Username" Type="nvarchar" MaxLength="50" />
     <Property Name="Email" Type="nvarchar(max)" />
     <Property Name="Permission" Type="nvarchar" MaxLength="20" />
+    <Property Name="TypeWarehouse" Type="nvarchar" MaxLength="50" />
   </EntityType>
   <EntityContainer Name="CarrierModelStoreContainer">
     <EntitySet Name="Article_Category" EntityType="Self.Article_Category" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Event_Shop" EntityType="Self.Event_Shop" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="History_Notify_Order" EntityType="Self.History_Notify_Order" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Notify" EntityType="Self.Notify" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Order_Box" EntityType="Self.Order_Box" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Order_Item" EntityType="Self.Order_Item" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Site_Center" EntityType="Self.Site_Center" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Site_Profit" EntityType="Self.Site_Profit" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Status_Notify_Order" EntityType="Self.Status_Notify_Order" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
   </EntityContainer>
 </Schema>

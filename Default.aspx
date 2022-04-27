@@ -276,6 +276,7 @@
                         </HeaderTemplate>
                         <ItemTemplate>
                             <asp:Label runat="server" ID="lbTypeSend" Text='<%# Bind("TypeSend") %>' Visible="false"></asp:Label>
+                            <asp:ImageButton runat="server" ID="imgbtnEdit" Width="30px" ImageUrl="~/Icon/edit.png" OnClick="imgbtnEdit_Click" Visible="false" CssClass="mr-2"/>
                             <asp:ImageButton runat="server" ID="imgbtnCancelOrder" Width="30px" ImageUrl="~/Icon/x-button.png" OnClick="imgbtnCancelOrder_Click" />
                         </ItemTemplate>
                         <ItemStyle CssClass="gj-text-align-center" />
@@ -307,4 +308,17 @@
                 </div>
             </div>
         </div>
+    <!-- Timer Tick for click update -->
+    <div>
+        <asp:Timer runat="server" ID="Time1" OnTick="Time1_Tick" Interval="1000">
+        </asp:Timer>
+        <asp:UpdatePanel runat="server" ID="upPanel" UpdateMode="Conditional">
+            <Triggers>
+                <asp:AsyncPostBackTrigger ControlID="Time1" />
+            </Triggers>
+            <ContentTemplate>
+                <asp:Label runat="server" ID="lbTime" Visible="true"></asp:Label>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+    </div>
 </asp:Content>

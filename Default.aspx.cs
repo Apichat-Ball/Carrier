@@ -184,6 +184,7 @@ namespace Carrier
                         Label lbTimeTracking = (Label)row.FindControl("lbTimeTracking");
                         Label lbStatusItem = (Label)row.FindControl("lbStatusItem");
                         ImageButton imgbtnCancelOrder = (ImageButton)row.FindControl("imgbtnCancelOrder");
+                        //ImageButton imgbtnEdit = (ImageButton)row.FindControl("imgbtnEdit");
                         Label lbTypeSend = (Label)row.FindControl("lbTypeSend");
                         Label lbTransport_Type = (Label)row.FindControl("lbTransport_Type");
                         lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
@@ -288,6 +289,14 @@ namespace Carrier
                                 }
                                 cbItem.Visible = false;
                                 imgbtnCancelOrder.Visible = false;
+                            }
+                            else
+                            {
+                                /*var a = service_Flashs.CheckNotify(lkbDocno.Text);
+                                if (a == "")
+                                {
+                                    imgbtnEdit.Visible = true;
+                                }*/
                             }
                         }
                         gv_OrderAll.Columns[0].Visible = true;
@@ -976,6 +985,27 @@ namespace Carrier
             ClientScript.RegisterStartupScript(this.GetType(), "Success", "<script type='text/javascript'>alert('อัพเดท Order สำเร็จ');window.location='Default';</script>'");
         }
 
+        protected void imgbtnEdit_Click(object sender, ImageClickEventArgs e)
+        {
+            ImageButton imgbtnEdit = (ImageButton)sender;
+            GridViewRow row = (GridViewRow)imgbtnEdit.NamingContainer;
+            LinkButton lkbDocno = (LinkButton)row.FindControl("lkbDocno");
+            service_Flashs.CheckNotify(lkbDocno.Text);
+            Response.Redirect("Transport_Form?Docno=" + lkbDocno.Text+"&Act=Edit");
+        }
+
+        protected void Time1_Tick(object sender, EventArgs e)
+        {
+
+            var date = Convert.ToDateTime(lbTime.Text != ""? lbTime.Text : DateTime.Now.ToString("H:mm"));
+            if(lbTime.Text == "" || date <= DateTime.Now)
+            {
+                lbTime.Text = DateTime.Now.AddMinutes(15).ToString("H:mm");
+                btnUpdatePno_Click(this,EventArgs.Empty);
+            }
+        }
+
+        
     }
     public class messageNotify
     {

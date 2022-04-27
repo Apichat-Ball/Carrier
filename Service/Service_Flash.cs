@@ -605,16 +605,19 @@ namespace Carrier.Service
                                   join haP in entities_InsideSFG_WF.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
                                   where ha.departmentID == item.SDpart
                                   select haP).ToList();
-
-                        var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
-                        if (brandProfit.Count == 0)
+                        var SaleChannel = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Sale_Channel).FirstOrDefault();
+                        if (SaleChannel != "Shop")
                         {
-                            return "ไม่พบ SiteStorage นี้ครับ";
-                        }
-                        BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
-                        if (BG.Count() == 0)
-                        {
-                            return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit โปรดแจ้งแผนก MIS";
+                            var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
+                            if (brandProfit.Count == 0)
+                            {
+                                return "ไม่พบ SiteStorage นี้ครับ";
+                            }
+                            BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
+                            if (BG.Count() == 0)
+                            {
+                                return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit โปรดแจ้งแผนก MIS";
+                            }
                         }
                     }
                 }
@@ -639,16 +642,30 @@ namespace Carrier.Service
                     }
                     else
                     {
-                        var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
-                        if (brandProfit.Count == 0)
+                        var SaleChannel = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Sale_Channel).FirstOrDefault();
+                        if(SaleChannel != "Shop")
                         {
-                            return "ไม่พบ SiteStorage นี้ครับ";
+                            var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
+                            if (brandProfit.Count == 0)
+                            {
+                                return "ไม่พบ SiteStorage นี้ครับ";
+                            }
+                                BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
+                            if (BG.Count() == 0)
+                            {
+                                return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit โปรดแจ้งแผนก MIS";
+                            }
                         }
-                        BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
-                        if (BG.Count() == 0)
+                        else
                         {
-                            return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit โปรดแจ้งแผนก MIS";
+                            var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
+                            BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
+                            if (BG.Count() == 0)
+                            {
+                                return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit โปรดแจ้งแผนก MIS";
+                            }
                         }
+                        
                     }
                 }
 
@@ -745,7 +762,7 @@ namespace Carrier.Service
             }
             headerpara += "&dstPostalCode=" + (item.dstPostalCode != null ? item.dstPostalCode.ToString() : "") +
                                 "&dstProvinceName=" + item.dstProvinceName +
-                                "&expressCategory=1" +
+                                "&expressCategory=" + item.ExpressCategory+
                                 "&insured=0" +
                                 "&mchId=" + model_key.mchId +
                                 "&nonceStr=" + item.Docno +
@@ -791,7 +808,7 @@ namespace Carrier.Service
                 order.Transport_Type = item.Transport_Type;
                 order.TypeSend = item.TypeSend;
                 order.siteStorage = item.siteStorage;
-                
+                order.ExpressCategory = item.ExpressCategory;
                 var orderItem = entities_Carrier.Order_Item.Where(w => w.Docno == item.Docno).FirstOrDefault();
                 orderItem.TypeSendKO = typeSentKo;
                 entities_Carrier.SaveChanges();

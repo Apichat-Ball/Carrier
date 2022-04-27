@@ -26,10 +26,11 @@ namespace Carrier
             lbDocno.Text = Request.QueryString["Docno"];
             String originalPath = new Uri(HttpContext.Current.Request.Url.AbsoluteUri).OriginalString;
             string filePath = originalPath.Substring(0, originalPath.LastIndexOf("/Transport_bill")) + "/PDFFile/" + lbDocno.Text + ".pdf";
+            string dataDir = HttpContext.Current.Server.MapPath("PDFFile/") + lbDocno.Text + ".pdf";
 
-            if (File.Exists(filePath))
+            if (File.Exists(dataDir))
             {
-                File.Delete(filePath);
+                File.Delete(dataDir);
                 var create = Service_Flash.Get_Docment(docno, "/Transport_bill");
             }
             else

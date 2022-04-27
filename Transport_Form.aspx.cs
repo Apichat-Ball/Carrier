@@ -44,6 +44,7 @@ namespace Carrier
                 Response.Redirect("https://www.sfg-th.com/Login/");
             }
             var Docno = Request.QueryString["Docno"];
+            var Act = Request.QueryString["Act"];
             var User = Session["_UserID"].ToString();
             if (!IsPostBack)
             {
@@ -243,7 +244,40 @@ namespace Carrier
                     ddlReceiveLocation.SelectedValue = query.SaleChannel;
                     ddlReceiveLocation.Enabled = false;
                     lbGuidSiteStorage.Visible = false;
-                    
+                    if(Act == "Edit")
+                    {
+                        txtsrcName.Enabled = true;
+                        txtsrcPhone.Enabled = true;
+                        ddlsrcProvinceName.Enabled = true;
+                        ddlsrcCityName.Enabled = true;
+                        ddlsrcDistrictName.Enabled = true;
+                        txtsrcPostalCode.Enabled = true;
+                        txtsrcDetailAddress.Enabled = true;
+                        txtsrcDetailAddress.Enabled = true;
+                        txtremark.Enabled = true;
+                        radioWorkOn.Enabled = true;
+                        radioWorkOff.Enabled = true;
+                        ddlReceiveLocation.Enabled = true;
+                        ddlSDpart.Enabled = true;
+                        txtSiteStorage.Enabled = true;
+                        txtdstName.Enabled = true;
+                        txtdstPhone.Enabled = true;
+                        txtdstHomePhone.Enabled = true;
+                        ddldstProvinceName.Enabled = true;
+                        ddldstCityName.Enabled = true;
+                        ddldstDistrictName.Enabled = true;
+                        txtdstPostalCode.Enabled = true;
+                        txtdstDetailAddress.Enabled = true;
+                        ddlBox.Enabled = true;
+                        txtQty.Enabled = true;
+                        btnAdd.Enabled = true;
+                        if(gv_Box != null)
+                        {
+                            gv_Box.Columns[2].Visible = true;
+                        }
+                        btnSave.Visible = true;
+                        ddlarticleCategory.Enabled = true;
+                    }
                 }
                 else
                 {
@@ -748,6 +782,9 @@ namespace Carrier
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
+            var Act = Request.QueryString["Act"];
+            if(Act != "Edit")
+            {
                 var docno = Carrier_Entities.Orders.ToList().LastOrDefault();
                 var newId = "";
                 if (docno == null)
@@ -894,7 +931,55 @@ namespace Carrier
                 {
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + vali + "')", true);
                 }
-           
+            }
+            else
+            {
+                var item = new Order
+                {
+                    Docno = txtDocno.Text,
+                    Date_send = DateTime.Now,
+                    UserID = Convert.ToInt32(Session["_UserID"].ToString()),
+                    articleCategory = Convert.ToInt32(ddlarticleCategory.SelectedValue),
+                    ExpressCategory = Convert.ToInt32(ddlExpress.SelectedValue),
+                    srcName = txtsrcName.Text,
+                    srcPhone = txtsrcPhone.Text,
+                    srcProvinceName = ddlsrcProvinceName.SelectedItem.Text,
+                    srcCityName = ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text,
+                    srcDistrictName = ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text,
+                    srcPostalCode = txtsrcPostalCode.Text,
+                    srcDetailAddress = txtsrcDetailAddress.Text,
+                    Ref_Order = "API",
+                    dstName = txtdstName.Text,
+                    dstPhone = (txtdstPhone.Text.Contains(" ") ? "-" : txtdstPhone.Text),
+                    dstHomePhone = txtdstHomePhone.Text,
+                    dstProvinceName = ddldstProvinceName.SelectedItem.Text,
+                    dstCityName = ddldstCityName.SelectedItem == null ? "" : ddldstCityName.SelectedItem.Text,
+                    dstDistrictName = ddldstDistrictName.SelectedItem == null ? "" : ddldstDistrictName.SelectedItem.Text,
+                    dstPostalCode = txtdstPostalCode.Text,
+                    dstDetailAddress = txtdstDetailAddress.Text,
+                    insured = 0,
+                    Transport_Type = Convert.ToInt32(ddlExpress.SelectedValue),
+                    weight = Convert.ToInt32(txtweight.Text),
+                    width = Convert.ToInt32(txtwidth.Text),
+                    length = Convert.ToInt32(txtlength.Text),
+                    height = Convert.ToInt32(txtheight.Text),
+                    remark = txtremark.Text,
+                    SDpart = ddlSDpart.SelectedValue,
+                    siteStorage = txtSiteStorage.Text.ToUpper(),
+                    saleChannel = ddlReceiveLocation.SelectedValue == "select" ? "" : ddlReceiveLocation.SelectedValue,
+                    TypeSend = Convert.ToInt32(ddlTypeSend.SelectedValue),
+
+                };
+                if (radioWorkOn.Checked)
+                {
+                    item.saleOn = radioWorkOn.Text;
+                }
+                else
+                {
+                    item.saleOn = radioWorkOff.Text;
+                }
+                var resEdit  = service_Flashs.EditOrder(item, txtTrackingID.Text, ddlFavorites.SelectedValue);
+            }
         }
 
         #endregion
@@ -985,7 +1070,8 @@ namespace Carrier
         {
             div_main.Style.Add("filter","blur(15px)");
             div_main.Style.Add("position", "absolute");
-            div_mail.Visible = true;
+            
+            div_mail.Visible = true;        
             
             List<newList> allFavorite = new List<newList>();
             allFavorite.Add(new newList { val = "select", text = "--" });

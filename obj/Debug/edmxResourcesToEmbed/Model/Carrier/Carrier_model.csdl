@@ -10,6 +10,9 @@
     <EntitySet Name="Order_Box" EntityType="CarrierModel.Order_Box" />
     <EntitySet Name="Site_Profit" EntityType="CarrierModel.Site_Profit" />
     <EntitySet Name="Event_Shop" EntityType="CarrierModel.Event_Shop" />
+    <EntitySet Name="Site_Center" EntityType="CarrierModel.Site_Center" />
+    <EntitySet Name="History_Notify_Order" EntityType="CarrierModel.History_Notify_Order" />
+    <EntitySet Name="Status_Notify_Order" EntityType="CarrierModel.Status_Notify_Order" />
   </EntityContainer>
   <EntityType Name="Article_Category">
     <Key>
@@ -100,6 +103,7 @@
     <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
     <Property Name="CodeResponse" Type="Int32" />
     <Property Name="ticketPickupId" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="TypeSendKO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="User">
     <Key>
@@ -109,6 +113,7 @@
     <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="Permission" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="TypeWarehouse" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="Order_Box">
     <Key>
@@ -142,5 +147,31 @@
     <Property Name="Event_Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="Event_Branch" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="Event_Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Site_Center">
+    <Key>
+      <PropertyRef Name="Brand_Center_Short" />
+    </Key>
+    <Property Name="Brand_Center_Short" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Brand_Center_Name_Full" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="History_Notify_Order">
+    <Key>
+      <PropertyRef Name="History_ID" />
+    </Key>
+    <Property Name="History_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="History_NO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Date_Notify" Type="DateTime" Precision="3" />
+    <Property Name="pno" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Docno" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Type_Send_KA" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="SaveFrom" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Status_Notify_Order">
+    <Key>
+      <PropertyRef Name="statusId" />
+    </Key>
+    <Property Name="statusId" Type="Int32" Nullable="false" />
+    <Property Name="statusName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
   </EntityType>
 </Schema>

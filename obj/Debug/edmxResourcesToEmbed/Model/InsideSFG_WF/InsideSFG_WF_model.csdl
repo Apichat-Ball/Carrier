@@ -124,6 +124,9 @@
     <EntitySet Name="Customer_Tax" EntityType="InsideSFG_WFModel.Customer_Tax" />
     <EntitySet Name="BG_HApprove_Profitcenter" EntityType="InsideSFG_WFModel.BG_HApprove_Profitcenter" />
     <EntitySet Name="WSHeadApproveBrands" EntityType="InsideSFG_WFModel.WSHeadApproveBrand" />
+    <EntitySet Name="DEPARTMENTs" EntityType="InsideSFG_WFModel.DEPARTMENT" />
+    <EntitySet Name="Employee_Level" EntityType="InsideSFG_WFModel.Employee_Level" />
+    <EntitySet Name="POSITIONs" EntityType="InsideSFG_WFModel.POSITION" />
   </EntityContainer>
   <EntityType Name="BG_ForeCast">
     <Key>
@@ -157,6 +160,18 @@
     <Property Name="ActiveDate" Type="DateTime" Precision="3" />
     <Property Name="Flag" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
     <Property Name="Remark" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="M01_o" Type="Double" />
+    <Property Name="M02_o" Type="Double" />
+    <Property Name="M03_o" Type="Double" />
+    <Property Name="M04_o" Type="Double" />
+    <Property Name="M05_o" Type="Double" />
+    <Property Name="M06_o" Type="Double" />
+    <Property Name="M07_o" Type="Double" />
+    <Property Name="M08_o" Type="Double" />
+    <Property Name="M09_o" Type="Double" />
+    <Property Name="M10_o" Type="Double" />
+    <Property Name="M11_o" Type="Double" />
+    <Property Name="M12_o" Type="Double" />
   </EntityType>
   <EntityType Name="Customer_Tax">
     <Key>
@@ -224,5 +239,36 @@
     <Property Name="Flag_Clear" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
     <Property Name="UserID_Online_Commission" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="UserID_Approve_Online_Com" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="DEPARTMENT">
+    <Key>
+      <PropertyRef Name="departmentID" />
+      <PropertyRef Name="divisionID" />
+    </Key>
+    <Property Name="departmentID" Type="Int32" Nullable="false" />
+    <Property Name="divisionID" Type="Int32" Nullable="false" />
+    <Property Name="department_" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Flag" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Employee_Level">
+    <Key>
+      <PropertyRef Name="Type_Level" />
+    </Key>
+    <Property Name="Type_Level" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="true" />
+    <Property Name="Type_Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="Type_Value" Type="Int32" />
+    <Property Name="Type_Head" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="FC_Approve" Type="Double" />
+    <Property Name="FC_Brand_Approve" Type="Double" />
+  </EntityType>
+  <EntityType Name="POSITION">
+    <Key>
+      <PropertyRef Name="positionID" />
+    </Key>
+    <Property Name="positionID" Type="Int32" Nullable="false" />
+    <Property Name="position_" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ePosition" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="limitPay" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="Flag" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
   </EntityType>
 </Schema>
