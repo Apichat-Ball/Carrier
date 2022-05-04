@@ -75,11 +75,20 @@ namespace Carrier
                     var depart = entities_InsideSFG_WF.DEPARTMENTs.Where(w => w.departmentID == objuser.departmentID).Select(s => s.department_).FirstOrDefault();
                     var position = entities_InsideSFG_WF.POSITIONs.Where(w => w.positionID == objuser.positionID).Select(s => s.position_).FirstOrDefault();
                     lblDepartmentID.Text = "<span style='line-height:1;'>แผนก : " + depart + " ตำแหน่ง : " + position + "</span>";
-                    var permision = carrier_Entities.Users.Where(w => w.UserID == userid && w.Permission == "Admin").ToList();
+                    var userPermission = carrier_Entities.Users.Where(w => w.UserID == userid).ToList();
+                    var permision = userPermission.Where(w=>w.Permission == "Admin").ToList();
                     if(permision.Count == 1)
                     {
                         div_Member.Visible = false;
                         div_Admin.Visible = true;
+                    }
+                    else
+                    {
+                        var acc = userPermission.Where(w => w.Permission == "ACC").ToList();
+                        if(acc.Count() == 1)
+                        {
+                            div_Profit.Visible = true;
+                        }
                     }
                 }
                 else { Response.Redirect("Home_Carrier.aspx"); }

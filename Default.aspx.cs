@@ -77,16 +77,16 @@ namespace Carrier
 
                 var format = "dd/MM/yyyy";
                 var enUS = new CultureInfo("en-US");
-                if(permission.TypeWarehouse != null)
+                if (permission.TypeWarehouse != null)
                 {
-                    if(permission.TypeWarehouse == "SFG")
+                    if (permission.TypeWarehouse == "SFG")
                     {
                         orderList = orderList.Where(w => w.TypeSendKa != "SDC1").ToList();
                     }
                     else
                     {
 
-                    orderList = orderList.Where(w => w.TypeSendKa == permission.TypeWarehouse).ToList();
+                        orderList = orderList.Where(w => w.TypeSendKa == permission.TypeWarehouse).ToList();
                     }
                 }
                 if (txtDateStart.Text != "" && txtDateEnd.Text != "")
@@ -106,11 +106,11 @@ namespace Carrier
                                 && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
 
                             }
-                            else if(lbStatusSearch.Text != "First")
+                            else if (lbStatusSearch.Text != "First")
                             {
                                 orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
                             }
-                            
+
                             break;
                         case "2":
                             orderList = orderList.Where(w => w.status != null && w.status != "C").ToList();
@@ -140,7 +140,7 @@ namespace Carrier
                             }
                             break;
                         case "3":
-                            orderList = orderList.Where(w =>w.status == "C").ToList();
+                            orderList = orderList.Where(w => w.status == "C").ToList();
                             if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
                             {
                                 //orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
@@ -189,10 +189,10 @@ namespace Carrier
                         Label lbTransport_Type = (Label)row.FindControl("lbTransport_Type");
                         lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
                         Label lbUserCreate = (Label)row.FindControl("lbUserCreate");
-                        
+
                         var userid = Convert.ToInt32(lbUserCreate.Text);
                         var emp = insideSFG_WF_Entities.Employees.Where(w => w.userID == userid).FirstOrDefault();
-                        lbUserCreate.Text = emp.name+" "+ emp.surname+"("+ emp.nick+ ")";
+                        lbUserCreate.Text = emp.name + " " + emp.surname + "(" + emp.nick + ")";
                         if (lbTransport_Type.Text == "1")
                         {
                             lbTransport_Type.Text = "FlashExpress";
@@ -212,15 +212,16 @@ namespace Carrier
                                 if (DateTime.Now >= dateToUpdate)
                                 {
                                     var date = DateTime.Parse(lbTimeTracking.Text);
-                                    var a  = service_Flashs.CheckNotify(lkbDocno.Text);
-                                    if(a != "")
+                                    var a = service_Flashs.CheckNotify(lkbDocno.Text);
+                                    if (a != "")
                                     {
-                                        lbTimeTrackingText.Text = service_Flashs.CheckNotify( lkbDocno.Text);
+                                        lbTimeTrackingText.Text = service_Flashs.CheckNotify(lkbDocno.Text);
                                     }
                                 }
                                 else
                                 {
-                                    if (DateTime.Now.ToShortDateString() == dateToUpdate.ToShortDateString()) { 
+                                    if (DateTime.Now.ToShortDateString() == dateToUpdate.ToShortDateString())
+                                    {
                                         lbTimeTrackingText.Text = "วันนี้" + lbTimeTrackingText.Text.Substring(8);
                                     }
                                 }
@@ -241,7 +242,7 @@ namespace Carrier
                                     else
                                     {
                                         lbTimeTrackingText.Text = "ยังไม่ได้มารับของ";
-                                        
+
                                     }
                                 }
                             }
@@ -252,7 +253,7 @@ namespace Carrier
                                 lbTimeTrackingText.CssClass = "status-tracking";
                             }
                             else if (lbTimeTrackingText.Text.Contains("ยังไม่ได้มารับของ"))
-                                {
+                            {
                                 lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
                                 lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
                                 lbTimeTrackingText.CssClass = "status-tracking";
@@ -319,7 +320,7 @@ namespace Carrier
                             lbTimeTrackingText.CssClass = "status-tracking";
                             imgbtnCancelOrder.Visible = false;
                         }
-                        if(lbStatusItem.Text == "C")
+                        if (lbStatusItem.Text == "C")
                         {
                             cbItem.Visible = false;
                             imgbtnCancelOrder.Visible = false;
@@ -358,6 +359,10 @@ namespace Carrier
 
             }
             else if (permission == null)
+            {
+                Response.Redirect("Home_Carrier.aspx");
+            }
+            else if(permission.Permission == "ACC")
             {
                 Response.Redirect("Home_Carrier.aspx");
             }
@@ -997,11 +1002,12 @@ namespace Carrier
         protected void Time1_Tick(object sender, EventArgs e)
         {
 
-            var date = Convert.ToDateTime(lbTime.Text != ""? lbTime.Text : DateTime.Now.ToString("H:mm"));
-            if(lbTime.Text == "" || date <= DateTime.Now)
+            //var date = Convert.ToDateTime(lbTime.Text != ""? lbTime.Text : DateTime.Now.ToString("H:mm"));
+            var date = DateTime.Now;
+            var minute = date.Minute;
+            if((minute%30) == 0)
             {
-                lbTime.Text = DateTime.Now.AddMinutes(15).ToString("H:mm");
-                btnUpdatePno_Click(this,EventArgs.Empty);
+                btnUpdatePno_Click(this, EventArgs.Empty);
             }
         }
 

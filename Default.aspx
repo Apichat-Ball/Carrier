@@ -301,7 +301,7 @@
                     <asp:Button runat="server" ID="btnSendFree" OnClick="btnSendFree_Click" CssClass="btn btn-primary mt-4" Text="ส่งไปรษณีย์/ส่งเอง" UseSubmitBehavior="false" Visible="false" />
                 </div>
                 <div class="col-6">
-                    <asp:ImageButton runat="server" ID="btnLalamove" OnClick="btnLalamove_Click" Width="110px" CssClass="mt-2 mg-Lala" ImageUrl="~/Icon/Lalamove.png" />
+                    <asp:ImageButton runat="server" ID="btnLalamove" OnClick="btnLalamove_Click" Width="110px" CssClass="mt-2 mg-Lala" ImageUrl="~/Icon/Lalamove.png" Visible="false" />
                 </div>
                 <div class="col-6">
                     <asp:ImageButton runat="server" ID="btnNotify" OnClick="btnNotifications_Click" Width="180px" CssClass="img-mt--12px" ImageUrl="~/Icon/TrackingFlashExpress.png" />

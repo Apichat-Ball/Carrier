@@ -73,6 +73,14 @@
                     </asp:TemplateField>
                     <asp:TemplateField>
                         <HeaderTemplate>
+                            <asp:Label runat="server" ID="lbhFlashLa" Text="บริการขนส่ง"></asp:Label>
+                        </HeaderTemplate>
+                        <ItemTemplate>
+                            <asp:Label runat="server" ID="lbFlashLa" Text='<%# Bind("FlashLa") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField>
+                        <HeaderTemplate>
                             <asp:Label runat="server" ID="lbhDateCreate" Text="วันที่สร้างเอกสาร"></asp:Label>
                         </HeaderTemplate>
                         <ItemTemplate>

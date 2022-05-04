@@ -71,6 +71,7 @@ namespace Carrier
                                      TrackingPickup = order_Item.ticketPickupId,
                                      TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
                                      SaleOn = order.saleOn,
+                                     FlashLa = order_Item.Status == "SL" ? "Lalamove" : "FlashExpress",
                                      Brand = order.SDpart,
                                      site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
                                  }).ToList();
@@ -89,6 +90,7 @@ namespace Carrier
                                          TrackingPickup = order_Item.ticketPickupId,
                                          TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
                                          SaleOn = order.saleOn,
+                                         FlashLa = order_Item.Status == "SL" ? "Lalamove" : "FlashExpress",
                                          Brand = order.SDpart,
                                          site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
                                      }).ToList();
@@ -372,6 +374,7 @@ namespace Carrier
                                      dateCreate = order_Item.Date_Success,
                                      TrackingPickup = order_Item.ticketPickupId,
                                      TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
+                                     FlashLa = order_Item.Status == "SL" ? "Lalamove" : "FlashExpress",
                                      SaleOn = order.saleOn,
                                      Brand = order.SDpart,
                                      site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
@@ -389,6 +392,7 @@ namespace Carrier
                                             dateCreate = order_Item.Date_Success,
                                             TrackingPickup = order_Item.ticketPickupId,
                                             TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
+                                            FlashLa = order_Item.Status == "SL" ? "Lalamove" : "FlashExpress",
                                             SaleOn = order.saleOn,
                                             Brand = order.SDpart,
                                             site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
@@ -416,6 +420,7 @@ namespace Carrier
                                          dateCreate = order_Item.Date_Success,
                                          TrackingPickup = order_Item.ticketPickupId,
                                          TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == order_Item.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",
+                                         FlashLa = order_Item.Status == "SL" ? "Lalamove" : "FlashExpress",
                                          SaleOn = order.saleOn,
                                          Brand = order.SDpart,
                                          site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage

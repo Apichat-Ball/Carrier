@@ -884,6 +884,7 @@ namespace Carrier
                             //ทำการสร้างไฟล์ขึ้นมาใหม่
                             var returnText = service_Flashs.Get_Docment(newId, "/Transport_Form");
                             btnSave.Visible = false;
+
                             foreach (GridViewRow row in gv_Box.Rows)
                             {
                                 Carrier_Entities.Order_Box.Add(new Order_Box { Docno = newId, Box_ID = Convert.ToInt32(((Label)row.FindControl("lbBox_ID")).Text), Box_Name = ((Label)row.FindControl("lbBox_Name")).Text, Qty = Convert.ToInt32(((TextBox)row.FindControl("txtQty")).Text) });

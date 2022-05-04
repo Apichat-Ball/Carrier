@@ -606,6 +606,22 @@ namespace Carrier.Service
                                   where ha.departmentID == item.SDpart
                                   select haP).ToList();
                         var SaleChannel = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Sale_Channel).FirstOrDefault();
+                        var departSh = BG.Select(s => s.Depart_Short).ToList();
+                        var siteCenter = entities_Carrier.Site_Center.Where(w => departSh.Contains(w.Brand_Center_Short)).FirstOrDefault();
+                        if(siteCenter == null)
+                        {
+                            if (item.siteStorage.StartsWith("CENTER"))
+                            {
+                                return "SiteStorage CENTER ใช้ไม่ได้";
+                            }
+                        }
+                        else
+                        {
+                            if (item.siteStorage != "CENTER")
+                            {
+                                return "SiteStorage ใช้ได้แค่ CENTER ";
+                            }
+                        }
                         if (SaleChannel != "Shop")
                         {
                             var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
@@ -616,7 +632,7 @@ namespace Carrier.Service
                             BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
                             if (BG.Count() == 0)
                             {
-                                return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit โปรดแจ้งแผนก MIS";
+                                return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
                             }
                         }
                     }
@@ -627,46 +643,106 @@ namespace Carrier.Service
                               join haP in entities_InsideSFG_WF.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
                               where ha.departmentID == item.SDpart
                               select haP).ToList();
-                    if (item.siteStorage.StartsWith("CENTER"))
+                    var departSh = BG.Select(s => s.Depart_Short).FirstOrDefault();
+                    var siteCenter = entities_Carrier.Site_Center.Where(w => departSh == w.Brand_Center_Short).FirstOrDefault();
+                    if (siteCenter == null)
                     {
-                        var BGShort = BG.Select(s => s.Depart_Short).FirstOrDefault();
-                        var centerSite = entities_Carrier.Site_Center.Where(w => BGShort == w.Brand_Center_Short).ToList();
-                        if (centerSite.Count == 0)
+                        if (item.siteStorage.StartsWith("CENTER"))
                         {
-                            var pro = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn && w.Brand == BGShort).ToList();
+                            return "SiteStorage CENTER ใช้ไม่ได้";
+                        }
+                        else
+                        {
+                            var pro = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn && w.Brand == departSh).ToList();
                             if (pro.Count == 0)
                             {
-                                return "Brand นี้ไม่พบ Profit โปรดแจ้งแผนก MIS";
+                                return "Brand นี้ไม่พบ Profit ";
+                            }
+                            else
+                            {
+                                var SaleChannel = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Sale_Channel).FirstOrDefault();
+                                if (SaleChannel != "Shop")
+                                {
+                                    var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
+                                    if (brandProfit.Count == 0)
+                                    {
+                                        return "ไม่พบ SiteStorage นี้ครับ";
+                                    }
+                                    BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
+                                    if (BG.Count() == 0)
+                                    {
+                                        return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
+                                    }
+                                }
+                                else
+                                {
+                                    var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
+                                    BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
+                                    if (BG.Count() == 0)
+                                    {
+                                        return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
+                                    }
+                                }
                             }
                         }
                     }
                     else
                     {
-                        var SaleChannel = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Sale_Channel).FirstOrDefault();
-                        if(SaleChannel != "Shop")
+                        if (!item.siteStorage.StartsWith("CENTER"))
                         {
-                            var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
-                            if (brandProfit.Count == 0)
+                            return "SiteStorage ใช้ได้แค่ CENTER ";
+                        }
+                        else
+                        {
+                            var pro = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn && w.Brand == siteCenter.Brand_Center_Name_Full).ToList();
+                            if (pro.Count == 0)
                             {
-                                return "ไม่พบ SiteStorage นี้ครับ";
+                                return "Brand นี้ไม่พบ Profit ";
                             }
-                                BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
-                            if (BG.Count() == 0)
+                        }
+                    }
+                       /* if (item.siteStorage.StartsWith("CENTER"))
+                        {
+                            var BGShort = BG.Select(s => s.Depart_Short).FirstOrDefault();
+                            var centerSite = entities_Carrier.Site_Center.Where(w => BGShort == w.Brand_Center_Short).ToList();
+                            if (centerSite.Count == 0)
                             {
-                                return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit โปรดแจ้งแผนก MIS";
+                                var pro = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn && w.Brand == BGShort).ToList();
+                                if (pro.Count == 0)
+                                {
+                                    return "Brand นี้ไม่พบ Profit ";
+                                }
                             }
                         }
                         else
                         {
-                            var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
-                            BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
-                            if (BG.Count() == 0)
+                            var SaleChannel = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Sale_Channel).FirstOrDefault();
+                            if (SaleChannel != "Shop")
                             {
-                                return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit โปรดแจ้งแผนก MIS";
+                                var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
+                                if (brandProfit.Count == 0)
+                                {
+                                    return "ไม่พบ SiteStorage นี้ครับ";
+                                }
+                                BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
+                                if (BG.Count() == 0)
+                                {
+                                    return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
+                                }
                             }
-                        }
-                        
-                    }
+                            else
+                            {
+                                var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
+                                BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
+                                if (BG.Count() == 0)
+                                {
+                                    return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
+                                }
+                            }
+
+                        }*/
+                    
+                    
                 }
 
             }
