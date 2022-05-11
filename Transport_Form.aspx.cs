@@ -46,6 +46,7 @@ namespace Carrier
             var Docno = Request.QueryString["Docno"];
             var Act = Request.QueryString["Act"];
             var User = Session["_UserID"].ToString();
+            lbuserID.Text = Session["_UserID"].ToString();
             if (!IsPostBack)
             {
                 loadPage();
@@ -244,40 +245,40 @@ namespace Carrier
                     ddlReceiveLocation.SelectedValue = query.SaleChannel;
                     ddlReceiveLocation.Enabled = false;
                     lbGuidSiteStorage.Visible = false;
-                    /*if(Act == "Edit")
-                    {
-                        txtsrcName.Enabled = true;
-                        txtsrcPhone.Enabled = true;
-                        ddlsrcProvinceName.Enabled = true;
-                        ddlsrcCityName.Enabled = true;
-                        ddlsrcDistrictName.Enabled = true;
-                        txtsrcPostalCode.Enabled = true;
-                        txtsrcDetailAddress.Enabled = true;
-                        txtsrcDetailAddress.Enabled = true;
-                        txtremark.Enabled = true;
-                        radioWorkOn.Enabled = true;
-                        radioWorkOff.Enabled = true;
-                        ddlReceiveLocation.Enabled = true;
-                        ddlSDpart.Enabled = true;
-                        txtSiteStorage.Enabled = true;
-                        txtdstName.Enabled = true;
-                        txtdstPhone.Enabled = true;
-                        txtdstHomePhone.Enabled = true;
-                        ddldstProvinceName.Enabled = true;
-                        ddldstCityName.Enabled = true;
-                        ddldstDistrictName.Enabled = true;
-                        txtdstPostalCode.Enabled = true;
-                        txtdstDetailAddress.Enabled = true;
-                        ddlBox.Enabled = true;
-                        txtQty.Enabled = true;
-                        btnAdd.Enabled = true;
-                        if(gv_Box != null)
-                        {
-                            gv_Box.Columns[2].Visible = true;
-                        }
-                        btnSave.Visible = true;
-                        ddlarticleCategory.Enabled = true;
-                    }*/
+                    //if (Act == "Edit")
+                    //{
+                    //    txtsrcName.Enabled = true;
+                    //    txtsrcPhone.Enabled = true;
+                    //    ddlsrcProvinceName.Enabled = true;
+                    //    ddlsrcCityName.Enabled = true;
+                    //    ddlsrcDistrictName.Enabled = true;
+                    //    txtsrcPostalCode.Enabled = true;
+                    //    txtsrcDetailAddress.Enabled = true;
+                    //    txtsrcDetailAddress.Enabled = true;
+                    //    txtremark.Enabled = true;
+                    //    radioWorkOn.Enabled = true;
+                    //    radioWorkOff.Enabled = true;
+                    //    ddlReceiveLocation.Enabled = true;
+                    //    ddlSDpart.Enabled = true;
+                    //    txtSiteStorage.Enabled = true;
+                    //    txtdstName.Enabled = true;
+                    //    txtdstPhone.Enabled = true;
+                    //    txtdstHomePhone.Enabled = true;
+                    //    ddldstProvinceName.Enabled = true;
+                    //    ddldstCityName.Enabled = true;
+                    //    ddldstDistrictName.Enabled = true;
+                    //    txtdstPostalCode.Enabled = true;
+                    //    txtdstDetailAddress.Enabled = true;
+                    //    ddlBox.Enabled = true;
+                    //    txtQty.Enabled = true;
+                    //    btnAdd.Enabled = true;
+                    //    if (gv_Box != null)
+                    //    {
+                    //        gv_Box.Columns[2].Visible = true;
+                    //    }
+                    //    btnSave.Visible = true;
+                    //    ddlarticleCategory.Enabled = true;
+                    //}
                 }
                 else
                 {
@@ -1105,17 +1106,18 @@ namespace Carrier
             {
                 on = RadioWork2.Text;
             }
-            var res = service_Flashs.SendMail("apichat.f@sfg-th.com",new string[] {"apichat_075@hotmail.com","apigtazoon@gmail.com"},"เพิ่ม SiteStorage จากระบบ Courier", 
+            var res = service_Flashs.SendMail("apichat.f@sfg-th.com",null,"เพิ่ม SiteStorage จากระบบ Courier", 
                 "<HTML>"+
                 "<body>"+
                 "<p>SiteStorage : "+ txtSiteAdd.Text+ "</p>"+
                 "<p>Brand : "+ ddlBrand.SelectedItem.Text+ "("+ ddlBrand.SelectedValue+")"+ "</p>"+
                 "<p>Channel : "+on+"</p>"+
-                "<p>Sale_Channel : "+ ddlTo.SelectedValue+"</p>"
+                "<p>Sale_Channel : "+ ddlTo.SelectedValue+"</p>"+
+                "<p>UserID : "+ lbuserID.Text+ "</p>"
                 + "</body>"
                 +"</HTML>"
                 );
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + res + "')", true);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('แจ้งความประสงค์ในการเพิ่ม SiteStorage ไปยังเจ้าหน้าที่เรียบร้อย')", true);
             div_main.Style.Remove("filter");
             div_main.Style.Remove("position");
             div_mail.Visible = false ;
@@ -1127,6 +1129,7 @@ namespace Carrier
             div_main.Style.Remove("position");
             div_mail.Visible = false;
         }
+
     }
 
     #region Model

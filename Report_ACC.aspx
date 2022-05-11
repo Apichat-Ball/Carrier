@@ -1,6 +1,11 @@
 ﻿<%@ Page Title="Courier" Language="C#" AutoEventWireup="true" CodeBehind="Report_ACC.aspx.cs" MasterPageFile="~/Site.Master" Inherits="Carrier.Report_ACC" %>
 
 <asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="MainContent">
+    <style type="text/css">
+        .overflow_wrap{
+            overflow-wrap : break-word;
+        }
+    </style>
     <script type="text/javascript">
 
         function pageLoad() {
@@ -133,10 +138,26 @@
                     </asp:TemplateField>
                     <asp:TemplateField ControlStyle-Width="220px">
                         <HeaderTemplate>
+                            <asp:Label runat="server" ID="lbhsrcAddress" Text="ที่อยู่ผู้ส่ง"></asp:Label>
+                        </HeaderTemplate>
+                        <ItemTemplate>
+                            <asp:Label runat="server" ID="lbsrcAddress" Text='<%# Bind("srcAddress") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField ControlStyle-Width="220px">
+                        <HeaderTemplate>
                             <asp:Label runat="server" ID="lbhdstName" Text="ชื่อผู้รับ"></asp:Label>
                         </HeaderTemplate>
                         <ItemTemplate>
                             <asp:Label runat="server" ID="lbdstName" Text='<%# Bind("dstName") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField ControlStyle-Width="220px" >
+                        <HeaderTemplate>
+                            <asp:Label runat="server" ID="lbhdstAddress" Text="ที่อยู่ผู้รับ"></asp:Label>
+                        </HeaderTemplate>
+                        <ItemTemplate>
+                            <asp:Label runat="server" ID="lbdstAddress" Text='<%# Bind("dstAddress") %>' CssClass="overflow_wrap"></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField ControlStyle-Width="120px">

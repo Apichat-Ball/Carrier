@@ -104,6 +104,10 @@ namespace Carrier
                 ddlChannel.SelectedValue = lbChannel.Text;
 
             }
+            txtSiteStorageADD.Text = "";
+            txtComcodeADD.Text = "";
+            txtProfitADD.Text = "";
+            txtCostcenterADD.Text = "";
             System.Threading.Thread.Sleep(1000);
         }
         protected void ddlBrand_SelectedIndexChanged(object sender, EventArgs e)
@@ -243,10 +247,11 @@ namespace Carrier
 
             lbChannel.Visible = true;
             ddlChannel.Visible = false;
-
+            lbChannel.Text = ddlChannel.SelectedValue;
 
             lbSaleChannel.Visible = true;
             ddlSaleChannel.Visible = false;
+            lbSaleChannel.Text = ddlSaleChannel.SelectedValue;
 
             lbComcode.Visible = true;
             lbComcode.Text = txtComcode.Text;

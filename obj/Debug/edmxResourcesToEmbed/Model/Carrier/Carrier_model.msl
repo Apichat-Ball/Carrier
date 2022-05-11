@@ -171,5 +171,15 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="Comment_System">
+      <EntityTypeMapping TypeName="CarrierModel.Comment_System">
+        <MappingFragment StoreEntitySet="Comment_System">
+          <ScalarProperty Name="CM_DateCreate" ColumnName="CM_DateCreate" />
+          <ScalarProperty Name="CM_Status" ColumnName="CM_Status" />
+          <ScalarProperty Name="CM_Message" ColumnName="CM_Message" />
+          <ScalarProperty Name="CM_ID" ColumnName="CM_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

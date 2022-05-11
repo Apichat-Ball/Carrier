@@ -77,6 +77,7 @@
 
     </script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <asp:Label runat="server" ID="lbuserID" Visible="false"></asp:Label>
     <asp:UpdatePanel ID="updatePanel1" runat="server">
         <ContentTemplate>
             <div runat="server" id="div_main">
@@ -184,8 +185,9 @@
                         <div class="col-sm-12 my-2">
                             <div class="input-group w-100">
                                 <asp:Label runat="server" ID="lbremark" Text="หมายเหตุ" CssClass="input-group-text s-15px shadow"></asp:Label>
-                                <asp:TextBox runat="server" ID="txtremark" CssClass="form-control s-15px shadow" TextMode="MultiLine" Rows="3"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtremark" CssClass="form-control s-15px shadow" TextMode="MultiLine" Rows="3"></asp:TextBox>                                
                             </div>
+                                <%--<asp:RegularExpressionValidator ID="RegularExpressionValidator3" runat="server" ControlToValidate="txtremark" ErrorMessage="ห้ามใช้เครื่องหมาย + " ValidationExpression="" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>--%>
                         </div>
 
 
@@ -234,6 +236,7 @@
                         </div>
                         <div class="row mb-2 ml-2">
                             <asp:Label runat="server" ID="lbGuidSiteStorage" Text=" - กรุณากรอก SiteStorage ถ้าไม่มีให้ใส่ CENTER" Font-Names="Comic Sans MS" Font-Size="Small" ForeColor="Red"></asp:Label>
+                            <asp:Label runat="server" ID="lbGuidSiteStorage2" Text=" - SiteStorage CENTER สามารถใส่ได้เฉพาะของกองหลังเท่านั้น" Font-Names="Comic Sans MS" Font-Size="Small" ForeColor="Red"></asp:Label>
                         </div>
                         <asp:Label runat="server" ID="Label2" Text="ผู้รับ" CssClass="s-22px"></asp:Label>
                         <div class="border border-1 " style="border-radius: 15px; padding: 20px; width: 100%">

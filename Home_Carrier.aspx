@@ -43,7 +43,24 @@
             <asp:Button runat="server" ID="btnCreateOrder" Text="Create Order" CssClass=" btn btn-primary s-15px" Width="100%" OnClick="btnCreateOrder_Click" />
         </div>
     </div>
-    <div class="mt-5 ">
+    <div class="row col-12" runat="server" id="dv_Comment" visible="false">
+        <asp:Label runat="server" ID="lbUpdateStatusComment" Text="ประกาศจากระบบ" CssClass="h3"></asp:Label><br />
+        <div class="row col-12 overflow-auto" style="height:80px">
+            <asp:GridView runat="server" ID="gv_UpdateComment" ShowHeader="false" AutoGenerateColumns="false" CssClass="border-0 table-sm">
+            <Columns>
+                <asp:TemplateField>
+                    <ItemTemplate>
+                        <asp:Label runat="server" ID="lbStatusComment" CssClass="status-tracking" Text='<%# Bind("CM_Status") %>'></asp:Label>
+                        <asp:Label runat="server" ID="lbDateCreate" Text='<%# Bind("CM_DateCreate") %>'></asp:Label>
+                        <asp:Label runat="server" ID="lbComment" Text='<%# Bind("CM_Message") %>'></asp:Label>
+                    </ItemTemplate>
+                    <ItemStyle CssClass="mb-2 small" Height="20px" />
+                </asp:TemplateField>
+            </Columns>
+        </asp:GridView> 
+        </div>
+    </div>
+    <div class="mt-1 ">
         <div class="row">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 gy-3">
                 <div class=" input-group">

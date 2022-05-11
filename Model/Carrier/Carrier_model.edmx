@@ -12,6 +12,15 @@
           <Property Name="ArticleCode" Type="int" Nullable="false" />
           <Property Name="ArticleName" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="Comment_System">
+          <Key>
+            <PropertyRef Name="CM_ID" />
+          </Key>
+          <Property Name="CM_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CM_Message" Type="nvarchar(max)" />
+          <Property Name="CM_Status" Type="int" />
+          <Property Name="CM_DateCreate" Type="datetime" />
+        </EntityType>
         <EntityType Name="Event_Shop">
           <Key>
             <PropertyRef Name="Event_ID" />
@@ -167,6 +176,7 @@
         </EntityType>
         <EntityContainer Name="CarrierModelStoreContainer">
           <EntitySet Name="Article_Category" EntityType="Self.Article_Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Comment_System" EntityType="Self.Comment_System" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event_Shop" EntityType="Self.Event_Shop" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="History_Notify_Order" EntityType="Self.History_Notify_Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Notify" EntityType="Self.Notify" Schema="dbo" store:Type="Tables" />
@@ -196,6 +206,7 @@
           <EntitySet Name="Site_Center" EntityType="CarrierModel.Site_Center" />
           <EntitySet Name="History_Notify_Order" EntityType="CarrierModel.History_Notify_Order" />
           <EntitySet Name="Status_Notify_Order" EntityType="CarrierModel.Status_Notify_Order" />
+          <EntitySet Name="Comment_System" EntityType="CarrierModel.Comment_System" />
         </EntityContainer>
         <EntityType Name="Article_Category">
           <Key>
@@ -356,6 +367,15 @@
           </Key>
           <Property Name="statusId" Type="Int32" Nullable="false" />
           <Property Name="statusName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Comment_System">
+          <Key>
+            <PropertyRef Name="CM_ID" />
+          </Key>
+          <Property Name="CM_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CM_Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CM_Status" Type="Int32" />
+          <Property Name="CM_DateCreate" Type="DateTime" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -530,6 +550,16 @@
               <MappingFragment StoreEntitySet="Status_Notify_Order">
                 <ScalarProperty Name="statusName" ColumnName="statusName" />
                 <ScalarProperty Name="statusId" ColumnName="statusId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Comment_System">
+            <EntityTypeMapping TypeName="CarrierModel.Comment_System">
+              <MappingFragment StoreEntitySet="Comment_System">
+                <ScalarProperty Name="CM_DateCreate" ColumnName="CM_DateCreate" />
+                <ScalarProperty Name="CM_Status" ColumnName="CM_Status" />
+                <ScalarProperty Name="CM_Message" ColumnName="CM_Message" />
+                <ScalarProperty Name="CM_ID" ColumnName="CM_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

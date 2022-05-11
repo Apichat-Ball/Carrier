@@ -40,6 +40,7 @@ namespace Carrier
                 txtDateEnd.Text = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy");
                 lbstatusSearch.Text = "First";
                 loadtable(1);
+                //loadComment();
             }
         }
         public void loadtable(int page)
@@ -212,6 +213,41 @@ namespace Carrier
             }
 
 
+        }
+        public void loadComment()
+        {
+            var cm = carrier_Entities.Comment_System.ToList();
+            if(cm.Count == 0)
+            {
+                dv_Comment.Visible = false;
+            }
+            else
+            {
+                dv_Comment.Visible = true;
+            }
+
+            gv_UpdateComment.DataSource = cm;
+            gv_UpdateComment.DataBind();
+            foreach(GridViewRow row in gv_UpdateComment.Rows)
+            {
+                Label lbStatusComment = (Label)row.FindControl("lbStatusComment");
+
+                if(lbStatusComment.Text == "1")
+                {
+                    lbStatusComment.Text = "อัพเดต";
+                    lbStatusComment.BackColor = System.Drawing.Color.LimeGreen;
+                    lbStatusComment.ForeColor = System.Drawing.Color.White;
+                }else if(lbStatusComment.Text == "2")
+                {
+                    lbStatusComment.Text = "ประกาศ";
+                    lbStatusComment.BackColor = System.Drawing.Color.PaleVioletRed;
+                    lbStatusComment.ForeColor = System.Drawing.Color.White;
+                }
+
+                Label lbDateCreate = (Label)row.FindControl("lbDateCreate");
+                lbDateCreate.Text = Convert.ToDateTime(lbDateCreate.Text).ToString("dd/MM/yyyy");
+
+            }
         }
         protected void Page_gv(int pageselect, int pageCount)
         {

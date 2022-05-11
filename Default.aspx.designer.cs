@@ -51,6 +51,33 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.Button btnUpdatePno;
 
         /// <summary>
+        /// dv_Comment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dv_Comment;
+
+        /// <summary>
+        /// lbUpdateStatusComment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbUpdateStatusComment;
+
+        /// <summary>
+        /// gv_UpdateComment control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gv_UpdateComment;
+
+        /// <summary>
         /// lbDocnoSearch control.
         /// </summary>
         /// <remarks>

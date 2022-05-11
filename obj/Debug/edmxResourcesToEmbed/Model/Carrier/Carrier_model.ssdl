@@ -7,6 +7,15 @@
     <Property Name="ArticleCode" Type="int" Nullable="false" />
     <Property Name="ArticleName" Type="nvarchar" MaxLength="50" />
   </EntityType>
+  <EntityType Name="Comment_System">
+    <Key>
+      <PropertyRef Name="CM_ID" />
+    </Key>
+    <Property Name="CM_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CM_Message" Type="nvarchar(max)" />
+    <Property Name="CM_Status" Type="int" />
+    <Property Name="CM_DateCreate" Type="datetime" />
+  </EntityType>
   <EntityType Name="Event_Shop">
     <Key>
       <PropertyRef Name="Event_ID" />
@@ -162,6 +171,7 @@
   </EntityType>
   <EntityContainer Name="CarrierModelStoreContainer">
     <EntitySet Name="Article_Category" EntityType="Self.Article_Category" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Comment_System" EntityType="Self.Comment_System" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Event_Shop" EntityType="Self.Event_Shop" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="History_Notify_Order" EntityType="Self.History_Notify_Order" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Notify" EntityType="Self.Notify" Schema="dbo" store:Type="Tables" />

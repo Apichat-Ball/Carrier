@@ -73,7 +73,10 @@ namespace Carrier
                                      SaleOn = order.saleOn,
                                      FlashLa = order_Item.Status == "SL" ? "Lalamove" : "FlashExpress",
                                      Brand = order.SDpart,
-                                     site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
+                                     site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage,
+                                     srcAddress = order.srcDetailAddress,
+                                     dstAddress = order.dstDetailAddress
+
                                  }).ToList();
 
                 var orderListTrue = (from order in carrier_Entities.Orders
@@ -92,7 +95,9 @@ namespace Carrier
                                          SaleOn = order.saleOn,
                                          FlashLa = order_Item.Status == "SL" ? "Lalamove" : "FlashExpress",
                                          Brand = order.SDpart,
-                                         site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
+                                         site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage,
+                                         srcAddress = order.srcDetailAddress,
+                                         dstAddress = order.dstDetailAddress
                                      }).ToList();
                 orderList.AddRange(orderListTrue);
                 var maxrow = 8;
@@ -377,7 +382,9 @@ namespace Carrier
                                      FlashLa = order_Item.Status == "SL" ? "Lalamove" : "FlashExpress",
                                      SaleOn = order.saleOn,
                                      Brand = order.SDpart,
-                                     site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
+                                     site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage,
+                                     srcAddress = order.srcDetailAddress,
+                                     dstAddress = order.dstDetailAddress
                                  }).ToList();
                 var orderListNotNoti = (from order in carrier_Entities.Orders
                                         join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
@@ -395,7 +402,9 @@ namespace Carrier
                                             FlashLa = order_Item.Status == "SL" ? "Lalamove" : "FlashExpress",
                                             SaleOn = order.saleOn,
                                             Brand = order.SDpart,
-                                            site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
+                                            site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage,
+                                            srcAddress = order.srcDetailAddress,
+                                            dstAddress = order.dstDetailAddress
                                         }).ToList();
                 List<string> doc = new List<string>();
                 foreach (var i in orderListNotNoti)
@@ -423,7 +432,9 @@ namespace Carrier
                                          FlashLa = order_Item.Status == "SL" ? "Lalamove" : "FlashExpress",
                                          SaleOn = order.saleOn,
                                          Brand = order.SDpart,
-                                         site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage
+                                         site = order.siteStorage == "" || order.siteStorage == "-" ? "CENTER" : order.siteStorage,
+                                         srcAddress = order.srcDetailAddress,
+                                         dstAddress = order.dstDetailAddress
                                      }).ToList();
                 orderList.AddRange(orderListNotNoti);
                 orderList.AddRange(orderListTrue);

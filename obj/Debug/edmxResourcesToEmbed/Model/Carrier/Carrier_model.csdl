@@ -13,6 +13,7 @@
     <EntitySet Name="Site_Center" EntityType="CarrierModel.Site_Center" />
     <EntitySet Name="History_Notify_Order" EntityType="CarrierModel.History_Notify_Order" />
     <EntitySet Name="Status_Notify_Order" EntityType="CarrierModel.Status_Notify_Order" />
+    <EntitySet Name="Comment_System" EntityType="CarrierModel.Comment_System" />
   </EntityContainer>
   <EntityType Name="Article_Category">
     <Key>
@@ -173,5 +174,14 @@
     </Key>
     <Property Name="statusId" Type="Int32" Nullable="false" />
     <Property Name="statusName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="Comment_System">
+    <Key>
+      <PropertyRef Name="CM_ID" />
+    </Key>
+    <Property Name="CM_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CM_Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CM_Status" Type="Int32" />
+    <Property Name="CM_DateCreate" Type="DateTime" Precision="3" />
   </EntityType>
 </Schema>

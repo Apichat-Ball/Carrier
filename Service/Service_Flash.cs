@@ -529,9 +529,9 @@ namespace Carrier.Service
             {
                 return "กรุณากรอกชื่อผู้รับ";
             }
-            else if (item.dstPhone == "" || item.dstPhone == "-" )
+            else if (item.dstPhone == "" || item.dstPhone == "-")
             {
-                if(item.dstHomePhone == "" || item.dstHomePhone == "-")
+                if (item.dstHomePhone == "" || item.dstHomePhone == "-")
                 {
                     return "กรุณากรอกเบอร์โทรศัพท์ผู้รับอย่างใดอย่างหนึ่งหรือทั้ง 2 เบอร์";
                 }
@@ -543,7 +543,8 @@ namespace Carrier.Service
             else if (item.dstCityName == "" || item.dstCityName == "เลือกอำเภอ")
             {
                 return "กรุณาเลือกอำเภอผู้รับ";
-            }else if(item.dstDistrictName == "" || item.dstDistrictName == "เลือกตำบล")
+            }
+            else if (item.dstDistrictName == "" || item.dstDistrictName == "เลือกตำบล")
             {
                 return "กรุณาเลือกตำบลผู้รับ";
             }
@@ -559,20 +560,24 @@ namespace Carrier.Service
             {
                 return "กรุณาเลือกปลายทาง";
             }
-            if(item.Transport_Type == 1)
+            if (item.Transport_Type == 1)
             {
                 if (favorites == "select")
                 {
                     return "กรุณาเลือกผุ้ส่ง";
                 }
             }
-            if( item.srcName.Length >50)
+            if (item.srcName.Length > 50)
             {
                 return "ชื่อผู้ส่งต้องมีความยาวไม่เกิน 50 ตัวอักษร";
             }
-            if(item.dstName.Length > 50)
+            if (item.dstName.Length > 50)
             {
                 return "ชื่อผู้รับต้องมีความยาวไม่เกิน 50 ตัวอักษร";
+            }
+            if (item.remark.Contains("+"))
+            {
+                return "ช่องหมายเหตุห้ามใส่เครื่องหมาย +";
             }
             
             if (item.siteStorage.Length < 6)
