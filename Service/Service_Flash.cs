@@ -32,7 +32,7 @@ namespace Carrier.Service
             entities_Carrier = new CarrierEntities();
             entities_InsideSFG_WF = new InsideSFG_WFEntities();
         }
-        public Model_Trackingno CreateOrderFLASH(string docno ,string favor)
+        public Model_Trackingno CreateOrderFLASH(string docno, string favor)
         {
             var obj = entities_Carrier.Orders.Where(w => w.Docno == docno).ToList();
 
@@ -65,7 +65,7 @@ namespace Carrier.Service
 
                     }
                 }
-                headerpara +=  "&dstPostalCode=" + (objOrder.dstPostalCode != null ? objOrder.dstPostalCode.ToString() : "") +
+                headerpara += "&dstPostalCode=" + (objOrder.dstPostalCode != null ? objOrder.dstPostalCode.ToString() : "") +
                                     "&dstProvinceName=" + objOrder.dstProvinceName +
                                     "&expressCategory=1" +
                                     "&insured=0" +
@@ -109,7 +109,7 @@ namespace Carrier.Service
                         upcountryCharge = j["data"]["upcountryCharge"].ToString(),
                         TypeSendKO = favor == "select" ? "SFG" : favor
                     };
-                    
+
                     entities_Carrier.Order_Item.Add(order);
                     entities_Carrier.SaveChanges();
                     return new Model_Trackingno { success = true, trackingno = j["data"]["pno"].ToString() };
@@ -272,7 +272,7 @@ namespace Carrier.Service
         }
         public List<responseNotify> Notify(List<string> tracking)
         {
-            List<Warehouse> warehouse = new List<Warehouse>(); 
+            List<Warehouse> warehouse = new List<Warehouse>();
             var keyFlash = Get_Key("FLASH", "FLASH");
             //var param = "mchId=" + keyFlash.mchId + "&nonceStr=" + tracking.FirstOrDefault();
             //string signWare = sha256_hash(param + "&key=" + keyFlash.key).ToUpper();
@@ -326,7 +326,7 @@ namespace Carrier.Service
                                      TypeSendKo = orderItem.TypeSendKO
                                  }).ToList().FirstOrDefault();
                 var check = CheckNotify(orderData.Docno);
-                if(check == "")
+                if (check == "")
                 {
                     Order_Noti.Add(orderData);
                 }
@@ -335,6 +335,7 @@ namespace Carrier.Service
             List<responseNotify> listResnotify = new List<responseNotify>();
             if (Order_Noti.Count != 0)
             {
+                //SDC1
                 var SDC1 = Order_Noti.Where(w => w.TypeSendKo == "SDC1").ToList();
                 foreach (var sd in SDC1)
                 {
@@ -387,8 +388,63 @@ namespace Carrier.Service
                 }
                 resnotity = new responseNotify();
 
+                //ROX
+                var rox = Order_Noti.Where(w => w.TypeSendKo == "ROX").ToList();
+                if (rox.Count != 0)
+                {
+                    foreach(var r in rox)
+                    {
+                        Order_Noti.Remove(r);
+                    }
+                    var last = rox.LastOrDefault();
+                    var random = "mdchId=" + last.mchId + "&sendTime=" + DateTime.Now;
+                    var Md5 = MD5_hash(random);
+                    var header =
+                        "estimateParcelNumber=" + rox.Count() +
+                        "&mchId=" + last.mchId +
+                        "&nonceStr=" + Md5 +
+                        "&warehouseNo=" + "RXSFRXM1";
+
+                    string sign = sha256_hash(header + "&key=" + keyFlash.key).ToUpper();
+                    var client = new RestClient("https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign);
+                    client.Timeout = -1;
+                    var request = new RestRequest(Method.POST);
+                    request.AlwaysMultipartFormData = true;
+                    IRestResponse response = client.Execute(request);
+                    JObject j = JObject.Parse(response.Content);
+                    var pno = rox.Select(s => s.pno).ToList();
+                    if (Convert.ToInt32(j["code"]) == 1)
+                    {
+                        resnotity.pno = pno;
+                        resnotity.code = Convert.ToInt32(j["code"]);
+                        resnotity.message = j["message"].ToString();
+                        resnotity.ticketPickupId = j["data"]["ticketPickupId"].ToString();
+                        resnotity.staffInfoId = Convert.ToInt32(j["data"]["staffInfoId"]);
+                        resnotity.staffInfoName = j["data"]["staffInfoName"].ToString();
+                        resnotity.staffInfoPhone = j["data"]["staffInfoPhone"].ToString();
+                        resnotity.upCountryNote = j["data"]["upCountryNote"].ToString();
+                        resnotity.timeoutAtText = j["data"]["timeoutAtText"].ToString();
+                        resnotity.ticketMessage = j["data"]["ticketMessage"].ToString();
+                        resnotity.dateSuccess = DateTime.Now;
+                        resnotity.warehouseNo = "RXSFRXM1";
+                    }
+                    else
+                    {
+                        resnotity.pno = pno;
+                        resnotity.code = Convert.ToInt32(j["code"]);
+                        resnotity.message = j["message"].ToString();
+                        resnotity.warehouseNo = "RXSFRXM1";
+
+                    }
+                    listResnotify.Add(resnotity);
+                }
+
+                resnotity = new responseNotify();
+
+                //SFG
                 if (Order_Noti.Count != 0)
                 {
+
                     var last = Order_Noti.LastOrDefault();
                     var random = "mdchId=" + last.mchId + "&sendTime=" + DateTime.Now;
                     var Md5 = MD5_hash(random);
@@ -430,12 +486,13 @@ namespace Carrier.Service
 
                     }
                     listResnotify.Add(resnotity);
+
                 }
+
             }
-            
-            return listResnotify;
+                return listResnotify;
         }
-        public string CheckNotify( string Docno)
+        public string CheckNotify(string Docno)
         {
             #region v1
             //var mchId = entities_Carrier.Order_Item.Where(w => w.Docno == Docno).Select(s => s.mchId).ToList().FirstOrDefault();
@@ -488,17 +545,17 @@ namespace Carrier.Service
             var Md5 = MD5_hash(random);
             var header = "mchId=" + mchId.mchId + "&nonceStr=" + Md5;
             string sign = sha256_hash(header + "&key=" + keyFlash.key).ToUpper();
-            var client = new RestClient("https://api.flashexpress.com/open/v1/orders/"+mchId.pno+"/routes?" + header + "&sign=" + sign);
+            var client = new RestClient("https://api.flashexpress.com/open/v1/orders/" + mchId.pno + "/routes?" + header + "&sign=" + sign);
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
             request.AlwaysMultipartFormData = true;
             IRestResponse response = client.Execute(request);
             JObject j = JObject.Parse(response.Content);
-            if(j["code"].ToString() == "1")
+            if (j["code"].ToString() == "1")
             {
                 var code = Convert.ToInt32(j["data"]["state"].ToString());
-                var a = entities_Carrier.Status_Notify_Order.Where(w => w.statusId == code).ToList(); 
-                if(a.Count() == 0)
+                var a = entities_Carrier.Status_Notify_Order.Where(w => w.statusId == code).ToList();
+                if (a.Count() == 0)
                 {
                     entities_Carrier.Status_Notify_Order.Add(new Status_Notify_Order { statusId = code, statusName = j["data"]["stateText"].ToString() });
                     entities_Carrier.SaveChanges();
@@ -511,7 +568,7 @@ namespace Carrier.Service
             #endregion
             return d;
         }
-        public string Validate_Transport(Order item, string receive , string favorites)
+        public string Validate_Transport(Order item, string receive, string favorites)
         {
             if (item.srcName == "")
             {
@@ -548,6 +605,10 @@ namespace Carrier.Service
             {
                 return "กรุณาเลือกตำบลผู้รับ";
             }
+            else if (item.dstDetailAddress.Length > 200)
+            {
+                return "รายละเอียดที่อยู่ผู้รับต้องไม่เกิน 200 ตัวอักษร";
+            }
             else if (item.SDpart == "Select")
             {
                 return "กรุณาเลือกแผนกที่ต้องการเบิก";
@@ -571,24 +632,32 @@ namespace Carrier.Service
             {
                 return "ชื่อผู้ส่งต้องมีความยาวไม่เกิน 50 ตัวอักษร";
             }
+            else if (item.srcName.Contains("&"))
+            {
+                return "ชื่อผู้ส่งไม่สามารถใส่อักษรพิเศษได้แก่ &";
+            }
             if (item.dstName.Length > 50)
             {
                 return "ชื่อผู้รับต้องมีความยาวไม่เกิน 50 ตัวอักษร";
+            }
+            else if (item.dstName.Contains("&"))
+            {
+                return "ชื่อผู้รับไม่สามารถใส่อักษรพิเศษได้แก่ &";
             }
             if (item.remark.Contains("+"))
             {
                 return "ช่องหมายเหตุห้ามใส่เครื่องหมาย +";
             }
-            
+
             if (item.siteStorage.Length < 6)
             {
                 return "กรุณาใส่ SiteStorage ไม่ต่ำกว่า 6 ตัวครับ";
             }
-            else if(item.siteStorage.Contains(" ") || item.siteStorage.Contains("-"))
+            else if (item.siteStorage.Contains(" ") || item.siteStorage.Contains("-"))
             {
                 return "SiteStorage ห้ามเว้นวรรคหรือเครื่องหมายต่างๆครับ";
             }
-            else 
+            else
             {
                 if (item.saleChannel == "Event")
                 {
@@ -613,7 +682,7 @@ namespace Carrier.Service
                         var SaleChannel = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Sale_Channel).FirstOrDefault();
                         var departSh = BG.Select(s => s.Depart_Short).ToList();
                         var siteCenter = entities_Carrier.Site_Center.Where(w => departSh.Contains(w.Brand_Center_Short)).FirstOrDefault();
-                        if(siteCenter == null)
+                        if (siteCenter == null)
                         {
                             if (item.siteStorage.StartsWith("CENTER"))
                             {
@@ -706,52 +775,52 @@ namespace Carrier.Service
                             }
                         }
                     }
-                       /* if (item.siteStorage.StartsWith("CENTER"))
-                        {
-                            var BGShort = BG.Select(s => s.Depart_Short).FirstOrDefault();
-                            var centerSite = entities_Carrier.Site_Center.Where(w => BGShort == w.Brand_Center_Short).ToList();
-                            if (centerSite.Count == 0)
-                            {
-                                var pro = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn && w.Brand == BGShort).ToList();
-                                if (pro.Count == 0)
-                                {
-                                    return "Brand นี้ไม่พบ Profit ";
-                                }
-                            }
-                        }
-                        else
-                        {
-                            var SaleChannel = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Sale_Channel).FirstOrDefault();
-                            if (SaleChannel != "Shop")
-                            {
-                                var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
-                                if (brandProfit.Count == 0)
-                                {
-                                    return "ไม่พบ SiteStorage นี้ครับ";
-                                }
-                                BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
-                                if (BG.Count() == 0)
-                                {
-                                    return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
-                                }
-                            }
-                            else
-                            {
-                                var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
-                                BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
-                                if (BG.Count() == 0)
-                                {
-                                    return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
-                                }
-                            }
+                    /* if (item.siteStorage.StartsWith("CENTER"))
+                     {
+                         var BGShort = BG.Select(s => s.Depart_Short).FirstOrDefault();
+                         var centerSite = entities_Carrier.Site_Center.Where(w => BGShort == w.Brand_Center_Short).ToList();
+                         if (centerSite.Count == 0)
+                         {
+                             var pro = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn && w.Brand == BGShort).ToList();
+                             if (pro.Count == 0)
+                             {
+                                 return "Brand นี้ไม่พบ Profit ";
+                             }
+                         }
+                     }
+                     else
+                     {
+                         var SaleChannel = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Sale_Channel).FirstOrDefault();
+                         if (SaleChannel != "Shop")
+                         {
+                             var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
+                             if (brandProfit.Count == 0)
+                             {
+                                 return "ไม่พบ SiteStorage นี้ครับ";
+                             }
+                             BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
+                             if (BG.Count() == 0)
+                             {
+                                 return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
+                             }
+                         }
+                         else
+                         {
+                             var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
+                             BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
+                             if (BG.Count() == 0)
+                             {
+                                 return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
+                             }
+                         }
 
-                        }*/
-                    
-                    
+                     }*/
+
+
                 }
 
             }
-            
+
 
             return "PASS";
         }
@@ -814,7 +883,7 @@ namespace Carrier.Service
                 return "Cancel Order Success.";
             }
         }
-        public string EditOrder(Order item, string pno,string typeSentKo)
+        public string EditOrder(Order item, string pno, string typeSentKo)
         {
             Model_Key model_key = Get_Key("FLASH", "FLASH");
             string headerpara = "articleCategory=" + item.articleCategory +
@@ -831,24 +900,24 @@ namespace Carrier.Service
             }
             else
             {
-                if(item.dstHomePhone == "" || item.dstHomePhone == "-" || item.dstHomePhone == " ")
+                if (item.dstHomePhone == "" || item.dstHomePhone == "-" || item.dstHomePhone == " ")
                 {
                     headerpara += "&dstName=" + item.dstName + "&dstPhone=" + item.dstPhone;
                 }
                 else
                 {
-                    headerpara += "&dstHomePhone" + item.dstHomePhone+"&dstName=" + item.dstName + "&dstPhone=" + item.dstPhone;
+                    headerpara += "&dstHomePhone" + item.dstHomePhone + "&dstName=" + item.dstName + "&dstPhone=" + item.dstPhone;
 
                 }
             }
             headerpara += "&dstPostalCode=" + (item.dstPostalCode != null ? item.dstPostalCode.ToString() : "") +
                                 "&dstProvinceName=" + item.dstProvinceName +
-                                "&expressCategory=" + item.ExpressCategory+
+                                "&expressCategory=" + item.ExpressCategory +
                                 "&insured=0" +
                                 "&mchId=" + model_key.mchId +
                                 "&nonceStr=" + item.Docno +
                                 "&outTradeNo=" + item.Docno +
-                                "&pno="+ pno+
+                                "&pno=" + pno +
                                 "&remark=" + (item.remark != "" ? item.remark : "-") +
                                 "&srcDetailAddress=" + (item.srcDetailAddress != null && item.srcDetailAddress != "" ? item.srcDetailAddress : "")
                                 + (item.srcDistrictName != null && item.srcDistrictName != "" ? " " + item.srcDistrictName : "")
@@ -864,7 +933,7 @@ namespace Carrier.Service
             request.AlwaysMultipartFormData = true;
             IRestResponse response = client.Execute(request);
             JObject j = JObject.Parse(response.Content);
-            if(Convert.ToInt32(j["code"]) == 1)
+            if (Convert.ToInt32(j["code"]) == 1)
             {
                 var order = entities_Carrier.Orders.Where(w => w.Docno == item.Docno).FirstOrDefault();
                 order.dstName = item.dstName;
@@ -899,11 +968,11 @@ namespace Carrier.Service
             {
                 return "ไม่สำเร็จ";
             }
-            
+
         }
         public List<ReportBrand> Get_Report_Brand(string departOrShop, string SDpart)
         {
-            
+
             var order = (from or in entities_Carrier.Orders
                          join orItem in entities_Carrier.Order_Item on or.Docno equals orItem.Docno
                          where orItem.Status == "A" || orItem.Status == "SL"
@@ -916,27 +985,27 @@ namespace Carrier.Service
                              siteStorage = or.siteStorage,
                              status = or.status,
                              TypeSend = or.TypeSend,
-                             saleChannel = entities_Carrier.Site_Profit.Where(w=>w.Site_Stroage.StartsWith(or.siteStorage)).FirstOrDefault().Sale_Channel,
+                             saleChannel = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(or.siteStorage)).FirstOrDefault().Sale_Channel,
                              Qty = orItem.Qty ?? 0
                          }).ToList();
-            foreach(var i in order)
+            foreach (var i in order)
             {
                 var BG = (from ha in entities_InsideSFG_WF.BG_HApprove
                           join haP in entities_InsideSFG_WF.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
                           where ha.departmentID == i.SDpart
-                          select new { ha = ha,haP = haP}).ToList();
+                          select new { ha = ha, haP = haP }).ToList();
                 i.SDpart_Name = BG.FirstOrDefault().haP.Depart_Short;
                 i.SDpart_Name_Full = BG.FirstOrDefault().ha.department_;
             }
             var ss = order.Where(w => w.saleChannel == departOrShop && w.saleOn == "OFFLINE" && w.SDpart == SDpart).ToList();
             return ss;
-            
+
         }
 
 
         readonly System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient();
         System.Net.Mail.MailMessage objMail;
-        public string SendMail(string addressTo,string[] addressCC,string subject, string body)
+        public string SendMail(string addressTo, string[] addressCC, string subject, string body)
         {
             var res = "";
             try
@@ -950,7 +1019,7 @@ namespace Carrier.Service
                     objMail.From = new System.Net.Mail.MailAddress("Online.starfashiongroup2551@gmail.com", "Starfashion Group");
                     if (addressCC != null)
                     {
-                        foreach(var i in addressCC)
+                        foreach (var i in addressCC)
                         {
                             objMail.Bcc.Add(i);
                         }

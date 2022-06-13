@@ -216,7 +216,7 @@ namespace Carrier
         }
         public void loadComment()
         {
-            var cm = carrier_Entities.Comment_System.ToList();
+            var cm = carrier_Entities.Comment_System.OrderByDescending(o=>o.CM_DateCreate).ToList();
             if(cm.Count == 0)
             {
                 dv_Comment.Visible = false;

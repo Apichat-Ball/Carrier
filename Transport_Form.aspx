@@ -140,7 +140,7 @@
                                 <div class="input-group ">
                                     <asp:Label runat="server" ID="lbsrcPhone" Text="เบอร์โทรศัพท์" CssClass=" input-group-text s-15px shadow"></asp:Label>
                                     <asp:TextBox runat="server" ID="txtsrcPhone" CssClass="form-control s-15px shadow " MaxLength="10" TextMode="Phone" AutoCompleteType="Disabled"></asp:TextBox>
-                                    <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ControlToValidate="txtsrcPhone" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง" ValidationExpression="[0]{1}(([6,8,9]{1}[0-9]{8})|([2]{1}[0-9]{7}))" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
+                                    <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ControlToValidate="txtsrcPhone" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง" ValidationExpression="[0]{1}(([6,8,9]{1}[0-9]{8})|([2]{1}[0-9]{7}))" Display="Dynamic" ForeColor="Red" SetFocusOnError="true"></asp:RegularExpressionValidator>
                                 </div>
                             </div>
                             <div class="row col-sm-12 my-2">
@@ -166,7 +166,7 @@
                                     <asp:Label runat="server" ID="lbsrcPostalCode" Text="รหัสไปรษณีย์" CssClass="input-group-text s-15px shadow"></asp:Label>
                                     <asp:TextBox runat="server" ID="txtsrcPostalCode" CssClass="form-control s-15px shadow" MaxLength="5" AutoCompleteType="Disabled"></asp:TextBox>
                                 </div>
-                                <asp:RegularExpressionValidator ID="RegularExpressionValidator4" runat="server" ControlToValidate="txtsrcPostalCode" ErrorMessage="กรุณากรอกรหัสไปรษณีย์ให้ถูกต้อง" ValidationExpression="[0-9]{5}" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
+                                <asp:RegularExpressionValidator ID="RegularExpressionValidator4" runat="server" ControlToValidate="txtsrcPostalCode" ErrorMessage="กรุณากรอกรหัสไปรษณีย์ให้ถูกต้อง" ValidationExpression="[0-9]{5}" Display="Dynamic" ForeColor="Red" SetFocusOnError="true"></asp:RegularExpressionValidator>
                                 <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator3" ControlToValidate="txtsrcPostalCode" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1" />--%>
                             </div>
                             <div class="row col-sm-12 my-2">
@@ -252,15 +252,14 @@
                                     <asp:Label runat="server" ID="lbdstPhone" Text="เบอร์โทรศัพท์มือถือ" CssClass="input-group-text s-15px shadow"></asp:Label>
                                     <asp:TextBox runat="server" ID="txtdstPhone" CssClass="form-control s-15px shadow" MaxLength="12" AutoCompleteType="Disabled"></asp:TextBox>
                                 </div>
-                                <asp:RegularExpressionValidator ID="RegularExpressionValidator2" runat="server" ControlToValidate="txtdstPhone" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง" ValidationExpression="([0]{1}[4,6,8,9,5]{1}[0-9]\w{7,9})|([-]{1})" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
-                                <%--                        <asp:RequiredFieldValidator ID="RequiredFieldValidator5" ControlToValidate="txtdstPhone" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1" />--%>
+                                <asp:RegularExpressionValidator ID="RegularExpressionValidator2" runat="server" ControlToValidate="txtdstPhone" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง" ValidationExpression="([0]{1}[4,6,8,9,5]{1}[0-9]\w{7,9})|([-]{1})" Display="Dynamic" ForeColor="Red" SetFocusOnError="true"></asp:RegularExpressionValidator>
                             </div>
                             <div class="row  col-sm-12 my-2">
                                 <div class="input-group">
                                     <asp:Label runat="server" ID="lbdstHomePhone" Text="เบอร์โทรศัพท์บ้าน" CssClass="input-group-text s-15px shadow"></asp:Label>
                                     <asp:TextBox runat="server" ID="txtdstHomePhone" CssClass="form-control s-15px shadow" MaxLength="9" AutoCompleteType="Disabled"></asp:TextBox>
-                                    <%--<asp:RegularExpressionValidator ID="RegularExpressionValidator3" runat="server" ControlToValidate="txtdstHomePhone" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์บ้านให้ถูกต้อง" ValidationExpression="([0]{1}[2,4]{1}[0-9]{7})|([-]{1})" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>--%>
                                 </div>
+                                    <asp:RegularExpressionValidator ID="RegularExpressionValidator3" runat="server" ControlToValidate="txtdstHomePhone" ErrorMessage="กรุณากรอกเบอร์โทรศัพท์บ้านให้ถูกต้อง" ValidationExpression="([0]{1}[2-7]{1}[0-9]{7})|([-,]{1})" Display="Dynamic" ForeColor="Red" SetFocusOnError="true"></asp:RegularExpressionValidator>
                             </div>
                             <div class="row  col-sm-12 my-2">
                                 <div class="input-group ">
@@ -284,7 +283,7 @@
                                 <div class="input-group">
                                     <asp:Label runat="server" ID="lbdstPostalCode" Text="รหัสไปรษณีย์" CssClass="input-group-text s-15px shadow"></asp:Label>
                                     <asp:TextBox runat="server" ID="txtdstPostalCode" CssClass="form-control s-15px shadow" AutoCompleteType="Disabled"></asp:TextBox>
-                                    <asp:RegularExpressionValidator ID="RegularExpressionValidator5" runat="server" ControlToValidate="txtdstPostalCode" ErrorMessage="กรุณากรอกรหัสไปรษณีย์ให้ถูกต้อง" ValidationExpression="[0-9]{5}" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
+                                    <asp:RegularExpressionValidator ID="RegularExpressionValidator5" runat="server" ControlToValidate="txtdstPostalCode" ErrorMessage="กรุณากรอกรหัสไปรษณีย์ให้ถูกต้อง" ValidationExpression="[0-9]{5}" Display="Dynamic" ForeColor="Red" SetFocusOnError="true"></asp:RegularExpressionValidator>
                                     <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator6" ControlToValidate="txtdstPostalCode" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1"  />--%>
                                 </div>
                             </div>

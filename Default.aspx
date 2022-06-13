@@ -70,7 +70,7 @@
 
         <asp:Label runat="server" ID="lbForm" Text="Transportation Outsource(Admin)" CssClass="h1"></asp:Label>
         <asp:Label runat="server" ID="lbuserid" Visible="false"></asp:Label>
-        <div class="row justify-content-end">
+        <div class="row justify-content-end ">
             <div class=" col-lg-2 col-md-2 col-sm-6 mt-3 ">
                 <asp:Button runat="server" ID="btnCreateOrder" Text="Create Order" CssClass="btn btn-primary s-15px" Width="100%" OnClick="btnCreateOrder_Click" UseSubmitBehavior="false" />
             </div>
@@ -87,9 +87,11 @@
             <Columns>
                 <asp:TemplateField>
                     <ItemTemplate>
-                        <asp:Label runat="server" ID="lbStatusComment" CssClass="status-tracking" Text='<%# Bind("CM_Status") %>'></asp:Label>
-                        <asp:Label runat="server" ID="lbDateCreate" Text='<%# Bind("CM_DateCreate") %>'></asp:Label>
+                        <asp:Label runat="server" ID="lbStatusComment" CssClass="status-tracking" Text='<%# Bind("CM_Status") %>'></asp:Label>&nbsp;
+                        (<asp:Label runat="server" ID="lbDateCreate" Text='<%# Bind("CM_DateCreate") %>'></asp:Label>)
                         <asp:Label runat="server" ID="lbComment" Text='<%# Bind("CM_Message") %>'></asp:Label>
+                        <asp:label runat="server" id="lbNew" Text="NEW" ForeColor="Red" visible="false">
+                        </asp:label>
                     </ItemTemplate>
                     <ItemStyle CssClass="mb-2 small" Height="20px" />
                 </asp:TemplateField>
@@ -97,7 +99,7 @@
         </asp:GridView> 
         </div>
     </div>
-    <div class="mt-5">
+    <div class="mt-2">
         <div class="row">
             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 gy-3">
                 <div class=" input-group">

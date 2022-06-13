@@ -80,14 +80,15 @@ namespace Carrier
                 var enUS = new CultureInfo("en-US");
                 if (permission.TypeWarehouse != null)
                 {
-                    if (permission.TypeWarehouse == "SFG")
+                    switch (permission.TypeWarehouse)
                     {
-                        orderList = orderList.Where(w => w.TypeSendKa != "SDC1").ToList();
-                    }
-                    else
-                    {
-
-                        orderList = orderList.Where(w => w.TypeSendKa == permission.TypeWarehouse).ToList();
+                        case "SFG":
+                            orderList = orderList.Where(w => w.TypeSendKa != "SDC1" && w.TypeSendKa != "ROX").ToList();
+                            break;
+                        case "SDC1":
+                        case "ROX":
+                            orderList = orderList.Where(w => w.TypeSendKa == permission.TypeWarehouse).ToList();
+                            break;
                     }
                 }
                 if (txtDateStart.Text != "" && txtDateEnd.Text != "")
@@ -359,7 +360,7 @@ namespace Carrier
                 }
 
             }
-            else if (permission == null)
+            else if (permission == null || permission.Permission == null)
             {
                 Response.Redirect("Home_Carrier.aspx");
             }
@@ -370,7 +371,7 @@ namespace Carrier
         }
         public void loadComment()
         {
-            var cm = carrier_Entities.Comment_System.ToList();
+            var cm = carrier_Entities.Comment_System.OrderByDescending(o => o.CM_DateCreate).ToList();
             if (cm.Count == 0)
             {
                 dv_Comment.Visible = false;
@@ -395,12 +396,21 @@ namespace Carrier
                 else if (lbStatusComment.Text == "2")
                 {
                     lbStatusComment.Text = "ประกาศ";
-                    lbStatusComment.BackColor = System.Drawing.Color.PaleVioletRed;
+                    lbStatusComment.BackColor = System.Drawing.Color.Red;
                     lbStatusComment.ForeColor = System.Drawing.Color.White;
                 }
-
                 Label lbDateCreate = (Label)row.FindControl("lbDateCreate");
                 lbDateCreate.Text = Convert.ToDateTime(lbDateCreate.Text).ToString("dd/MM/yyyy");
+                var datenow = DateTime.Now.ToString("dd/MM/yyyy");
+                Label lbNew = (Label)row.FindControl("lbNew");
+                if (lbDateCreate.Text == datenow)
+                {
+                    lbNew.Visible = true;
+                }
+                else
+                {
+                    lbNew.Visible = false;
+                }
 
             }
         }
