@@ -199,7 +199,6 @@
                 </Columns>
             </asp:GridView>
         </div>
-        <asp:GridView runat="server" ID="gv_Export" Visible="false" ></asp:GridView>
         <div aria-label="nav Page navigation example">
         <div class="btn-group" role="group" aria-label="Basic outlined example">
             <asp:LinkButton runat="server" ID="lkPrevious"  CssClass="btn btn-outline-primary " OnCommand="selectPage" Visible="false" >PREVIOUS</asp:LinkButton>

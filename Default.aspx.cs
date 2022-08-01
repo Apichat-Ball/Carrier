@@ -843,8 +843,8 @@ namespace Carrier
                     messageAlert = listmess.message + "\n";
                 }
 
-
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + messageAlert + "')", true);
+                Page myPage = (Page)HttpContext.Current.Handler;
+                ScriptManager.RegisterClientScriptBlock(myPage, myPage.GetType(), "alertMessage", "alert('" + messageAlert + "')", true);
                 div_Page_Bar.Visible = true;
                 Response.Redirect("Default.aspx");
             }
@@ -941,9 +941,12 @@ namespace Carrier
             {
                 his = carrier_Entities.History_Notify_Order.Where(w => w.SaveFrom == null && w.Date_Notify >= dateOld && w.Date_Notify <= dateNew && w.Type_Send_KA == permission.TypeWarehouse).ToList();
             }
+            else if(permission.TypeWarehouse == "ROX")
+            {
+                his = carrier_Entities.History_Notify_Order.Where(w => w.SaveFrom == null && w.Date_Notify >= dateOld && w.Date_Notify <= dateNew && w.Type_Send_KA == permission.TypeWarehouse).ToList();
+            }
             else
             {
-                var ss = carrier_Entities.History_Notify_Order.ToList();
                 his = carrier_Entities.History_Notify_Order.Where(w => w.SaveFrom == null && w.Date_Notify >= dateOld && w.Date_Notify <= dateNew ).ToList();
             }
             var listHistory = his.Select(s=>new

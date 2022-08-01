@@ -762,7 +762,7 @@ namespace Carrier.Service
                     }
                     else
                     {
-                        if (!item.siteStorage.StartsWith("CENTER"))
+                        if (item.siteStorage != "CENTER")
                         {
                             return "SiteStorage ใช้ได้แค่ CENTER ";
                         }
@@ -774,49 +774,8 @@ namespace Carrier.Service
                                 return "Brand นี้ไม่พบ Profit ";
                             }
                         }
+
                     }
-                    /* if (item.siteStorage.StartsWith("CENTER"))
-                     {
-                         var BGShort = BG.Select(s => s.Depart_Short).FirstOrDefault();
-                         var centerSite = entities_Carrier.Site_Center.Where(w => BGShort == w.Brand_Center_Short).ToList();
-                         if (centerSite.Count == 0)
-                         {
-                             var pro = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn && w.Brand == BGShort).ToList();
-                             if (pro.Count == 0)
-                             {
-                                 return "Brand นี้ไม่พบ Profit ";
-                             }
-                         }
-                     }
-                     else
-                     {
-                         var SaleChannel = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Sale_Channel).FirstOrDefault();
-                         if (SaleChannel != "Shop")
-                         {
-                             var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
-                             if (brandProfit.Count == 0)
-                             {
-                                 return "ไม่พบ SiteStorage นี้ครับ";
-                             }
-                             BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
-                             if (BG.Count() == 0)
-                             {
-                                 return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
-                             }
-                         }
-                         else
-                         {
-                             var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
-                             BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
-                             if (BG.Count() == 0)
-                             {
-                                 return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
-                             }
-                         }
-
-                     }*/
-
-
                 }
 
             }

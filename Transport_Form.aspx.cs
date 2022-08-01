@@ -267,6 +267,9 @@ namespace Carrier
                     ddlFavorites.DataBind();
                     ddlFavorites.Items.Insert(3, new ListItem { Value = "ROX", Text = "R.O.X.Flagship store" });
                     ddlFavorites.SelectedValue = query.TypeSendKO;
+                    lbFavorites.Visible = true;
+                    ddlFavorites.Visible = true;
+                    ddlFavorites.Enabled = false;
                     allFavorite.Add(new newList { val = "Depart", text = "หน้าร้าน" });
                     allFavorite.Add(new newList { val = "CENTER", text = "ลูกค้า" });
                     allFavorite.Add(new newList { val = "Event", text = "Event" });

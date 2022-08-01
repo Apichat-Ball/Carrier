@@ -367,6 +367,7 @@ namespace Carrier
                 ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Process : ERROR! ได้ทำการส่งไปทาง Dev เรียบร้อยโปรดรอการปรับปรุง ')", true);
             }
             btnClose_Click(this, EventArgs.Empty);
+            loadProfit("");
         }
 
         protected void imgbtnDel_Click(object sender, ImageClickEventArgs e)
