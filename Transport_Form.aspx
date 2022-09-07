@@ -291,7 +291,7 @@
                                 <div class=" input-group">
                                     <asp:Label runat="server" ID="lbdstDetailAddress" Text="รายละเอียดที่อยู่" CssClass="input-group-text s-15px shadow"></asp:Label>
                                     <asp:TextBox runat="server" ID="txtdstDetailAddress" CssClass="form-control s-15px shadow" AutoCompleteType="Disabled" TextMode="MultiLine" Rows="3"></asp:TextBox>
-
+                                    <%--<asp:RegularExpressionValidator ID="RegularExpressionValidator6" runat="server" ControlToValidate="txtdstDetailAddress" ErrorMessage="ที่อยู่ไม่ควรมีเครื่องหมาย + *" ValidationExpression="[\w\s-/(),]*" Display="Dynamic" ForeColor="Red" SetFocusOnError="true"></asp:RegularExpressionValidator>--%>
                                 </div>
                             </div>
                         </div>

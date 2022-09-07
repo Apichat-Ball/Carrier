@@ -5,6 +5,17 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="CarrierModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="API_Carrier_Log">
+          <Key>
+            <PropertyRef Name="dateSend" />
+          </Key>
+          <Property Name="dateSend" Type="datetime" Nullable="false" />
+          <Property Name="path" Type="nvarchar" MaxLength="100" />
+          <Property Name="status" Type="nvarchar" MaxLength="20" />
+          <Property Name="request" Type="nvarchar(max)" />
+          <Property Name="respon" Type="nvarchar(max)" />
+          <Property Name="fromFlash" Type="nvarchar(max)" />
+        </EntityType>
         <EntityType Name="Article_Category">
           <Key>
             <PropertyRef Name="ArticleCode" />
@@ -130,6 +141,15 @@
           <Property Name="ticketPickupId" Type="nvarchar" MaxLength="20" />
           <Property Name="TypeSendKO" Type="nvarchar" MaxLength="20" />
         </EntityType>
+        <EntityType Name="RunDocno">
+          <Key>
+            <PropertyRef Name="Type" />
+            <PropertyRef Name="Year" />
+          </Key>
+          <Property Name="Type" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="Year" Type="int" Nullable="false" />
+          <Property Name="RunNo" Type="int" />
+        </EntityType>
         <EntityType Name="Site_Center">
           <Key>
             <PropertyRef Name="Brand_Center_Short" />
@@ -175,6 +195,7 @@
           <Property Name="TypeWarehouse" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityContainer Name="CarrierModelStoreContainer">
+          <EntitySet Name="API_Carrier_Log" EntityType="Self.API_Carrier_Log" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Article_Category" EntityType="Self.Article_Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comment_System" EntityType="Self.Comment_System" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event_Shop" EntityType="Self.Event_Shop" Schema="dbo" store:Type="Tables" />
@@ -183,6 +204,7 @@
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order_Box" EntityType="Self.Order_Box" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order_Item" EntityType="Self.Order_Item" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RunDocno" EntityType="Self.RunDocno" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Site_Center" EntityType="Self.Site_Center" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Site_Profit" EntityType="Self.Site_Profit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
@@ -207,6 +229,8 @@
           <EntitySet Name="History_Notify_Order" EntityType="CarrierModel.History_Notify_Order" />
           <EntitySet Name="Status_Notify_Order" EntityType="CarrierModel.Status_Notify_Order" />
           <EntitySet Name="Comment_System" EntityType="CarrierModel.Comment_System" />
+          <EntitySet Name="API_Carrier_Log" EntityType="CarrierModel.API_Carrier_Log" />
+          <EntitySet Name="RunDocnoes" EntityType="CarrierModel.RunDocno" />
         </EntityContainer>
         <EntityType Name="Article_Category">
           <Key>
@@ -376,6 +400,26 @@
           <Property Name="CM_Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CM_Status" Type="Int32" />
           <Property Name="CM_DateCreate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="API_Carrier_Log">
+          <Key>
+            <PropertyRef Name="dateSend" />
+          </Key>
+          <Property Name="dateSend" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="path" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="request" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="respon" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="fromFlash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="RunDocno">
+          <Key>
+            <PropertyRef Name="Type" />
+            <PropertyRef Name="Year" />
+          </Key>
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Year" Type="Int32" Nullable="false" />
+          <Property Name="RunNo" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -560,6 +604,27 @@
                 <ScalarProperty Name="CM_Status" ColumnName="CM_Status" />
                 <ScalarProperty Name="CM_Message" ColumnName="CM_Message" />
                 <ScalarProperty Name="CM_ID" ColumnName="CM_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="API_Carrier_Log">
+            <EntityTypeMapping TypeName="CarrierModel.API_Carrier_Log">
+              <MappingFragment StoreEntitySet="API_Carrier_Log">
+                <ScalarProperty Name="fromFlash" ColumnName="fromFlash" />
+                <ScalarProperty Name="respon" ColumnName="respon" />
+                <ScalarProperty Name="request" ColumnName="request" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="path" ColumnName="path" />
+                <ScalarProperty Name="dateSend" ColumnName="dateSend" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RunDocnoes">
+            <EntityTypeMapping TypeName="CarrierModel.RunDocno">
+              <MappingFragment StoreEntitySet="RunDocno">
+                <ScalarProperty Name="RunNo" ColumnName="RunNo" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

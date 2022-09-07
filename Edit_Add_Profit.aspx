@@ -37,7 +37,7 @@
                         <asp:ImageButton runat="server" ID="imgbtnAdd" ImageUrl="~/Icon/add.png" Width="30px" CssClass="float-end" OnClick="imgbtnAdd_Click" />
                     </div>
                     <div>
-                        <asp:GridView runat="server" ID="gv_main" AutoGenerateColumns="false" CssClass="table table-bordered table-hover small table-sm" HeaderStyle-BackColor="GradientActiveCaption"
+                        <asp:GridView runat="server" ID="gv_main" AutoGenerateColumns="false" CssClass="table table-bordered table-hover small table-sm" HeaderStyle-BackColor="DarkGray"
                             EmptyDataText="No Data">
                             <Columns>
                                 <asp:TemplateField>

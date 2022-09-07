@@ -38,5 +38,7 @@ namespace Carrier.Model.Carrier
         public virtual DbSet<History_Notify_Order> History_Notify_Order { get; set; }
         public virtual DbSet<Status_Notify_Order> Status_Notify_Order { get; set; }
         public virtual DbSet<Comment_System> Comment_System { get; set; }
+        public virtual DbSet<API_Carrier_Log> API_Carrier_Log { get; set; }
+        public virtual DbSet<RunDocno> RunDocnoes { get; set; }
     }
 }

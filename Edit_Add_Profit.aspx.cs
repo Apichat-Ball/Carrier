@@ -49,8 +49,8 @@ namespace Carrier
                 var depCen = carrier_Entities.Site_Center.Where(w => w.Brand_Center_Short == dep.nameShot).FirstOrDefault();
                 if(depCen != null)
                 {
-                    dep.name = "(" + depCen.Brand_Center_Name_Full + ")" + dep.name;
-                    dep.nameShot = depCen.Brand_Center_Name_Full;
+                    dep.name = "(" + depCen.Brand_Center_Short + ")" + dep.name;
+                    dep.nameShot = depCen.Brand_Center_Short;
                 }
                 else
                 {
@@ -74,7 +74,7 @@ namespace Carrier
             var profit = carrier_Entities.Site_Profit.ToList();
             if (center != null)
             {
-                profit = profit.Where(w => w.Brand == center.Brand_Center_Name_Full).ToList();
+                profit = profit.Where(w => w.Brand == center.Brand_Center_Short).ToList();
             }
             else
             {
@@ -220,9 +220,9 @@ namespace Carrier
 
             }catch(Exception ex)
             {
-                service_Flashs.SendMail("apichat.f@sfg-th.com", new string[] { }, "Site_Profit_Add_New ERROR",
+                service_Flashs.SendMail("apichat.f@sfg-th.com", new string[] { }, "Site_Profit_Edit ERROR",
                     "<HTML>" +
-                "<body>" +
+                "<body><p>OLD</p>" +
                 "<p>SiteStorage : " + profit.Site_Stroage + "</p>" +
                 "<p>Brand : " + lbBrandTemp.Text + "</p>" +
                 "<p>Channel : " + profit.Channel + "</p>" +
@@ -230,10 +230,18 @@ namespace Carrier
                 "<p>COMCODE : " + profit.COMCODE + "</p>" +
                 "<p>Profit : " + profit.Profit + "</p>" +
                 "<p>Costcenter : " + profit.Costcenter + "</p>" +
-                "<p>ERROR : " + ex.Message + "</p>" +
-                "</body>" +
+                "<p>New</p>"+
+                "<p>SiteStorage : " + txtSiteStorage.Text + "</p>" +
+                "<p>Brand : " + lbBrandTemp.Text + "</p>" +
+                "<p>Channel : " + ddlChannel.SelectedValue + "</p>" +
+                "<p>Sale_Channel : " + ddlSaleChannel.SelectedValue + "</p>" +
+                "<p>COMCODE : " + txtComcode.Text + "</p>" +
+                "<p>Profit : " + txtProfit.Text + "</p>" +
+                "<p>Costcenter : " + txtCostcenter.Text + "</p>" +
+                "<p>ERROR : " + ex.Message + "</p><p>UserID : " + Session["_UserID"].ToString() +
+                "</p></body>" +
                 "</HTML>");
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Process : ERROR! Update Entity กรุณาติดต่อ dev ')", true);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Process : ERROR! Update Entity กรุณาติดต่อ [MIS]Ball ')", true);
 
             }
             imgbtnCancel.Visible = false;
@@ -347,24 +355,36 @@ namespace Carrier
                 site.COMCODE = txtComcodeADD.Text;
                 site.Profit = txtProfitADD.Text;
                 site.Costcenter = txtCostcenterADD.Text;
+                var BG = (from ha in insideSFG_WF_Entities.BG_HApprove
+                          join haP in insideSFG_WF_Entities.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
+                          where haP.Depart_Short == site.Brand && ha.Sta == "B" && ha.departmentID != "1508"
+                          select ha).FirstOrDefault();
+                if(BG != null)
+                {
+                    var cariCenter = carrier_Entities.Site_Center.Where(w => w.Brand_Center_Name_Full == BG.department_ || w.Brand_Center_Name_Full == site.Brand).FirstOrDefault();
+                    if(cariCenter == null)
+                    {
+                        carrier_Entities.Site_Center.Add(new Site_Center { Brand_Center_Short = site.Brand, Brand_Center_Name_Full = site.Brand });
+                    }
+                }
                 carrier_Entities.Site_Profit.Add(site);
                 carrier_Entities.SaveChanges();
             }catch(Exception ex)
             {
                 service_Flashs.SendMail("apichat.f@sfg-th.com",new string[] { },"Site_Profit_Add_New ERROR",
                     "<HTML>" +
-                "<body>" +
+                "<body><p>NEW</p>" +
                 "<p>SiteStorage : " + site.Site_Stroage + "</p>" +
                 "<p>Brand : " + ddlBrandADD.SelectedItem.Text + "(" + site.Brand + ")" + "</p>" +
                 "<p>Channel : " + site.Channel + "</p>" +
                 "<p>Sale_Channel : " + site.Sale_Channel + "</p>"+
                 "<p>COMCODE : " + site.COMCODE + "</p>"+
                 "<p>Profit : " + site.Profit + "</p>"+
-                "<p>Costcenter : " + site.Costcenter + "</p>"+
-                "<p>ERROR : " + ex.Message + "</p>"+
-                "</body>"+
+                "<p>Costcenter : " + site.Costcenter + "</p>"+ 
+                "<p>ERROR : " + ex.Message + "</p><p>UserID : "+ Session["_UserID"].ToString() +
+                "</p></body>" +
                 "</HTML>");
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Process : ERROR! ได้ทำการส่งไปทาง Dev เรียบร้อยโปรดรอการปรับปรุง ')", true);
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Process : ERROR! ได้ทำการส่งไปทาง Dev เรียบร้อยโปรดรอการปรับปรุง หรือติดต่อ [MIS]Ball')", true);
             }
             btnClose_Click(this, EventArgs.Empty);
             loadProfit("");
@@ -379,6 +399,7 @@ namespace Carrier
             var del = carrier_Entities.Site_Profit.Where(w => w.Site_Stroage == lbSiteStorage.Text && w.Brand == lbBrandTemp.Text).FirstOrDefault();
             carrier_Entities.Site_Profit.Remove(del);
             carrier_Entities.SaveChanges();
+            loadProfit("");
         }
     }
     public class BrandShowInfo

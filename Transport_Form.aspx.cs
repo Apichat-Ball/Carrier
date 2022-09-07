@@ -842,6 +842,7 @@ namespace Carrier
             var Act = Request.QueryString["Act"];
             if(Act != "Edit")
             {
+                //V1
                 var docno = Carrier_Entities.Orders.Where(w=>w.Docno.StartsWith("FL")).ToList().LastOrDefault();
                 var newId = "";
                 if (docno == null)
@@ -855,6 +856,49 @@ namespace Carrier
                     var lastId = Convert.ToInt32(newId.Substring(2, 10)) + 1;
                     newId = newId.Substring(0, 2) + newId.Substring(2, 10 - lastId.ToString().Length) + lastId.ToString();
                 }
+
+                #region V2
+                /*
+                 var yearnow = "FL"+  DateTime.Now.Year.ToString().Substring(2,2);
+                var docno = Carrier_Entities.Orders.Where(w=>w.Docno.StartsWith(yearnow) ).ToList().OrderBy(o=>o.Date_send).LastOrDefault();
+                var newId = "";
+                if (docno == null)
+                {
+                    var docnoRun = Carrier_Entities.RunDocnoes.Where(w => w.Type == "FL" && w.Year == DateTime.Now.Year).FirstOrDefault();
+                    if (docnoRun == null)
+                    {
+                        Carrier_Entities.RunDocnoes.Add(new RunDocno { Type = "FL", Year = DateTime.Now.Year, RunNo = 1 });
+                        Carrier_Entities.SaveChanges();
+                    }
+                    else
+                    {
+                        docnoRun.RunNo = 1;
+                        Carrier_Entities.SaveChanges();
+                    }
+                    var id = "FL"+DateTime.Now.Year.ToString().Substring(2,2)+"00000001";
+                    newId = id;
+                }
+                else
+                {
+                    var docnoRun = Carrier_Entities.RunDocnoes.Where(w => w.Type == "FL" && w.Year == DateTime.Now.Year).FirstOrDefault();
+                    if(docnoRun == null)
+                    {
+                        var last = Convert.ToInt32(docno.Docno.Substring(4, 8)) +1;
+                        Carrier_Entities.RunDocnoes.Add(new RunDocno { Type = "FL", Year = DateTime.Now.Year, RunNo = last });
+                        Carrier_Entities.SaveChanges();
+                        var docnoID = "FL" + DateTime.Now.Year.ToString().Substring(2, 2) + docno.Docno.Substring(4, 8 -last.ToString().Length) + last.ToString();
+                        newId = docnoID;
+                    }
+                    else
+                    {
+                        var last = docnoRun.RunNo + 1;
+                        newId = docno.Docno.Substring(0, 4) + docno.Docno.Substring(4, 8 - last.ToString().Length) + last;
+                        docnoRun.RunNo += 1;
+                        Carrier_Entities.SaveChanges();
+                    }
+                }
+                 */
+                #endregion
 
                 var siteCode = "";
                 if (txtSiteStorage.Text.Length >= 4)

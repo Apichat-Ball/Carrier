@@ -260,6 +260,7 @@
     </Content>
     <Content Include="Report_ACC.aspx" />
     <Content Include="Report_Brand.aspx" />
+    <Content Include="RunAuto.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -514,6 +515,9 @@
       <DependentUpon>Home_Carrier.aspx</DependentUpon>
     </Compile>
     <Compile Include="Info\CreateOrderInfo.cs" />
+    <Compile Include="Model\Carrier\API_Carrier_Log.cs">
+      <DependentUpon>Carrier_model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Carrier\Article_Category.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
@@ -551,6 +555,9 @@
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Carrier\Order_Item.cs">
+      <DependentUpon>Carrier_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Carrier\RunDocno.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Carrier\Site_Center.cs">
@@ -675,6 +682,13 @@
     </Compile>
     <Compile Include="Report_Brand.aspx.designer.cs">
       <DependentUpon>Report_Brand.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="RunAuto.aspx.cs">
+      <DependentUpon>RunAuto.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RunAuto.aspx.designer.cs">
+      <DependentUpon>RunAuto.aspx</DependentUpon>
     </Compile>
     <Compile Include="Service\Service_Flash.cs" />
     <Compile Include="Site.Master.cs">

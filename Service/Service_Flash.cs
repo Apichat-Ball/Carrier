@@ -112,12 +112,16 @@ namespace Carrier.Service
 
                     entities_Carrier.Order_Item.Add(order);
                     entities_Carrier.SaveChanges();
+                    entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Create_Transport", request = "{https://api.flashexpress.com/open/v3/orders?" + headerpara + "&sign=" + sign + "}", status = j["code"].ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(new Model_Trackingno { success = true, trackingno = j["data"]["pno"].ToString() }) });
+                    entities_Carrier.SaveChanges();
                     return new Model_Trackingno { success = true, trackingno = j["data"]["pno"].ToString() };
                 }
                 else
                 {
                     var selectOrder = entities_Carrier.Orders.Where(w => w.Docno == docno).FirstOrDefault();
                     entities_Carrier.Orders.Remove(selectOrder);
+                    entities_Carrier.SaveChanges();
+                    entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Create_Transport", request = "{https://api.flashexpress.com/open/v3/orders?" + headerpara + "&sign=" + sign + "}", status = j["code"].ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(new Model_Trackingno { success = false, trackingno = j["message"].ToString() }) });
                     entities_Carrier.SaveChanges();
                     return new Model_Trackingno { success = false, trackingno = j["message"].ToString() };
                 }
@@ -649,6 +653,11 @@ namespace Carrier.Service
                 return "ช่องหมายเหตุห้ามใส่เครื่องหมาย +";
             }
 
+            if(item.dstDetailAddress.Contains("#")|| item.dstDetailAddress.Contains("*") || item.dstDetailAddress.Contains("+"))
+            {
+                return "ที่อยู่รายละเอียดผู้รับห้ามใช้ตัวอักษรดังนี้ # * +";
+            }
+
             if (item.siteStorage.Length < 6)
             {
                 return "กรุณาใส่ SiteStorage ไม่ต่ำกว่า 6 ตัวครับ";
@@ -972,10 +981,10 @@ namespace Carrier.Service
                 smtp.Host = "smtp.gmail.com";
                 smtp.EnableSsl = true;
                 smtp.Port = 587;
-                smtp.Credentials = new NetworkCredential("Online.starfashiongroup2551@gmail.com", "Star2009");
-                using (objMail = new System.Net.Mail.MailMessage("Online.starfashiongroup2551@gmail.com", addressTo))
+                smtp.Credentials = new NetworkCredential("mis.starfashiongroup@gmail.com", "cljsefqhkviuckfl");
+                using (objMail = new System.Net.Mail.MailMessage("mis.starfashiongroup@gmail.com", addressTo))
                 {
-                    objMail.From = new System.Net.Mail.MailAddress("Online.starfashiongroup2551@gmail.com", "Starfashion Group");
+                    objMail.From = new System.Net.Mail.MailAddress("mis.starfashiongroup@gmail.com", "Starfashion Group");
                     if (addressCC != null)
                     {
                         foreach (var i in addressCC)

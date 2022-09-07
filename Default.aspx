@@ -328,7 +328,7 @@
             </div>
         </div>
     <!-- Timer Tick for click update -->
-    <div>
+   <%-- <div>
         <asp:Timer runat="server" ID="Time1" OnTick="Time1_Tick" Interval="1000">
         </asp:Timer>
         <asp:UpdatePanel runat="server" ID="upPanel" UpdateMode="Conditional">
@@ -339,5 +339,5 @@
                 <asp:Label runat="server" ID="lbTime" Visible="false"></asp:Label>
             </ContentTemplate>
         </asp:UpdatePanel>
-    </div>
+    </div>--%>
 </asp:Content>

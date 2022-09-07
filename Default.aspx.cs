@@ -1049,17 +1049,17 @@ namespace Carrier
             Response.Redirect("Transport_Form?Docno=" + lkbDocno.Text+"&Act=Edit");
         }
 
-        protected void Time1_Tick(object sender, EventArgs e)
-        {
+        //protected void Time1_Tick(object sender, EventArgs e)
+        //{
 
-            //var date = Convert.ToDateTime(lbTime.Text != ""? lbTime.Text : DateTime.Now.ToString("H:mm"));
-            var date = DateTime.Now;
-            var minute = date.Minute;
-            if((minute%30) == 0)
-            {
-                btnUpdatePno_Click(this, EventArgs.Empty);
-            }
-        }
+        //    //var date = Convert.ToDateTime(lbTime.Text != ""? lbTime.Text : DateTime.Now.ToString("H:mm"));
+        //    var date = DateTime.Now;
+        //    var minute = date.Minute;
+        //    if((minute%30) == 0)
+        //    {
+        //        btnUpdatePno_Click(this, EventArgs.Empty);
+        //    }
+        //}
 
         
     }
