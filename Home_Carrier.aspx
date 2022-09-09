@@ -129,6 +129,14 @@
                 </asp:TemplateField>
                 <asp:TemplateField>
                     <HeaderTemplate>
+                        <asp:Label runat="server" ID="lbhSRC" Text="จุดรับ"></asp:Label>
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:Label runat="server" ID="lbSRC" Text='<%# Bind("TypesendKO") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField>
+                    <HeaderTemplate>
                         <asp:Label runat="server" ID="lbhBrand" Text="Brand"></asp:Label>
                     </HeaderTemplate>
                     <ItemTemplate>

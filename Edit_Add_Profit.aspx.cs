@@ -217,9 +217,49 @@ namespace Carrier
             try
             {
                 carrier_Entities.SaveChanges();
+                var a = new
+                {
+                    Brand = lbBrandTemp.Text,
+                    Site_Stroage = txtSiteStorage.Text,
+                    Channel = ddlChannel.SelectedValue,
+                    Sale_Channel = ddlSaleChannel.SelectedValue,
+                    COMCODE = txtComcode.Text,
+                    Costcenter = txtCostcenter.Text,
+                    Profit = txtProfit.Text
+                };
+                carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log
+                {
+                    dateSend = DateTime.Now,
+                    path = "Carrier/Edit_Add_Profit",
+                    status = "1",
+                    request = Newtonsoft.Json.JsonConvert.SerializeObject(a),
+                    respon = "Success"
+                });
+                carrier_Entities.SaveChanges();
 
-            }catch(Exception ex)
+            }
+            catch(Exception ex)
             {
+                var a = new {
+                    Brand = lbBrandTemp.Text,
+                    Site_Stroage = txtSiteStorage.Text,
+                    Channel = ddlChannel.SelectedValue,
+                    Sale_Channel = ddlSaleChannel.SelectedValue,
+                    COMCODE = txtComcode.Text,
+                    Costcenter = txtCostcenter.Text,
+                    Profit = txtProfit.Text
+                };
+                carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log
+                {
+                    dateSend = DateTime.Now,
+                    path = "Carrier/Edit_Add_Profit",
+                    status = "2",
+                    request = Newtonsoft.Json.JsonConvert.SerializeObject(a),
+                    respon = ex.Message
+                });
+                carrier_Entities.SaveChanges();
+
+
                 service_Flashs.SendMail("apichat.f@sfg-th.com", new string[] { }, "Site_Profit_Edit ERROR",
                     "<HTML>" +
                 "<body><p>OLD</p>" +
@@ -369,8 +409,30 @@ namespace Carrier
                 }
                 carrier_Entities.Site_Profit.Add(site);
                 carrier_Entities.SaveChanges();
+
+                carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log
+                {
+                    dateSend = DateTime.Now,
+                    path = "Carrier/Edit_Add_Profit",
+                    request = Newtonsoft.Json.JsonConvert.SerializeObject(site),
+                    status = "1",
+                    respon = "Success"
+                });
+                carrier_Entities.SaveChanges();
+
+
             }catch(Exception ex)
             {
+                carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log
+                {
+                    dateSend = DateTime.Now,
+                    path = "Carrier/Edit_Add_Profit",
+                    request = Newtonsoft.Json.JsonConvert.SerializeObject(new Site_Center { Brand_Center_Short = site.Brand, Brand_Center_Name_Full = site.Brand }),
+                    respon = ex.Message,
+                    status = "2"
+                });
+                carrier_Entities.SaveChanges();
+
                 service_Flashs.SendMail("apichat.f@sfg-th.com",new string[] { },"Site_Profit_Add_New ERROR",
                     "<HTML>" +
                 "<body><p>NEW</p>" +

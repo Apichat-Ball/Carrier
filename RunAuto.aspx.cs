@@ -49,11 +49,27 @@ namespace Carrier
                     }
                     var lenght = (Convert.ToInt32(lastNo.Substring(3, 5)) + 1).ToString().Length;
                     var newNo = lastNo.Substring(0, 8 - lenght) + (Convert.ToInt32(lastNo.Substring(3, 5)) + 1).ToString();
-                    if (his.Count == 0)
+                    try
                     {
-                        carrier_Entities.History_Notify_Order.Add(new History_Notify_Order { Date_Notify = DateTime.Now, Docno = order.FirstOrDefault().Docno, pno = order.FirstOrDefault().pno, Type_Send_KA = order.FirstOrDefault().TypeSendKO, History_NO = newNo, SaveFrom = "Update" });
+                        if (his.Count == 0)
+                        {
+                            carrier_Entities.History_Notify_Order.Add(new History_Notify_Order { Date_Notify = DateTime.Now, Docno = order.FirstOrDefault().Docno, pno = order.FirstOrDefault().pno, Type_Send_KA = order.FirstOrDefault().TypeSendKO, History_NO = newNo, SaveFrom = "Update" });
+                            carrier_Entities.SaveChanges();
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                        carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log
+                        {
+                            dateSend = DateTime.Now,
+                            path = "Carrier/RunAuto_ADD_History_Notify",
+                            request = Newtonsoft.Json.JsonConvert.SerializeObject(new History_Notify_Order { Date_Notify = DateTime.Now, Docno = order.FirstOrDefault().Docno, pno = order.FirstOrDefault().pno, Type_Send_KA = order.FirstOrDefault().TypeSendKO, History_NO = newNo, SaveFrom = "Update" }),
+                            status = "2",
+                            respon = ex.Message
+                        });
                         carrier_Entities.SaveChanges();
                     }
+                    
 
                 }
             }

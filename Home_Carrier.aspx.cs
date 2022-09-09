@@ -47,6 +47,12 @@ namespace Carrier
         {
             var user = Convert.ToInt32(lbuserid.Text);
             var maxrow = 10;
+            /*allFavorite.Insert(0, new newList { val = "select", text = "เลือกผู้ส่งที่ใช้บ่อย" });
+                    allFavorite.Insert(1, new newList { val = "SFG", text = "Star Fashion Group" });
+                    allFavorite.Insert(2, new newList { val = "SDC1", text = "SDC1" });
+                    ddlFavorites.DataSource = allFavorite;
+                    ddlFavorites.DataBind();
+                    ddlFavorites.Items.Insert(3, new ListItem{ Value = "ROX", Text = "R.O.X.Flagship store" });*/
             var orderList = (from orderItem in carrier_Entities.Order_Item
                              join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
                              where order.UserID == user && orderItem.Status != "C"
@@ -54,6 +60,7 @@ namespace Carrier
                              {
                                  Docno = orderItem.Docno,
                                  pno = orderItem.pno,
+                                 TypesendKO = orderItem.TypeSendKO == "SDC1" ? "SDC1" : orderItem.TypeSendKO == "ROX" ? "R.O.X.Flagship store" : "Star Fashion Group",
                                  srcName = order.srcName,
                                  dstName = order.dstName,
                                  ArticleCategory = carrier_Entities.Article_Category.Where(w => w.ArticleCode == order.articleCategory).ToList().FirstOrDefault().ArticleName,
@@ -135,7 +142,7 @@ namespace Carrier
                                 var a = service_Flashs.CheckNotify(lkDocno.Text);
                                 if (a != "")
                                 {
-                                    lbTimeTrackingText.Text = service_Flashs.CheckNotify(lkDocno.Text);
+                                    lbTimeTrackingText.Text = a;
                                 }
                             }
                             else
@@ -154,7 +161,7 @@ namespace Carrier
                                 var a = service_Flashs.CheckNotify(lkDocno.Text);
                                 if (a != "")
                                 {
-                                    lbTimeTrackingText.Text = service_Flashs.CheckNotify(lkDocno.Text);
+                                    lbTimeTrackingText.Text = a;
                                 }
                             }
                         }
