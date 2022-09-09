@@ -181,5 +181,26 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="API_Carrier_Log">
+      <EntityTypeMapping TypeName="CarrierModel.API_Carrier_Log">
+        <MappingFragment StoreEntitySet="API_Carrier_Log">
+          <ScalarProperty Name="fromFlash" ColumnName="fromFlash" />
+          <ScalarProperty Name="respon" ColumnName="respon" />
+          <ScalarProperty Name="request" ColumnName="request" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="path" ColumnName="path" />
+          <ScalarProperty Name="dateSend" ColumnName="dateSend" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RunDocnoes">
+      <EntityTypeMapping TypeName="CarrierModel.RunDocno">
+        <MappingFragment StoreEntitySet="RunDocno">
+          <ScalarProperty Name="RunNo" ColumnName="RunNo" />
+          <ScalarProperty Name="Year" ColumnName="Year" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>
