@@ -14,8 +14,6 @@
     <EntitySet Name="History_Notify_Order" EntityType="CarrierModel.History_Notify_Order" />
     <EntitySet Name="Status_Notify_Order" EntityType="CarrierModel.Status_Notify_Order" />
     <EntitySet Name="Comment_System" EntityType="CarrierModel.Comment_System" />
-    <EntitySet Name="API_Carrier_Log" EntityType="CarrierModel.API_Carrier_Log" />
-    <EntitySet Name="RunDocnoes" EntityType="CarrierModel.RunDocno" />
   </EntityContainer>
   <EntityType Name="Article_Category">
     <Key>
@@ -185,25 +183,5 @@
     <Property Name="CM_Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="CM_Status" Type="Int32" />
     <Property Name="CM_DateCreate" Type="DateTime" Precision="3" />
-  </EntityType>
-  <EntityType Name="API_Carrier_Log">
-    <Key>
-      <PropertyRef Name="dateSend" />
-    </Key>
-    <Property Name="dateSend" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="path" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-    <Property Name="status" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-    <Property Name="request" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="respon" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="fromFlash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-  </EntityType>
-  <EntityType Name="RunDocno">
-    <Key>
-      <PropertyRef Name="Type" />
-      <PropertyRef Name="Year" />
-    </Key>
-    <Property Name="Type" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
-    <Property Name="Year" Type="Int32" Nullable="false" />
-    <Property Name="RunNo" Type="Int32" />
   </EntityType>
 </Schema>
