@@ -27,7 +27,7 @@ namespace Carrier
         protected void Page_Load(object sender, EventArgs e)
         {
             Session.Clear();
-            //HttpContext.Current.Session["_UserID"] = "634";
+            //HttpContext.Current.Session["_UserID"] = "101635";
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();
@@ -718,6 +718,24 @@ namespace Carrier
                 }
                 var lenght = (Convert.ToInt32(lastNo.Substring(3, 5)) + 1).ToString().Length;
                 var newNo = lastNo.Substring(0, 8 - lenght) + (Convert.ToInt32(lastNo.Substring(3, 5)) + 1).ToString();
+
+                #region V2
+                //var checkNO = lastNolist.OrderByDescending(o => o.History_ID).FirstOrDefault().History_NO;
+                //if (checkNO.Length == 8)
+                //{
+                //    lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00001";
+                //}
+                //else if (checkNO.Substring(3, 2) != DateTime.Now.Year.ToString().Substring(2, 2))
+                //{
+                //    lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00001";
+                //}
+                //else
+                //{
+                //    lastNo = checkNO;
+                //}
+                //var lenght = (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString().Length;
+                //var newNo = lastNo.Substring(0, 8 - lenght) + (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString();
+                #endregion
                 foreach (var responseNotify in responseNotifyList)
                 {
                     if (responseNotify.code == 1)
@@ -1029,6 +1047,24 @@ namespace Carrier
                     }
                     var lenght = (Convert.ToInt32(lastNo.Substring(3, 5)) + 1).ToString().Length;
                     var newNo = lastNo.Substring(0, 8 - lenght) + (Convert.ToInt32(lastNo.Substring(3, 5)) + 1).ToString();
+
+                    #region V2
+                    //var checkNO = lastNolist.OrderByDescending(o => o.History_ID).FirstOrDefault().History_NO;
+                    //if (checkNO.Length == 8)
+                    //{
+                    //    lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00001";
+                    //}
+                    //else if (checkNO.Substring(3, 2) != DateTime.Now.Year.ToString().Substring(2, 2))
+                    //{
+                    //    lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00001";
+                    //}
+                    //else
+                    //{
+                    //    lastNo = checkNO;
+                    //}
+                    //var lenght = (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString().Length;
+                    //var newNo = lastNo.Substring(0, 8 - lenght) + (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString();
+                    #endregion
                     if (his.Count == 0)
                     {
                         carrier_Entities.History_Notify_Order.Add(new History_Notify_Order { Date_Notify = DateTime.Now, Docno = order.FirstOrDefault().Docno, pno = order.FirstOrDefault().pno, Type_Send_KA = order.FirstOrDefault().TypeSendKO, History_NO = newNo ,SaveFrom = "Update"});

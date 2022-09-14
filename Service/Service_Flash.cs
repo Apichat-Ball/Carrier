@@ -379,6 +379,9 @@ namespace Carrier.Service
                         resnotity.ticketMessage = j["data"]["ticketMessage"].ToString();
                         resnotity.dateSuccess = DateTime.Now;
                         resnotity.warehouseNo = "Wangnoi";
+
+                        entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Service_Flash/Notify", request = "https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign, status = resnotity.code.ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(resnotity) });
+                        entities_Carrier.SaveChanges();
                     }
                     else
                     {
@@ -386,6 +389,9 @@ namespace Carrier.Service
                         resnotity.code = Convert.ToInt32(j["code"]);
                         resnotity.message = j["message"].ToString();
                         resnotity.warehouseNo = "Wangnoi";
+
+                        entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Service_Flash/Notify", request = "https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign, status = resnotity.code.ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(resnotity) });
+                        entities_Carrier.SaveChanges();
 
                     }
                     listResnotify.Add(resnotity);
@@ -431,6 +437,8 @@ namespace Carrier.Service
                         resnotity.ticketMessage = j["data"]["ticketMessage"].ToString();
                         resnotity.dateSuccess = DateTime.Now;
                         resnotity.warehouseNo = "RXSFRXM1";
+                        entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Service_Flash/Notify", request = "https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign, status = resnotity.code.ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(resnotity) });
+                        entities_Carrier.SaveChanges();
                     }
                     else
                     {
@@ -438,6 +446,8 @@ namespace Carrier.Service
                         resnotity.code = Convert.ToInt32(j["code"]);
                         resnotity.message = j["message"].ToString();
                         resnotity.warehouseNo = "RXSFRXM1";
+                        entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Service_Flash/Notify", request = "https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign, status = resnotity.code.ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(resnotity) });
+                        entities_Carrier.SaveChanges();
 
                     }
                     listResnotify.Add(resnotity);
@@ -480,6 +490,8 @@ namespace Carrier.Service
                         resnotity.ticketMessage = j["data"]["ticketMessage"].ToString();
                         resnotity.dateSuccess = DateTime.Now;
                         resnotity.warehouseNo = "SFG";
+                        entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Service_Flash/Notify", request = "https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign, status = resnotity.code.ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(resnotity) });
+                        entities_Carrier.SaveChanges();
                     }
                     else
                     {
@@ -487,6 +499,8 @@ namespace Carrier.Service
                         resnotity.code = Convert.ToInt32(j["code"]);
                         resnotity.message = j["message"].ToString();
                         resnotity.warehouseNo = "SFG";
+                        entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Service_Flash/Notify", request = "https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign, status = resnotity.code.ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(resnotity) });
+                        entities_Carrier.SaveChanges();
 
                     }
                     listResnotify.Add(resnotity);

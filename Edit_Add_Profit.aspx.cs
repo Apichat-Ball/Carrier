@@ -459,8 +459,21 @@ namespace Carrier
             Label lbSiteStorage = (Label)row.FindControl("lbSiteStorage");
             Label lbBrandTemp = (Label)row.FindControl("lbBrandTemp");
             var del = carrier_Entities.Site_Profit.Where(w => w.Site_Stroage == lbSiteStorage.Text && w.Brand == lbBrandTemp.Text).FirstOrDefault();
-            carrier_Entities.Site_Profit.Remove(del);
-            carrier_Entities.SaveChanges();
+            try
+            {
+                carrier_Entities.Site_Profit.Remove(del);
+                carrier_Entities.SaveChanges();
+                carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Edit_Add_Profit/Del", request = Newtonsoft.Json.JsonConvert.SerializeObject(del), status = "1" , respon = "Success"});
+                carrier_Entities.SaveChanges();
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ทำการลบเรียบร้อย')", true);
+            }
+            catch (Exception ex)
+            {
+                carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Edit_Add_Profit/Del", request = Newtonsoft.Json.JsonConvert.SerializeObject(del), status = "2", respon = "Success" });
+                carrier_Entities.SaveChanges();
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ลบไม่สำเร็จ')", true);
+            }
+            
             loadProfit("");
         }
     }

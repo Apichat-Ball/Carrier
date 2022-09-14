@@ -49,6 +49,25 @@ namespace Carrier
                     }
                     var lenght = (Convert.ToInt32(lastNo.Substring(3, 5)) + 1).ToString().Length;
                     var newNo = lastNo.Substring(0, 8 - lenght) + (Convert.ToInt32(lastNo.Substring(3, 5)) + 1).ToString();
+
+                    #region V2
+                    //var checkNO = lastNolist.OrderByDescending(o => o.History_ID).FirstOrDefault().History_NO;
+                    //if (checkNO.Length == 8)
+                    //{
+                    //    lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00001";
+                    //}
+                    //else if (checkNO.Substring(3, 2) != DateTime.Now.Year.ToString().Substring(2, 2))
+                    //{
+                    //    lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00001";
+                    //}
+                    //else
+                    //{
+                    //    lastNo = checkNO;
+                    //}
+                    //var lenght = (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString().Length;
+                    //var newNo = lastNo.Substring(0, 8 - lenght) + (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString();
+                    #endregion
+
                     try
                     {
                         if (his.Count == 0)
