@@ -7,17 +7,19 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Carrier.Model.Carrier
+namespace Carrier.Model.Budget
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Comment_System
+    public partial class Department
     {
-        public int CM_ID { get; set; }
-        public string CM_Message { get; set; }
-        public Nullable<int> CM_Status { get; set; }
-        public Nullable<System.DateTime> CM_DateCreate { get; set; }
-        public string CM_Url { get; set; }
+        public string Department_ID { get; set; }
+        public string Department_Name { get; set; }
+        public string UserID { get; set; }
+        public string Flag { get; set; }
+        public string Department_Ref { get; set; }
+        public string UserID_Ref { get; set; }
+        public string CostCenter { get; set; }
     }
 }

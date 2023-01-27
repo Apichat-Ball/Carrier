@@ -25,8 +25,15 @@
             opacity: 0;
             transition: visibility 0s 2s, opacity 2s linear;
         }
+        .radius{
+            border-radius: 15px;
+        }
+        .status-tracking {
+            border-radius: 7px;
+            padding: 3px;
+        }
     </style>
-    
+    <script type="text/javascript" src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js'></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
     <script type="text/javascript">
@@ -82,9 +89,9 @@
         <ContentTemplate>
             <div runat="server" id="div_main">
                 <div style="margin-top: 80px;">
-                    <div style="position: absolute; left: 50%;" class="float-end">
+                    <%--<div style="position: absolute; left: 50%;" class="float-end">
                         <asp:Button runat="server" ID="btnPrint" Text="พิมพ์ใบปะหน้ากล่อง" Visible="false" CssClass="btn btn-primary" OnClick="btnPrint_Click" UseSubmitBehavior="false" />
-                    </div>
+                    </div>--%>
                     <div style="position: absolute; left: 80%;" class="float-end">
                         <asp:Button runat="server" ID="btnCancel" CssClass="btn btn-primary " Text="กลับหน้าหลัก" OnClick="btnCancel_Click" UseSubmitBehavior="false" />
                     </div>
@@ -105,12 +112,12 @@
                                 <asp:TextBox runat="server" ID="txtDocno" Width="100%" CssClass="form-control s-15px shadow" Enabled="false" Visible="false"></asp:TextBox>
                             </div>
                         </div>
-                        <div class="row ">
+                        <%--<div class="row ">
                             <div class="col-sm-2 w-100 input-group mb-2" runat="server">
                                 <asp:Label runat="server" ID="lbTrackingID" Text="เลขพัสดุ" CssClass=" input-group-text s-15px shadow" Visible="false"></asp:Label>
                                 <asp:TextBox runat="server" ID="txtTrackingID" Width="100%" CssClass="form-control s-15px shadow" Enabled="false" Visible="false"></asp:TextBox>
                             </div>
-                        </div>
+                        </div>--%>
 
                         <div class="row col-sm-12 col-md-6" runat="server" id="div_TypeSend">
                             <div class=" input-group mb-2 ">
@@ -176,7 +183,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-12 my-2">
+                        <!--<div class="col-sm-12 my-2">
                             <div class="input-group">
                                 <asp:Label runat="server" ID="lbarticleCategory" Text="ประเภทสินค้า" CssClass="input-group-text s-15px shadow"></asp:Label>
                                 <asp:DropDownList runat="server" ID="ddlarticleCategory" CssClass="btn dropdown-toggle shadow" DataTextField="ArticleName" DataValueField="ArticleCode"></asp:DropDownList>
@@ -188,7 +195,7 @@
                                 <asp:TextBox runat="server" ID="txtremark" CssClass="form-control s-15px shadow" TextMode="MultiLine" Rows="3"></asp:TextBox>                                
                             </div>
                                 <%--<asp:RegularExpressionValidator ID="RegularExpressionValidator3" runat="server" ControlToValidate="txtremark" ErrorMessage="ห้ามใช้เครื่องหมาย + " ValidationExpression="" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>--%>
-                        </div>
+                        </div>-->
 
 
                     </div>
@@ -298,7 +305,138 @@
                     </div>
                 </div>
 
-                <div runat="server" id="div_Box" class="row mt-3">
+                <div class="row text-center">
+                    <h3>
+                        กล่องที่ต้องการส่ง
+                    </h3>
+                    <br />
+                    <span style="color:red">*1 รายการ : 1 กล่อง*</span>
+                    <div class="row  justify-content-center my-2"  runat="server" id="divPrintAll" visible="false">
+                        <asp:Button runat="server" ID="btnPrintAll" Text="พิมพ์ใบปะหน้ากล่องทั้งหมด" OnClick="btnPrintAll_Click" CssClass="btn btn-primary w-50"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <asp:GridView runat="server" ID="gv_Big_Box" EmptyDataText="No Reccord." CssClass="table table-hover table-bordered small" Width="100%" AutoGenerateColumns="false" BorderStyle="None" RowStyle-BorderColor="Gray" RowStyle-CssClass="" AlternatingRowStyle-BackColor="LightGray">
+                        <Columns>
+                            <asp:TemplateField  ItemStyle-HorizontalAlign="Center">
+                                <ItemTemplate>
+                                    <asp:Button runat="server" ID="btnPDF" Text="พิมพ์ใบปะหน้ากล่อง" Visible="false" OnClick="btnPrint_Click"  />
+                                    <asp:ImageButton runat="server" ID="imgADD" ImageUrl="~/Icon/add.png" Visible="false"  Width="30px" ToolTip="เพิ่มกล่องใหญ่" OnClick="imgADD_Click"/>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField  ItemStyle-VerticalAlign="Top">
+                                <HeaderTemplate>
+                                    <span>เลขที่กล่อง</span>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <div class="input-group mt-2">
+                                    <%--<asp:Label runat="server" ID="lbhBBoxID" CssClass="input-group-text" Text ="เลขที่กล่อง : "></asp:Label>--%>
+                                    <asp:Label runat="server" ID="lbBBoxID" CssClass="input-group-text" Text='<%# Bind("Docno") %>'></asp:Label>
+                                        </div>
+                                </ItemTemplate>
+                                </asp:TemplateField>
+                            <asp:TemplateField  ItemStyle-VerticalAlign="Top">
+                                <HeaderTemplate>
+                                    <span>
+                                        เลขพัสดุ
+                                    </span>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <div class="input-group mt-2">
+                                    <%--<asp:Label runat="server" ID="lbhBBoxTracking" CssClass="input-group-text" Text="เลขพัสดุ : "></asp:Label>--%>
+                                    <asp:Label runat="server" ID="lbBBoxTracking" CssClass="input-group-text"></asp:Label>
+                                        </div>
+                                </ItemTemplate>
+                                </asp:TemplateField>
+                            <asp:TemplateField ItemStyle-VerticalAlign="Top" >
+                                <HeaderTemplate>
+                                    <span>
+                                        ประเภทสินค้า
+                                    </span>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <div class="input-group mt-2">
+                                    <asp:Label runat="server" ID="lbhArticleCategory" Text="ประเภทสินค้า : " CssClass="input-group-text shadow"></asp:Label>
+                                    <asp:DropDownList runat="server" ID="ddlarticleCategory" DataSource='<%# Bind("Arti") %>' CssClass="btn dropdown-toggle shadow" BackColor="White" DataTextField="ArticleName" DataValueField="ArticleCode" Width="100%" ></asp:DropDownList>
+                                    
+                                        </div>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField ItemStyle-VerticalAlign="Top" >
+                                <HeaderTemplate>
+                                    หมายเหตุ
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <div class="input-group mt-2">
+                                    <asp:Label runat="server" ID="lbhRemark" Text="หมายเหตุ" CssClass="input-group-text shadow"></asp:Label>
+                                    <asp:TextBox runat="server" ID="txtremark" TextMode="MultiLine" Rows="3" CssClass="form-control shadow" Text='<%# Bind("Remark") %>'></asp:TextBox>
+                                        </div>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField ItemStyle-VerticalAlign="Top">
+                                <HeaderTemplate>
+                                        ภายในกล่อง
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                        <div class="row col-sm-12 input-group my-2">
+                                            <asp:Label runat="server" ID="lbhBox" Text="ประเภทกล่อง" Width="40%" CssClass="input-group-text s-15px shadow"></asp:Label>
+                                            <asp:DropDownList runat="server" ID="ddlBox" DataSource='<%# Bind("TypeBox") %>' Width="60%" CssClass="btn dropdown-toggle s-15px shadow" BackColor="White" DataTextField="Box_Name" DataValueField="Box_ID"></asp:DropDownList>
+                                        </div>
+                                        <div class="row col-sm-12 input-group ">
+                                            <asp:Label runat="server" ID="lbInputQty" Text="จำนวน" Width="40%" CssClass=" input-group-text s-15px shadow"></asp:Label>
+                                            <asp:TextBox runat="server" ID="txtQty" Width="60%" CssClass="form-control shadow text-end" TextMode="Number" ValidateRequestMode="Enabled"></asp:TextBox>
+                                        </div>
+
+                                        <div class=" gj-text-align-center mt-1">
+                                            <asp:Button runat="server" ID="btnAdd" Text="ADD" Width="100%" Height="46px" CssClass="text-center btn btn-success s-15px" OnClick="btnAdd_Click" />
+                                        </div>
+                                        
+                                    <br />
+                                    <asp:GridView runat="server" ID="gv_Small_Box" CssClass="table table-striped table-bordered table-hover small bg-gradient " AutoGenerateColumns="false" >
+                                        <Columns>
+                                            <asp:TemplateField>
+                                                <HeaderTemplate>
+                                                    <asp:Label runat="server" ID="lbhBox_Name" Text="ขนาดกล่อง"></asp:Label>
+                                                </HeaderTemplate>
+                                                <ItemTemplate>
+                                                    <asp:Label runat="server" ID="lbBox_ID" Text='<%# Bind("Box_ID") %>' Visible="false"></asp:Label>
+                                                    <asp:Label runat="server" ID="lbBox_Name" Text='<%# Bind("Box_Name") %>'></asp:Label>
+                                                </ItemTemplate>
+                                                <ItemStyle BackColor="White" />
+                                            </asp:TemplateField>
+                                            <asp:TemplateField>
+                                                <HeaderTemplate>
+                                                    <asp:Label runat="server" ID="lbhQty" Text="จำนวน"></asp:Label>
+                                                </HeaderTemplate>
+                                                <ItemTemplate>
+                                                    <asp:Label runat="server" ID="lbQty" Text='<%# Bind("Qty") %>' Visible="false"></asp:Label>
+                                                    <asp:TextBox runat="server" ID="txtQty" Text='<%# Bind("Qty") %>' CssClass="form-control text-end" Width="50px"></asp:TextBox>
+                                                </ItemTemplate>
+                                                <ItemStyle CssClass="text-end" BackColor="White" />
+                                            </asp:TemplateField>
+                                            <asp:TemplateField>
+                                                <ItemTemplate>
+                                                    <asp:Button runat="server" ID="btnDeleteBoxItem" OnClick="btnDeleteBoxItem_Click" CssClass="btn-close" />
+                                                </ItemTemplate>
+                                                <ItemStyle BackColor="White" />
+                                            </asp:TemplateField>
+                                        </Columns>
+                                    </asp:GridView>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <ItemStyle CssClass="justify-content-center"/>
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lbStatuspno" Visible="false" ></asp:Label>
+                                    <asp:ImageButton runat="server" ID="imgDeleteBox" ImageUrl="~/Icon/x-button.png" Width="30px" OnClick="imgDeleteBox_Click"/>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                           
+                        </Columns>
+                    </asp:GridView>
+                </div>
+
+                <%--<div runat="server" id="div_Box" class="row mt-3">
                     <div class="col-md-4 col-sm-12">
                         <div class="row col-sm-12 input-group my-2">
                             <asp:Label runat="server" ID="Label3" Text="ประเภทกล่อง" Width="40%" CssClass="input-group-text s-15px shadow"></asp:Label>
@@ -345,7 +483,7 @@
 
                         </div>
                     </div>
-                </div>
+                </div>--%>
 
 
                 <div class="row">

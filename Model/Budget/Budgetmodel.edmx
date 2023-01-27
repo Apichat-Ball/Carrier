@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BudgetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="Department_ID" />
+          </Key>
+          <Property Name="Department_ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Department_Name" Type="nvarchar" MaxLength="1000" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="100" />
+          <Property Name="Flag" Type="nvarchar" MaxLength="5" />
+          <Property Name="Department_Ref" Type="nvarchar" MaxLength="50" />
+          <Property Name="UserID_Ref" Type="nvarchar" MaxLength="100" />
+          <Property Name="CostCenter" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="MainBudget">
+          <Key>
+            <PropertyRef Name="Year_Budget" />
+            <PropertyRef Name="Department_ID" />
+            <PropertyRef Name="Detail_ID" />
+            <PropertyRef Name="Revision" />
+          </Key>
+          <Property Name="Year_Budget" Type="int" Nullable="false" />
+          <Property Name="Department_ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Detail_ID" Type="int" Nullable="false" />
+          <Property Name="Revision" Type="int" Nullable="false" />
+          <Property Name="Department_Type" Type="nvarchar" MaxLength="2" />
+          <Property Name="M01" Type="float" />
+          <Property Name="M02" Type="float" />
+          <Property Name="M03" Type="float" />
+          <Property Name="M04" Type="float" />
+          <Property Name="M05" Type="float" />
+          <Property Name="M06" Type="float" />
+          <Property Name="M07" Type="float" />
+          <Property Name="M08" Type="float" />
+          <Property Name="M09" Type="float" />
+          <Property Name="M10" Type="float" />
+          <Property Name="M11" Type="float" />
+          <Property Name="M12" Type="float" />
+          <Property Name="M01_O" Type="float" />
+          <Property Name="M02_O" Type="float" />
+          <Property Name="M03_O" Type="float" />
+          <Property Name="M04_O" Type="float" />
+          <Property Name="M05_O" Type="float" />
+          <Property Name="M06_O" Type="float" />
+          <Property Name="M07_O" Type="float" />
+          <Property Name="M08_O" Type="float" />
+          <Property Name="M09_O" Type="float" />
+          <Property Name="M10_O" Type="float" />
+          <Property Name="M11_O" Type="float" />
+          <Property Name="M12_O" Type="float" />
+          <Property Name="UserID_Save" Type="int" />
+          <Property Name="Date_Save" Type="datetime" />
+          <Property Name="UserID_Active" Type="int" />
+          <Property Name="Date_Active" Type="datetime" />
+          <Property Name="Status_ID" Type="nvarchar" MaxLength="2" />
+          <Property Name="Status_Sync" Type="nvarchar" MaxLength="2" />
+          <Property Name="Detail_Remark" Type="nvarchar(max)" />
+          <Property Name="Department_IO_ID" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityContainer Name="BudgetModelStoreContainer">
+          <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MainBudget" EntityType="Self.MainBudget" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BudgetModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="Department_ID" />
+          </Key>
+          <Property Name="Department_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Department_Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="UserID" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Flag" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Department_Ref" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_Ref" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CostCenter" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="MainBudget">
+          <Key>
+            <PropertyRef Name="Year_Budget" />
+            <PropertyRef Name="Department_ID" />
+            <PropertyRef Name="Detail_ID" />
+            <PropertyRef Name="Revision" />
+          </Key>
+          <Property Name="Year_Budget" Type="Int32" Nullable="false" />
+          <Property Name="Department_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Detail_ID" Type="Int32" Nullable="false" />
+          <Property Name="Revision" Type="Int32" Nullable="false" />
+          <Property Name="Department_Type" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="M01" Type="Double" />
+          <Property Name="M02" Type="Double" />
+          <Property Name="M03" Type="Double" />
+          <Property Name="M04" Type="Double" />
+          <Property Name="M05" Type="Double" />
+          <Property Name="M06" Type="Double" />
+          <Property Name="M07" Type="Double" />
+          <Property Name="M08" Type="Double" />
+          <Property Name="M09" Type="Double" />
+          <Property Name="M10" Type="Double" />
+          <Property Name="M11" Type="Double" />
+          <Property Name="M12" Type="Double" />
+          <Property Name="M01_O" Type="Double" />
+          <Property Name="M02_O" Type="Double" />
+          <Property Name="M03_O" Type="Double" />
+          <Property Name="M04_O" Type="Double" />
+          <Property Name="M05_O" Type="Double" />
+          <Property Name="M06_O" Type="Double" />
+          <Property Name="M07_O" Type="Double" />
+          <Property Name="M08_O" Type="Double" />
+          <Property Name="M09_O" Type="Double" />
+          <Property Name="M10_O" Type="Double" />
+          <Property Name="M11_O" Type="Double" />
+          <Property Name="M12_O" Type="Double" />
+          <Property Name="UserID_Save" Type="Int32" />
+          <Property Name="Date_Save" Type="DateTime" Precision="3" />
+          <Property Name="UserID_Active" Type="Int32" />
+          <Property Name="Date_Active" Type="DateTime" Precision="3" />
+          <Property Name="Status_ID" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="Status_Sync" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="Detail_Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Department_IO_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="BudgetEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Departments" EntityType="Self.Department" />
+          <EntitySet Name="MainBudgets" EntityType="Self.MainBudget" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BudgetModelStoreContainer" CdmEntityContainer="BudgetEntities">
+          <EntitySetMapping Name="Departments">
+            <EntityTypeMapping TypeName="BudgetModel.Department">
+              <MappingFragment StoreEntitySet="Department">
+                <ScalarProperty Name="Department_ID" ColumnName="Department_ID" />
+                <ScalarProperty Name="Department_Name" ColumnName="Department_Name" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Flag" ColumnName="Flag" />
+                <ScalarProperty Name="Department_Ref" ColumnName="Department_Ref" />
+                <ScalarProperty Name="UserID_Ref" ColumnName="UserID_Ref" />
+                <ScalarProperty Name="CostCenter" ColumnName="CostCenter" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MainBudgets">
+            <EntityTypeMapping TypeName="BudgetModel.MainBudget">
+              <MappingFragment StoreEntitySet="MainBudget">
+                <ScalarProperty Name="Year_Budget" ColumnName="Year_Budget" />
+                <ScalarProperty Name="Department_ID" ColumnName="Department_ID" />
+                <ScalarProperty Name="Detail_ID" ColumnName="Detail_ID" />
+                <ScalarProperty Name="Revision" ColumnName="Revision" />
+                <ScalarProperty Name="Department_Type" ColumnName="Department_Type" />
+                <ScalarProperty Name="M01" ColumnName="M01" />
+                <ScalarProperty Name="M02" ColumnName="M02" />
+                <ScalarProperty Name="M03" ColumnName="M03" />
+                <ScalarProperty Name="M04" ColumnName="M04" />
+                <ScalarProperty Name="M05" ColumnName="M05" />
+                <ScalarProperty Name="M06" ColumnName="M06" />
+                <ScalarProperty Name="M07" ColumnName="M07" />
+                <ScalarProperty Name="M08" ColumnName="M08" />
+                <ScalarProperty Name="M09" ColumnName="M09" />
+                <ScalarProperty Name="M10" ColumnName="M10" />
+                <ScalarProperty Name="M11" ColumnName="M11" />
+                <ScalarProperty Name="M12" ColumnName="M12" />
+                <ScalarProperty Name="M01_O" ColumnName="M01_O" />
+                <ScalarProperty Name="M02_O" ColumnName="M02_O" />
+                <ScalarProperty Name="M03_O" ColumnName="M03_O" />
+                <ScalarProperty Name="M04_O" ColumnName="M04_O" />
+                <ScalarProperty Name="M05_O" ColumnName="M05_O" />
+                <ScalarProperty Name="M06_O" ColumnName="M06_O" />
+                <ScalarProperty Name="M07_O" ColumnName="M07_O" />
+                <ScalarProperty Name="M08_O" ColumnName="M08_O" />
+                <ScalarProperty Name="M09_O" ColumnName="M09_O" />
+                <ScalarProperty Name="M10_O" ColumnName="M10_O" />
+                <ScalarProperty Name="M11_O" ColumnName="M11_O" />
+                <ScalarProperty Name="M12_O" ColumnName="M12_O" />
+                <ScalarProperty Name="UserID_Save" ColumnName="UserID_Save" />
+                <ScalarProperty Name="Date_Save" ColumnName="Date_Save" />
+                <ScalarProperty Name="UserID_Active" ColumnName="UserID_Active" />
+                <ScalarProperty Name="Date_Active" ColumnName="Date_Active" />
+                <ScalarProperty Name="Status_ID" ColumnName="Status_ID" />
+                <ScalarProperty Name="Status_Sync" ColumnName="Status_Sync" />
+                <ScalarProperty Name="Detail_Remark" ColumnName="Detail_Remark" />
+                <ScalarProperty Name="Department_IO_ID" ColumnName="Department_IO_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

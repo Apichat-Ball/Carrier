@@ -63,4 +63,9 @@ namespace Carrier.Info
         public int? TypeSend { get; set; }
         public int Qty { get; set; }
     }
+    public class pathFile
+    {
+        public string pathname { get; set; }
+        public string filename { get; set; }
+    }
 }

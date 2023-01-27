@@ -31,6 +31,7 @@
           <Property Name="CM_Message" Type="nvarchar(max)" />
           <Property Name="CM_Status" Type="int" />
           <Property Name="CM_DateCreate" Type="datetime" />
+          <Property Name="CM_Url" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Event_Shop">
           <Key>
@@ -110,6 +111,17 @@
           <Property Name="saleChannel" Type="nvarchar" MaxLength="50" />
           <Property Name="TypeSend" Type="int" />
           <Property Name="DO_Remark" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Order_Big_Box">
+          <Key>
+            <PropertyRef Name="RunID" />
+          </Key>
+          <Property Name="RunID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BFID" Type="nvarchar" MaxLength="20" />
+          <Property Name="Docno" Type="nvarchar" MaxLength="20" />
+          <Property Name="Status" Type="nvarchar" MaxLength="5" />
+          <Property Name="StatusNotifyCode" Type="nvarchar" MaxLength="3" />
+          <Property Name="StatusNotifyText" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="Order_Box">
           <Key>
@@ -203,6 +215,7 @@
           <EntitySet Name="History_Notify_Order" EntityType="Self.History_Notify_Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Notify" EntityType="Self.Notify" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Order_Big_Box" EntityType="Self.Order_Big_Box" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order_Box" EntityType="Self.Order_Box" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order_Item" EntityType="Self.Order_Item" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RunDocno" EntityType="Self.RunDocno" Schema="dbo" store:Type="Tables" />
@@ -232,6 +245,7 @@
           <EntitySet Name="Comment_System" EntityType="CarrierModel.Comment_System" />
           <EntitySet Name="API_Carrier_Log" EntityType="CarrierModel.API_Carrier_Log" />
           <EntitySet Name="RunDocnoes" EntityType="CarrierModel.RunDocno" />
+          <EntitySet Name="Order_Big_Box" EntityType="CarrierModel.Order_Big_Box" />
         </EntityContainer>
         <EntityType Name="Article_Category">
           <Key>
@@ -402,6 +416,7 @@
           <Property Name="CM_Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CM_Status" Type="Int32" />
           <Property Name="CM_DateCreate" Type="DateTime" Precision="3" />
+          <Property Name="CM_Url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="API_Carrier_Log">
           <Key>
@@ -422,6 +437,17 @@
           <Property Name="Type" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
           <Property Name="Year" Type="Int32" Nullable="false" />
           <Property Name="RunNo" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Order_Big_Box">
+          <Key>
+            <PropertyRef Name="RunID" />
+          </Key>
+          <Property Name="RunID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BFID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Docno" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="StatusNotifyCode" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="StatusNotifyText" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -603,6 +629,7 @@
           <EntitySetMapping Name="Comment_System">
             <EntityTypeMapping TypeName="CarrierModel.Comment_System">
               <MappingFragment StoreEntitySet="Comment_System">
+                <ScalarProperty Name="CM_Url" ColumnName="CM_Url" />
                 <ScalarProperty Name="CM_DateCreate" ColumnName="CM_DateCreate" />
                 <ScalarProperty Name="CM_Status" ColumnName="CM_Status" />
                 <ScalarProperty Name="CM_Message" ColumnName="CM_Message" />
@@ -628,6 +655,18 @@
                 <ScalarProperty Name="RunNo" ColumnName="RunNo" />
                 <ScalarProperty Name="Year" ColumnName="Year" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Order_Big_Box">
+            <EntityTypeMapping TypeName="CarrierModel.Order_Big_Box">
+              <MappingFragment StoreEntitySet="Order_Big_Box">
+                <ScalarProperty Name="StatusNotifyText" ColumnName="StatusNotifyText" />
+                <ScalarProperty Name="StatusNotifyCode" ColumnName="StatusNotifyCode" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Docno" ColumnName="Docno" />
+                <ScalarProperty Name="BFID" ColumnName="BFID" />
+                <ScalarProperty Name="RunID" ColumnName="RunID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

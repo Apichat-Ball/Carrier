@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using Carrier.Service;
 using Carrier.Model.Carrier;
 using Carrier.Model.InsideSFG_WF;
+using Carrier.Model.Budget;
 
 namespace Carrier
 {
@@ -15,6 +16,7 @@ namespace Carrier
         Service_Flash service_Flashs = new Service_Flash();
         CarrierEntities carrier_Entities = new CarrierEntities();
         InsideSFG_WFEntities insideSFG_WF_Entities = new InsideSFG_WFEntities();
+        BudgetEntities budget_Entities = new BudgetEntities();
         protected void Page_Load(object sender, EventArgs e)
         {
             if (Session["_UserID"] == null)
@@ -35,16 +37,30 @@ namespace Carrier
         public void loadBrand()
         {
 
-            var FC = insideSFG_WF_Entities.BG_ForeCast.Where(w => w.ActiveStatus == 1).GroupBy(g => g.DepartmentID).Select(s => new Forecasts { DepartmentID = s.Key });
+            //var FC = insideSFG_WF_Entities.BG_ForeCast.Where(w => w.ActiveStatus == 1).GroupBy(g => g.DepartmentID).Select(s => new Forecasts { DepartmentID = s.Key });
+            var FC = (from d in budget_Entities.Departments
+                      join mb in budget_Entities.MainBudgets on d.Department_ID equals mb.Department_ID
+                      where new string[] { "F", "VIP" }.Contains(d.Flag)
+                      select d.Department_ID).ToList();
             var depart = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
                           join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
-                          where FC.Select(s => s.DepartmentID).Contains(BG_HA.departmentID) && (BG_HA.Sta == "B" || BG_HA.Sta == "S" || BG_HA.Sta == "N")
+                          where  FC.Contains(BG_HA.departmentID) && 
+                          (BG_HA.Sta == "B" || BG_HA.Sta == "S" || BG_HA.Sta == "N") && !BG_HA.department_.Contains("SEEK")
                           select new BrandShowInfo
                           {
                               name = BG_HA.department_,
                               nameShot = BG_HAPF.Depart_Short
                           }).OrderBy(r => r.name).ToList();
-            foreach(var dep in depart)
+            var seek = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
+                        join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
+                        where (BG_HA.Sta == "B" || BG_HA.Sta == "S" || BG_HA.Sta == "N") && BG_HA.department_.Contains("SEEK")
+                        select new BrandShowInfo
+                        {
+                            name = BG_HA.department_,
+                            nameShot = BG_HAPF.Depart_Short
+                        }).OrderBy(r => r.name).ToList();
+            depart.AddRange(seek);
+            foreach (var dep in depart)
             {
                 var depCen = carrier_Entities.Site_Center.Where(w => w.Brand_Center_Short == dep.nameShot).FirstOrDefault();
                 if(depCen != null)
@@ -370,6 +386,7 @@ namespace Carrier
             
             div_main.Style.Add("filter", "blur(15px)");
             div_main.Style.Add("position", "absolute");
+            div_main.Style.Add("pointer-events", "none");
 
             div_ADD.Visible = true;
             ddlBrandADD.SelectedValue = ddlBrandSearch.SelectedValue;
@@ -380,6 +397,7 @@ namespace Carrier
         {
             div_main.Style.Remove("filter");
             div_main.Style.Remove("position");
+            div_main.Style.Remove("pointer-events");
             div_ADD.Visible = false;
         }
 

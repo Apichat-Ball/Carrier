@@ -12,12 +12,13 @@ namespace Carrier.Model.Carrier
     using System;
     using System.Collections.Generic;
     
-    public partial class Comment_System
+    public partial class Order_Big_Box
     {
-        public int CM_ID { get; set; }
-        public string CM_Message { get; set; }
-        public Nullable<int> CM_Status { get; set; }
-        public Nullable<System.DateTime> CM_DateCreate { get; set; }
-        public string CM_Url { get; set; }
+        public int RunID { get; set; }
+        public string BFID { get; set; }
+        public string Docno { get; set; }
+        public string Status { get; set; }
+        public string StatusNotifyCode { get; set; }
+        public string StatusNotifyText { get; set; }
     }
 }

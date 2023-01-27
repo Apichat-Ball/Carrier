@@ -10,6 +10,36 @@
             border-radius: 7px;
             padding: 3px;
         }
+        .rainbow {
+            text-align: center;
+            font-size: 22px;
+            font-family:LilyUPC;
+/*            font-family: monospace;*/
+/*            letter-spacing: 1px;*/
+            animation: colorRotate 2s linear 0s infinite;
+        }
+
+        @keyframes colorRotate {
+            from {
+                color: #6666ff;
+            }
+
+            10% {
+                color: #0099ff;
+            }
+
+            50% {
+                color: #00ff00;
+            }
+
+            75% {
+                color: #ff3399;
+            }
+
+            100% {
+                color: #6666ff;
+            }
+        }
     </style>
     <script type="text/javascript">
 <%--        $(document).ready(function () {
@@ -43,7 +73,7 @@
             <asp:Button runat="server" ID="btnCreateOrder" Text="Create Order" CssClass=" btn btn-primary s-15px" Width="100%" OnClick="btnCreateOrder_Click" />
         </div>
     </div>
-    <div class="row col-12" runat="server" id="dv_Comment" visible="false">
+    <div class="row col-12" runat="server" id="dv_Comment" >
         <asp:Label runat="server" ID="lbUpdateStatusComment" Text="ประกาศจากระบบ" CssClass="h3"></asp:Label><br />
         <div class="row col-12 overflow-auto" style="height:80px">
             <asp:GridView runat="server" ID="gv_UpdateComment" ShowHeader="false" AutoGenerateColumns="false" CssClass="border-0 table-sm">
@@ -53,6 +83,9 @@
                         <asp:Label runat="server" ID="lbStatusComment" CssClass="status-tracking" Text='<%# Bind("CM_Status") %>'></asp:Label>
                         <asp:Label runat="server" ID="lbDateCreate" Text='<%# Bind("CM_DateCreate") %>'></asp:Label>
                         <asp:Label runat="server" ID="lbComment" Text='<%# Bind("CM_Message") %>'></asp:Label>
+                        <asp:Label runat="server"  ID="lbUrlFile" Text='<%# Bind("CM_Url") %>' Visible="false"></asp:Label>
+                        <asp:ImageButton runat="server" ID="imgGuie" ImageUrl="~/Icon/pdf.png" Width="20px"  Visible="false" />
+                        <asp:label runat="server" id="lbNew" Text="NEW!"  CssClass="rainbow" visible="false"></asp:label>
                     </ItemTemplate>
                     <ItemStyle CssClass="mb-2 small" Height="20px" />
                 </asp:TemplateField>

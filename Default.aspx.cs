@@ -27,7 +27,7 @@ namespace Carrier
         protected void Page_Load(object sender, EventArgs e)
         {
             Session.Clear();
-            //HttpContext.Current.Session["_UserID"] = "101635";
+            //HttpContext.Current.Session["_UserID"] = "100686";
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();
@@ -42,8 +42,21 @@ namespace Carrier
                 lbStatusSearch.Text = "First";
                 txtDateStart.Text = DateTime.Now.AddDays(-7).ToString("dd/MM/yyyy");
                 txtDateEnd.Text = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy");
-                loadtable(1);
-                //loadComment();
+                //try
+                //{
+                    loadtable(1);
+                //}
+                //catch (Exception ex)
+                //{
+                //    service_Flashs.SendMail("apichat.f@sfg-th.com", null, "Carrier Error Load Page default",
+                //        "<html>" +
+                //        "<body>" +
+                //        "<p>"+ex.Message+"</p>" +
+                //        "</body>" +
+                //        "</html>");
+                //}
+                loadComment();
+
             }
         }
         public void loadtable(int page)
@@ -75,6 +88,8 @@ namespace Carrier
                                      Transport_Type = order.Transport_Type,
                                      TypeSendKa = orderItem.TypeSendKO
                                  }).ToList();
+
+                
 
                 var format = "dd/MM/yyyy";
                 var enUS = new CultureInfo("en-US");
@@ -169,6 +184,96 @@ namespace Carrier
                             }
                             break;
                     }
+                    
+
+                    #region Test
+                    var BigBox = carrier_Entities.Order_Big_Box.ToList();
+                    if(ddlStatusOrder.SelectedValue != "3")
+                    {
+                        BigBox = BigBox.Where(w => w.Status == "A").ToList();
+                    }
+                    else
+                    {
+                        BigBox = BigBox.Where(w => w.Status == "C").ToList();
+                    }
+                    var DocnoGroup = BigBox.Select(s => s.Docno).ToList();
+                    var orderListCloon = orderList.ToList();
+                    var orderGroup = orderList.FindAll(f => DocnoGroup.Contains(f.Docno));
+                    foreach(var gro in orderGroup)
+                    {
+
+                        orderList.Remove(gro);
+                    }
+
+                    if(new string[] { "1","2"}.Contains(ddlStatusOrder.SelectedValue) && txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
+                    {
+                        var DocnoHaveFromClone = orderListCloon.Select(s => s.Docno).ToList();
+                        BigBox = BigBox.Where(w => DocnoHaveFromClone.Contains(w.Docno)).ToList();
+                    }
+                    var groupBox = BigBox.GroupBy(g => new { g.BFID }).Select(s=>new { s.Key.BFID, docno = s.Select(d=>d.Docno).FirstOrDefault()}).ToList();
+
+                    foreach(var Box in groupBox)
+                    {
+                        var orderget = orderListCloon.Where(w => w.Docno == Box.docno).FirstOrDefault();
+                        if(orderget != null)
+                        {
+                            var BigBoxAll = BigBox.Where(w => w.BFID == Box.BFID).ToList();
+                            var Tracking = "";
+                            
+                            switch (orderget.TypeSendKa)
+                            {
+                                case "SFG":
+                                    Tracking = "รายละเอียดอยู่ในเอกสาร";
+                                    break;
+                                case "SDC1":
+                                    foreach (var b in BigBoxAll)
+                                    {
+                                        var orderOne = carrier_Entities.Orders.Where(w => w.Docno == b.Docno).FirstOrDefault();
+                                        if (orderOne != null)
+                                        {
+                                            
+                                            if (b != BigBoxAll.LastOrDefault())
+                                            {
+                                                Tracking += orderOne.remark + " ,\n";
+                                            }
+                                            else
+                                            {
+                                                Tracking += orderOne.remark ;
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case "ROX":
+                                    Tracking = "รายละเอียดอยู่ในเอกสาร";
+                                    break;
+                                default: Tracking = "รายละเอียดอยู่ในเอกสาร";
+                                    break;
+                            }
+                            orderList.Add(new
+                            {
+                                Docno = Box.BFID,
+                                nameCreate = orderget.nameCreate,
+                                pno = orderget.pno,
+                                srcName = orderget.srcName,
+                                dstName = orderget.dstName,
+                                ArticleCategory = orderget.ArticleCategory,
+                                dateCreate = orderget.dateCreate,
+                                TrackingPickup = orderget.TrackingPickup,
+                                TimeTracking = orderget.TimeTracking,
+                                TimeTrackingText = orderget.TimeTrackingText,
+                                Brand = orderget.Brand,
+                                status = orderget.status,
+                                Remark = Tracking,
+                                TypeSend = orderget.TypeSend,
+                                StaffInfoName = orderget.StaffInfoName,
+                                Transport_Type = orderget.Transport_Type,
+                                TypeSendKa = orderget.TypeSendKa
+                            });
+                        }
+                        
+                    }
+
+                    #endregion
 
                     double maxdata_gvData = (double)((decimal)Convert.ToDecimal(orderList.Count()) / Convert.ToDecimal(maxrow));
                     int pageCount_gvData = (int)Math.Ceiling(maxdata_gvData);
@@ -176,6 +281,19 @@ namespace Carrier
                     gv_OrderAll.DataBind();
                     Page_gv(page, pageCount_gvData);
 
+                    if(orderList.Count() != 0)
+                    {
+                        if (ddlStatusOrder.SelectedValue == "2" || ddlStatusOrder.SelectedValue == "3")
+                        {
+                            gv_OrderAll.HeaderRow.Cells[0].Visible = false;
+                            gv_OrderAll.HeaderRow.Cells[12].Visible = false;
+                        }
+                        else
+                        {
+                            gv_OrderAll.HeaderRow.Cells[0].Visible = true;
+                        }
+                    }
+                    
                     foreach (GridViewRow row in gv_OrderAll.Rows)
                     {
                         LinkButton lkbDocno = (LinkButton)row.FindControl("lkbDocno");
@@ -192,6 +310,16 @@ namespace Carrier
                         lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
                         Label lbUserCreate = (Label)row.FindControl("lbUserCreate");
 
+                        if(ddlStatusOrder.SelectedValue == "2"|| ddlStatusOrder.SelectedValue == "3")
+                        {
+                            row.Cells[0].Visible = false;
+                            row.Cells[12].Visible = false;
+                        }
+                        else
+                        {
+                            row.Cells[0].Visible = true;
+                        }
+
                         var userid = Convert.ToInt32(lbUserCreate.Text);
                         var emp = insideSFG_WF_Entities.Employees.Where(w => w.userID == userid).FirstOrDefault();
                         lbUserCreate.Text = emp.name + " " + emp.surname + "(" + emp.nick + ")";
@@ -203,84 +331,66 @@ namespace Carrier
                         {
                             lbTransport_Type.Text = "Lalamove";
                         }
-                        if (lbStatus.Text != "")
+                        var checkBigBox = carrier_Entities.Order_Big_Box.Where(w => w.BFID == lkbDocno.Text).ToList();
+                        if(checkBigBox.Count() == 0)
                         {
-                            var dateNotiDate = new DateTime();
-                            if (lbTimeTrackingText.Text.Contains("พรุ่งนี้"))
+                            if (lbStatus.Text != "")
                             {
-                                var dateRaw = DateTime.Parse(lbTimeTracking.Text).AddDays(1);
-                                dateNotiDate = DateTime.Parse(dateRaw.ToShortDateString());
-                                var dateToUpdate = dateNotiDate.AddHours(16).AddMinutes(45);
-                                if (DateTime.Now >= dateToUpdate)
+                                var dateNotiDate = new DateTime();
+                                if (lbTimeTrackingText.Text.Contains("พรุ่งนี้"))
                                 {
-                                    var date = DateTime.Parse(lbTimeTracking.Text);
-                                    var a = service_Flashs.CheckNotify(lkbDocno.Text);
-                                    if (a != "")
+                                    var dateRaw = DateTime.Parse(lbTimeTracking.Text).AddDays(1);
+                                    dateNotiDate = DateTime.Parse(dateRaw.ToShortDateString());
+                                    var dateToUpdate = dateNotiDate.AddHours(16).AddMinutes(45);
+                                    if (DateTime.Now >= dateToUpdate)
                                     {
-                                        lbTimeTrackingText.Text = service_Flashs.CheckNotify(lkbDocno.Text);
-                                    }
-                                }
-                                else
-                                {
-                                    if (DateTime.Now.ToShortDateString() == dateToUpdate.ToShortDateString())
-                                    {
-                                        lbTimeTrackingText.Text = "วันนี้" + lbTimeTrackingText.Text.Substring(8);
-                                    }
-                                }
-                            }
-                            else if (lbTimeTrackingText.Text.Contains("วันนี้"))
-                            {
-                                var dateRaw = DateTime.Parse(lbTimeTracking.Text);
-                                dateNotiDate = DateTime.Parse(dateRaw.ToShortDateString());
-                                var dateToUpdate = dateNotiDate.AddHours(17).AddMinutes(30);
-                                if (DateTime.Now >= dateToUpdate)
-                                {
-                                    var date = DateTime.Parse(lbTimeTracking.Text);
-                                    var a = service_Flashs.CheckNotify(lkbDocno.Text);
-                                    if (a != "")
-                                    {
-                                        lbTimeTrackingText.Text = service_Flashs.CheckNotify(lkbDocno.Text);
+                                        var date = DateTime.Parse(lbTimeTracking.Text);
+                                        var a = service_Flashs.CheckNotify(lkbDocno.Text);
+                                        if (a != "")
+                                        {
+                                            lbTimeTrackingText.Text = service_Flashs.CheckNotify(lkbDocno.Text);
+                                        }
+                                        else
+                                        {
+                                            lbTimeTrackingText.Text = "ยังไม่ได้มารับของ";
+                                        }
                                     }
                                     else
                                     {
-                                        lbTimeTrackingText.Text = "ยังไม่ได้มารับของ";
-
+                                        if (DateTime.Now.ToShortDateString() == dateToUpdate.ToShortDateString())
+                                        {
+                                            lbTimeTrackingText.Text = "วันนี้" + lbTimeTrackingText.Text.Substring(8);
+                                        }
                                     }
                                 }
-                            }
-                            if (lbTimeTrackingText.Text.Contains("ยกเลิกแล้ว"))
-                            {
-                                lbTimeTrackingText.BackColor = System.Drawing.Color.PaleVioletRed;
-                                lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
-                                lbTimeTrackingText.CssClass = "status-tracking";
-                            }
-                            else if (lbTimeTrackingText.Text.Contains("ยังไม่ได้มารับของ"))
-                            {
-                                lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
-                                lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
-                                lbTimeTrackingText.CssClass = "status-tracking";
-                            }
-                            else
-                            {
-                                lbTimeTrackingText.BackColor = System.Drawing.Color.LimeGreen;
-                                lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
-                                lbTimeTrackingText.CssClass = "status-tracking";
-                            }
-                            cbItem.Visible = false;
-                            imgbtnCancelOrder.Visible = false;
-                        }
-                        else
-                        {
-                            if (lbStatusItem.Text == "A")
-                            {
-                                var a = service_Flashs.CheckNotify(lkbDocno.Text);
-                                if (a != "")
+                                else if (lbTimeTrackingText.Text.Contains("วันนี้"))
                                 {
-                                    lbTimeTrackingText.Text = service_Flashs.CheckNotify(lkbDocno.Text);
+                                    var dateRaw = DateTime.Parse(lbTimeTracking.Text);
+                                    dateNotiDate = DateTime.Parse(dateRaw.ToShortDateString());
+                                    var dateToUpdate = dateNotiDate.AddHours(17).AddMinutes(30);
+                                    if (DateTime.Now >= dateToUpdate)
+                                    {
+                                        var date = DateTime.Parse(lbTimeTracking.Text);
+                                        var a = service_Flashs.CheckNotify(lkbDocno.Text);
+                                        if (a != "")
+                                        {
+                                            lbTimeTrackingText.Text = service_Flashs.CheckNotify(lkbDocno.Text);
+                                        }
+                                        else
+                                        {
+                                            lbTimeTrackingText.Text = "ยังไม่ได้มารับของ";
+                                        }
+                                    }
                                 }
                                 if (lbTimeTrackingText.Text.Contains("ยกเลิกแล้ว"))
                                 {
                                     lbTimeTrackingText.BackColor = System.Drawing.Color.PaleVioletRed;
+                                    lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                    lbTimeTrackingText.CssClass = "status-tracking";
+                                }
+                                else if (lbTimeTrackingText.Text.Contains("ยังไม่ได้มารับของ"))
+                                {
+                                    lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
                                     lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
                                     lbTimeTrackingText.CssClass = "status-tracking";
                                 }
@@ -292,16 +402,204 @@ namespace Carrier
                                 }
                                 cbItem.Visible = false;
                                 imgbtnCancelOrder.Visible = false;
+                                
                             }
                             else
                             {
-                                /*var a = service_Flashs.CheckNotify(lkbDocno.Text);
-                                if (a == "")
+                                if (lbStatusItem.Text == "A")
                                 {
-                                    imgbtnEdit.Visible = true;
-                                }*/
+                                    var a = service_Flashs.CheckNotify(lkbDocno.Text);
+                                    if (a != "")
+                                    {
+                                        lbTimeTrackingText.Text = service_Flashs.CheckNotify(lkbDocno.Text);
+                                    }
+                                    if (lbTimeTrackingText.Text.Contains("ยกเลิกแล้ว"))
+                                    {
+                                        lbTimeTrackingText.BackColor = System.Drawing.Color.PaleVioletRed;
+                                        lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                        lbTimeTrackingText.CssClass = "status-tracking";
+                                    }
+                                    else
+                                    {
+                                        lbTimeTrackingText.BackColor = System.Drawing.Color.LimeGreen;
+                                        lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                        lbTimeTrackingText.CssClass = "status-tracking";
+                                    }
+                                    cbItem.Visible = false;
+                                    imgbtnCancelOrder.Visible = false;
+                                }
                             }
                         }
+                        else
+                        {
+                            List<Model_Chack_Noti> resCheck = new List<Model_Chack_Noti>();
+                            foreach(var BoxID in checkBigBox)
+                            {
+                                if (lbStatus.Text != "")
+                                {
+                                    var dateNotiDate = new DateTime();
+                                    if (lbTimeTrackingText.Text.Contains("พรุ่งนี้"))
+                                    {
+                                        var dateRaw = DateTime.Parse(lbTimeTracking.Text).AddDays(1);
+                                        dateNotiDate = DateTime.Parse(dateRaw.ToShortDateString());
+                                        var dateToUpdate = dateNotiDate.AddHours(17).AddMinutes(30);
+                                        if (DateTime.Now >= dateToUpdate)
+                                        {
+                                            var date = DateTime.Parse(lbTimeTracking.Text);
+                                            var a = service_Flashs.CheckNotifyBigBox(BoxID.Docno);
+                                            if (a.message != "")
+                                            {
+                                                resCheck.Add(a);
+                                            }
+                                            else
+                                            {
+                                                resCheck.Add(new Model_Chack_Noti { code = "0", message = "ยังไม่ได้มารับของ" });
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (DateTime.Now.ToShortDateString() == dateToUpdate.ToShortDateString())
+                                            {
+                                                resCheck.Add(new Model_Chack_Noti { code = "0" , message = "วันนี้" + lbTimeTrackingText.Text.Substring(8) });
+                                            }
+                                            else
+                                            {
+                                                resCheck.Add(new Model_Chack_Noti { code = "0", message = lbTimeTrackingText.Text });
+                                            }
+                                        }
+                                    }
+                                    else if (lbTimeTrackingText.Text.Contains("วันนี้"))
+                                    {
+                                        var dateRaw = DateTime.Parse(lbTimeTracking.Text);
+                                        dateNotiDate = DateTime.Parse(dateRaw.ToShortDateString());
+                                        var dateToUpdate = dateNotiDate.AddHours(17).AddMinutes(30);
+                                        if (DateTime.Now >= dateToUpdate)
+                                        {
+                                            var date = DateTime.Parse(lbTimeTracking.Text);
+                                            var a = service_Flashs.CheckNotifyBigBox(BoxID.Docno);
+                                            if (a.message != "")
+                                            {
+                                                resCheck.Add(a);
+                                            }
+                                            else
+                                            {
+                                                resCheck.Add(new Model_Chack_Noti { code = "0", message = "ยังไม่ได้มารับของ" });
+
+                                            }
+                                        }
+                                    }
+                                    if (lbTimeTrackingText.Text.Contains("ยกเลิกแล้ว"))
+                                    {
+                                        lbTimeTrackingText.BackColor = System.Drawing.Color.PaleVioletRed;
+                                        lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                        lbTimeTrackingText.CssClass = "status-tracking";
+                                    }
+                                    else if (lbTimeTrackingText.Text.Contains("ยังไม่ได้มารับของ"))
+                                    {
+                                        lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
+                                        lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                        lbTimeTrackingText.CssClass = "status-tracking";
+                                    }
+                                    else
+                                    {
+                                        lbTimeTrackingText.BackColor = System.Drawing.Color.LimeGreen;
+                                        lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                        lbTimeTrackingText.CssClass = "status-tracking";
+                                    }
+                                    cbItem.Visible = false;
+                                    imgbtnCancelOrder.Visible = false;
+                                }
+                                else
+                                {
+                                    if (lbStatusItem.Text == "A")
+                                    {
+                                        var a = service_Flashs.CheckNotifyBigBox(BoxID.Docno);
+                                        if (a.message != "")
+                                        {
+                                            resCheck.Add(a);
+                                        }
+                                        if (lbTimeTrackingText.Text.Contains("ยกเลิกแล้ว"))
+                                        {
+                                            lbTimeTrackingText.BackColor = System.Drawing.Color.PaleVioletRed;
+                                            lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                            lbTimeTrackingText.CssClass = "status-tracking";
+                                        }
+                                        else
+                                        {
+                                            lbTimeTrackingText.BackColor = System.Drawing.Color.LimeGreen;
+                                            lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                            lbTimeTrackingText.CssClass = "status-tracking";
+                                        }
+                                        cbItem.Visible = false;
+                                        imgbtnCancelOrder.Visible = false;
+                                    }
+                                    else
+                                    {
+                                        /*var a = service_Flashs.CheckNotify(lkbDocno.Text);
+                                        if (a == "")
+                                        {
+                                            imgbtnEdit.Visible = true;
+                                        }*/
+                                    }
+                                }
+                            }
+
+                            if(lbStatus.Text != "" && resCheck.Count() != 0)
+                            {
+                                var resday = resCheck.Where(w => w.code == "0" && w.message.StartsWith("วันนี้")).FirstOrDefault();
+                                var resmessage = resCheck.Where(w => w.code == "0" && w.message == "ยังไม่ได้มารับของ").FirstOrDefault();
+                                if (resday != null)
+                                {
+                                    lbTimeTrackingText.Text = resday.message;
+                                }
+                                else if (resmessage != null)
+                                {
+                                    lbTimeTrackingText.Text = resmessage.message;
+                                }
+                                else
+                                {
+                                    var statusNoti = resCheck.Where(w => w.code != "0").GroupBy(g => g.code).Select(s => new { code = s.Key, message = s.Select(si => si.message).FirstOrDefault() }).ToList();
+                                    if (statusNoti.Count() > 1)
+                                    {
+                                        if (statusNoti.Where(w => w.code == "5").FirstOrDefault() != null)
+                                        {
+                                            lbTimeTrackingText.Text = "บางรายการเซ็นรับแล้ว";
+                                        }
+                                        else if (statusNoti.Where(w => w.code != "0").FirstOrDefault() != null)
+                                        {
+                                            lbTimeTrackingText.Text = "อยู่ในขั้นตอนการขนส่ง";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        lbTimeTrackingText.Text = resCheck.FirstOrDefault().message;
+                                    }
+                                }
+                            }
+                            else if(resCheck.Count() != 0)
+                            {
+                                var statusNoti = resCheck.Where(w => w.code != "0").GroupBy(g => g.code).Select(s => new { code = s.Key, message = s.Select(si => si.message).FirstOrDefault() }).ToList();
+                                if (statusNoti.Count() > 1)
+                                {
+                                    if (statusNoti.Where(w => w.code == "5").FirstOrDefault() != null)
+                                    {
+                                        lbTimeTrackingText.Text = "บางรายการเซ็นรับแล้ว";
+                                    }
+                                    else if (statusNoti.Where(w => w.code != "0").FirstOrDefault() != null)
+                                    {
+                                        lbTimeTrackingText.Text = "อยู่ในขั้นตอนการขนส่ง";
+                                    }
+                                }
+                                else
+                                {
+                                    lbTimeTrackingText.Text = resCheck.FirstOrDefault().message;
+                                }
+                            }
+                            
+                            
+                           
+                        }
+                        
                         gv_OrderAll.Columns[0].Visible = true;
                         gv_OrderAll.Columns[10].Visible = true;
                         gv_OrderAll.Columns[11].Visible = true;
@@ -371,7 +669,8 @@ namespace Carrier
         }
         public void loadComment()
         {
-            var cm = carrier_Entities.Comment_System.OrderByDescending(o => o.CM_DateCreate).ToList();
+            var datenowOld = DateTime.Now.AddDays(-7);
+            var cm = carrier_Entities.Comment_System.Where(w=>w.CM_DateCreate > datenowOld).OrderByDescending(o => o.CM_DateCreate).ToList();
             if (cm.Count == 0)
             {
                 dv_Comment.Visible = false;
@@ -411,6 +710,27 @@ namespace Carrier
                 {
                     lbNew.Visible = false;
                 }
+
+                Label lbCommerntID = (Label)row.FindControl("lbCommerntID");
+                ImageButton imgGuie = (ImageButton)row.FindControl("imgGuie");
+                Label lbUrlFile = (Label)row.FindControl("lbUrlFile");
+                if(lbUrlFile.Text != "")
+                {
+                    imgGuie.Visible = true;
+                    String originalPath = new Uri(HttpContext.Current.Request.Url.AbsoluteUri).OriginalString;
+                    string filePath = originalPath.Substring(0, originalPath.LastIndexOf("/Default")) + "/FilePatchUpdate/" + lbUrlFile.Text;
+                    string dataDir = HttpContext.Current.Server.MapPath("FilePatchUpdate/") + lbUrlFile.Text;
+                    if (File.Exists(dataDir))
+                    {
+                        imgGuie.OnClientClick = "window.open('" + filePath + "', '_blank', '')";
+
+                    }
+                    else
+                    {
+                        imgGuie.Visible = false;
+                    }
+                }
+               
 
             }
         }
@@ -666,7 +986,27 @@ namespace Carrier
             GridViewRow row = (GridViewRow)imgbtnCancelOrder.NamingContainer;
             Label lbpno = (Label)row.FindControl("lbpno");
             LinkButton lkbDocno = (LinkButton)row.FindControl("lkbDocno");
-            var res = service_Flashs.CancelOrder(lkbDocno.Text, lbpno.Text);
+
+            var loadFL = carrier_Entities.Order_Big_Box.Where(w => w.BFID == lkbDocno.Text).ToList();
+            var res = "";
+            if(loadFL.Count() != 0)
+            {
+                List<string> resall = new List<string>();
+                foreach(var i in loadFL)
+                {
+                    var pno = carrier_Entities.Order_Item.Where(w => w.Docno == i.Docno).FirstOrDefault().pno;
+                    res = service_Flashs.CancelOrder(i.Docno, pno);
+                    resall.Add(res);
+                    i.Status = "C";
+                    carrier_Entities.SaveChanges();
+                }
+
+            }
+            else
+            {
+                res = service_Flashs.CancelOrder(lkbDocno.Text, lbpno.Text);
+            }
+
             
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('succes : " + res + "')", true);
 
@@ -689,11 +1029,25 @@ namespace Carrier
             List<string> tracking = new List<string>();
             foreach (GridViewRow row in gv_OrderAll.Rows)
             {
+                LinkButton lkbDocno = (LinkButton)row.FindControl("lkbDocno");
                 CheckBox cbItem = (CheckBox)row.FindControl("cbItem");
                 Label lbpno = (Label)row.FindControl("lbpno");
                 if (cbItem.Checked)
                 {
-                    tracking.Add(lbpno.Text);
+                    var inbox = carrier_Entities.Order_Big_Box.Where(w => w.BFID == lkbDocno.Text).ToList();
+                    if(inbox.Count() != 0)
+                    {
+                        foreach (var b in inbox)
+                        {
+                            var pno = carrier_Entities.Order_Item.Where(w => w.Docno == b.Docno).FirstOrDefault().pno;
+                            tracking.Add(pno);
+                        }
+                    }
+                    else
+                    {
+                        tracking.Add(lbpno.Text);
+                    }
+                    
                 }
             }
             if (tracking.Count == 0)
@@ -702,108 +1056,49 @@ namespace Carrier
             }
             else
             {
-                var responseNotifyList = service_Flashs.Notify(tracking);
-                List<messageNotify> messageNoti = new List<messageNotify>();
-                DateTime dateSuccess = DateTime.Now;
-                List<History_Notify_Order> his = new List<History_Notify_Order>();
-                var lastNolist = carrier_Entities.History_Notify_Order.ToList();
-                var lastNo = "";
-                if (lastNolist.Count == 0)
+                var ordNotPrint = (from o in carrier_Entities.Orders
+                           join i in carrier_Entities.Order_Item on o.Docno equals i.Docno
+                           where tracking.Contains(i.pno) && o.status != "AP"
+                           select new { Docno = o.Docno }).ToList();
+                if(ordNotPrint.Count() == 0)
                 {
-                    lastNo = "HIS00001";
-                }
-                else
-                {
-                    lastNo = carrier_Entities.History_Notify_Order.OrderByDescending(o => o.History_ID).FirstOrDefault().History_NO;
-                }
-                var lenght = (Convert.ToInt32(lastNo.Substring(3, 5)) + 1).ToString().Length;
-                var newNo = lastNo.Substring(0, 8 - lenght) + (Convert.ToInt32(lastNo.Substring(3, 5)) + 1).ToString();
+                    var responseNotifyList = service_Flashs.Notify(tracking);
+                    List<messageNotify> messageNoti = new List<messageNotify>();
+                    DateTime dateSuccess = DateTime.Now;
+                    List<History_Notify_Order> his = new List<History_Notify_Order>();
 
-                #region V2
-                //var checkNO = lastNolist.OrderByDescending(o => o.History_ID).FirstOrDefault().History_NO;
-                //if (checkNO.Length == 8)
-                //{
-                //    lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00001";
-                //}
-                //else if (checkNO.Substring(3, 2) != DateTime.Now.Year.ToString().Substring(2, 2))
-                //{
-                //    lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00001";
-                //}
-                //else
-                //{
-                //    lastNo = checkNO;
-                //}
-                //var lenght = (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString().Length;
-                //var newNo = lastNo.Substring(0, 8 - lenght) + (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString();
-                #endregion
-                foreach (var responseNotify in responseNotifyList)
-                {
-                    if (responseNotify.code == 1)
+
+                    #region V2
+                    var lastNolist = carrier_Entities.History_Notify_Order.ToList();
+                    var lastNo = "";
+                    var checkNO = lastNolist.OrderByDescending(o => o.History_ID).FirstOrDefault().History_NO;
+                    if (checkNO.Length == 8)
                     {
-                        var mess = "เลขที่พัสดุที่ : ";
-                        var lastpno = responseNotify.pno.LastOrDefault();
-                        foreach (var pno in responseNotify.pno)
-                        {
-                            var orderItem = carrier_Entities.Order_Item.Where(w => w.pno == pno).FirstOrDefault();
-                            orderItem.Status = "A";
-                            orderItem.CodeResponse = responseNotify.code;
-                            orderItem.ticketPickupId = responseNotify.ticketPickupId;
-                            if (lastpno == pno)
-                            {
-                                mess += pno + " เรียกรถเรียบร้อยแล้ว";
-                            }
-                            else
-                            {
-                                mess += pno + ",";
-                            }
-                            his.Add(new History_Notify_Order
-                            {
-                                History_NO = newNo,
-                                Docno = orderItem.Docno,
-                                Date_Notify = dateSuccess,
-                                pno = pno,
-                                Type_Send_KA = orderItem.TypeSendKO
-                            });
-                        }
-                        carrier_Entities.Notifies.Add(new Notify
-                        {
-                            TicketPickupId = responseNotify.ticketPickupId,
-                            StaffInfoId = responseNotify.staffInfoId,
-                            StaffInfoName = responseNotify.staffInfoName,
-                            StaffInfoPhone = responseNotify.staffInfoPhone,
-                            UpCountryNote = responseNotify.upCountryNote,
-                            TimeoutAtText = responseNotify.timeoutAtText,
-                            TicketMessage = responseNotify.ticketMessage,
-                            DateNotify = responseNotify.dateSuccess,
-                            warehouseNo = responseNotify.warehouseNo
-                        });
-                        carrier_Entities.SaveChanges();
-                        messageNoti.Add(new messageNotify { code = 1, message = mess });
+                        lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00000";
+                    }
+                    else if (checkNO.Substring(3, 2) != DateTime.Now.Year.ToString().Substring(2, 2))
+                    {
+                        lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00000";
                     }
                     else
                     {
-                        if (responseNotify.code == 1010)
+                        lastNo = checkNO;
+                    }
+                    var lenght = (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString().Length;
+                    var newNo = lastNo.Substring(0, 10 - lenght) + (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString();
+                    #endregion
+                    foreach (var responseNotify in responseNotifyList)
+                    {
+                        if (responseNotify.code == 1)
                         {
                             var mess = "เลขที่พัสดุที่ : ";
-                            var notiOld = carrier_Entities.Notifies.Where(w => w.warehouseNo == responseNotify.warehouseNo).OrderByDescending(r => r.DateNotify).ToList();
+                            var lastpno = responseNotify.pno.LastOrDefault();
                             foreach (var pno in responseNotify.pno)
                             {
-                                var lastpno = responseNotify.pno.LastOrDefault();
                                 var orderItem = carrier_Entities.Order_Item.Where(w => w.pno == pno).FirstOrDefault();
-                                if (notiOld == null)
-                                {
-                                    orderItem.Status = "A";
-                                    orderItem.CodeResponse = 1;
-                                    //orderItem.ticketPickupId = ;
-                                    carrier_Entities.SaveChanges();
-                                }
-                                else
-                                {
-                                    orderItem.Status = "A";
-                                    orderItem.CodeResponse = 1;
-                                    orderItem.ticketPickupId = notiOld.Select(s => s.TicketPickupId).FirstOrDefault();
-                                    carrier_Entities.SaveChanges();
-                                }
+                                orderItem.Status = "A";
+                                orderItem.CodeResponse = responseNotify.code;
+                                orderItem.ticketPickupId = responseNotify.ticketPickupId;
                                 if (lastpno == pno)
                                 {
                                     mess += pno + " เรียกรถเรียบร้อยแล้ว";
@@ -812,59 +1107,135 @@ namespace Carrier
                                 {
                                     mess += pno + ",";
                                 }
-                                var hisNoti = carrier_Entities.History_Notify_Order.Where(w => w.pno == pno).FirstOrDefault();
-                                if(hisNoti == null)
+                                his.Add(new History_Notify_Order
                                 {
-                                    his.Add(new History_Notify_Order
-                                    {
-                                        History_NO = newNo,
-                                        Docno = orderItem.Docno,
-                                        Date_Notify = dateSuccess,
-                                        pno = pno,
-                                        Type_Send_KA = orderItem.TypeSendKO
-                                    });
-                                }
+                                    History_NO = newNo,
+                                    Docno = orderItem.Docno,
+                                    Date_Notify = dateSuccess,
+                                    pno = pno,
+                                    Type_Send_KA = orderItem.TypeSendKO
+                                });
                             }
+                            carrier_Entities.Notifies.Add(new Notify
+                            {
+                                TicketPickupId = responseNotify.ticketPickupId,
+                                StaffInfoId = responseNotify.staffInfoId,
+                                StaffInfoName = responseNotify.staffInfoName,
+                                StaffInfoPhone = responseNotify.staffInfoPhone,
+                                UpCountryNote = responseNotify.upCountryNote,
+                                TimeoutAtText = responseNotify.timeoutAtText,
+                                TicketMessage = responseNotify.ticketMessage,
+                                DateNotify = responseNotify.dateSuccess,
+                                warehouseNo = responseNotify.warehouseNo
+                            });
+                            carrier_Entities.SaveChanges();
+                            messageNoti.Add(new messageNotify { code = 1, message = mess });
                         }
                         else
                         {
-
-                            var mess = "เลขที่พัสดุที่ : ";
-                            var lastpno = responseNotify.pno.LastOrDefault();
-                            foreach (var pno in responseNotify.pno)
+                            if (responseNotify.code == 1010)
                             {
-                                var orderItem = carrier_Entities.Order_Item.Where(w => w.pno == pno).FirstOrDefault();
-                                orderItem.CodeResponse = responseNotify.code;
-                                carrier_Entities.SaveChanges();
-                                if (lastpno == pno)
+                                var mess = "เลขที่พัสดุที่ : ";
+                                var notiOld = carrier_Entities.Notifies.Where(w => w.warehouseNo == responseNotify.warehouseNo).OrderByDescending(r => r.DateNotify).ToList();
+                                foreach (var pno in responseNotify.pno)
                                 {
-                                    mess += pno + " ไม่สามารถเรียกรถได้";
-                                }
-                                else
-                                {
-                                    mess += pno + ",";
+                                    var lastpno = responseNotify.pno.LastOrDefault();
+                                    var orderItem = carrier_Entities.Order_Item.Where(w => w.pno == pno).FirstOrDefault();
+                                    if (notiOld == null)
+                                    {
+                                        orderItem.Status = "A";
+                                        orderItem.CodeResponse = 1;
+                                        //orderItem.ticketPickupId = ;
+                                        carrier_Entities.SaveChanges();
+                                    }
+                                    else
+                                    {
+                                        orderItem.Status = "A";
+                                        orderItem.CodeResponse = 1;
+                                        orderItem.ticketPickupId = notiOld.Select(s => s.TicketPickupId).FirstOrDefault();
+                                        carrier_Entities.SaveChanges();
+                                    }
+                                    if (lastpno == pno)
+                                    {
+                                        mess += pno + " เรียกรถเรียบร้อยแล้ว";
+                                    }
+                                    else
+                                    {
+                                        mess += pno + ",";
+                                    }
+                                    var hisNoti = carrier_Entities.History_Notify_Order.Where(w => w.pno == pno).FirstOrDefault();
+                                    if (hisNoti == null)
+                                    {
+                                        his.Add(new History_Notify_Order
+                                        {
+                                            History_NO = newNo,
+                                            Docno = orderItem.Docno,
+                                            Date_Notify = dateSuccess,
+                                            pno = pno,
+                                            Type_Send_KA = orderItem.TypeSendKO
+                                        });
+                                    }
                                 }
                             }
-                            messageNoti.Add(new messageNotify { code = 1, message = mess });
+                            else
+                            {
+
+                                var mess = "เลขที่พัสดุที่ : ";
+                                var lastpno = responseNotify.pno.LastOrDefault();
+                                foreach (var pno in responseNotify.pno)
+                                {
+                                    var orderItem = carrier_Entities.Order_Item.Where(w => w.pno == pno).FirstOrDefault();
+                                    orderItem.CodeResponse = responseNotify.code;
+                                    carrier_Entities.SaveChanges();
+                                    if (lastpno == pno)
+                                    {
+                                        mess += pno + " ไม่สามารถเรียกรถได้";
+                                    }
+                                    else
+                                    {
+                                        mess += pno + ",";
+                                    }
+                                }
+                                messageNoti.Add(new messageNotify { code = 1, message = mess });
+                            }
                         }
                     }
+                    if (his.Count != 0)
+                    {
+                        carrier_Entities.History_Notify_Order.AddRange(his);
+                        carrier_Entities.SaveChanges();
+                    }
+
+                    var messageAlert = "";
+                    foreach (var listmess in messageNoti)
+                    {
+                        messageAlert = listmess.message + "\n";
+                    }
+
+                    Page myPage = (Page)HttpContext.Current.Handler;
+                    ClientScript.RegisterStartupScript(this.GetType(), "alertMessage", "<script type='text/javascript'>alert('"+ messageAlert + "');window.location='Default';</script>'");
+                    div_Page_Bar.Visible = true;
+                    //Response.Redirect("Default.aspx");
                 }
-                if(his.Count != 0)
+                else
                 {
-                    carrier_Entities.History_Notify_Order.AddRange(his);
-                    carrier_Entities.SaveChanges();
+
+                    var doc = "";
+                    foreach(var i in ordNotPrint)
+                    {
+                        var BigBox = carrier_Entities.Order_Big_Box.Where(w => w.Docno == i.Docno).FirstOrDefault().BFID;
+                        if (!doc.Contains(BigBox))
+                        {
+                            doc += BigBox + ";";
+                        }
+                        
+                    }
+                    Page myPage = (Page)HttpContext.Current.Handler;
+                    ClientScript.RegisterStartupScript(this.GetType(), "alertMessage", "<script type='text/javascript'>alert('เอกสารที่ยังไม่ได้มีการปะหน้ากล่อง : " + doc + "');window.location='Default';</script>'");
+                    div_Page_Bar.Visible = true;
+                    //Response.Redirect("Default.aspx");
                 }
                 
-                var messageAlert = "";
-                foreach (var listmess in messageNoti)
-                {
-                    messageAlert = listmess.message + "\n";
-                }
-
-                Page myPage = (Page)HttpContext.Current.Handler;
-                ScriptManager.RegisterClientScriptBlock(myPage, myPage.GetType(), "alertMessage", "alert('" + messageAlert + "')", true);
-                div_Page_Bar.Visible = true;
-                Response.Redirect("Default.aspx");
             }
 
         }
@@ -1037,33 +1408,24 @@ namespace Carrier
                     var his = carrier_Entities.History_Notify_Order.Where(w => w.Docno == i).ToList();
                     var lastNolist = carrier_Entities.History_Notify_Order.ToList();
                     var lastNo = "";
-                    if (lastNolist.Count == 0)
+                    
+
+                    #region V2
+                    var checkNO = lastNolist.OrderByDescending(o => o.History_ID).FirstOrDefault().History_NO;
+                    if (checkNO.Length == 8)
                     {
-                        lastNo = "HIS00001";
+                        lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00000";
+                    }
+                    else if (checkNO.Substring(3, 2) != DateTime.Now.Year.ToString().Substring(2, 2))
+                    {
+                        lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00000";
                     }
                     else
                     {
-                        lastNo = carrier_Entities.History_Notify_Order.OrderByDescending(o => o.History_ID).FirstOrDefault().History_NO;
+                        lastNo = checkNO;
                     }
-                    var lenght = (Convert.ToInt32(lastNo.Substring(3, 5)) + 1).ToString().Length;
-                    var newNo = lastNo.Substring(0, 8 - lenght) + (Convert.ToInt32(lastNo.Substring(3, 5)) + 1).ToString();
-
-                    #region V2
-                    //var checkNO = lastNolist.OrderByDescending(o => o.History_ID).FirstOrDefault().History_NO;
-                    //if (checkNO.Length == 8)
-                    //{
-                    //    lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00001";
-                    //}
-                    //else if (checkNO.Substring(3, 2) != DateTime.Now.Year.ToString().Substring(2, 2))
-                    //{
-                    //    lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00001";
-                    //}
-                    //else
-                    //{
-                    //    lastNo = checkNO;
-                    //}
-                    //var lenght = (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString().Length;
-                    //var newNo = lastNo.Substring(0, 8 - lenght) + (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString();
+                    var lenght = (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString().Length;
+                    var newNo = lastNo.Substring(0, 10 - lenght) + (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString();
                     #endregion
                     if (his.Count == 0)
                     {
@@ -1085,6 +1447,8 @@ namespace Carrier
             Response.Redirect("Transport_Form?Docno=" + lkbDocno.Text+"&Act=Edit");
         }
 
+        
+
         //protected void Time1_Tick(object sender, EventArgs e)
         //{
 
@@ -1097,7 +1461,7 @@ namespace Carrier
         //    }
         //}
 
-        
+
     }
     public class messageNotify
     {

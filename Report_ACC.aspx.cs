@@ -59,7 +59,7 @@ namespace Carrier
                 }
                 var orderList = (from order in carrier_Entities.Orders
                                  join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
-                                 where order_Item.Status != "C" && order_Item.Status != "A" && order_Item.Status != null && order_Item.Date_Success >= datestart && order_Item.Date_Success <= dateend
+                                 where order_Item.Status != "C" && order_Item.Status != "A" && order_Item.Status != null && order_Item.Date_Success >= datestart && order_Item.Date_Success <= dateend && order.Ref_Order != "ECommerce"
                                  select new
                                  {
                                      Docno = order.Docno,
@@ -81,7 +81,7 @@ namespace Carrier
 
                 var orderListTrue = (from order in carrier_Entities.Orders
                                      join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
-                                     where order_Item.Status != "C" && order_Item.Status != null && docno.Contains(order_Item.Docno)
+                                     where order_Item.Status != "C" && order_Item.Status != null && docno.Contains(order_Item.Docno) && order.Ref_Order != "ECommerce"
                                      select new
                                      {
                                          Docno = order.Docno,
@@ -368,7 +368,7 @@ namespace Carrier
                 var docno = HistoryNoti.Select(s => s.Docno).Distinct();
                 var orderList = (from order in carrier_Entities.Orders
                                  join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
-                                 where order_Item.Status != "C" && order_Item.Status != "A" && order_Item.Status != null && order_Item.Date_Success >= datestart && order_Item.Date_Success <= dateend
+                                 where order_Item.Status != "C" && order_Item.Status != "A" && order_Item.Status != null && order_Item.Date_Success >= datestart && order_Item.Date_Success <= dateend && order.Ref_Order != "ECommerce"
                                  select new
                                  {
                                      Docno = order.Docno,
@@ -388,7 +388,7 @@ namespace Carrier
                                  }).ToList();
                 var orderListNotNoti = (from order in carrier_Entities.Orders
                                         join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
-                                        where order_Item.Status == null && order_Item.Date_Success >= datestart && order_Item.Date_Success <= dateend
+                                        where order_Item.Status == null && order_Item.Date_Success >= datestart && order_Item.Date_Success <= dateend && order.Ref_Order != "ECommerce"
                                         select new
                                         {
                                             Docno = order.Docno,
@@ -418,7 +418,7 @@ namespace Carrier
                 orderListNotNoti = orderListNotNoti.Where(w => doc.Contains(w.Docno)).ToList();
                 var orderListTrue = (from order in carrier_Entities.Orders
                                      join order_Item in carrier_Entities.Order_Item on order.Docno equals order_Item.Docno
-                                     where order_Item.Status != "C" && order_Item.Status != null && docno.Contains(order_Item.Docno)
+                                     where order_Item.Status != "C" && order_Item.Status != null && docno.Contains(order_Item.Docno) && order.Ref_Order != "ECommerce"
                                      select new
                                      {
                                          Docno = order.Docno,

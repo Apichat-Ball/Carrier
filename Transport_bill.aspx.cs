@@ -25,17 +25,76 @@ namespace Carrier
             var docno = Request.QueryString["Docno"];
             lbDocno.Text = Request.QueryString["Docno"];
             String originalPath = new Uri(HttpContext.Current.Request.Url.AbsoluteUri).OriginalString;
-            string filePath = originalPath.Substring(0, originalPath.LastIndexOf("/Transport_bill")) + "/PDFFile/" + lbDocno.Text + ".pdf";
-            string dataDir = HttpContext.Current.Server.MapPath("PDFFile/") + lbDocno.Text + ".pdf";
+            string filePath = "";
+            string dataDir = "";
+            var checkBig = Carrier_Entities.Order_Big_Box.Where(w => w.BFID == docno).ToList();
 
-            if (File.Exists(dataDir))
+            List<log> log = new List<log>();
+            if(checkBig.Count() != 0)
             {
-                File.Delete(dataDir);
-                var create = Service_Flash.Get_Docment(docno, "/Transport_bill");
+                try
+                {
+                    foreach (var i in checkBig)
+                    {
+                        var pathDocno = HttpContext.Current.Server.MapPath("PDFFile/") + i.Docno + ".pdf";
+                        if (File.Exists(pathDocno))
+                        {
+                            File.Delete(pathDocno);
+                            var create = Service_Flash.Get_Docment(i.Docno, "/Transport_bill");
+                        }
+                        else
+                        {
+                            var create = Service_Flash.Get_Docment(i.Docno, "/Transport_bill");
+                        }
+                    }
+
+
+                    filePath = originalPath.Substring(0, originalPath.LastIndexOf("/Transport_bill")) + "/MergePDF/" + lbDocno.Text + ".pdf";
+                    dataDir = HttpContext.Current.Server.MapPath("MergePDF/") + lbDocno.Text + ".pdf";
+                    if (File.Exists(dataDir))
+                    {
+                        File.Delete(dataDir);
+                        var create = Service_Flash.GetDocumentAll(docno, "/Transport_bill");
+                    }
+                    else
+                    {
+                        var create = Service_Flash.GetDocumentAll(docno, "/Transport_bill");
+                    }
+                    foreach (var i in checkBig)
+                    {
+                        Carrier_Entities.Orders.Where(w => w.Docno == i.Docno).FirstOrDefault().status = "AP";
+                        Carrier_Entities.SaveChanges();
+                    }
+                }
+                catch(Exception ex)
+                {
+                    
+                }
+                
             }
             else
             {
-                var create = Service_Flash.Get_Docment(docno, "/Transport_bill");
+                try
+                {
+                    filePath = originalPath.Substring(0, originalPath.LastIndexOf("/Transport_bill")) + "/PDFFile/" + lbDocno.Text + ".pdf";
+                    dataDir = HttpContext.Current.Server.MapPath("PDFFile/") + lbDocno.Text + ".pdf";
+                    if (File.Exists(dataDir))
+                    {
+                        File.Delete(dataDir);
+                        var create = Service_Flash.Get_Docment(docno, "/Transport_bill");
+                    }
+                    else
+                    {
+                        var create = Service_Flash.Get_Docment(docno, "/Transport_bill");
+                    }
+                    Carrier_Entities.Orders.Where(w => w.Docno == lbDocno.Text).FirstOrDefault().status = "AP";
+                    Carrier_Entities.SaveChanges();
+                }
+                catch(Exception ex)
+                {
+
+                }
+                
             }
             #region //เปิดไฟล์แบบเต็มหน้า
             //string fileExtention = Path.GetExtension(filePath);
@@ -50,14 +109,14 @@ namespace Carrier
             Page myPage = (Page)HttpContext.Current.Handler;
             myFrame.Src = filePath;
             myFrame.Visible = true;
+
             //div_Image.Visible = true;
             //ImageLabel.ImageUrl = filePath;
             //ClientScript.RegisterStartupScript(GetType(), "print", "window.print();", true);
             ScriptManager.RegisterStartupScript(myPage, myPage.GetType(), "CallMyFunction", "print_iFrame();", true);
             #endregion
 
-            Carrier_Entities.Orders.Where(w => w.Docno == lbDocno.Text).FirstOrDefault().status = "AP";
-            Carrier_Entities.SaveChanges();
+            
 
         }
 
@@ -65,5 +124,11 @@ namespace Carrier
         {
             Response.Redirect("Transport_Form?Docno=" + lbDocno.Text);
         }
+
     }
+        public class log
+        {
+            public string row { get; set; }
+            public string data { get; set; }
+        }
 }
