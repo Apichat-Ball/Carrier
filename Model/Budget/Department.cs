@@ -21,5 +21,6 @@ namespace Carrier.Model.Budget
         public string Department_Ref { get; set; }
         public string UserID_Ref { get; set; }
         public string CostCenter { get; set; }
+        public string ShortBrand { get; set; }
     }
 }

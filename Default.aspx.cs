@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using Carrier.Service;
 using Carrier.Model.Carrier;
 using Carrier.Model.InsideSFG_WF;
+using Carrier.Model.Budget;
 using System.IO;
 using System.Net;
 using System.Globalization;
@@ -18,6 +19,7 @@ namespace Carrier
         Service_Flash service_Flashs;
         CarrierEntities carrier_Entities;
         InsideSFG_WFEntities insideSFG_WF_Entities;
+        BudgetEntities budget_Entities = new BudgetEntities();
         public _Default()
         {
             service_Flashs = new Service_Flash();
@@ -28,6 +30,7 @@ namespace Carrier
         {
             Session.Clear();
             //HttpContext.Current.Session["_UserID"] = "100686";
+
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();
@@ -59,6 +62,8 @@ namespace Carrier
 
             }
         }
+
+       
         public void loadtable(int page)
         {
             var user = Convert.ToInt32(Session["_UserID"].ToString());

@@ -168,6 +168,15 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.DropDownList ddlBrandADD;
 
         /// <summary>
+        /// btnADD_Brand control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnADD_Brand;
+
+        /// <summary>
         /// Label7 control.
         /// </summary>
         /// <remarks>
@@ -274,6 +283,15 @@ namespace Carrier
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCostcenterADD;
+
+        /// <summary>
+        /// gv_TempBrand control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gv_TempBrand;
 
         /// <summary>
         /// btnSaveAdd control.

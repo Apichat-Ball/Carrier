@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BudgetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BudgetModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Department">
           <Key>
             <PropertyRef Name="Department_ID" />
@@ -16,6 +16,7 @@
           <Property Name="Department_Ref" Type="nvarchar" MaxLength="50" />
           <Property Name="UserID_Ref" Type="nvarchar" MaxLength="100" />
           <Property Name="CostCenter" Type="nvarchar" MaxLength="10" />
+          <Property Name="ShortBrand" Type="nvarchar" MaxLength="8" />
         </EntityType>
         <EntityType Name="MainBudget">
           <Key>
@@ -66,8 +67,7 @@
           <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MainBudget" EntityType="Self.MainBudget" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BudgetModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -82,6 +82,7 @@
           <Property Name="Department_Ref" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="UserID_Ref" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="CostCenter" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ShortBrand" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="MainBudget">
           <Key>
@@ -141,6 +142,7 @@
           <EntitySetMapping Name="Departments">
             <EntityTypeMapping TypeName="BudgetModel.Department">
               <MappingFragment StoreEntitySet="Department">
+                <ScalarProperty Name="ShortBrand" ColumnName="ShortBrand" />
                 <ScalarProperty Name="Department_ID" ColumnName="Department_ID" />
                 <ScalarProperty Name="Department_Name" ColumnName="Department_Name" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />

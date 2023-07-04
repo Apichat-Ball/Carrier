@@ -1,7 +1,11 @@
 ﻿<%@ Page Title="" Language="C#" AutoEventWireup="true" CodeBehind="Edit_Add_Profit.aspx.cs" Inherits="Carrier.Edit_Add_Profit" MasterPageFile="~/Site.Master" %>
 
 <asp:Content runat="server" ID="Content1" ContentPlaceHolderID="MainContent">
-    
+    <style type="text/css">
+        .width-fit{
+            width: -webkit-fill-available;
+        }
+    </style>
     <asp:UpdatePanel runat="server" ID="update">
         <ContentTemplate>
             <div runat="server" id="div_main">
@@ -156,22 +160,27 @@
                         <div class="input-group">
                             <asp:Label runat="server" ID="Label8" Text="Brand" CssClass="input-group-text shadow"></asp:Label>
                             <asp:DropDownList ID="ddlBrandADD" runat="server" DataTextField="name" DataValueField="nameShot" CssClass="btn text-start shadow " BackColor="White"></asp:DropDownList>
+                            
+                        <asp:Button runat="server" ID="btnADD_Brand" Text="ADD" CssClass="btn btn-primary" OnClick="btnADD_Brand_Click"/>
+                    
                         </div>
+                        
                     </div>
-                    <div class=" col-sm-12 col-md-3  my-2">
+                    
+                    <div class=" col-sm-12 col-md-4  my-2">
                         <div class="input-group">
                             <asp:Label runat="server" ID="Label7" Text="SiteStorage" CssClass="input-group-text shadow"></asp:Label>
                             <asp:TextBox runat="server" ID="txtSiteStorageADD" CssClass="form-control text-uppercase"></asp:TextBox>
                         </div>
                     </div>
                     <div class=" col-sm-12 col-md-4 my-2" style="margin-bottom: 10px; ">
-                        <div class="  input-group" >
+                        <div class="  input-group" style="">
                             <asp:Label runat="server" ID="Label9" Text="Sale Channel" CssClass="input-group-text shadow"></asp:Label>
-                            <asp:DropDownList runat="server" ID="ddlSaleChannelADD" DataTextField="Sale_Channel"  CssClass="btn" BackColor="White" DataValueField="Sale_Channel">
+                            <asp:DropDownList runat="server" ID="ddlSaleChannelADD" DataTextField="Sale_Channel"  CssClass="btn width-fit" BackColor="White" DataValueField="Sale_Channel">
                             </asp:DropDownList>
                         </div>
                     </div>
-                    <div class=" col-sm-12 col-md-5 my-2"  style="margin-bottom: 10px; flex-wrap: nowrap;">
+                    <div class=" col-sm-12 col-md-4 my-2"  style="margin-bottom: 10px; flex-wrap: nowrap;">
                         <div class="  input-group mb-2 " style="width:100%">
                             <asp:Label runat="server" ID="Label2" Text="Channel" CssClass="input-group-text shadow"></asp:Label>
                             <asp:DropDownList runat="server" ID="ddlChannelADD"  CssClass="form-control" Width="100%">
@@ -200,6 +209,33 @@
                         </div>
                     </div>
 
+                </div>
+                <div class="row">
+                    <asp:GridView runat="server" ID="gv_TempBrand" AutoGenerateColumns="false" EmptyDataRowStyle-CssClass="invisible" CssClass="table table-info">
+                        <Columns>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <span>Brand Short</span>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lbBrand_Short" Text='<%# Bind("Brand_Short") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <span>Brand</span>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lbBrand" Text='<%# Bind("Brand")  %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <ItemTemplate>
+                                    <asp:ImageButton runat="server" ID="imgDelete" ImageUrl="~/Icon/x-button.png" Width="30px" OnClick="imgDelete_Click" />
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
                 </div>
                 <div class="row float-end">
                     <div class="col-sm-12 col-md-3 ">

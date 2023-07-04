@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Carrier.Model.Carrier;
 using Carrier.Model.InsideSFG_WF;
+using Carrier.Model.Budget ;
 using Carrier.Service;
 using System.Globalization;
 using System.IO;
@@ -18,6 +19,7 @@ namespace Carrier
         InsideSFG_WFEntities insideSFG_WF_Entities;
         CarrierEntities carrier_Entities;
         Service_Flash service_Flashs;
+        BudgetEntities budget_Entities = new BudgetEntities();
         public Report_ACC()
         {
             insideSFG_WF_Entities = new InsideSFG_WFEntities();
@@ -114,37 +116,45 @@ namespace Carrier
                     lbDateCreate.Text = DateTime.Parse(lbDateCreate.Text).ToString("dd/MM/yyyy");
                     if (lbBrand.Text != "")
                     {
-                        var ShotBand = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
-                                        join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
-                                        where BG_HA.departmentID == lbBrand.Text
-                                        select new BrandPro
-                                        {
-                                            DepartmentID = BG_HA.departmentID,
-                                            Brand = BG_HA.department_,
-                                            Depart_Short = BG_HAPF.Depart_Short,
-                                            ComCode = BG_HAPF.ComCode,
-                                            CostCenter_Offline = BG_HAPF.CostCenter_Offline,
-                                            CostCenter_Online = BG_HAPF.CostCenter_Online,
-                                            Profit_Offline = BG_HAPF.Profit_Offline,
-                                            Profit_Online = BG_HAPF.Profit_Online
-                                        }
-                                 ).ToList().FirstOrDefault();
+                        //var ShotBand = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
+                        //                join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
+                        //                where BG_HA.departmentID == lbBrand.Text
+                        //                select new BrandPro
+                        //                {
+                        //                    DepartmentID = BG_HA.departmentID,
+                        //                    Brand = BG_HA.department_,
+                        //                    Depart_Short = BG_HAPF.Depart_Short,
+                        //                    ComCode = BG_HAPF.ComCode,
+                        //                    CostCenter_Offline = BG_HAPF.CostCenter_Offline,
+                        //                    CostCenter_Online = BG_HAPF.CostCenter_Online,
+                        //                    Profit_Offline = BG_HAPF.Profit_Offline,
+                        //                    Profit_Online = BG_HAPF.Profit_Online
+                        //                }
+                        //         ).ToList().FirstOrDefault();
+                        //if(lbBrand.Text == "1619")
+                        //{
+                        //    var budget = budget_Entities.Departments.Where(w => w.Department_Name.Contains("SEEK") && !new string[] { "1619", "1508" }.Contains(w.Department_ID)).ToList();
+                        //    if(budget.Count() != 0)
+                        //    {
+                                
+                        //    }
+                        //}
                         Label lbComcode = (Label)row.FindControl("lbComcode");
                         Label lbProfit = (Label)row.FindControl("lbProfit");
                         Label lbCostCenter = (Label)row.FindControl("lbCostCenter");
                         Label lbSaleOn = (Label)row.FindControl("lbSaleOn");
                         Label lbSiteStorage = (Label)row.FindControl("lbSiteStorage");
-
+                        var ShotBand = budget_Entities.Departments.Where(w => w.Department_ID == lbBrand.Text).FirstOrDefault();
                         if (ShotBand != null)
                         {
-                            lbBrand.Text = ShotBand.Brand;
-                            lbBrandShort.Text = ShotBand.Depart_Short;
+                            lbBrand.Text = ShotBand.Department_Name;
+                            lbBrandShort.Text = ShotBand.ShortBrand;
                             if (lbSiteStorage.Text == "CENTER")
                             {
-                                var centerSite = carrier_Entities.Site_Center.Where(w => ShotBand.Depart_Short == w.Brand_Center_Short).ToList().FirstOrDefault();
+                                var centerSite = carrier_Entities.Site_Center.Where(w => ShotBand.ShortBrand == w.Brand_Center_Short).ToList().FirstOrDefault();
                                 if (centerSite == null)
                                 {
-                                    var pro = carrier_Entities.Site_Profit.Where(w => w.Channel == lbSaleOn.Text && w.Brand == ShotBand.Depart_Short
+                                    var pro = carrier_Entities.Site_Profit.Where(w => w.Channel == lbSaleOn.Text && w.Brand == ShotBand.ShortBrand
                                     && (w.Sale_Channel == "Depart" || w.Sale_Channel == "Shop" || w.Sale_Channel == "WebSite")).ToList().FirstOrDefault();
                                     if (pro != null)
                                     {
@@ -164,7 +174,7 @@ namespace Carrier
                             else
                             {
                                 var Profit = (from pro in carrier_Entities.Site_Profit
-                                              where pro.Site_Stroage == lbSiteStorage.Text && pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.Depart_Short)
+                                              where pro.Site_Stroage == lbSiteStorage.Text && pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.ShortBrand)
                                               select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
                                 if (Profit != null)
                                 {
@@ -178,7 +188,7 @@ namespace Carrier
                                     if (lbSiteStorage.Text == "CENTER_ONLINE" || lbSiteStorage.Text == "CENTER_OFFLINE")
                                     {
                                         var ProfitNoSiteCenter = (from pro in carrier_Entities.Site_Profit
-                                                                  where pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.Depart_Short) && (pro.Sale_Channel == "Depart" || pro.Sale_Channel == "Shop" || pro.Sale_Channel == "WebSite")
+                                                                  where pro.Channel == lbSaleOn.Text && pro.Brand.Contains(ShotBand.ShortBrand) && (pro.Sale_Channel == "Depart" || pro.Sale_Channel == "Shop" || pro.Sale_Channel == "WebSite")
                                                                   select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
                                         if (ProfitNoSiteCenter != null)
                                         {
@@ -194,7 +204,7 @@ namespace Carrier
                                         if (eventCheck != null)
                                         {
                                             var ProfitNoSiteCenter = (from pro in carrier_Entities.Site_Profit
-                                                                      where pro.Channel == "OFFLINE" && pro.Brand.Contains(ShotBand.Depart_Short) && (pro.Sale_Channel == "Depart" || pro.Sale_Channel == "Shop")
+                                                                      where pro.Channel == "OFFLINE" && pro.Brand.Contains(ShotBand.ShortBrand) && (pro.Sale_Channel == "Depart" || pro.Sale_Channel == "Shop")
                                                                       select new { ComCode = pro.COMCODE, profit = pro.Profit, CostCenter = pro.Costcenter }).ToList().FirstOrDefault();
                                             if (ProfitNoSiteCenter != null)
                                             {
@@ -203,7 +213,6 @@ namespace Carrier
                                                 lbCostCenter.Text = ProfitNoSiteCenter.CostCenter;
                                             }
                                         }
-
                                     }
                                 }
                             }
@@ -235,6 +244,7 @@ namespace Carrier
                             #endregion
 
                         }
+
 
                     }
 

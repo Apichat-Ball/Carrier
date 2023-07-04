@@ -242,7 +242,7 @@
                             <asp:LinkButton runat="server" ID="lkSendMail" Text="เพิ่ม SiteStorage" OnClick="lkSendMail_Click"></asp:LinkButton>
                         </div>
                         <div class="row mb-2 ml-2">
-                            <asp:Label runat="server" ID="lbGuidSiteStorage" Text=" - กรุณากรอก SiteStorage ถ้าไม่มีให้ใส่ CENTER" Font-Names="Comic Sans MS" Font-Size="Small" ForeColor="Red"></asp:Label>
+                            <asp:Label runat="server" ID="lbGuidSiteStorage" Text=" - กรุณากรอก SiteStorage ถ้าไม่มีให้ใส่ CENTER" Font-Names="Comic Sans MS" Font-Size="Small" ForeColor="Red" Visible="false"></asp:Label>
                             <asp:Label runat="server" ID="lbGuidSiteStorage2" Text=" - SiteStorage CENTER สามารถใส่ได้เฉพาะของกองหลังเท่านั้น" Font-Names="Comic Sans MS" Font-Size="Small" ForeColor="Red"></asp:Label>
                         </div>
                         <asp:Label runat="server" ID="Label2" Text="ผู้รับ" CssClass="s-22px"></asp:Label>

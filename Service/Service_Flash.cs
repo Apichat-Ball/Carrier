@@ -37,6 +37,7 @@ namespace Carrier.Service
             entities_Whale = new WhaleEntities();
             entities_Carrier = new CarrierEntities();
             entities_InsideSFG_WF = new InsideSFG_WFEntities();
+            budget_Entities = new BudgetEntities();
         }
         public Model_Trackingno CreateOrderFLASH(string docno, string favor)
         {
@@ -834,7 +835,8 @@ namespace Carrier.Service
             else if (item.dstDetailAddress.Length > 200)
             {
                 return "รายละเอียดที่อยู่ผู้รับต้องไม่เกิน 200 ตัวอักษร";
-            }else if (item.dstDetailAddress.Contains("&"))
+            }
+            else if (item.dstDetailAddress.Contains("&"))
             {
                 return "รายละเอียดที่อยู่ผู้รับต้องไม่มีตัวอักษร &";
             }
@@ -878,7 +880,7 @@ namespace Carrier.Service
                 return "ช่องหมายเหตุห้ามใส่เครื่องหมาย +";
             }
 
-            if(item.dstDetailAddress.Contains("#")|| item.dstDetailAddress.Contains("*") || item.dstDetailAddress.Contains("+"))
+            if (item.dstDetailAddress.Contains("#") || item.dstDetailAddress.Contains("*") || item.dstDetailAddress.Contains("+"))
             {
                 return "ที่อยู่รายละเอียดผู้รับห้ามใช้ตัวอักษรดังนี้ # * +";
             }
@@ -893,36 +895,117 @@ namespace Carrier.Service
             }
             else
             {
-                if (item.saleChannel == "Event")
-                {
-                    var eventPro = entities_Carrier.Event_Shop.Where(w => w.Shop_Code.StartsWith(item.siteStorage)).ToList();
-                    if (eventPro.Count == 0)
+                //if (item.SDpart == "1619")
+                //{
+                //    var seek = budget_Entities.Departments.Where(w => w.Department_Name.Contains("SEEK") && w.Flag == "F" && w.Department_ID != "1619" && w.ShortBrand != "" ).Select(s=>s.ShortBrand).ToList();
+                //    var siteCheck = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn && seek.Contains(w.Brand)).ToList();
+                //    if(siteCheck.Count() == 0)
+                //    {
+                //        return "ไม่พบ SiteStorage นี้ครับ";
+                //    }
+                //}
+                //else
+                //{
+                    if (item.saleChannel == "Event")
                     {
-                        return "ไม่พบ SiteStorage นี้ใน Event ครับ";
+                        var eventPro = entities_Carrier.Event_Shop.Where(w => w.Shop_Code.StartsWith(item.siteStorage)).ToList();
+                        if (eventPro.Count == 0)
+                        {
+                            var eventProfit = entities_Carrier.Site_Profit.Where(w => w.Sale_Channel == item.saleChannel && w.Site_Stroage.StartsWith(item.siteStorage)).ToList();
+                            if(eventProfit.Count() == 0)
+                            {
+                                return "ไม่พบ SiteStorage นี้ใน Event ครับ";
+                            }
+                            
+                        }
                     }
-                }
-                else if (item.saleChannel == "Depart")
-                {
-                    if (item.siteStorage.StartsWith("CENTER"))
+                    else if (item.saleChannel == "Depart")
                     {
-                        return "หน้าร้าน จำเป็นต้องใส่ SiteStorage ที่ไม่ใช่ CENTER";
+                        if (item.siteStorage.StartsWith("CENTER"))
+                        {
+                            return "หน้าร้าน จำเป็นต้องใส่ SiteStorage ที่ไม่ใช่ CENTER";
+                        }
+                        else
+                        {
+                            var BG = budget_Entities.Departments.Where(w => w.Department_ID == item.SDpart).Select(s => s.ShortBrand).ToList();
+
+                            var SaleChannel = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Sale_Channel).FirstOrDefault();
+
+                            var siteCenter = entities_Carrier.Site_Center.Where(w => BG.Contains(w.Brand_Center_Short)).FirstOrDefault();
+                            if (siteCenter == null)
+                            {
+                                if (item.siteStorage.StartsWith("CENTER"))
+                                {
+                                    return "SiteStorage CENTER ใช้ไม่ได้";
+                                }
+                            }
+                            else
+                            {
+                                if (item.siteStorage != "CENTER")
+                                {
+                                    return "SiteStorage ใช้ได้แค่ CENTER ";
+                                }
+                            }
+                            if (SaleChannel != "Shop")
+                            {
+                                var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
+                                if (brandProfit.Count == 0)
+                                {
+                                    return "ไม่พบ SiteStorage นี้ครับ";
+                                }
+                                BG = BG.Where(w => brandProfit.Contains(w)).ToList();
+                                if (BG.Count() == 0)
+                                {
+                                    return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
+                                }
+                            }
+                        }
+
                     }
                     else
                     {
-                        var BG = (from ha in entities_InsideSFG_WF.BG_HApprove
-                                  join haP in entities_InsideSFG_WF.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
-                                  where ha.departmentID == item.SDpart
-                                  select haP).ToList();
+                        var BG = budget_Entities.Departments.Where(w => w.Department_ID == item.SDpart).Select(s => s.ShortBrand).ToList();
 
-                        var SaleChannel = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Sale_Channel).FirstOrDefault();
-
-                        var departSh = BG.Select(s => s.Depart_Short).ToList();
-                        var siteCenter = entities_Carrier.Site_Center.Where(w => departSh.Contains(w.Brand_Center_Short)).FirstOrDefault();
+                        var siteCenter = entities_Carrier.Site_Center.Where(w => BG.Contains(w.Brand_Center_Short)).FirstOrDefault();
                         if (siteCenter == null)
                         {
                             if (item.siteStorage.StartsWith("CENTER"))
                             {
                                 return "SiteStorage CENTER ใช้ไม่ได้";
+                            }
+                            else
+                            {
+                                var pro = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn && BG.Contains(w.Brand)).ToList();
+                                if (pro.Count == 0)
+                                {
+                                    return "Brand นี้ไม่พบ Profit ";
+                                }
+                                else
+                                {
+                                    var SaleChannel = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Sale_Channel).FirstOrDefault();
+                                    if (SaleChannel != "Shop")
+                                    {
+                                        var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
+                                        if (brandProfit.Count == 0)
+                                        {
+                                            return "ไม่พบ SiteStorage นี้ครับ";
+                                        }
+                                        BG = BG.Where(w => brandProfit.Contains(w)).ToList();
+                                        if (BG.Count() == 0)
+                                        {
+                                            return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
+                                        BG = BG.Where(w => brandProfit.Contains(w)).ToList();
+                                        if (BG.Count() == 0)
+                                        {
+                                            return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
+                                        }
+                                    }
+                                }
                             }
                         }
                         else
@@ -931,92 +1014,19 @@ namespace Carrier.Service
                             {
                                 return "SiteStorage ใช้ได้แค่ CENTER ";
                             }
-                        }
-                        if (SaleChannel != "Shop")
-                        {
-                            var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
-                            if (brandProfit.Count == 0)
-                            {
-                                return "ไม่พบ SiteStorage นี้ครับ";
-                            }
-                            BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
-                            if (BG.Count() == 0)
-                            {
-                                return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
-                            }
-                        }
-                    }
-
-                }
-                else
-                {
-                    var BG = (from ha in entities_InsideSFG_WF.BG_HApprove
-                              join haP in entities_InsideSFG_WF.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
-                              where ha.departmentID == item.SDpart
-                              select haP).ToList();
-
-                    var departSh = BG.Select(s => s.Depart_Short).FirstOrDefault();
-                    var siteCenter = entities_Carrier.Site_Center.Where(w => departSh == w.Brand_Center_Short).FirstOrDefault();
-                    if (siteCenter == null)
-                    {
-                        if (item.siteStorage.StartsWith("CENTER"))
-                        {
-                            return "SiteStorage CENTER ใช้ไม่ได้";
-                        }
-                        else
-                        {
-                            var pro = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn && w.Brand == departSh).ToList();
-                            if (pro.Count == 0)
-                            {
-                                return "Brand นี้ไม่พบ Profit ";
-                            }
                             else
                             {
-                                var SaleChannel = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Sale_Channel).FirstOrDefault();
-                                if (SaleChannel != "Shop")
+                                var pro = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn && w.Brand == siteCenter.Brand_Center_Name_Full).ToList();
+                                if (pro.Count == 0)
                                 {
-                                    var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
-                                    if (brandProfit.Count == 0)
-                                    {
-                                        return "ไม่พบ SiteStorage นี้ครับ";
-                                    }
-                                    BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
-                                    if (BG.Count() == 0)
-                                    {
-                                        return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
-                                    }
-                                }
-                                else
-                                {
-                                    var brandProfit = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage.StartsWith(item.siteStorage) && w.Channel == item.saleOn).Select(s => s.Brand).Distinct().ToList();
-                                    BG = BG.Where(w => brandProfit.Contains(w.Depart_Short)).ToList();
-                                    if (BG.Count() == 0)
-                                    {
-                                        return "SiteStorage พบ Profit แต่ Brand ไม่ตรงกับใน Profit ";
-                                    }
+                                    return "Brand นี้ไม่พบ Profit ";
                                 }
                             }
-                        }
-                    }
-                    else
-                    {
-                        if (item.siteStorage != "CENTER")
-                        {
-                            return "SiteStorage ใช้ได้แค่ CENTER ";
-                        }
-                        else
-                        {
-                            var pro = entities_Carrier.Site_Profit.Where(w => w.Channel == item.saleOn && w.Brand == siteCenter.Brand_Center_Name_Full).ToList();
-                            if (pro.Count == 0)
-                            {
-                                return "Brand นี้ไม่พบ Profit ";
-                            }
+
                         }
 
                     }
-
-                }
-
+                //}
             }
 
 

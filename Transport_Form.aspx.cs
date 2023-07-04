@@ -538,7 +538,7 @@ namespace Carrier
                 else
                 {
                     string username = HttpContext.Current.Request.Cookies["sfgweb"]["uname"].Trim();
-                    //string username = "9012400";
+                    //string username = "9021517";
                     var objuser = (from tEmployee in InsideSFG_WF_Entities.Employees
                                    where (tEmployee.username_ == username || tEmployee.uCode == username)
                                    && tEmployee.StatWork == "Y"
@@ -610,52 +610,17 @@ namespace Carrier
             txtlength.Text = "1";
             txtheight.Text = "1";
 
-            //var ccc = DateTime.Now;
-            //if(date <= Convert.ToDateTime("26/01/2023 12:14:42 PM"))
-            //{
-
-            //var FC = InsideSFG_WF_Entities.BG_ForeCast.Where(w => w.ActiveStatus == 1).GroupBy(g => g.DepartmentID).Select(s => new Forecasts { DepartmentID = s.Key });
-            //var depart = (from BG_HA in InsideSFG_WF_Entities.BG_HApprove
-            //              join BG_HAPF in InsideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
-            //              where //FC.Select(s => s.DepartmentID).Contains(BG_HA.departmentID) &&
-            //              (BG_HA.Sta == "B" || BG_HA.Sta == "S" || BG_HA.Sta == "N")
-            //              select new { departmentID = BG_HA.departmentID, department_ = BG_HA.department_ }
-            //          ).OrderBy(r => r.department_).ToList();
-            
+            var bubget = budget_Entities.MainBudgets.Where(w => w.Year_Budget == date.Value.Year  ).GroupBy(g => g.Department_ID).Select(s => s.Key).ToList();
             var FC = (from d in budget_Entities.Departments
-                      join mb in budget_Entities.MainBudgets on d.Department_ID equals mb.Department_ID
-                      where new string[] { "F", "VIP" }.Contains(d.Flag) && mb.Year_Budget == DateTime.Now.Year
-                      select d.Department_ID).ToList();
-            var depart = (from BG_HA in InsideSFG_WF_Entities.BG_HApprove
-                          join BG_HAPF in InsideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
-                          where FC.Contains(BG_HA.departmentID) &&
-                          (BG_HA.Sta == "B" || BG_HA.Sta == "S" || BG_HA.Sta == "N") && !BG_HA.department_.Contains("SEEK")
-                          select new { departmentID = BG_HA.departmentID, department_ = BG_HA.department_ }).ToList();
-            var seek = (from BG_HA in InsideSFG_WF_Entities.BG_HApprove
-                        join BG_HAPF in InsideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
-                        where (BG_HA.Sta == "B" || BG_HA.Sta == "S" || BG_HA.Sta == "N") && BG_HA.department_.Contains("SEEK")
-                        select new { departmentID = BG_HA.departmentID, department_ = BG_HA.department_ }).ToList();
-            depart.AddRange(seek);
-            depart.Insert(0, new { departmentID = "Select", department_ = "กรุณาเลือกแผนกที่ต้องการเบิก" });
-            ddlSDpart.DataSource = depart;
+                      where new string[] { "F", "VIP" }.Contains(d.Flag) && bubget.Contains(d.Department_ID) && !d.Department_Name.Contains("SEEK") && !d.Department_Name.Contains("SDC1")
+                      select new { departmentID = d.Department_ID, department_ = d.Department_Name }).OrderBy(o=>o.department_).ToList();
+            
+            var seek = budget_Entities.Departments.Where(w => w.Department_Name.Contains("SEEK") && !new string[] { "1508", "1619" }.Contains(w.Department_ID)).Select(s=>new { departmentID = s.Department_ID, department_ = s.Department_Name }).OrderBy(o=>o.department_).ToList();
+            FC.AddRange(seek);
+            FC.Insert(0, new { departmentID = "Select", department_ = "กรุณาเลือกแผนกที่ต้องการเบิก" });
+            ddlSDpart.DataSource = FC;
             ddlSDpart.DataBind();
-            //}
-            //else
-            //{
-            //    var FC = (from b in budget_Entities.Departments
-            //              join mb in budget_Entities.MainBudgets on b.Department_ID equals mb.Department_ID
-            //              where new string[] { "F", "VIP" }.Contains(b.Flag) && mb.Year_Budget == date.Value.Year
-            //              select b).
-            //              GroupBy(g=>g.Department_ID).Select(s=>new { departmentID = s.Key, department_ = s.Select(d=>d.Department_Name).FirstOrDefault()}).ToList();
-            //    //var depart = (from BG_HA in InsideSFG_WF_Entities.BG_HApprove
-            //    //              join BG_HAPF in InsideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
-            //    //              where FC.Contains(BG_HA.departmentID) && (BG_HA.Sta == "B" || BG_HA.Sta == "S" || BG_HA.Sta == "N")
-            //    //              select new { departmentID = BG_HA.departmentID, department_ = BG_HA.department_ }
-            //    //          ).OrderBy(r => r.department_).ToList();
-            //    FC.Insert(0, new { departmentID = "Select", department_ = "กรุณาเลือกแผนกที่ต้องการเบิก" });
-            //    ddlSDpart.DataSource = FC;
-            //    ddlSDpart.DataBind();
-            //}
+            
 
 
             var box = Whale_Entities.Boxes.Where(w => w.Flag_Active == true && (w.Box_ID != 1 && w.Box_ID != 6 && w.Box_ID != 8 && w.Box_ID != 12 && w.Box_ID != 13 && w.Box_ID != 14 && w.Box_ID != 16 && w.Box_ID != 17)).ToList();
@@ -803,7 +768,7 @@ namespace Carrier
         public void loadProvince()
         {
             //src
-            var Provincelist = Whale_Entities.Provinces.ToList();
+            var Provincelist = Whale_Entities.Provinces.OrderBy(o => o.Province_Name).ToList();
             Provincelist.Insert(0, new Province { Province_ID = 0, Province_Name = "เลือกจังหวัด" });
             ddlsrcProvinceName.DataSource = Provincelist;
             ddlsrcProvinceName.DataBind();
@@ -838,12 +803,12 @@ namespace Carrier
             }
             else
             {
-                ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == province).ToList();
+                ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == province).OrderBy(o=>o.City_Name).ToList();
                 ddlsrcCityName.DataBind();
                 ddlsrcDistrictName.Enabled = true;
 
                 var city = Convert.ToInt32(ddlsrcCityName.SelectedValue);
-                ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == city).ToList();
+                ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == city).OrderBy(o=>o.Distinct_Name).ToList();
                 ddlsrcDistrictName.DataBind();
 
                 var district = Convert.ToInt32(ddlsrcDistrictName.SelectedValue);
@@ -856,7 +821,7 @@ namespace Carrier
         {
             ddlsrcDistrictName.Enabled = true;
             var city = Convert.ToInt32(ddlsrcCityName.SelectedValue);
-            ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == city).ToList();
+            ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == city).OrderBy(o=>o.Distinct_Name).ToList();
             ddlsrcDistrictName.DataBind();
 
             var district = Convert.ToInt32(ddlsrcDistrictName.SelectedValue);
@@ -892,12 +857,12 @@ namespace Carrier
             }
             else
             {
-                ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == province).ToList();
+                ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == province).OrderBy(o=>o.City_Name).ToList();
                 ddldstCityName.DataBind();
                 ddldstDistrictName.Enabled = true;
 
                 var city = Convert.ToInt32(ddldstCityName.SelectedValue);
-                ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == city).ToList();
+                ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == city).OrderBy(o=>o.Distinct_Name).ToList();
                 ddldstDistrictName.DataBind();
 
                 var district = Convert.ToInt32(ddldstDistrictName.SelectedValue);
@@ -910,7 +875,7 @@ namespace Carrier
         {
             ddldstDistrictName.Enabled = true;
             var city = Convert.ToInt32(ddldstCityName.SelectedValue);
-            ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == city).ToList();
+            ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == city).OrderBy(o=>o.Distinct_Name).ToList();
             ddldstDistrictName.DataBind();
             txtdstPostalCode.Text = Whale_Entities.Districts.Where(w => w.City_ID == city).FirstOrDefault().Postcode.ToString();
 
@@ -939,14 +904,14 @@ namespace Carrier
                     ddlsrcProvinceName.SelectedValue = "1";
                     var provinceSFG = Convert.ToInt32(ddlsrcProvinceName.SelectedValue);
 
-                    ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSFG).ToList();
+                    ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSFG).OrderBy(o=>o.City_Name).ToList();
                     ddlsrcCityName.DataBind();
                     ddlsrcCityName.SelectedValue = "20";
                     ddlsrcCityName.Enabled = true;
 
                     ddlsrcDistrictName.Enabled = true;
                     var citySFG = Convert.ToInt32(ddlsrcCityName.SelectedValue);
-                    ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citySFG).ToList();
+                    ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citySFG).OrderBy(o=>o.Distinct_Name).ToList();
                     ddlsrcDistrictName.DataBind();
                     ddlsrcDistrictName.SelectedValue = "119";
                     txtsrcPostalCode.Text = "10120";
@@ -962,14 +927,14 @@ namespace Carrier
                     ddlsrcProvinceName.SelectedValue = "5";
                     var provinceSDC1 = Convert.ToInt32(ddlsrcProvinceName.SelectedValue);
 
-                    ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSDC1).ToList();
+                    ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSDC1).OrderBy(o=>o.City_Name).ToList();
                     ddlsrcCityName.DataBind();
                     ddlsrcCityName.SelectedValue = "755";
                     ddlsrcCityName.Enabled = true;
 
                     ddlsrcDistrictName.Enabled = true;
                     var citySDC1 = Convert.ToInt32(ddlsrcCityName.SelectedValue);
-                    ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citySDC1).ToList();
+                    ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citySDC1).OrderBy(o=>o.Distinct_Name).ToList();
                     ddlsrcDistrictName.DataBind();
                     ddlsrcDistrictName.SelectedValue = "483";
                     txtsrcPostalCode.Text = "13170";
@@ -982,14 +947,14 @@ namespace Carrier
                     ddlsrcProvinceName.SelectedValue = "1";
                     var provinceROX = Convert.ToInt32(ddlsrcProvinceName.SelectedValue);
 
-                    ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceROX).ToList();
+                    ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceROX).OrderBy(o=>o.City_Name).ToList();
                     ddlsrcCityName.DataBind();
                     ddlsrcCityName.SelectedValue = "20";
                     ddlsrcCityName.Enabled = true;
 
                     ddlsrcDistrictName.Enabled = true;
                     var cityROX = Convert.ToInt32(ddlsrcCityName.SelectedValue);
-                    ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == cityROX).ToList();
+                    ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == cityROX).OrderBy(o=>o.Distinct_Name).ToList();
                     ddlsrcDistrictName.DataBind();
                     ddlsrcDistrictName.SelectedValue = "119";
                     txtsrcPostalCode.Text = "10120";
@@ -1020,13 +985,13 @@ namespace Carrier
                         ddldstProvinceName.SelectedValue = "5";
                         var provincedstSCD1 = Convert.ToInt32(ddldstProvinceName.SelectedValue);
                         ddldstCityName.Enabled = true;
-                        ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provincedstSCD1).ToList();
+                        ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provincedstSCD1).OrderBy(o=>o.City_Name).ToList();
                         ddldstCityName.DataBind();
                         ddldstCityName.SelectedValue = "755";
 
                         ddldstDistrictName.Enabled = true;
                         var citydstSCD1 = Convert.ToInt32(ddldstCityName.SelectedValue);
-                        ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citydstSCD1).ToList();
+                        ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citydstSCD1).OrderBy(o=>o.Distinct_Name).ToList();
                         ddldstDistrictName.DataBind();
                         ddldstDistrictName.SelectedValue = "483";
                         txtdstPostalCode.Text = "13170";
@@ -1041,14 +1006,14 @@ namespace Carrier
                         ddldstProvinceName.SelectedValue = "1";
                         var provincedstSFG = Convert.ToInt32(ddldstProvinceName.SelectedValue);
 
-                        ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provincedstSFG).ToList();
+                        ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provincedstSFG).OrderBy(o=>o.City_Name).ToList();
                         ddldstCityName.DataBind();
                         ddldstCityName.SelectedValue = "20";
                         ddldstCityName.Enabled = true;
 
                         ddldstDistrictName.Enabled = true;
                         var citydstSFG = Convert.ToInt32(ddldstCityName.SelectedValue);
-                        ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citydstSFG).ToList();
+                        ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citydstSFG).OrderBy(o => o.Distinct_Name).ToList();
                         ddldstDistrictName.DataBind();
                         ddldstDistrictName.SelectedValue = "119";
                         txtdstPostalCode.Text = "10120";
@@ -1129,23 +1094,24 @@ namespace Carrier
                 var citylike = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSDC1 && w.City_Name.Contains(address.dstCity)).ToList().FirstOrDefault();
                 if (citylike != null)
                 {
-                    ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSDC1).ToList();
+                    ddldstCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSDC1).OrderBy(o=>o.City_Name).ToList();
                     ddldstCityName.DataBind();
                     ddldstCityName.SelectedValue = citylike.City_ID.ToString();
                     ddldstCityName.Enabled = true;
 
                     var city = Convert.ToInt32(ddldstCityName.SelectedValue);
-                    var districtlike = Whale_Entities.Districts.Where(w => w.City_ID == city && w.Distinct_Name.Contains(address.dstDistrict)).ToList().FirstOrDefault();
+                    var districtSplit = address.dstDistrict.StartsWith("แขวง")? address.dstDistrict.Substring(4).TrimEnd(): address.dstDistrict;
+                    var districtlike = Whale_Entities.Districts.Where(w => w.City_ID == city && w.Distinct_Name.Contains(districtSplit)).OrderBy(o=>o.Distinct_Name).ToList().FirstOrDefault();
                     if (districtlike != null)
                     {
                         ddldstDistrictName.Enabled = true;
-                        ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == city).ToList();
+                        ddldstDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == city).OrderBy(o=>o.Distinct_Name).ToList();
                         ddldstDistrictName.DataBind();
                         ddldstDistrictName.SelectedValue = districtlike.Distinct_ID.ToString();
                     }
                     else
                     {
-                        var district = Whale_Entities.Districts.Where(w => w.City_ID == city).ToList();
+                        var district = Whale_Entities.Districts.Where(w => w.City_ID == city).OrderBy(o=>o.Distinct_Name).OrderBy(o=>o.Distinct_Name).ToList();
                         district.Insert(0, new District { Distinct_ID = 0, Distinct_Name = "เลือกตำบล" });
                         ddldstDistrictName.Enabled = true;
                         ddldstDistrictName.DataSource = district;
@@ -1155,7 +1121,7 @@ namespace Carrier
                 }
                 else
                 {
-                    var city = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSDC1).ToList();
+                    var city = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSDC1).OrderBy(o=>o.City_Name).ToList();
                     city.Insert(0, new City { City_ID = 0, City_Name = "เลือกอำเภอ" });
                     ddldstCityName.Enabled = true;
                     ddldstCityName.DataSource = city;

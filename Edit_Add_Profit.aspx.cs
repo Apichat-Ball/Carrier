@@ -38,27 +38,32 @@ namespace Carrier
         {
 
             //var FC = insideSFG_WF_Entities.BG_ForeCast.Where(w => w.ActiveStatus == 1).GroupBy(g => g.DepartmentID).Select(s => new Forecasts { DepartmentID = s.Key });
-            var FC = (from d in budget_Entities.Departments
-                      join mb in budget_Entities.MainBudgets on d.Department_ID equals mb.Department_ID
-                      where new string[] { "F", "VIP" }.Contains(d.Flag)
-                      select d.Department_ID).ToList();
-            var depart = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
-                          join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
-                          where  FC.Contains(BG_HA.departmentID) && 
-                          (BG_HA.Sta == "B" || BG_HA.Sta == "S" || BG_HA.Sta == "N") && !BG_HA.department_.Contains("SEEK")
-                          select new BrandShowInfo
-                          {
-                              name = BG_HA.department_,
-                              nameShot = BG_HAPF.Depart_Short
-                          }).OrderBy(r => r.name).ToList();
-            var seek = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
-                        join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
-                        where (BG_HA.Sta == "B" || BG_HA.Sta == "S" || BG_HA.Sta == "N") && BG_HA.department_.Contains("SEEK")
-                        select new BrandShowInfo
-                        {
-                            name = BG_HA.department_,
-                            nameShot = BG_HAPF.Depart_Short
-                        }).OrderBy(r => r.name).ToList();
+            //var FC = (from d in budget_Entities.Departments
+            //          join mb in budget_Entities.MainBudgets on d.Department_ID equals mb.Department_ID
+            //          where new string[] { "F", "VIP" }.Contains(d.Flag)
+            //          select d.Department_ID).ToList();
+            //var depart = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
+            //              join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
+            //              where  FC.Contains(BG_HA.departmentID) && 
+            //              (BG_HA.Sta == "B" || BG_HA.Sta == "S" || BG_HA.Sta == "N") && !BG_HA.department_.Contains("SEEK")
+            //              select new BrandShowInfo
+            //              {
+            //                  name = BG_HA.department_,
+            //                  nameShot = BG_HAPF.Depart_Short
+            //              }).OrderBy(r => r.name).ToList();
+            //var seek = (from BG_HA in insideSFG_WF_Entities.BG_HApprove
+            //            join BG_HAPF in insideSFG_WF_Entities.BG_HApprove_Profitcenter on BG_HA.departmentID equals BG_HAPF.DepartmentID
+            //            where (BG_HA.Sta == "B" || BG_HA.Sta == "S" || BG_HA.Sta == "N") && BG_HA.department_.Contains("SEEK")
+            //            select new BrandShowInfo
+            //            {
+            //                name = BG_HA.department_,
+            //                nameShot = BG_HAPF.Depart_Short
+            //            }).OrderBy(r => r.name).ToList();
+            //depart.AddRange(seek);
+
+            var budget = budget_Entities.MainBudgets.Where(w => w.Year_Budget == DateTime.Now.Year).GroupBy(g => g.Department_ID).Select(s => s.Key).ToList();
+            var depart = budget_Entities.Departments.Where(w => budget.Contains(w.Department_ID) && new string[] { "F", "VIP" }.Contains(w.Flag) && !w.Department_Name.Contains("SEEK") && !w.Department_Name.Contains("SDC1")).Select(s => new BrandShowInfo { name = s.Department_Name, nameShot = s.ShortBrand }).OrderBy(o=>o.name).ToList();
+            var seek = budget_Entities.Departments.Where(w => w.Department_Name.Contains("SEEK") && w.Flag == "F" && !new string[] { "1508", "1619" }.Contains(w.Department_ID)).Select(s => new BrandShowInfo { name = s.Department_Name, nameShot = s.ShortBrand }).OrderBy(o => o.name).ToList();
             depart.AddRange(seek);
             foreach (var dep in depart)
             {
@@ -74,17 +79,15 @@ namespace Carrier
                 }
             }
             depart.Insert(0,new BrandShowInfo { name = "--- Selected ---", nameShot = "--- Selected ---" });
-            ddlBrandSearch.DataSource = depart.OrderBy(r => r.name).ToList();
+            ddlBrandSearch.DataSource = depart.ToList();
             ddlBrandSearch.DataBind();
-            ddlBrandADD.DataSource = depart.OrderBy(r => r.name).ToList();
+            ddlBrandADD.DataSource = depart.ToList();
             ddlBrandADD.DataBind();
         }
         public void loadProfit(string siteStorage)
         {
-            var BG = (from ha in insideSFG_WF_Entities.BG_HApprove
-                      join haP in insideSFG_WF_Entities.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
-                      where haP.Depart_Short == ddlBrandSearch.SelectedValue
-                      select haP).ToList();
+            //var BG = budget_Entities.Departments.Where(w => w.ShortBrand == ddlBrandSearch.SelectedValue).ToList();
+            
             var departShot = ddlBrandSearch.SelectedValue;
             var center = carrier_Entities.Site_Center.Where(w => w.Brand_Center_Short == departShot).FirstOrDefault();
             var profit = carrier_Entities.Site_Profit.ToList();
@@ -207,7 +210,7 @@ namespace Carrier
                 Site_Profit profitNew = new Site_Profit()
                 {
                     Brand = lbBrandTemp.Text,
-                    Site_Stroage = txtSiteStorage.Text,
+                    Site_Stroage = txtSiteStorage.Text.ToUpper(),
                     Channel = ddlChannel.SelectedValue,
                     Sale_Channel = ddlSaleChannel.SelectedValue,
                     COMCODE = txtComcode.Text,
@@ -403,71 +406,191 @@ namespace Carrier
 
         protected void btnSaveAdd_Click(object sender, EventArgs e)
         {
-                Site_Profit site = new Site_Profit();
-            try
+            if(gv_TempBrand.Rows.Count != 0)
             {
-                site.Brand = ddlBrandADD.SelectedValue;
-                site.Site_Stroage = txtSiteStorageADD.Text;
-                site.Sale_Channel = ddlSaleChannelADD.SelectedValue;
-                site.Channel = ddlChannelADD.SelectedValue;
-                site.COMCODE = txtComcodeADD.Text;
-                site.Profit = txtProfitADD.Text;
-                site.Costcenter = txtCostcenterADD.Text;
-                var BG = (from ha in insideSFG_WF_Entities.BG_HApprove
-                          join haP in insideSFG_WF_Entities.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
-                          where haP.Depart_Short == site.Brand && ha.Sta == "B" && ha.departmentID != "1508"
-                          select ha).FirstOrDefault();
-                if(BG != null)
+                    List<Site_Profit> listSite = new List<Site_Profit>();
+                foreach(GridViewRow row in gv_TempBrand.Rows)
                 {
-                    var cariCenter = carrier_Entities.Site_Center.Where(w => w.Brand_Center_Name_Full == BG.department_ || w.Brand_Center_Name_Full == site.Brand).FirstOrDefault();
-                    if(cariCenter == null)
+                    Label lbBrand_Short = (Label)row.FindControl("lbBrand_Short");
+                    Site_Profit site = new Site_Profit();
+                    try
                     {
-                        carrier_Entities.Site_Center.Add(new Site_Center { Brand_Center_Short = site.Brand, Brand_Center_Name_Full = site.Brand });
+                        site.Brand = lbBrand_Short.Text.ToUpper();
+                        site.Site_Stroage = txtSiteStorageADD.Text.ToUpper();
+                        site.Sale_Channel = ddlSaleChannelADD.SelectedValue;
+                        site.Channel = ddlChannelADD.SelectedValue;
+                        site.COMCODE = txtComcodeADD.Text;
+                        site.Profit = txtProfitADD.Text;
+                        site.Costcenter = txtCostcenterADD.Text;
+                        
+                        var have = carrier_Entities.Site_Profit.Where(w => w.Site_Stroage == txtSiteStorageADD.Text && w.Brand == ddlBrandADD.SelectedValue && w.Sale_Channel == ddlSaleChannelADD.SelectedValue).ToList();
+                        if (have.Count() == 0)
+                        {
+                            listSite.Add(site);
+                        }
+                        else
+                        {
+                            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ได้มีการบันทึกไว้แล้วครับ')", true);
+                            return;
+                        }
+
+
+                        carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log
+                        {
+                            dateSend = DateTime.Now,
+                            path = "Carrier/Edit_Add_Profit",
+                            request = Newtonsoft.Json.JsonConvert.SerializeObject(site),
+                            status = "1",
+                            respon = "Success"
+                        });
+                        carrier_Entities.SaveChanges();
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log
+                        {
+                            dateSend = DateTime.Now,
+                            path = "Carrier/Edit_Add_Profit",
+                            request = Newtonsoft.Json.JsonConvert.SerializeObject(new Site_Center { Brand_Center_Short = site.Brand, Brand_Center_Name_Full = site.Brand }),
+                            respon = ex.Message,
+                            status = "2"
+                        });
+                        carrier_Entities.SaveChanges();
+
+                        service_Flashs.SendMail("apichat.f@sfg-th.com", new string[] { }, "Site_Profit_Add_New ERROR",
+                            "<HTML>" +
+                        "<body><p>NEW</p>" +
+                        "<p>SiteStorage : " + site.Site_Stroage + "</p>" +
+                        "<p>Brand : " + ddlBrandADD.SelectedItem.Text + "(" + site.Brand + ")" + "</p>" +
+                        "<p>Channel : " + site.Channel + "</p>" +
+                        "<p>Sale_Channel : " + site.Sale_Channel + "</p>" +
+                        "<p>COMCODE : " + site.COMCODE + "</p>" +
+                        "<p>Profit : " + site.Profit + "</p>" +
+                        "<p>Costcenter : " + site.Costcenter + "</p>" +
+                        "<p>ERROR : " + ex.Message + "</p><p>UserID : " + Session["_UserID"].ToString() +
+                        "</p></body>" +
+                        "</HTML>");
+                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Process : ERROR! ได้ทำการส่งไปทาง Dev เรียบร้อยโปรดรอการปรับปรุง หรือติดต่อ [MIS]Ball')", true);
+                        return;
                     }
                 }
-                carrier_Entities.Site_Profit.Add(site);
-                carrier_Entities.SaveChanges();
-
-                carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log
+                try
                 {
-                    dateSend = DateTime.Now,
-                    path = "Carrier/Edit_Add_Profit",
-                    request = Newtonsoft.Json.JsonConvert.SerializeObject(site),
-                    status = "1",
-                    respon = "Success"
-                });
-                carrier_Entities.SaveChanges();
-
-
-            }catch(Exception ex)
-            {
-                carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log
+                    carrier_Entities.Site_Profit.AddRange(listSite);
+                    carrier_Entities.SaveChanges();
+                }
+                catch (Exception ex)
                 {
-                    dateSend = DateTime.Now,
-                    path = "Carrier/Edit_Add_Profit",
-                    request = Newtonsoft.Json.JsonConvert.SerializeObject(new Site_Center { Brand_Center_Short = site.Brand, Brand_Center_Name_Full = site.Brand }),
-                    respon = ex.Message,
-                    status = "2"
-                });
-                carrier_Entities.SaveChanges();
+                    carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log
+                    {
+                        dateSend = DateTime.Now,
+                        path = "Carrier/Edit_Add_Profit",
+                        request = Newtonsoft.Json.JsonConvert.SerializeObject(listSite),
+                        respon = ex.Message,
+                        status = "2"
+                    });
+                    carrier_Entities.SaveChanges();
 
-                service_Flashs.SendMail("apichat.f@sfg-th.com",new string[] { },"Site_Profit_Add_New ERROR",
-                    "<HTML>" +
-                "<body><p>NEW</p>" +
-                "<p>SiteStorage : " + site.Site_Stroage + "</p>" +
-                "<p>Brand : " + ddlBrandADD.SelectedItem.Text + "(" + site.Brand + ")" + "</p>" +
-                "<p>Channel : " + site.Channel + "</p>" +
-                "<p>Sale_Channel : " + site.Sale_Channel + "</p>"+
-                "<p>COMCODE : " + site.COMCODE + "</p>"+
-                "<p>Profit : " + site.Profit + "</p>"+
-                "<p>Costcenter : " + site.Costcenter + "</p>"+ 
-                "<p>ERROR : " + ex.Message + "</p><p>UserID : "+ Session["_UserID"].ToString() +
-                "</p></body>" +
-                "</HTML>");
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Process : ERROR! ได้ทำการส่งไปทาง Dev เรียบร้อยโปรดรอการปรับปรุง หรือติดต่อ [MIS]Ball')", true);
+                    service_Flashs.SendMail("apichat.f@sfg-th.com", new string[] { }, "Site_Profit_Add_New ERROR",
+                        "<HTML>" +
+                    "<body><p>ADD to base</p>" +
+                    "<p>"+ Newtonsoft.Json.JsonConvert.SerializeObject(listSite) + "</p>"+
+                    "<p>ERROR : " + ex.Message + "</p><p>UserID : " + Session["_UserID"].ToString() +
+                    "</p></body>" +
+                    "</HTML>");
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Process : ERROR! ที่การบันทึกข้อมูล ระบบได้ทำการส่งไปทาง Dev เรียบร้อยโปรดรอการปรับปรุง หรือติดต่อมาที่ [MIS]Ball')", true);
+                    return;
+                }
+                btnClose_Click(this, EventArgs.Empty);
+                loadProfit("");
+                ScriptManager.RegisterStartupScript(this, GetType(), "ServerControlScript",
+                        "setTimeout(function(){alert('บันทึกสำเร็จ') ;window.location.href ='Edit_Add_Profit.aspx'}, 3000);", true);
+
             }
-            btnClose_Click(this, EventArgs.Empty);
-            loadProfit("");
+            else
+            {
+                Site_Profit site = new Site_Profit();
+                try
+                {
+                    site.Brand = ddlBrandADD.SelectedValue;
+                    site.Site_Stroage = txtSiteStorageADD.Text;
+                    site.Sale_Channel = ddlSaleChannelADD.SelectedValue;
+                    site.Channel = ddlChannelADD.SelectedValue;
+                    site.COMCODE = txtComcodeADD.Text;
+                    site.Profit = txtProfitADD.Text;
+                    site.Costcenter = txtCostcenterADD.Text;
+                    //var BG = budget_Entities.Departments.Where(w => w.ShortBrand == site.Brand).FirstOrDefault();
+                    //var BG = (from ha in insideSFG_WF_Entities.BG_HApprove
+                    //          join haP in insideSFG_WF_Entities.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID
+                    //          where haP.Depart_Short == site.Brand && ha.Sta == "B" && ha.departmentID != "1508"
+                    //          select ha).FirstOrDefault();
+                    //if (BG != null)
+                    //{
+                    //    var cariCenter = carrier_Entities.Site_Center.Where(w => w.Brand_Center_Name_Full == BG.Department_Name || w.Brand_Center_Name_Full == site.Brand).FirstOrDefault();
+                    //    if (cariCenter == null)
+                    //    {
+                    //        carrier_Entities.Site_Center.Add(new Site_Center { Brand_Center_Short = site.Brand, Brand_Center_Name_Full = site.Brand });
+                    //    }
+                    //}
+                    var have = carrier_Entities.Site_Profit.Where(w => w.Site_Stroage == txtSiteStorageADD.Text && w.Brand == ddlBrandADD.SelectedValue && w.Sale_Channel == ddlSaleChannelADD.SelectedValue).ToList();
+                    if (have.Count() == 0)
+                    {
+                        carrier_Entities.Site_Profit.Add(site);
+                        carrier_Entities.SaveChanges();
+                    }
+                    else
+                    {
+                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ได้มีการบันทึกไว้แล้วครับ')", true);
+                        return;
+                    }
+
+
+                    carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log
+                    {
+                        dateSend = DateTime.Now,
+                        path = "Carrier/Edit_Add_Profit",
+                        request = Newtonsoft.Json.JsonConvert.SerializeObject(site),
+                        status = "1",
+                        respon = "Success"
+                    });
+                    carrier_Entities.SaveChanges();
+
+                    btnClose_Click(this, EventArgs.Empty);
+                    loadProfit("");
+                    ScriptManager.RegisterStartupScript(this, GetType(), "ServerControlScript",
+                            "setTimeout(function(){alert('บันทึกสำเร็จ') ;window.location.href ='Edit_Add_Profit.aspx'}, 3000);", true);
+                }
+                catch (Exception ex)
+                {
+                    carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log
+                    {
+                        dateSend = DateTime.Now,
+                        path = "Carrier/Edit_Add_Profit",
+                        request = Newtonsoft.Json.JsonConvert.SerializeObject(new Site_Center { Brand_Center_Short = site.Brand, Brand_Center_Name_Full = site.Brand }),
+                        respon = ex.Message,
+                        status = "2"
+                    });
+                    carrier_Entities.SaveChanges();
+
+                    service_Flashs.SendMail("apichat.f@sfg-th.com", new string[] { }, "Site_Profit_Add_New ERROR",
+                        "<HTML>" +
+                    "<body><p>NEW</p>" +
+                    "<p>SiteStorage : " + site.Site_Stroage + "</p>" +
+                    "<p>Brand : " + ddlBrandADD.SelectedItem.Text + "(" + site.Brand + ")" + "</p>" +
+                    "<p>Channel : " + site.Channel + "</p>" +
+                    "<p>Sale_Channel : " + site.Sale_Channel + "</p>" +
+                    "<p>COMCODE : " + site.COMCODE + "</p>" +
+                    "<p>Profit : " + site.Profit + "</p>" +
+                    "<p>Costcenter : " + site.Costcenter + "</p>" +
+                    "<p>ERROR : " + ex.Message + "</p><p>UserID : " + Session["_UserID"].ToString() +
+                    "</p></body>" +
+                    "</HTML>");
+                    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Process : ERROR! ได้ทำการส่งไปทาง Dev เรียบร้อยโปรดรอการปรับปรุง หรือติดต่อ [MIS]Ball')", true);
+                }
+            }
+            
         }
 
         protected void imgbtnDel_Click(object sender, ImageClickEventArgs e)
@@ -494,10 +617,53 @@ namespace Carrier
             
             loadProfit("");
         }
+
+        protected void btnADD_Brand_Click(object sender, EventArgs e)
+        {
+            List<TempBrand> temp = new List<TempBrand>();
+            foreach(GridViewRow row in gv_TempBrand.Rows)
+            {
+                Label lbBrand_Short = (Label)row.FindControl("lbBrand_Short");
+                Label lbBrand = (Label)row.FindControl("lbBrand");
+                temp.Add(new TempBrand { Brand_Short = lbBrand_Short.Text, Brand = lbBrand.Text });
+            }
+            if(temp.Where(w=>w.Brand_Short == ddlBrandADD.SelectedValue).Count() == 0)
+            {
+                temp.Add(new TempBrand { Brand_Short = ddlBrandADD.SelectedValue, Brand = ddlBrandADD.SelectedItem.Text });
+            }
+            
+            gv_TempBrand.DataSource = temp;
+            gv_TempBrand.DataBind();
+        }
+
+        protected void imgDelete_Click(object sender, ImageClickEventArgs e)
+        {
+            ImageButton imgDelete = (ImageButton)sender;
+            GridViewRow row = (GridViewRow)imgDelete.NamingContainer;
+            List<TempBrand> temp = new List<TempBrand>();
+            foreach (GridViewRow rowo in gv_TempBrand.Rows)
+            {
+                Label lbBrand_Short = (Label)rowo.FindControl("lbBrand_Short");
+                Label lbBrand = (Label)rowo.FindControl("lbBrand");
+                if (row != rowo)
+                {
+                    temp.Add(new TempBrand { Brand_Short = lbBrand_Short.Text, Brand = lbBrand.Text });
+                }
+
+
+            }
+            gv_TempBrand.DataSource = temp;
+            gv_TempBrand.DataBind();
+        }
     }
     public class BrandShowInfo
     {
         public string name { get; set; }
         public string nameShot { get; set; }
+    }
+    public class TempBrand
+    {
+        public string Brand_Short { get; set; }
+        public string Brand { get; set; }
     }
 }

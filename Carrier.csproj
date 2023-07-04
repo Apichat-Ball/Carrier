@@ -52,11 +52,17 @@
     <Reference Include="AspNet.ScriptManager.jQuery, Version=3.5.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\AspNet.ScriptManager.jQuery.3.5.1\lib\net45\AspNet.ScriptManager.jQuery.dll</HintPath>
     </Reference>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.9.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>packages\BouncyCastle.1.8.9\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PdfSharp, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
@@ -213,11 +219,22 @@
     <Content Include="Icon\Lalamove.png" />
     <Content Include="Icon\logo-thailandpost.jpg" />
     <Content Include="Icon\Logo_Courier.png" />
+    <Content Include="Icon\pdf.png" />
     <Content Include="Icon\TrackingFlashExpress.png" />
     <Content Include="Icon\x-button.png" />
     <Content Include="Image\6196.jpg" />
     <Content Include="Image\6197.jpg" />
     <Content Include="Image\6198.jpg" />
+    <Content Include="Model\Budget\Budgetmodel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Budgetmodel.edmx</DependentUpon>
+      <LastGenOutput>Budgetmodel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Model\Budget\Budgetmodel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Budgetmodel.edmx</DependentUpon>
+      <LastGenOutput>Budgetmodel.cs</LastGenOutput>
+    </Content>
     <Content Include="Model\Carrier\Carrier_model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Carrier_model.edmx</DependentUpon>
@@ -367,6 +384,14 @@
     <Content Include="Content\gijgo\fonts\gijgo-material.woff" />
     <Content Include="Content\gijgo\fonts\gijgo-material.ttf" />
     <Content Include="Content\gijgo\fonts\gijgo-material.eot" />
+    <Content Include="FilePatchUpdate\V_1.pdf" />
+    <EntityDeploy Include="Model\Budget\Budgetmodel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Budgetmodel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Model\Budget\Budgetmodel.edmx.diagram">
+      <DependentUpon>Budgetmodel.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery-3.5.1.min.js" />
@@ -515,6 +540,27 @@
       <DependentUpon>Home_Carrier.aspx</DependentUpon>
     </Compile>
     <Compile Include="Info\CreateOrderInfo.cs" />
+    <Compile Include="Model\Budget\Budgetmodel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Budgetmodel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Budget\Budgetmodel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Budgetmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Budget\Budgetmodel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Budgetmodel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Budget\Department.cs">
+      <DependentUpon>Budgetmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Budget\MainBudget.cs">
+      <DependentUpon>Budgetmodel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Carrier\API_Carrier_Log.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
@@ -549,6 +595,9 @@
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Carrier\Order.cs">
+      <DependentUpon>Carrier_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Carrier\Order_Big_Box.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Carrier\Order_Box.cs">
@@ -715,6 +764,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="MergePDF\" />
     <Folder Include="PDFFile\" />
   </ItemGroup>
   <ItemGroup>
