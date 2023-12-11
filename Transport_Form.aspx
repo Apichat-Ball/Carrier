@@ -230,7 +230,7 @@
                         <div class="row col-sm-12 my-2" runat="server" id="divSite" style="margin-bottom: 10px; flex-wrap: nowrap;">
                             <div class="col-sm-8  input-group mb-2 " style="width: 50%">
                                 <asp:Label runat="server" ID="lbSite" Text="Site Storage" CssClass="input-group-text s-15px shadow"></asp:Label>
-                                <asp:TextBox runat="server" ID="txtSiteStorage" CssClass="form-control s-15px shadow " MaxLength="14" OnTextChanged="txtSiteStorage_TextChanged" AutoCompleteType="Disabled" ToolTip="กรุณากรอก SiteStorage ถ้าไม่มีให้ใส่ CENTER"></asp:TextBox>
+                                <asp:TextBox runat="server" ID="txtSiteStorage" CssClass="form-control s-15px shadow text-uppercase " MaxLength="14" OnTextChanged="txtSiteStorage_TextChanged" AutoCompleteType="Disabled" ToolTip="กรุณากรอก SiteStorage ถ้าไม่มีให้ใส่ CENTER"></asp:TextBox>
 
                             </div>
                             <div class="col-sm-4 input-group h-50">

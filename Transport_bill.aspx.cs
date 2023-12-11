@@ -76,7 +76,7 @@ namespace Carrier
             {
                 try
                 {
-                    filePath = originalPath.Substring(0, originalPath.LastIndexOf("/Transport_bill")) + "/PDFFile/" + lbDocno.Text + ".pdf";
+                    filePath = originalPath.Substring(0, originalPath.LastIndexOf("/Transport_bill")) + "/PDFFile/" + lbDocno.Text + ".pdf?"+DateTime.Now;
                     dataDir = HttpContext.Current.Server.MapPath("PDFFile/") + lbDocno.Text + ".pdf";
                     if (File.Exists(dataDir))
                     {

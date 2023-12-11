@@ -205,7 +205,7 @@
                     <%--</div>--%>
                 </div>
     </div>
-    <div class="row mt-2">
+    <div class="row mt-2 align-center">
                 <asp:Label runat="server" ID="lbAlert" Text="* ปุ่ม Export/Day เป็นรายงานของการเรียกรถ Flash ให้มารับที่จุดรับของ ซึ่งจะรวมรายการตั้งแต่ 16.30 น. ของเมื่อวานถึง 16.30น. ของวันนี้ *" ForeColor="Red"></asp:Label>
             </div>
 

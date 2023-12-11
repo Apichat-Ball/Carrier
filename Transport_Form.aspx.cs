@@ -1045,8 +1045,8 @@ namespace Carrier
                                NameTax = tax.NameTax,
                                dstDetail = tax.Address1 + " " + tax.lane1 + " " + tax.Road1,
                                dstProvince = tax.Province1,
-                               dstCity = tax.Area1,
-                               dstDistrict = tax.Zone1,
+                               dstCity = tax.Area1.Trim(),
+                               dstDistrict = tax.Zone1.Trim(),
                                dstPostal = tax.Postal1,
                                dstPhone = tax.phone1
                            }).ToList().FirstOrDefault();

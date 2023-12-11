@@ -215,7 +215,9 @@ namespace Carrier
                     Sale_Channel = ddlSaleChannel.SelectedValue,
                     COMCODE = txtComcode.Text,
                     Costcenter = txtCostcenter.Text,
-                    Profit = txtProfit.Text
+                    Profit = txtProfit.Text,
+                    Date_Create = DateTime.Now
+                    
                 };
                 var old = carrier_Entities.Site_Profit.Where(w => w.Site_Stroage == lbSiteStorage.Text && w.Brand == lbBrandTemp.Text).FirstOrDefault();
                 carrier_Entities.Site_Profit.Remove(old);
@@ -231,6 +233,7 @@ namespace Carrier
                 profit.COMCODE = txtComcode.Text;
                 profit.Profit = txtProfit.Text;
                 profit.Costcenter = txtCostcenter.Text;
+                profit.Date_Update = DateTime.Now;
             }
            
             try
@@ -422,6 +425,7 @@ namespace Carrier
                         site.COMCODE = txtComcodeADD.Text;
                         site.Profit = txtProfitADD.Text;
                         site.Costcenter = txtCostcenterADD.Text;
+                        site.Date_Create = DateTime.Now;
                         
                         var have = carrier_Entities.Site_Profit.Where(w => w.Site_Stroage == txtSiteStorageADD.Text && w.Brand == ddlBrandADD.SelectedValue && w.Sale_Channel == ddlSaleChannelADD.SelectedValue).ToList();
                         if (have.Count() == 0)
@@ -521,6 +525,7 @@ namespace Carrier
                     site.COMCODE = txtComcodeADD.Text;
                     site.Profit = txtProfitADD.Text;
                     site.Costcenter = txtCostcenterADD.Text;
+                    site.Date_Create = DateTime.Now;
                     //var BG = budget_Entities.Departments.Where(w => w.ShortBrand == site.Brand).FirstOrDefault();
                     //var BG = (from ha in insideSFG_WF_Entities.BG_HApprove
                     //          join haP in insideSFG_WF_Entities.BG_HApprove_Profitcenter on ha.departmentID equals haP.DepartmentID

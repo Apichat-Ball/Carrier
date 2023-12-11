@@ -233,6 +233,9 @@ namespace Carrier
                         else if(lbStatusItem.Text == "C")
                         {
                             lbTimeTrackingText.Text = "ยกเลิกแล้ว";
+                            lbTimeTrackingText.BackColor = System.Drawing.Color.PaleVioletRed;
+                            lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                            lbTimeTrackingText.CssClass = "status-tracking";
                         }
                             row.Cells.RemoveAt(10);
                     }
@@ -290,6 +293,14 @@ namespace Carrier
                                     lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
                                     lbTimeTrackingText.CssClass = "status-tracking";
                                 }
+                                imgbtnCancelOrder.Visible = false;
+                            }
+                            else if(lbStatusItem.Text == "C")
+                            {
+                                lbTimeTrackingText.Text = "ยกเลิกแล้ว";
+                                lbTimeTrackingText.BackColor = System.Drawing.Color.PaleVioletRed;
+                                lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                lbTimeTrackingText.CssClass = "status-tracking";
                                 imgbtnCancelOrder.Visible = false;
                             }
                         }
