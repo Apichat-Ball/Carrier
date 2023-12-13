@@ -182,6 +182,8 @@
           <Property Name="Costcenter" Type="nvarchar" MaxLength="50" />
           <Property Name="Site_Stroage" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Sale_Channel" Type="nvarchar" MaxLength="50" />
+          <Property Name="Date_Create" Type="datetime" />
+          <Property Name="Date_Update" Type="datetime" />
         </EntityType>
         <EntityType Name="Status">
           <Key>
@@ -371,6 +373,8 @@
           <Property Name="Costcenter" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Site_Stroage" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Sale_Channel" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Create" Type="DateTime" Precision="3" />
+          <Property Name="Date_Update" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="Event_Shop">
           <Key>
@@ -576,6 +580,8 @@
           <EntitySetMapping Name="Site_Profit">
             <EntityTypeMapping TypeName="CarrierModel.Site_Profit">
               <MappingFragment StoreEntitySet="Site_Profit">
+                <ScalarProperty Name="Date_Update" ColumnName="Date_Update" />
+                <ScalarProperty Name="Date_Create" ColumnName="Date_Create" />
                 <ScalarProperty Name="Sale_Channel" ColumnName="Sale_Channel" />
                 <ScalarProperty Name="Site_Stroage" ColumnName="Site_Stroage" />
                 <ScalarProperty Name="Costcenter" ColumnName="Costcenter" />

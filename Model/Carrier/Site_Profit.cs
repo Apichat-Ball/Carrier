@@ -21,5 +21,7 @@ namespace Carrier.Model.Carrier
         public string Costcenter { get; set; }
         public string Site_Stroage { get; set; }
         public string Sale_Channel { get; set; }
+        public Nullable<System.DateTime> Date_Create { get; set; }
+        public Nullable<System.DateTime> Date_Update { get; set; }
     }
 }

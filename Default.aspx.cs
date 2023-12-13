@@ -28,8 +28,10 @@ namespace Carrier
         }
         protected void Page_Load(object sender, EventArgs e)
         {
+
+            //สำหรับ Admin
             Session.Clear();
-            HttpContext.Current.Session["_UserID"] = "101635";
+            //HttpContext.Current.Session["_UserID"] = "101635";
 
             if (Session["_UserID"] == null)
             {
@@ -45,19 +47,8 @@ namespace Carrier
                 lbStatusSearch.Text = "First";
                 txtDateStart.Text = DateTime.Now.AddDays(-7).ToString("dd/MM/yyyy");
                 txtDateEnd.Text = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy");
-                //try
-                //{
-                    loadtable(1);
-                //}
-                //catch (Exception ex)
-                //{
-                //    service_Flashs.SendMail("apichat.f@sfg-th.com", null, "Carrier Error Load Page default",
-                //        "<html>" +
-                //        "<body>" +
-                //        "<p>"+ex.Message+"</p>" +
-                //        "</body>" +
-                //        "</html>");
-                //}
+
+                loadtable(1);
                 loadComment();
 
             }

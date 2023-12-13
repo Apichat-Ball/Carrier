@@ -25,6 +25,8 @@ namespace Carrier
         }
         protected void Page_Load(object sender, EventArgs e)
         {
+
+            //User ทั่วไป
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();

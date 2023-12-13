@@ -538,7 +538,7 @@ namespace Carrier
                 else
                 {
                     string username = HttpContext.Current.Request.Cookies["sfgweb"]["uname"].Trim();
-                    //string username = "9021517";
+                    //string username = "9012400";
                     var objuser = (from tEmployee in InsideSFG_WF_Entities.Employees
                                    where (tEmployee.username_ == username || tEmployee.uCode == username)
                                    && tEmployee.StatWork == "Y"
@@ -894,7 +894,7 @@ namespace Carrier
         protected void ddlFavorites_SelectedIndexChanged(object sender, EventArgs e)
         {
             var selectFavorite = ddlFavorites.SelectedValue;
-            var user = Convert.ToInt32(Session["_UserID"].ToString());
+            var user = Convert.ToInt32(lbuserID.Text);
 
             switch (selectFavorite)
             {
@@ -1291,7 +1291,7 @@ namespace Carrier
                             var item = new Order
                             {
                                 Date_send = DateTime.Now,
-                                UserID = Convert.ToInt32(Session["_UserID"].ToString()),
+                                UserID = Convert.ToInt32(lbuserID.Text),
                                 articleCategory = Convert.ToInt32(ddlarticleCategory.SelectedValue),
                                 ExpressCategory = Convert.ToInt32(ddlExpress.SelectedValue),
                                 srcName = txtsrcName.Text,
@@ -1420,7 +1420,7 @@ namespace Carrier
                                 {
                                     Docno = newId,
                                     Date_send = DateTime.Now,
-                                    UserID = Convert.ToInt32(Session["_UserID"].ToString()),
+                                    UserID = Convert.ToInt32(lbuserID.Text),
                                     articleCategory = Convert.ToInt32(ddlarticleCategory.SelectedValue),
                                     ExpressCategory = Convert.ToInt32(ddlExpress.SelectedValue),
                                     srcName = txtsrcName.Text,
@@ -1558,7 +1558,7 @@ namespace Carrier
                 {
                     Docno = txtDocno.Text,
                     Date_send = DateTime.Now,
-                    UserID = Convert.ToInt32(Session["_UserID"].ToString()),
+                    UserID = Convert.ToInt32(lbuserID.Text),
                     articleCategory = Convert.ToInt32(ddlarticleCategory.SelectedValue),
                     ExpressCategory = Convert.ToInt32(ddlExpress.SelectedValue),
                     srcName = txtsrcName.Text,
