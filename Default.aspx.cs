@@ -61,6 +61,7 @@ namespace Carrier
             var permission = carrier_Entities.Users.Where(w => w.UserID == user).FirstOrDefault();
             if (permission != null && permission.Permission == "Admin")
             {
+                dv_DO_Search.Visible = true;
                 var maxrow = 10;
                 var orderList = (from orderItem in carrier_Entities.Order_Item
                                  join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
@@ -110,13 +111,17 @@ namespace Carrier
                     {
                         case "1":
                             orderList = orderList.Where(w => w.status != "A" && w.status != "SP" && w.status != "SL" && w.status != "C").ToList();
-                            if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
+                            if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "" || txtDOSearch.Text != "")
                             {
                                 //orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
                                 orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
                                 && (w.pno.Contains(txtPnoSearch.Text.ToUpper()) || txtPnoSearch.Text == "")
                                 && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
-                                && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
+                                && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")
+                                && ((w.Remark != "" && w.Remark != null ? (w.Remark.Contains(':') ? (w.Remark.Split(':')[0].EndsWith("DO") ? (w.Remark.Split(':')[1].Contains(",") ? w.Remark.Split(':')[1].Split(',').ToList().Contains(txtDOSearch.Text) : w.Remark.Split(':')[1].Contains(txtDOSearch.Text)) 
+                                : false  ) : (w.Remark.Contains(txtDOSearch.Text)) ) : false)
+                                || txtDOSearch.Text == "")
+                                ).ToList();
 
                             }
                             else if (lbStatusSearch.Text != "First")
@@ -127,7 +132,7 @@ namespace Carrier
                             break;
                         case "2":
                             orderList = orderList.Where(w => w.status != null && w.status != "C").ToList();
-                            if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
+                            if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "" || txtDOSearch.Text != "")
                             {
                                 //orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
                                 if (txtPnoSearch.Text != "")
@@ -136,13 +141,21 @@ namespace Carrier
                                     orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
                                     && (w.pno.StartsWith(txtPnoSearch.Text.ToUpper()) || txtPnoSearch.Text == "")
                                     && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
-                                    && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
+                                    && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")
+                                    && ((w.Remark != "" && w.Remark != null ? (w.Remark.Contains(':') ? (w.Remark.Split(':')[0].EndsWith("DO") ? (w.Remark.Split(':')[1].Contains(",") ? w.Remark.Split(':')[1].Split(',').ToList().Contains(txtDOSearch.Text) : w.Remark.Split(':')[1].Contains(txtDOSearch.Text))
+                                : false) : (w.Remark.Contains(txtDOSearch.Text))) : false)
+                                || txtDOSearch.Text == "")
+                                    ).ToList();
                                 }
                                 else
                                 {
                                     orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
                                     && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
-                                    && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
+                                    && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")
+                                    && ((w.Remark != "" && w.Remark != null ? (w.Remark.Contains(':') ? (w.Remark.Split(':')[0].EndsWith("DO") ? (w.Remark.Split(':')[1].Contains(",") ? w.Remark.Split(':')[1].Split(',').ToList().Contains(txtDOSearch.Text) : w.Remark.Split(':')[1].Contains(txtDOSearch.Text))
+                                : false) : (w.Remark.Contains(txtDOSearch.Text))) : false)
+                                || txtDOSearch.Text == "")
+                                    ).ToList();
                                 }
 
 
@@ -154,7 +167,7 @@ namespace Carrier
                             break;
                         case "3":
                             orderList = orderList.Where(w => w.status == "C").ToList();
-                            if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
+                            if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "" || txtDOSearch.Text != "")
                             {
                                 //orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
                                 if (txtPnoSearch.Text != "")
@@ -163,13 +176,21 @@ namespace Carrier
                                     orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
                                     && (w.pno.StartsWith(txtPnoSearch.Text.ToUpper()) || txtPnoSearch.Text == "")
                                     && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
-                                    && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
+                                    && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")
+                                    && ((w.Remark != "" && w.Remark != null ? (w.Remark.Contains(':') ? (w.Remark.Split(':')[0].EndsWith("DO") ? (w.Remark.Split(':')[1].Contains(",") ? w.Remark.Split(':')[1].Split(',').ToList().Contains(txtDOSearch.Text) : w.Remark.Split(':')[1].Contains(txtDOSearch.Text))
+                                : false) : (w.Remark.Contains(txtDOSearch.Text))) : false)
+                                || txtDOSearch.Text == "")
+                                    ).ToList();
                                 }
                                 else
                                 {
                                     orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
                                     && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
-                                    && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
+                                    && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")
+                                    && ((w.Remark != "" && w.Remark != null ? (w.Remark.Contains(':') ? (w.Remark.Split(':')[0].EndsWith("DO") ? (w.Remark.Split(':')[1].Contains(",") ? w.Remark.Split(':')[1].Split(',').ToList().Contains(txtDOSearch.Text) : w.Remark.Split(':')[1].Contains(txtDOSearch.Text))
+                                : false) : (w.Remark.Contains(txtDOSearch.Text))) : false)
+                                || txtDOSearch.Text == "")
+                                    ).ToList();
                                 }
 
 
@@ -182,7 +203,7 @@ namespace Carrier
                     }
                     
 
-                    #region Test
+                    #region 
                     var BigBox = carrier_Entities.Order_Big_Box.ToList();
                     if(ddlStatusOrder.SelectedValue != "3")
                     {
@@ -1257,7 +1278,7 @@ namespace Carrier
             txtPnoSearch.Text = "";
             txtDstNameSearch.Text = "";
             txtArticleSearch.Text = "";
-
+            txtDOSearch.Text = "";
             loadtable(1);
             div_Page_Bar.Visible = true;
         }

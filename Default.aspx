@@ -164,7 +164,7 @@
             </div>
         <%--</div>
         <div class="row mt-2">--%>
-            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 gy-3">
+            <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 gy-3" style="align-self: center;">
                 <%--<div class=" align-self-center">--%>
                     <div class="input-group ">
                         <asp:Label runat="server" ID="lbArticleSearch" Text="ประเภทพัสดุ" CssClass="input-group-text"></asp:Label>
@@ -188,6 +188,12 @@
                         <asp:RegularExpressionValidator ID="RegularExpressionValidatorDateEnd" runat="server" ControlToValidate="txtDateEnd" ErrorMessage="กรุณาเลือกวันที่สุดท้ายในการค้นหา" ValidationExpression="^(0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|1[012])[-/.](19|20)\d\d$" Display="Dynamic" ForeColor="Red"></asp:RegularExpressionValidator>
                     </div>
                 </div>
+             <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 gy-3" style="align-self: center;" runat="server" id="dv_DO_Search" visible="false">
+                 <div class=" input-group">
+                     <asp:Label runat="server" ID="Label2" Text="DO" CssClass="input-group-text"></asp:Label>
+                     <asp:TextBox runat="server" ID="txtDOSearch" CssClass="form-control"></asp:TextBox>
+                 </div>
+             </div>
                 <div class="col-sm-12 col-md-12 col-lg-2 col-xl-1 gy-3">
                     <%--<div class="col-sm-1">--%>
                         <asp:Button runat="server" ID="btnSearch" Text="SEARCH" CssClass="btn btn-primary w-100" OnClick="btnSearch_Click" UseSubmitBehavior="true" />
