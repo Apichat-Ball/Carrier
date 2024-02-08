@@ -159,6 +159,7 @@
                         <asp:ListItem Text="ยังไม่ได้เรียกรถ" Value="1" Selected="True"></asp:ListItem>
                         <asp:ListItem Text="เรียกรถแล้ว" Value="2"></asp:ListItem>
                         <asp:ListItem Text="ยกเลิก" Value="3"></asp:ListItem>
+                        <asp:ListItem Text="ทั้งหมด" Value="0"></asp:ListItem>
                     </asp:DropDownList>
                 </div>
             </div>
@@ -362,7 +363,7 @@
                     <asp:ImageButton runat="server" ID="btnLalamove" OnClick="btnLalamove_Click" Width="110px" CssClass="mt-2 mg-Lala" ImageUrl="~/Icon/Lalamove.png" Visible="false" />
                 </div>
                 <div class="col-6">
-                    <asp:ImageButton runat="server" ID="btnNotify" OnClick="btnNotifications_Click" Width="180px" CssClass="img-mt--12px" ImageUrl="~/Icon/TrackingFlashExpress.png" />
+                    <asp:ImageButton runat="server" ID="btnNotify" OnClick="btnNotifications_Click" Width="100px" CssClass="img-mt--12px" ImageUrl="~/Icon/fast-delivery.png" />
                 </div>
             </div>
         </div>

@@ -25,7 +25,7 @@ namespace Carrier
         {
             var orderList = (from orderItem in carrier_Entities.Order_Item
                              join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
-                             where orderItem.Status == null
+                             where orderItem.Status == null  && order.Transport_Type == 1
                              select order.Docno).ToList();
             foreach (var i in orderList)
             {

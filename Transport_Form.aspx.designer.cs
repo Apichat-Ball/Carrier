@@ -42,6 +42,15 @@ namespace Carrier
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl div_main;
 
         /// <summary>
+        /// btnNotiLalamove control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton btnNotiLalamove;
+
+        /// <summary>
         /// btnCancel control.
         /// </summary>
         /// <remarks>

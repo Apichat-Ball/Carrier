@@ -92,8 +92,17 @@
                     <%--<div style="position: absolute; left: 50%;" class="float-end">
                         <asp:Button runat="server" ID="btnPrint" Text="พิมพ์ใบปะหน้ากล่อง" Visible="false" CssClass="btn btn-primary" OnClick="btnPrint_Click" UseSubmitBehavior="false" />
                     </div>--%>
-                    <div style="position: absolute; left: 80%;" class="float-end">
-                        <asp:Button runat="server" ID="btnCancel" CssClass="btn btn-primary " Text="กลับหน้าหลัก" OnClick="btnCancel_Click" UseSubmitBehavior="false" />
+                    <div style="position: absolute; width: 80%; text-align: -webkit-right;" class="float-end">
+                        <div class="row" style="width: 40%;">
+                            <div class="col-md-6 col-sm-6">
+                                <asp:ImageButton runat="server" ID="btnNotiLalamove" OnClick="btnNotiLalamove_Click1" Width="60px"  CssClass="img-Noti" ImageUrl="~/Icon/fast-delivery.png" Visible="false" />
+                            </div>
+                            <div class="col-md-6 col-sm-6 align-self-center" >
+                                <asp:Button runat="server" ID="btnCancel" CssClass="btn btn-primary " Text="กลับหน้าหลัก" OnClick="btnCancel_Click" UseSubmitBehavior="false" />
+                            </div>
+                        </div>
+                        
+                        
                     </div>
                     <asp:Label runat="server" ID="lbForm" Text="Transportation" CssClass="h1"></asp:Label>
                 </div>

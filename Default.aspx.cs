@@ -200,6 +200,9 @@ namespace Carrier
                                 orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
                             }
                             break;
+                        case "0":
+                                orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end).ToList();
+                            break;
                     }
                     
 
@@ -1011,11 +1014,23 @@ namespace Carrier
                 List<string> resall = new List<string>();
                 foreach(var i in loadFL)
                 {
-                    var pno = carrier_Entities.Order_Item.Where(w => w.Docno == i.Docno).FirstOrDefault().pno;
-                    res = service_Flashs.CancelOrder(i.Docno, pno);
-                    resall.Add(res);
-                    i.Status = "C";
-                    carrier_Entities.SaveChanges();
+                    var orItem = carrier_Entities.Order_Item.Where(w => w.Docno == i.Docno).FirstOrDefault();
+                    var ord = carrier_Entities.Orders.Where(w => w.Docno == i.Docno).FirstOrDefault();
+                    if(ord.Transport_Type == 2)
+                    {
+                        i.Status = "C";
+                        orItem.Status = "C";
+                        carrier_Entities.SaveChanges();
+                        res = "Cancel Order Success.";
+                    }
+                    else
+                    {
+                        res = service_Flashs.CancelOrder(i.Docno, orItem.pno);
+                        resall.Add(res);
+                        i.Status = "C";
+                        carrier_Entities.SaveChanges();
+                    }
+                    
                 }
 
             }
@@ -1044,6 +1059,7 @@ namespace Carrier
         protected void btnNotifications_Click(object sender, ImageClickEventArgs e)
         {
             List<string> tracking = new List<string>();
+            var DocBGSL = "";
             foreach (GridViewRow row in gv_OrderAll.Rows)
             {
                 LinkButton lkbDocno = (LinkButton)row.FindControl("lkbDocno");
@@ -1056,8 +1072,21 @@ namespace Carrier
                     {
                         foreach (var b in inbox)
                         {
-                            var pno = carrier_Entities.Order_Item.Where(w => w.Docno == b.Docno).FirstOrDefault().pno;
-                            tracking.Add(pno);
+                            var tran = carrier_Entities.Orders.Where(w => w.Docno == b.Docno).FirstOrDefault();
+                            if (tran.Transport_Type == 2)
+                            {
+                                var orderBig = carrier_Entities.Order_Big_Box.Where(w => w.Docno == tran.Docno).FirstOrDefault().BFID;
+                                DocBGSL += orderBig + ",";
+
+                                carrier_Entities.Order_Item.Where(w=>w.Docno == b.Docno).First().Status = "SL";
+                                carrier_Entities.SaveChanges();
+                            }
+                            else
+                            {
+                                var pno = carrier_Entities.Order_Item.Where(w => w.Docno == b.Docno).FirstOrDefault().pno;
+                                tracking.Add(pno);
+                            }
+                            
                         }
                     }
                     else
@@ -1067,12 +1096,19 @@ namespace Carrier
                     
                 }
             }
-            if (tracking.Count == 0)
+            if (tracking.Count == 0 && DocBGSL == "")
             {
                 ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ไม่ได้เลือก Order ที่ต้องการเรียกรถมารับพัสดุ')", true);
+                return;
             }
-            else
+            if(DocBGSL != "")
             {
+                DocBGSL = "รายการ " + DocBGSL + " Lalamove มารับเรียบร้อยแล้วครับ";
+            }
+
+            if(tracking.Count != 0)
+            {
+
                 var ordNotPrint = (from o in carrier_Entities.Orders
                            join i in carrier_Entities.Order_Item on o.Docno equals i.Docno
                            where tracking.Contains(i.pno) && o.status != "AP"
@@ -1230,7 +1266,7 @@ namespace Carrier
                     }
 
                     Page myPage = (Page)HttpContext.Current.Handler;
-                    ClientScript.RegisterStartupScript(this.GetType(), "alertMessage", "<script type='text/javascript'>alert('"+ messageAlert + "');window.location='Default';</script>'");
+                    ClientScript.RegisterStartupScript(this.GetType(), "alertMessage", "<script type='text/javascript'>alert('"+ messageAlert + DocBGSL + "');window.location='Default';</script>'");
                     div_Page_Bar.Visible = true;
                     //Response.Redirect("Default.aspx");
                 }
@@ -1248,12 +1284,19 @@ namespace Carrier
                         
                     }
                     Page myPage = (Page)HttpContext.Current.Handler;
-                    ClientScript.RegisterStartupScript(this.GetType(), "alertMessage", "<script type='text/javascript'>alert('เอกสารที่ยังไม่ได้มีการปะหน้ากล่อง : " + doc + "');window.location='Default';</script>'");
+                    ClientScript.RegisterStartupScript(this.GetType(), "alertMessage", "<script type='text/javascript'>alert('เอกสารที่ยังไม่ได้มีการปะหน้ากล่อง : " +  doc + "\n" + DocBGSL +  "');window.location='Default';</script>'");
                     div_Page_Bar.Visible = true;
                     //Response.Redirect("Default.aspx");
                 }
                 
             }
+            else
+            {
+                Page myPage = (Page)HttpContext.Current.Handler;
+                ClientScript.RegisterStartupScript(this.GetType(), "alertMessage", "<script type='text/javascript'>alert('" + DocBGSL + "');window.location='Default';</script>'");
+                div_Page_Bar.Visible = true;
+            }
+
 
         }
 
@@ -1411,7 +1454,7 @@ namespace Carrier
         {
             var orderList = (from orderItem in carrier_Entities.Order_Item
                              join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
-                             where orderItem.Status == null
+                             where orderItem.Status == null && order.Transport_Type == 1
                              select order.Docno).ToList();
             foreach(var i in orderList)
             {

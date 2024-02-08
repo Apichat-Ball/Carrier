@@ -63,6 +63,7 @@ namespace Carrier
                         haveBox = Carrier_Entities.Order_Big_Box.Where(w => w.BFID == checkBox.BFID).ToList();
                         Docno = haveBox.Select(s => s.Docno).FirstOrDefault();
                         txtDocno.Text = checkBox.BFID;
+                        
                     }
                     else if(checkDocnoInBigBox != null)
                     {
@@ -104,7 +105,8 @@ namespace Carrier
                                      Transport_Type = order.Transport_Type,
                                      TypeSendKO = orderItem.TypeSendKO,
                                      TypeSend = order.TypeSend,
-                                     datesend = order.Date_send
+                                     datesend = order.Date_send,
+                                     status = orderItem.Status
                                  }).ToList().FirstOrDefault();
 
                     loadPage(query.datesend);
@@ -112,6 +114,15 @@ namespace Carrier
                     ddlTypeSend.Enabled = false;
                     ddlExpress.SelectedValue = query.Transport_Type.ToString();
                     ddlExpress.Enabled = false;
+
+                    if(query.Transport_Type == 2 && query.status == null)
+                    {
+                        btnNotiLalamove.Visible = true;
+                    }
+                    else
+                    {
+                        btnNotiLalamove.Visible = false;
+                    }
 
                     txtsrcName.Text = query.SrcName;
                     txtsrcPhone.Text = query.SrcPhone;
@@ -498,42 +509,6 @@ namespace Carrier
                     lbGuidSiteStorage.Visible = false;
                     lbGuidSiteStorage2.Visible = false;
 
-                    #region Edit
-                    //if (Act == "Edit")
-                    //{
-                    //    txtsrcName.Enabled = true;
-                    //    txtsrcPhone.Enabled = true;
-                    //    ddlsrcProvinceName.Enabled = true;
-                    //    ddlsrcCityName.Enabled = true;
-                    //    ddlsrcDistrictName.Enabled = true;
-                    //    txtsrcPostalCode.Enabled = true;
-                    //    txtsrcDetailAddress.Enabled = true;
-                    //    txtsrcDetailAddress.Enabled = true;
-                    //    txtremark.Enabled = true;
-                    //    radioWorkOn.Enabled = true;
-                    //    radioWorkOff.Enabled = true;
-                    //    ddlReceiveLocation.Enabled = true;
-                    //    ddlSDpart.Enabled = true;
-                    //    txtSiteStorage.Enabled = true;
-                    //    txtdstName.Enabled = true;
-                    //    txtdstPhone.Enabled = true;
-                    //    txtdstHomePhone.Enabled = true;
-                    //    ddldstProvinceName.Enabled = true;
-                    //    ddldstCityName.Enabled = true;
-                    //    ddldstDistrictName.Enabled = true;
-                    //    txtdstPostalCode.Enabled = true;
-                    //    txtdstDetailAddress.Enabled = true;
-                    //    ddlBox.Enabled = true;
-                    //    txtQty.Enabled = true;
-                    //    btnAdd.Enabled = true;
-                    //    if (gv_Box != null)
-                    //    {
-                    //        gv_Box.Columns[2].Visible = true;
-                    //    }
-                    //    btnSave.Visible = true;
-                    //    ddlarticleCategory.Enabled = true;
-                    //}
-                    #endregion
                 }
                 else
                 {
@@ -1517,7 +1492,7 @@ namespace Carrier
                                             packEnabled = null,
                                             upcountryCharge = null,
                                             TypeSendKO = ddlFavorites.SelectedValue == "select" ? "SFG" : ddlFavorites.SelectedValue,
-                                            Status = "SL"
+                                            
                                         };
                                         Carrier_Entities.Order_Item.Add(order);
                                         Carrier_Entities.SaveChanges();
@@ -1836,6 +1811,31 @@ namespace Carrier
         protected void btnPrintAll_Click(object sender, EventArgs e)
         {
             Response.Redirect("Transport_bill?Docno=" + txtDocno.Text);
+        }
+
+        protected void btnNotiLalamove_Click1(object sender, ImageClickEventArgs e)
+        {
+            var BG = Carrier_Entities.Order_Big_Box.Where(w => w.BFID == txtDocno.Text).ToList();
+            
+            if (BG.Count() != 0)
+            {
+                foreach (var b in BG)
+                {
+                    var orderitem = Carrier_Entities.Order_Item.Where(w => w.Docno == b.Docno).FirstOrDefault();
+                    orderitem.Status = "SL";
+                    Carrier_Entities.SaveChanges();
+                    
+                }
+                //ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ยืนยันนำส่งรายการเรียบร้อยแล้วครับ')", true);
+                Page myPage = (Page)HttpContext.Current.Handler;
+                ClientScript.RegisterStartupScript(this.GetType(), "alertMessage", "<script type='text/javascript'>alert('ยืนยันนำส่งพัสดุเรียบร้อยแล้วครับ');window.location='Default';</script>", true);
+            }
+            else
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ไม่พบเลขที่เอกสาร " + txtDocno.Text + "')", true);
+            }
+
+
         }
     }
     public class newBox
