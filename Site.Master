@@ -72,6 +72,9 @@
                     <div class="nav-item" runat="server" id="div_Profit" visible="false">
                         <a class="nav-link text-white" href="Edit_Add_Profit.aspx">Custom Profit</a>
                     </div>
+                    <div class="nav-item" runat="server" id="div_CalCar" visible="false">
+                        <a class="nav-link text-white" href="Calculate_Lalamove.aspx">Calculate Lalamove</a>
+                    </div>
                     <div id="divmenu" runat="server" class="navbar-nav mr-auto"></div>
                 </div>
                 <div class="float-end">

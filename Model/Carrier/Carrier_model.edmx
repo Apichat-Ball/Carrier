@@ -23,6 +23,20 @@
           <Property Name="ArticleCode" Type="int" Nullable="false" />
           <Property Name="ArticleName" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="Calculate_Car">
+          <Key>
+            <PropertyRef Name="DeliveryNumber" />
+            <PropertyRef Name="BFID" />
+            <PropertyRef Name="Docno" />
+          </Key>
+          <Property Name="DeliveryNumber" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="BFID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Docno" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="QTY" Type="int" />
+          <Property Name="Price" Type="float" />
+          <Property Name="Date_Group" Type="datetime" />
+          <Property Name="TypeSendKO" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Comment_System">
           <Key>
             <PropertyRef Name="CM_ID" />
@@ -122,6 +136,7 @@
           <Property Name="Status" Type="nvarchar" MaxLength="5" />
           <Property Name="StatusNotifyCode" Type="nvarchar" MaxLength="3" />
           <Property Name="StatusNotifyText" Type="nvarchar" MaxLength="100" />
+          <Property Name="StatusCal" Type="nvarchar" MaxLength="5" />
         </EntityType>
         <EntityType Name="Order_Box">
           <Key>
@@ -212,6 +227,7 @@
         <EntityContainer Name="CarrierModelStoreContainer">
           <EntitySet Name="API_Carrier_Log" EntityType="Self.API_Carrier_Log" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Article_Category" EntityType="Self.Article_Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Calculate_Car" EntityType="Self.Calculate_Car" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comment_System" EntityType="Self.Comment_System" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event_Shop" EntityType="Self.Event_Shop" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="History_Notify_Order" EntityType="Self.History_Notify_Order" Schema="dbo" store:Type="Tables" />
@@ -248,6 +264,7 @@
           <EntitySet Name="API_Carrier_Log" EntityType="CarrierModel.API_Carrier_Log" />
           <EntitySet Name="RunDocnoes" EntityType="CarrierModel.RunDocno" />
           <EntitySet Name="Order_Big_Box" EntityType="CarrierModel.Order_Big_Box" />
+          <EntitySet Name="Calculate_Car" EntityType="CarrierModel.Calculate_Car" />
         </EntityContainer>
         <EntityType Name="Article_Category">
           <Key>
@@ -452,6 +469,21 @@
           <Property Name="Status" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
           <Property Name="StatusNotifyCode" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
           <Property Name="StatusNotifyText" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="StatusCal" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Calculate_Car">
+          <Key>
+            <PropertyRef Name="DeliveryNumber" />
+            <PropertyRef Name="BFID" />
+            <PropertyRef Name="Docno" />
+          </Key>
+          <Property Name="DeliveryNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="BFID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Docno" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="QTY" Type="Int32" />
+          <Property Name="Price" Type="Double" />
+          <Property Name="Date_Group" Type="DateTime" Precision="3" />
+          <Property Name="TypeSendKO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -667,12 +699,26 @@
           <EntitySetMapping Name="Order_Big_Box">
             <EntityTypeMapping TypeName="CarrierModel.Order_Big_Box">
               <MappingFragment StoreEntitySet="Order_Big_Box">
+                <ScalarProperty Name="StatusCal" ColumnName="StatusCal" />
                 <ScalarProperty Name="StatusNotifyText" ColumnName="StatusNotifyText" />
                 <ScalarProperty Name="StatusNotifyCode" ColumnName="StatusNotifyCode" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Docno" ColumnName="Docno" />
                 <ScalarProperty Name="BFID" ColumnName="BFID" />
                 <ScalarProperty Name="RunID" ColumnName="RunID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Calculate_Car">
+            <EntityTypeMapping TypeName="CarrierModel.Calculate_Car">
+              <MappingFragment StoreEntitySet="Calculate_Car">
+                <ScalarProperty Name="TypeSendKO" ColumnName="TypeSendKO" />
+                <ScalarProperty Name="Date_Group" ColumnName="Date_Group" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="QTY" ColumnName="QTY" />
+                <ScalarProperty Name="Docno" ColumnName="Docno" />
+                <ScalarProperty Name="BFID" ColumnName="BFID" />
+                <ScalarProperty Name="DeliveryNumber" ColumnName="DeliveryNumber" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

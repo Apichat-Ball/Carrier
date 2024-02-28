@@ -47,6 +47,7 @@ namespace Carrier
             }
             var Docno = Request.QueryString["Docno"];
             var Act = Request.QueryString["Act"];
+            var PM = Request.QueryString["PM"];
             var User = Session["_UserID"].ToString();
             lbuserID.Text = Session["_UserID"].ToString();
             if (!IsPostBack)
@@ -115,7 +116,7 @@ namespace Carrier
                     ddlExpress.SelectedValue = query.Transport_Type.ToString();
                     ddlExpress.Enabled = false;
 
-                    if(query.Transport_Type == 2 && query.status == null)
+                    if(query.Transport_Type == 2 && query.status == null && PM != null)
                     {
                         btnNotiLalamove.Visible = true;
                     }
@@ -1480,7 +1481,7 @@ namespace Carrier
                                         Order_Item order = new Order_Item
                                         {
                                             Docno = item.Docno,
-                                            Date_Success = DateTime.Now,
+                                            Date_Success = null,
                                             sign = null,
                                             pno = null,
                                             mchId = null,
@@ -1823,12 +1824,14 @@ namespace Carrier
                 {
                     var orderitem = Carrier_Entities.Order_Item.Where(w => w.Docno == b.Docno).FirstOrDefault();
                     orderitem.Status = "SL";
+                    orderitem.Date_Success = DateTime.Now;
                     Carrier_Entities.SaveChanges();
                     
                 }
                 //ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ยืนยันนำส่งรายการเรียบร้อยแล้วครับ')", true);
-                Page myPage = (Page)HttpContext.Current.Handler;
-                ClientScript.RegisterStartupScript(this.GetType(), "alertMessage", "<script type='text/javascript'>alert('ยืนยันนำส่งพัสดุเรียบร้อยแล้วครับ');window.location='Default';</script>", true);
+                
+                ClientScript.RegisterStartupScript(this.GetType(), "Success", "<script type='text/javascript'>alert('ยืนยันนำส่งพัสดุเรียบร้อยแล้วครับ');window.location='Default';</script>'");
+
             }
             else
             {

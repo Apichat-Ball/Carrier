@@ -67,7 +67,7 @@ namespace Carrier
                                  srcName = order.srcName,
                                  dstName = order.dstName,
                                  ArticleCategory = carrier_Entities.Article_Category.Where(w => w.ArticleCode == order.articleCategory).ToList().FirstOrDefault().ArticleName,
-                                 dateCreate = orderItem.Date_Success,
+                                 dateCreate = order.Date_send,
                                  TrackingPickup = orderItem.ticketPickupId,
                                  TimeTracking = carrier_Entities.Notifies.Where(w => w.TicketPickupId == orderItem.ticketPickupId).Select(s => s.DateNotify).ToList().FirstOrDefault(),
                                  TimeTrackingText = carrier_Entities.Notifies.Where(w => w.TicketPickupId == orderItem.ticketPickupId).Select(s => s.TimeoutAtText).ToList().FirstOrDefault() ?? "",

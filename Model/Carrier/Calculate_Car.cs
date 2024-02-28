@@ -12,14 +12,14 @@ namespace Carrier.Model.Carrier
     using System;
     using System.Collections.Generic;
     
-    public partial class Order_Big_Box
+    public partial class Calculate_Car
     {
-        public int RunID { get; set; }
+        public string DeliveryNumber { get; set; }
         public string BFID { get; set; }
         public string Docno { get; set; }
-        public string Status { get; set; }
-        public string StatusNotifyCode { get; set; }
-        public string StatusNotifyText { get; set; }
-        public string StatusCal { get; set; }
+        public Nullable<int> QTY { get; set; }
+        public Nullable<double> Price { get; set; }
+        public Nullable<System.DateTime> Date_Group { get; set; }
+        public string TypeSendKO { get; set; }
     }
 }

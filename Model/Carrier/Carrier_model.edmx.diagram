@@ -21,6 +21,7 @@
         <EntityTypeShape EntityType="CarrierModel.API_Carrier_Log" Width="1.5" PointX="3.375" PointY="10.75" />
         <EntityTypeShape EntityType="CarrierModel.RunDocno" Width="1.5" PointX="5.375" PointY="10.75" />
         <EntityTypeShape EntityType="CarrierModel.Order_Big_Box" Width="1.5" PointX="7.375" PointY="10.75" />
+        <EntityTypeShape EntityType="CarrierModel.Calculate_Car" Width="1.5" PointX="9.375" PointY="10.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

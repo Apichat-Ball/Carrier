@@ -337,6 +337,7 @@
                             <asp:Label runat="server" ID="lbTypeSend" Text='<%# Bind("TypeSend") %>' Visible="false"></asp:Label>
                             <asp:ImageButton runat="server" ID="imgbtnEdit" Width="30px" ImageUrl="~/Icon/edit.png" OnClick="imgbtnEdit_Click" Visible="false" CssClass="mr-2"/>
                             <asp:ImageButton runat="server" ID="imgbtnCancelOrder" Width="30px" ImageUrl="~/Icon/x-button.png" OnClick="imgbtnCancelOrder_Click" />
+                            <asp:ImageButton runat="server" ID="imgbtnGet" Width="30px" ImageUrl="~/Icon/correct.png" OnClick="imgbtnGet_Click" Visible="false" />
                         </ItemTemplate>
                         <ItemStyle CssClass="gj-text-align-center" />
                     </asp:TemplateField>

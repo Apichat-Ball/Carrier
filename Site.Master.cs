@@ -81,6 +81,7 @@ namespace Carrier
                     {
                         div_Member.Visible = false;
                         div_Admin.Visible = true;
+                        div_CalCar.Visible = true;
                     }
                     else
                     {

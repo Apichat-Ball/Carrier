@@ -41,5 +41,6 @@ namespace Carrier.Model.Carrier
         public virtual DbSet<API_Carrier_Log> API_Carrier_Log { get; set; }
         public virtual DbSet<RunDocno> RunDocnoes { get; set; }
         public virtual DbSet<Order_Big_Box> Order_Big_Box { get; set; }
+        public virtual DbSet<Calculate_Car> Calculate_Car { get; set; }
     }
 }
