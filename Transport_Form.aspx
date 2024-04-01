@@ -93,11 +93,20 @@
                         <asp:Button runat="server" ID="btnPrint" Text="พิมพ์ใบปะหน้ากล่อง" Visible="false" CssClass="btn btn-primary" OnClick="btnPrint_Click" UseSubmitBehavior="false" />
                     </div>--%>
                     <div style="position: absolute; width: 80%; text-align: -webkit-right;" class="float-end">
-                        <div class="row" style="width: 40%;">
-                            <div class="col-md-6 col-sm-6">
+                        <div class="row" style="width: 50%;">
+                            <div class="col-md-7 col-sm-6" style="top: 14px;" runat="server" id="dv_deliveryID" visible="false">
+                               
+                                <div class="input-group">
+                                    
+                                    <asp:Label runat="server" ID="lbDeliveryOrder" Text="Delivery Order:" CssClass="input-group-text"></asp:Label>
+                                    <asp:TextBox runat="server" ID="txtDeliveryOrder" CssClass="form-control"></asp:TextBox>
+                                </div>
+                                
+                            </div>
+                            <div class="col-md-2 col-sm-6">
                                 <asp:ImageButton runat="server" ID="btnNotiLalamove" OnClick="btnNotiLalamove_Click1" Width="60px"  CssClass="img-Noti" ImageUrl="~/Icon/fast-delivery.png" Visible="false" />
                             </div>
-                            <div class="col-md-6 col-sm-6 align-self-center" >
+                            <div class="col-md-3 col-sm-6 align-self-center" >
                                 <asp:Button runat="server" ID="btnCancel" CssClass="btn btn-primary " Text="กลับหน้าหลัก" OnClick="btnCancel_Click" UseSubmitBehavior="false" />
                             </div>
                         </div>

@@ -42,6 +42,33 @@ namespace Carrier
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl div_main;
 
         /// <summary>
+        /// dv_deliveryID control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dv_deliveryID;
+
+        /// <summary>
+        /// lbDeliveryOrder control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbDeliveryOrder;
+
+        /// <summary>
+        /// txtDeliveryOrder control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDeliveryOrder;
+
+        /// <summary>
         /// btnNotiLalamove control.
         /// </summary>
         /// <remarks>

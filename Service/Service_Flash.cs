@@ -42,7 +42,7 @@ namespace Carrier.Service
         public Model_Trackingno CreateOrderFLASH(string docno, string favor)
         {
             var obj = entities_Carrier.Orders.Where(w => w.Docno == docno).ToList();
-
+            
             if (obj.Count > 0)
             {
 
@@ -96,42 +96,52 @@ namespace Carrier.Service
                 var request = new RestRequest(Method.POST);
                 request.AlwaysMultipartFormData = true;
                 IRestResponse response = client.Execute(request);
-                JObject j = JObject.Parse(response.Content);
-
-                if (Convert.ToInt32(j["code"]) == 1)
+                try
                 {
-                    Order_Item order = new Order_Item
+                    JObject j = JObject.Parse(response.Content);
+
+                    if (Convert.ToInt32(j["code"]) == 1)
                     {
-                        Docno = docno,
-                        Date_Success = DateTime.Now,
-                        sign = sign,
-                        pno = j["data"]["pno"].ToString(),
-                        mchId = j["data"]["mchId"].ToString(),
-                        sortCode = j["data"]["sortCode"].ToString(),
-                        dstStoreName = j["data"]["dstStoreName"].ToString(),
-                        sortingLineCode = j["data"]["sortingLineCode"].ToString(),
-                        Qty = 1,
-                        earlyFlightEnabled = j["data"]["earlyFlightEnabled"].ToString(),
-                        packEnabled = j["data"]["packEnabled"].ToString(),
-                        upcountryCharge = j["data"]["upcountryCharge"].ToString(),
-                        TypeSendKO = favor == "select" ? "SFG" : favor
-                    };
+                        Order_Item order = new Order_Item
+                        {
+                            Docno = docno,
+                            Date_Success = DateTime.Now,
+                            sign = sign,
+                            pno = j["data"]["pno"].ToString(),
+                            mchId = j["data"]["mchId"].ToString(),
+                            sortCode = j["data"]["sortCode"].ToString(),
+                            dstStoreName = j["data"]["dstStoreName"].ToString(),
+                            sortingLineCode = j["data"]["sortingLineCode"].ToString(),
+                            Qty = 1,
+                            earlyFlightEnabled = j["data"]["earlyFlightEnabled"].ToString(),
+                            packEnabled = j["data"]["packEnabled"].ToString(),
+                            upcountryCharge = j["data"]["upcountryCharge"].ToString(),
+                            TypeSendKO = favor == "select" ? "SFG" : favor
+                        };
 
-                    entities_Carrier.Order_Item.Add(order);
-                    entities_Carrier.SaveChanges();
-                    entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Create_Transport", request = "{https://api.flashexpress.com/open/v3/orders?" + headerpara + "&sign=" + sign + "}", status = j["code"].ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(new Model_Trackingno { success = true, trackingno = j["data"]["pno"].ToString() }) });
-                    entities_Carrier.SaveChanges();
-                    return new Model_Trackingno { success = true, trackingno = j["data"]["pno"].ToString() };
+                        entities_Carrier.Order_Item.Add(order);
+                        entities_Carrier.SaveChanges();
+                        entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Create_Transport", request = "{https://api.flashexpress.com/open/v3/orders?" + headerpara + "&sign=" + sign + "}", status = j["code"].ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(new Model_Trackingno { success = true, trackingno = j["data"]["pno"].ToString() }) });
+                        entities_Carrier.SaveChanges();
+                        return new Model_Trackingno { success = true, trackingno = j["data"]["pno"].ToString() };
+                    }
+                    else
+                    {
+                        var selectOrder = entities_Carrier.Orders.Where(w => w.Docno == docno).FirstOrDefault();
+                        entities_Carrier.Orders.Remove(selectOrder);
+                        entities_Carrier.SaveChanges();
+                        entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Create_Transport", request = "{https://api.flashexpress.com/open/v3/orders?" + headerpara + "&sign=" + sign + "}", status = j["code"].ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(new Model_Trackingno { success = false, trackingno = j["message"].ToString() }) });
+                        entities_Carrier.SaveChanges();
+                        return new Model_Trackingno { success = false, trackingno = j["message"].ToString() };
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    var selectOrder = entities_Carrier.Orders.Where(w => w.Docno == docno).FirstOrDefault();
-                    entities_Carrier.Orders.Remove(selectOrder);
+                    entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Create_Transport", request = "{https://api.flashexpress.com/open/v3/orders?" + headerpara + "&sign=" + sign + "}", status = "500", fromFlash = response.Content, respon ="Fail" });
                     entities_Carrier.SaveChanges();
-                    entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Create_Transport", request = "{https://api.flashexpress.com/open/v3/orders?" + headerpara + "&sign=" + sign + "}", status = j["code"].ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(new Model_Trackingno { success = false, trackingno = j["message"].ToString() }) });
-                    entities_Carrier.SaveChanges();
-                    return new Model_Trackingno { success = false, trackingno = j["message"].ToString() };
+                    return new Model_Trackingno { success = false, trackingno = "Order นี้ไม่สามารถบันทึกได้ โปรดบันทึกหน้าจอการกรอกข้อมูลและแจ้งเจ้าหน้าที่ครับ" };
                 }
+                
             }
             else
             {

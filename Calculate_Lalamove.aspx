@@ -123,6 +123,23 @@
                             </asp:TemplateField>
                             <asp:TemplateField>
                                 <HeaderTemplate>
+                                    <span>Brand</span>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lbBrandname" Text=""></asp:Label>
+                                    <asp:Label runat="server" ID="lbBrandID" Text='<%# Bind("SDpart") %>' Visible="false" ></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <span>SiteStorage</span>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lbSiteStorage" Text='<%# Bind("siteStorage") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
                                     <span>จำนวนกล่อง(แปลง)</span>
                                 </HeaderTemplate>
                                 <ItemTemplate>
@@ -195,6 +212,23 @@
                                 </HeaderTemplate>
                                 <ItemTemplate>
                                     <asp:Label runat="server" ID="lbTypeSendKO" Text='<%# Bind("TypeSendKO") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <span>Brand</span>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lbBrandID" Text='<%# Bind("SDpart") %>' Visible="false"></asp:Label>
+                                    <asp:Label runat="server" ID="lbBrandname" Text=""></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <span>SiteStorage</span>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lbSiteStorage" Text='<%# Bind("SiteStorage") %>'></asp:Label>
                                 </ItemTemplate>
                             </asp:TemplateField>
                             <asp:TemplateField>

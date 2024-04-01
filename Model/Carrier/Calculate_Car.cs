@@ -21,5 +21,7 @@ namespace Carrier.Model.Carrier
         public Nullable<double> Price { get; set; }
         public Nullable<System.DateTime> Date_Group { get; set; }
         public string TypeSendKO { get; set; }
+        public string SDpart { get; set; }
+        public string SiteStorage { get; set; }
     }
 }

@@ -114,15 +114,17 @@ namespace Carrier
                     ddlTypeSend.SelectedValue = query.TypeSend.ToString();
                     ddlTypeSend.Enabled = false;
                     ddlExpress.SelectedValue = query.Transport_Type.ToString();
-                    ddlExpress.Enabled = false;
-
+                    ddlExpress.Enabled = query.TypeSend.ToString() == "1" && PM != null ? true: false;
                     if(query.Transport_Type == 2 && query.status == null && PM != null)
                     {
                         btnNotiLalamove.Visible = true;
+                        dv_deliveryID.Visible = true;
+                        
                     }
                     else
                     {
                         btnNotiLalamove.Visible = false;
+                        dv_deliveryID.Visible = false;
                     }
 
                     txtsrcName.Text = query.SrcName;
@@ -217,7 +219,16 @@ namespace Carrier
                     txtdstPostalCode.Enabled = false;
                     txtdstDetailAddress.Enabled = false;
 
-                    btnSave.Visible = false;
+
+                    if(query.TypeSend.ToString() == "1" && query.Transport_Type == 1 && query.status == null && PM != null)
+                    {
+                        btnSave.Visible = true;
+                    }
+                    else
+                    {
+                        btnSave.Visible = false;
+                    }
+                    
 
                     ddlSDpart.SelectedValue = query.SDpart;
                     ddlSDpart.Enabled = false;
@@ -276,6 +287,13 @@ namespace Carrier
                         gv_Big_Box.HeaderRow.Cells[0].Visible = false;
                         gv_Big_Box.HeaderRow.Cells[2].Visible = false;
                         divPrintAll.Visible = false;
+                        var calcar = Carrier_Entities.Calculate_Car.Where(w => w.Docno == query.Docno).FirstOrDefault();
+                        if (calcar != null)
+                        {
+                            dv_deliveryID.Visible = true;
+                            txtDeliveryOrder.Text = calcar.DeliveryNumber;
+                            txtDeliveryOrder.Enabled = false;
+                        }
                     }
                     List<string> boxSmall = new List<string> { };
                     foreach (GridViewRow row in gv_Big_Box.Rows)
@@ -1224,6 +1242,46 @@ namespace Carrier
                 //}
                 #endregion
 
+                #region CancelOrder
+                var docnoC = txtDocno.Text;
+                if(docnoC != "")
+                {
+
+                    var loadFL = Carrier_Entities.Order_Big_Box.Where(w => w.BFID == docnoC).ToList();
+                    var res = "";
+                    if (loadFL.Count() != 0)
+                    {
+                        List<string> resall = new List<string>();
+                        foreach (var i in loadFL)
+                        {
+                            var orItem = Carrier_Entities.Order_Item.Where(w => w.Docno == i.Docno).FirstOrDefault();
+                            var ord = Carrier_Entities.Orders.Where(w => w.Docno == i.Docno).FirstOrDefault();
+                            if (ord.Transport_Type == 2)
+                            {
+                                i.Status = "C";
+                                orItem.Status = "C";
+                                Carrier_Entities.SaveChanges();
+                                res = "Cancel Order Success.";
+                            }
+                            else
+                            {
+                                res = service_Flashs.CancelOrder(i.Docno, orItem.pno);
+                                resall.Add(res);
+                                i.Status = "C";
+                                Carrier_Entities.SaveChanges();
+                            }
+
+                        }
+
+                    }
+                    else
+                    {
+                        var order = Carrier_Entities.Order_Item.Where(w => w.Docno == docnoC).FirstOrDefault();
+                        res = service_Flashs.CancelOrder(docnoC, order.pno);
+                    }
+                }
+                #endregion
+
                 #region Run BigBoxID
                 var docnow = "BF" + DateTime.Now.Year.ToString().Substring(2, 2);
                 var BigBoxID = Carrier_Entities.Order_Big_Box.Where(w => w.BFID.StartsWith(docnow)).OrderBy(o => o.RunID).ToList() ;
@@ -1252,8 +1310,8 @@ namespace Carrier
                 }
                 #endregion
                 
-                var ss = gv_Big_Box.Rows.Count -1;
-                if(ss != 0)
+                var ss = Request.QueryString["PM"] != null ? 1 : gv_Big_Box.Rows.Count -1;
+                if(ss != 0 )
                 {
                     List<string> checkVali = new List<string>();
                     foreach (GridViewRow row in gv_Big_Box.Rows)
@@ -1822,11 +1880,31 @@ namespace Carrier
             {
                 foreach (var b in BG)
                 {
-                    var orderitem = Carrier_Entities.Order_Item.Where(w => w.Docno == b.Docno).FirstOrDefault();
-                    orderitem.Status = "SL";
-                    orderitem.Date_Success = DateTime.Now;
-                    Carrier_Entities.SaveChanges();
-                    
+                    var tran = Carrier_Entities.Orders.Where(w => w.Docno == b.Docno).FirstOrDefault();
+                    if (tran.Transport_Type == 2)
+                    {
+                        var orderBig = Carrier_Entities.Order_Big_Box.Where(w => w.Docno == tran.Docno).FirstOrDefault().BFID;
+                        var slItemslItem = Carrier_Entities.Order_Item.Where(w => w.Docno == b.Docno).First();
+                        slItemslItem.Status = "SL";
+                        slItemslItem.Date_Success = DateTime.Now;
+                        Carrier_Entities.SaveChanges();
+                        if(txtDeliveryOrder.Text != "")
+                        {
+                            Carrier_Entities.Calculate_Car.Add(new Calculate_Car
+                            {
+                                DeliveryNumber = txtDeliveryOrder.Text,
+                                BFID = b.BFID,
+                                Docno = b.Docno,
+                                QTY = 1,
+                                Date_Group = DateTime.Now,
+                                TypeSendKO = slItemslItem.TypeSendKO,
+                                SDpart = tran.SDpart,
+                                SiteStorage = tran.siteStorage
+                            });
+                            Carrier_Entities.SaveChanges();
+                        }
+                        
+                    }
                 }
                 //ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ยืนยันนำส่งรายการเรียบร้อยแล้วครับ')", true);
                 

@@ -53,7 +53,9 @@ namespace Carrier
                                 o.Docno,
                                 i.TypeSendKO,
                                 i.Date_Success,
-                                i.Qty
+                                i.Qty,
+                                o.SDpart,
+                                o.siteStorage
 
                             }).ToList();
 
@@ -62,12 +64,16 @@ namespace Carrier
                 g.BFID,
                 g.Docno,
                 g.TypeSendKO,
+                g.SDpart,
+                g.siteStorage,
                 g.Date_Success
             }).Select(s=>new
             {
                 s.Key.BFID,
                 s.Key.Docno,
                 s.Key.TypeSendKO,
+                s.Key.SDpart,
+                s.Key.siteStorage,
                 s.Key.Date_Success,
                 QTY = s.Sum(x=>x.Qty)
             });
@@ -81,6 +87,8 @@ namespace Carrier
                     DeliveryNumber = s.DeliveryNumber,
                     Date_Success = s.Date_Group ?? DateTime.Now,
                     TypeSendKO = s.TypeSendKO,
+                    SDpart = s.SDpart,
+                    SiteStorage = s.SiteStorage,
                     Qty = s.QTY ?? 0,
                     Price = ""+(s.Price??0),
                     New = ""
@@ -97,6 +105,24 @@ namespace Carrier
             }
             txtDeliveryNumber.Text = "";
             txtPriceCar.Text = "";
+
+            foreach(GridViewRow row in gv_Car.Rows)
+            {
+                Label lbBrandID = (Label)row.FindControl("lbBrandID");
+                Label lbBrandname = (Label)row.FindControl("lbBrandname");
+
+                var brand = budget_Entities.Departments.Where(w => w.Department_ID == lbBrandID.Text).FirstOrDefault();
+                lbBrandname.Text = brand.Department_Name;
+            }
+
+            foreach(GridViewRow row in gv_Group.Rows)
+            {
+                Label lbBrandID = (Label)row.FindControl("lbBrandID");
+                Label lbBrandname = (Label)row.FindControl("lbBrandname");
+
+                var brand = budget_Entities.Departments.Where(w => w.Department_ID == lbBrandID.Text).FirstOrDefault();
+                lbBrandname.Text = brand.Department_Name;
+            }
         }
 
         protected void btnSearch_Click(object sender, EventArgs e)
@@ -144,7 +170,9 @@ namespace Carrier
                                      BFID = b.BFID,
                                      Docno = b.Docno,
                                      Qty = i.Qty ?? 0,
-                                     TypeSendKO = i.TypeSendKO
+                                     TypeSendKO = i.TypeSendKO,
+                                     SDpart = o.SDpart,
+                                     SiteStorage = o.siteStorage
                                  });
 
                     orderall.AddRange(order);
@@ -163,13 +191,15 @@ namespace Carrier
                 i.New = "NEW";
                 i.Date_Success = DateTime.Now;
             }
-            var oldgroup = carrier_Entities.Calculate_Car.Where(w => w.Date_Group >= dateST && w.Date_Group <= dateED)
+            var oldgroup = carrier_Entities.Calculate_Car.Where(w => w.Date_Group >= dateST && w.Date_Group <= dateED && w.DeliveryNumber == txtDeliveryNumber.Text)
                 .Select(s => new groupOrderCar
                 {
                     DeliveryNumber = s.DeliveryNumber,
                     BFID = s.BFID,
                     Docno = s.Docno,
                     TypeSendKO = s.TypeSendKO,
+                    SDpart = s.SDpart,
+                    SiteStorage = s.SiteStorage,
                     Qty = s.QTY ?? 0,
                     Price = s.Price.ToString(),
                     Date_Success = s.Date_Group ?? DateTime.Now
@@ -179,6 +209,14 @@ namespace Carrier
             gv_Group.DataBind();
             dv_Group.Visible = true;
             btnSave.Enabled = true;
+
+            foreach(GridViewRow row in gv_Group.Rows)
+            {
+                Label lbBrandname = (Label)row.FindControl("lbBrandname");
+                Label lbBrandID = (Label)row.FindControl("lbBrandID");
+                var brand = budget_Entities.Departments.Where(w => w.Department_ID == lbBrandID.Text).FirstOrDefault();
+                lbBrandname.Text = brand.Department_Name;
+            }
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
@@ -194,6 +232,8 @@ namespace Carrier
                     Label lbBox = (Label)row.FindControl("lbBox");
                     Label lbPrice = (Label)row.FindControl("lbPrice");
                     Label lbNew = (Label)row.FindControl("lbNew");
+                    Label lbBrandID = (Label)row.FindControl("lbBrandID");
+                    Label lbSiteStorage = (Label)row.FindControl("lbSiteStorage");
 
                     if (lbNew.Text != "")
                     {
@@ -205,6 +245,8 @@ namespace Carrier
                         cal.TypeSendKO = lbTypeSendKO.Text;
                         cal.QTY = Convert.ToInt32(lbBox.Text);
                         cal.Price = Convert.ToDouble(lbPrice.Text);
+                        cal.SDpart = lbBrandID.Text;
+                        cal.SiteStorage = lbSiteStorage.Text;
                         carrier_Entities.Calculate_Car.Add(cal);
                         carrier_Entities.SaveChanges();
 
@@ -354,10 +396,13 @@ namespace Carrier
         public string BFID { get; set; }
         public string Docno { get; set; }
         public string TypeSendKO { get; set; }
+        public string SDpart { get; set; }
+        public string SiteStorage { get; set; }
         public DateTime Date_Success { get; set; }
         public int Qty { get; set; }
         public string Price { get; set; }
         public string New { get; set; }
+
     }
 
     public class modelExport

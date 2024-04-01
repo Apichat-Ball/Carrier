@@ -15,6 +15,15 @@ namespace Carrier
     {
 
         /// <summary>
+        /// dv_Main control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dv_Main;
+
+        /// <summary>
         /// lbForm control.
         /// </summary>
         /// <remarks>
@@ -285,6 +294,24 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.Button btnExport;
 
         /// <summary>
+        /// Label3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label3;
+
+        /// <summary>
+        /// ddlTypsend control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlTypsend;
+
+        /// <summary>
         /// lbAlert control.
         /// </summary>
         /// <remarks>
@@ -373,6 +400,24 @@ namespace Carrier
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lkNext;
+
+        /// <summary>
+        /// dv_Deliver control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dv_Deliver;
+
+        /// <summary>
+        /// txtDeliveryOrder control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDeliveryOrder;
 
         /// <summary>
         /// div_SendFree control.

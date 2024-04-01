@@ -36,6 +36,8 @@
           <Property Name="Price" Type="float" />
           <Property Name="Date_Group" Type="datetime" />
           <Property Name="TypeSendKO" Type="nvarchar" MaxLength="50" />
+          <Property Name="SDpart" Type="nvarchar" MaxLength="50" />
+          <Property Name="SiteStorage" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="Comment_System">
           <Key>
@@ -484,6 +486,8 @@
           <Property Name="Price" Type="Double" />
           <Property Name="Date_Group" Type="DateTime" Precision="3" />
           <Property Name="TypeSendKO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SDpart" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SiteStorage" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -712,6 +716,8 @@
           <EntitySetMapping Name="Calculate_Car">
             <EntityTypeMapping TypeName="CarrierModel.Calculate_Car">
               <MappingFragment StoreEntitySet="Calculate_Car">
+                <ScalarProperty Name="SiteStorage" ColumnName="SiteStorage" />
+                <ScalarProperty Name="SDpart" ColumnName="SDpart" />
                 <ScalarProperty Name="TypeSendKO" ColumnName="TypeSendKO" />
                 <ScalarProperty Name="Date_Group" ColumnName="Date_Group" />
                 <ScalarProperty Name="Price" ColumnName="Price" />

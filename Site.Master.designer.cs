@@ -51,13 +51,13 @@ namespace Carrier
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl div_Profit;
 
         /// <summary>
-        /// div_CalCar control.
+        /// div1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div_CalCar;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div1;
 
         /// <summary>
         /// divmenu control.

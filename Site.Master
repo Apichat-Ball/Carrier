@@ -62,7 +62,7 @@
                             <a class="dropdown-item" href="Home_Carrier.aspx">Doccument Owner</a>
                         </div>
                     </div>
-
+                    
                     <div class="nav-item">
                         <a class="nav-link text-white" href="Transport_Form.aspx">Create Order</a>
                     </div>
@@ -72,8 +72,13 @@
                     <div class="nav-item" runat="server" id="div_Profit" visible="false">
                         <a class="nav-link text-white" href="Edit_Add_Profit.aspx">Custom Profit</a>
                     </div>
-                    <div class="nav-item" runat="server" id="div_CalCar" visible="false">
-                        <a class="nav-link text-white" href="Calculate_Lalamove.aspx">Calculate Lalamove</a>
+                    <div class="nav-item dropdown" runat="server" id="div1" visible="false">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Lalamove
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+                            <a class="dropdown-item" href="Calculate_Lalamove.aspx">Calculate Lalamove</a>
+                            <a class="dropdown-item" href="Transport_Form_Lalamove.aspx">Report Lalamove</a>
+                        </div>
                     </div>
                     <div id="divmenu" runat="server" class="navbar-nav mr-auto"></div>
                 </div>
