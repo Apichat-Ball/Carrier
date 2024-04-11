@@ -18,6 +18,39 @@
           <Property Name="CostCenter" Type="nvarchar" MaxLength="10" />
           <Property Name="ShortBrand" Type="nvarchar" MaxLength="8" />
         </EntityType>
+        <EntityType Name="Department_IO">
+          <Key>
+            <PropertyRef Name="Department_ID" />
+          </Key>
+          <Property Name="Department_ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Department_Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="Date_Send" Type="datetime" />
+          <Property Name="Revision" Type="int" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="Status_ID" Type="nvarchar" MaxLength="2" />
+          <Property Name="Cost_Number" Type="nvarchar" MaxLength="10" />
+          <Property Name="Date_Start" Type="date" />
+          <Property Name="Date_End" Type="date" />
+          <Property Name="Action_Start" Type="date" />
+          <Property Name="Action_End" Type="date" />
+          <Property Name="UserID_Save" Type="int" />
+          <Property Name="Detail" Type="nvarchar(max)" />
+          <Property Name="Remark" Type="nvarchar(max)" />
+          <Property Name="Flag_IO" Type="nvarchar" MaxLength="1" />
+          <Property Name="Head_Department_ID" Type="nvarchar" MaxLength="8" />
+          <Property Name="Head_UserID" Type="nvarchar" MaxLength="20" />
+          <Property Name="UserID_Ref" Type="nvarchar" MaxLength="100" />
+          <Property Name="Department_Ref" Type="nvarchar" MaxLength="100" />
+          <Property Name="SyncStatus" Type="nvarchar" MaxLength="1" />
+          <Property Name="Status_IO" Type="nvarchar" MaxLength="1" />
+          <Property Name="Version" Type="nvarchar" MaxLength="3" />
+          <Property Name="SiteStorage" Type="nvarchar(max)" />
+          <Property Name="Type" Type="nvarchar(max)" />
+          <Property Name="NewFC" Type="bit" />
+          <Property Name="Per_Share" Type="int" />
+          <Property Name="Ref_Cost_Number" Type="nvarchar" MaxLength="10" />
+          <Property Name="NewFC_NextYear" Type="bit" />
+        </EntityType>
         <EntityType Name="MainBudget">
           <Key>
             <PropertyRef Name="Year_Budget" />
@@ -65,6 +98,7 @@
         </EntityType>
         <EntityContainer Name="BudgetModelStoreContainer">
           <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Department_IO" EntityType="Self.Department_IO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MainBudget" EntityType="Self.MainBudget" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -132,7 +166,41 @@
         <EntityContainer Name="BudgetEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Departments" EntityType="Self.Department" />
           <EntitySet Name="MainBudgets" EntityType="Self.MainBudget" />
+          <EntitySet Name="Department_IO" EntityType="BudgetModel.Department_IO" />
         </EntityContainer>
+        <EntityType Name="Department_IO">
+          <Key>
+            <PropertyRef Name="Department_ID" />
+          </Key>
+          <Property Name="Department_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Department_Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Send" Type="DateTime" Precision="3" />
+          <Property Name="Revision" Type="Int32" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="Status_ID" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="Cost_Number" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Start" Type="DateTime" Precision="0" />
+          <Property Name="Date_End" Type="DateTime" Precision="0" />
+          <Property Name="Action_Start" Type="DateTime" Precision="0" />
+          <Property Name="Action_End" Type="DateTime" Precision="0" />
+          <Property Name="UserID_Save" Type="Int32" />
+          <Property Name="Detail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_IO" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="Head_Department_ID" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Head_UserID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_Ref" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Department_Ref" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SyncStatus" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="Status_IO" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="Version" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="SiteStorage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NewFC" Type="Boolean" />
+          <Property Name="Per_Share" Type="Int32" />
+          <Property Name="Ref_Cost_Number" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="NewFC_NextYear" Type="Boolean" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -193,6 +261,40 @@
                 <ScalarProperty Name="Status_Sync" ColumnName="Status_Sync" />
                 <ScalarProperty Name="Detail_Remark" ColumnName="Detail_Remark" />
                 <ScalarProperty Name="Department_IO_ID" ColumnName="Department_IO_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Department_IO">
+            <EntityTypeMapping TypeName="BudgetModel.Department_IO">
+              <MappingFragment StoreEntitySet="Department_IO">
+                <ScalarProperty Name="NewFC_NextYear" ColumnName="NewFC_NextYear" />
+                <ScalarProperty Name="Ref_Cost_Number" ColumnName="Ref_Cost_Number" />
+                <ScalarProperty Name="Per_Share" ColumnName="Per_Share" />
+                <ScalarProperty Name="NewFC" ColumnName="NewFC" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="SiteStorage" ColumnName="SiteStorage" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="Status_IO" ColumnName="Status_IO" />
+                <ScalarProperty Name="SyncStatus" ColumnName="SyncStatus" />
+                <ScalarProperty Name="Department_Ref" ColumnName="Department_Ref" />
+                <ScalarProperty Name="UserID_Ref" ColumnName="UserID_Ref" />
+                <ScalarProperty Name="Head_UserID" ColumnName="Head_UserID" />
+                <ScalarProperty Name="Head_Department_ID" ColumnName="Head_Department_ID" />
+                <ScalarProperty Name="Flag_IO" ColumnName="Flag_IO" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="Detail" ColumnName="Detail" />
+                <ScalarProperty Name="UserID_Save" ColumnName="UserID_Save" />
+                <ScalarProperty Name="Action_End" ColumnName="Action_End" />
+                <ScalarProperty Name="Action_Start" ColumnName="Action_Start" />
+                <ScalarProperty Name="Date_End" ColumnName="Date_End" />
+                <ScalarProperty Name="Date_Start" ColumnName="Date_Start" />
+                <ScalarProperty Name="Cost_Number" ColumnName="Cost_Number" />
+                <ScalarProperty Name="Status_ID" ColumnName="Status_ID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Revision" ColumnName="Revision" />
+                <ScalarProperty Name="Date_Send" ColumnName="Date_Send" />
+                <ScalarProperty Name="Department_Name" ColumnName="Department_Name" />
+                <ScalarProperty Name="Department_ID" ColumnName="Department_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

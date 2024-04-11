@@ -88,7 +88,14 @@
                     <asp:GridView runat="server" ID="gv_Car" AutoGenerateColumns="false" CssClass="table table-hover table-border table-sm align-top maxTable"
                         HeaderStyle-CssClass="fixedHeader">
                         <Columns>
-                            
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <span>Group Delivery</span>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <asp:CheckBox runat="server" ID="chGroup"></asp:CheckBox>
+                                </ItemTemplate>
+                            </asp:TemplateField>
                             <asp:TemplateField>
                                 <HeaderTemplate>
                                     <span>เลขที่เอกสาร</span>
@@ -146,14 +153,7 @@
                                     <asp:Label runat="server" ID="lbBox" Text='<%# Bind("QTY") %>'></asp:Label>
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:TemplateField>
-                                <HeaderTemplate>
-                                    <span>Group Delivery</span>
-                                </HeaderTemplate>
-                                <ItemTemplate>
-                                    <asp:CheckBox runat="server" ID="chGroup"></asp:CheckBox>
-                                </ItemTemplate>
-                            </asp:TemplateField>
+                            
                         </Columns>
                     </asp:GridView>
                 </div>

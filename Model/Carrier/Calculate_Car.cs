@@ -23,5 +23,6 @@ namespace Carrier.Model.Carrier
         public string TypeSendKO { get; set; }
         public string SDpart { get; set; }
         public string SiteStorage { get; set; }
+        public string StatusBud { get; set; }
     }
 }

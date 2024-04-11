@@ -416,7 +416,7 @@
 
         </div>
         <div class="row my-3 overflow-auto">
-                <asp:GridView runat="server" ID="gv_OrderAll" Width="1300px" EmptyDataText="ไม่มีการสร้างรายการ" AutoGenerateColumns="false" CssClass="table table-striped table-bordered table-hover table-sm small"
+                <asp:GridView runat="server" ID="gv_OrderAll" Width="1500px" EmptyDataText="ไม่มีการสร้างรายการ" AutoGenerateColumns="false" CssClass="table table-striped table-bordered table-hover table-sm small"
                     HeaderStyle-HorizontalAlign="Center">
                     <Columns>
                         <asp:TemplateField>
@@ -451,6 +451,15 @@
                             </HeaderTemplate>
                             <ItemTemplate>
                                 <asp:Label runat="server" ID="lbBrand" Text='<%# Bind("Brand") %>'></asp:Label>
+                                <asp:Label runat="server" ID="lbBrandID" Text='<%# Bind("Brand") %>' Visible="false"></asp:Label>
+                            </ItemTemplate>
+                        </asp:TemplateField>
+                        <asp:TemplateField>
+                            <HeaderTemplate>
+                                <span>ที่อยู่ผู้รับ</span>
+                            </HeaderTemplate>
+                            <ItemTemplate>
+                                <asp:Label runat="server" ID="lbSiteStorage" Text='<%# Bind("dstDetailAddress") %>'></asp:Label>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField>
@@ -545,7 +554,7 @@
             
         </div>
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-4">
                 <div aria-label="nav Page navigation example" runat="server" id="div_Page_Bar">
                     <div class="btn-group" role="group" aria-label="Basic outlined example">
                         <asp:LinkButton runat="server" ID="lkPrevious" CssClass="btn btn-outline-primary " OnCommand="selectPage" Visible="false">PREVIOUS</asp:LinkButton>
@@ -566,6 +575,14 @@
                     <span class="input-group-text">Delivery Order</span>
                     <asp:TextBox runat="server" ID="txtDeliveryOrder" CssClass="form-control"></asp:TextBox>
                 </div>
+
+            </div>
+            <div class="col-sm-12 col-md-3 border-2 my-2" >
+                <div class=" input-group" runat="server" id="dv_price" visible="false">
+                    <span class="input-group-text">ราคา</span><br />
+                    <asp:TextBox runat="server" ID="txtPriceDelivery" CssClass="form-control"></asp:TextBox>
+                </div>
+
             </div>
             <div class="col-md-1">
                 <div style="margin-bottom: 90px">

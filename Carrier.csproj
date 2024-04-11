@@ -568,6 +568,9 @@
     <Compile Include="Model\Budget\Department.cs">
       <DependentUpon>Budgetmodel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\Budget\Department_IO.cs">
+      <DependentUpon>Budgetmodel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Budget\MainBudget.cs">
       <DependentUpon>Budgetmodel.tt</DependentUpon>
     </Compile>
@@ -752,6 +755,7 @@
     <Compile Include="RunAuto.aspx.designer.cs">
       <DependentUpon>RunAuto.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Service\Service_Budget.cs" />
     <Compile Include="Service\Service_Flash.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>

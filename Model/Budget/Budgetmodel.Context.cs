@@ -27,5 +27,6 @@ namespace Carrier.Model.Budget
     
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<MainBudget> MainBudgets { get; set; }
+        public virtual DbSet<Department_IO> Department_IO { get; set; }
     }
 }

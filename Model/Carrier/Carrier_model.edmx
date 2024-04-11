@@ -38,6 +38,7 @@
           <Property Name="TypeSendKO" Type="nvarchar" MaxLength="50" />
           <Property Name="SDpart" Type="nvarchar" MaxLength="50" />
           <Property Name="SiteStorage" Type="nvarchar" MaxLength="20" />
+          <Property Name="StatusBud" Type="nvarchar" MaxLength="5" />
         </EntityType>
         <EntityType Name="Comment_System">
           <Key>
@@ -488,6 +489,7 @@
           <Property Name="TypeSendKO" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SDpart" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SiteStorage" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="StatusBud" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -716,6 +718,7 @@
           <EntitySetMapping Name="Calculate_Car">
             <EntityTypeMapping TypeName="CarrierModel.Calculate_Car">
               <MappingFragment StoreEntitySet="Calculate_Car">
+                <ScalarProperty Name="StatusBud" ColumnName="StatusBud" />
                 <ScalarProperty Name="SiteStorage" ColumnName="SiteStorage" />
                 <ScalarProperty Name="SDpart" ColumnName="SDpart" />
                 <ScalarProperty Name="TypeSendKO" ColumnName="TypeSendKO" />

@@ -242,7 +242,7 @@ namespace Carrier
                 var a = new
                 {
                     Brand = lbBrandTemp.Text,
-                    Site_Stroage = txtSiteStorage.Text,
+                    Site_Stroage = txtSiteStorage.Text.ToUpper(),
                     Channel = ddlChannel.SelectedValue,
                     Sale_Channel = ddlSaleChannel.SelectedValue,
                     COMCODE = txtComcode.Text,
@@ -264,7 +264,7 @@ namespace Carrier
             {
                 var a = new {
                     Brand = lbBrandTemp.Text,
-                    Site_Stroage = txtSiteStorage.Text,
+                    Site_Stroage = txtSiteStorage.Text.ToUpper(),
                     Channel = ddlChannel.SelectedValue,
                     Sale_Channel = ddlSaleChannel.SelectedValue,
                     COMCODE = txtComcode.Text,
@@ -293,7 +293,7 @@ namespace Carrier
                 "<p>Profit : " + profit.Profit + "</p>" +
                 "<p>Costcenter : " + profit.Costcenter + "</p>" +
                 "<p>New</p>"+
-                "<p>SiteStorage : " + txtSiteStorage.Text + "</p>" +
+                "<p>SiteStorage : " + txtSiteStorage.Text.ToUpper() + "</p>" +
                 "<p>Brand : " + lbBrandTemp.Text + "</p>" +
                 "<p>Channel : " + ddlChannel.SelectedValue + "</p>" +
                 "<p>Sale_Channel : " + ddlSaleChannel.SelectedValue + "</p>" +
@@ -312,7 +312,7 @@ namespace Carrier
             imgbtnDel.Visible = true;
 
             lbSiteStorage.Visible = true;
-            lbSiteStorage.Text = txtSiteStorage.Text;
+            lbSiteStorage.Text = txtSiteStorage.Text.ToUpper();
             txtSiteStorage.Visible = false;
 
             lbChannel.Visible = true;
@@ -519,7 +519,7 @@ namespace Carrier
                 try
                 {
                     site.Brand = ddlBrandADD.SelectedValue;
-                    site.Site_Stroage = txtSiteStorageADD.Text;
+                    site.Site_Stroage = txtSiteStorageADD.Text.ToUpper();
                     site.Sale_Channel = ddlSaleChannelADD.SelectedValue;
                     site.Channel = ddlChannelADD.SelectedValue;
                     site.COMCODE = txtComcodeADD.Text;

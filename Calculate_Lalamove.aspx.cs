@@ -76,10 +76,9 @@ namespace Carrier
                 s.Key.siteStorage,
                 s.Key.Date_Success,
                 QTY = s.Sum(x=>x.Qty)
-            });
+            }).OrderBy(o=>o.Date_Success);
             gv_Car.DataBind();
-
-            var CalculateCar = carrier_Entities.Calculate_Car.Where(w => w.Date_Group >= dateST && w.Date_Group <= dateED)
+            var CalculateCar = carrier_Entities.Calculate_Car.Where(w => (w.DeliveryNumber == txtDeliveryNumber.Text || txtDeliveryNumber.Text == "")&& w.Date_Group >= dateST && w.Date_Group <= dateED)
                 .Select(s => new groupOrderCar
                 {
                     BFID = s.BFID,
@@ -92,7 +91,7 @@ namespace Carrier
                     Qty = s.QTY ?? 0,
                     Price = ""+(s.Price??0),
                     New = ""
-                }).ToList();
+                }).OrderBy(o=>o.Date_Success).ToList();
             gv_Group.DataSource = CalculateCar;
             gv_Group.DataBind();
             if(CalculateCar.Count() != 0)
@@ -103,6 +102,7 @@ namespace Carrier
             {
                 dv_Group.Visible = false;
             }
+
             txtDeliveryNumber.Text = "";
             txtPriceCar.Text = "";
 
@@ -140,12 +140,12 @@ namespace Carrier
                 return;
             }
 
-            if(!Double.TryParse(txtPriceCar.Text, out _))
-            {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('โปรดกรอกราคา')", true);
-                txtPriceCar.Focus();
-                return;
-            }
+            //if(!Double.TryParse(txtPriceCar.Text, out _))
+            //{
+            //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('โปรดกรอกราคา')", true);
+            //    txtPriceCar.Focus();
+            //    return;
+            //}
 
 
 
@@ -182,12 +182,12 @@ namespace Carrier
 
 
             }
-            var box = orderall.Sum(s => s.Qty);
-            var pricePerBox = Convert.ToDouble(txtPriceCar.Text) / box;
+            //var box = orderall.Sum(s => s.Qty);
+            //var pricePerBox = txtPriceCar.Text == "" ? 0 :Convert.ToDouble(txtPriceCar.Text) / box;
             foreach (var i in orderall)
             {
                 i.DeliveryNumber = txtDeliveryNumber.Text;
-                i.Price = (pricePerBox * i.Qty).ToString("#,##0.00");
+                i.Price = 0.ToString("#,##0.00");
                 i.New = "NEW";
                 i.Date_Success = DateTime.Now;
             }
@@ -205,6 +205,17 @@ namespace Carrier
                     Date_Success = s.Date_Group ?? DateTime.Now
                 }).ToList();
             oldgroup.AddRange(orderall);
+
+            if(txtPriceCar.Text != "")
+            {
+                var box = oldgroup.Sum(s => s.Qty);
+                var pricePerBox = txtPriceCar.Text == "" ? 0 : Convert.ToDouble(txtPriceCar.Text) / box;
+                foreach (var i in oldgroup)
+                {
+                    i.Price = (pricePerBox * i.Qty).ToString("#,##0.00");
+                }
+            }
+            
             gv_Group.DataSource = oldgroup.OrderByDescending(o=>o.Date_Success);
             gv_Group.DataBind();
             dv_Group.Visible = true;
@@ -254,9 +265,16 @@ namespace Carrier
                         bigbox.StatusCal = "F";
                         carrier_Entities.SaveChanges();
                     }
+                    else
+                    {
+                        var car = carrier_Entities.Calculate_Car.Where(w => w.BFID == lbOrderBig.Text && w.DeliveryNumber == lbDelivery.Text && w.Docno == lbOrder.Text).FirstOrDefault();
+                        car.Price = Convert.ToDouble(lbPrice.Text);
+                        carrier_Entities.SaveChanges();
+                    }
                 }
                 btnSave.Enabled = false;
-                
+                txtDeliveryNumber.Text = "";
+                txtPriceCar.Text = "";
                 ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('บันทึกสำเร็จ')", true);
                 LoadData();
             }
@@ -311,6 +329,7 @@ namespace Carrier
                     item.จำนวนกล่อง_แปลง = i.Qty??0;
                     item.ค่ารถ = carrier_Entities.Calculate_Car.Where(w => w.Docno == i.Docno).FirstOrDefault().Price ?? 0;
                     item.TaxCode = "VX";
+                    item.DeliveryNumber = carrier_Entities.Calculate_Car.Where(w => w.Docno == i.Docno).FirstOrDefault().DeliveryNumber;
                     Site_Profit site = new Site_Profit();
                     if (i.siteStorage == "CENTER")
                     {
