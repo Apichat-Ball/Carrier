@@ -21,7 +21,7 @@ namespace Carrier.Service
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
             request.AddHeader("Content-Type", "application/json");
-            //request.AddJsonBody(filter);
+            request.AddJsonBody(filter);
             IRestResponse response = client.Execute(request);
             JObject j = JObject.Parse(response.Content);
             Return_Create_MainExpense return_model = new Return_Create_MainExpense();
@@ -40,6 +40,24 @@ namespace Carrier.Service
             }
             return return_model;
         }
+
+        public string Insert_CutBudget(cuttemp filter)
+        {
+
+            var client = new RestClient("https://www.sfg-th.com/API_Budget/Insert_Cut_Budget");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddJsonBody(new { detail_id = filter.detail_id, depart_id = filter.depart_id, date_use = filter.date_use, money = filter.money, typeBudget_id = filter.typeBudget_id, userId = filter.userId, remark = filter.remark });
+            IRestResponse response = client.Execute(request);
+            JObject j = JObject.Parse(response.Content);
+            if (j["code"].ToString() == "200")
+            {
+                JSAlert("S", j["message"].ToString());
+            }
+            return j["message"].ToString();
+        }
+
 
         public string Encrypt(string clearText)
         {

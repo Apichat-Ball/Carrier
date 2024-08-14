@@ -24,5 +24,6 @@ namespace Carrier.Model.Carrier
         public string SDpart { get; set; }
         public string SiteStorage { get; set; }
         public string StatusBud { get; set; }
+        public string DocInFC { get; set; }
     }
 }

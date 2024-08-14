@@ -8,14 +8,20 @@
             $("#<%= txtDateSt.ClientID %>").datepicker({
                 uiLibrary: 'bootstrap4',
                 format: 'dd/mm/yyyy'
-            }),
-
-                $("#<%= txtDateED.ClientID %>").datepicker({
-                    uiLibrary: 'bootstrap4',
-                    format: 'dd/mm/yyyy'
-                });
+            }),$("#<%= txtDateED.ClientID %>").datepicker({
+                uiLibrary: 'bootstrap4',
+                format: 'dd/mm/yyyy'
+            });
 
         }
+
+
+        $(document).ready(
+            function () {
+
+            }
+        )
+        
     </script>
     <script type="text/javascript" src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js'></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
@@ -316,27 +322,73 @@
                     </div>
                 </div>
                 <div class="row my-2" >
-                    <div class="col-md-3">
+                    <div class="col-md-3" runat="server" id="dv_DateST">
                         <asp:Label runat="server" ID="lbDateST" Text="วันที่เริ่ม"></asp:Label>
                         <asp:TextBox runat="server" ID="txtDateSt"></asp:TextBox>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-3" runat="server" id="dv_DateED">
                         <asp:Label runat="server" ID="lbDateED" Text="วันที่สิ้นสุด"></asp:Label>
                         <asp:TextBox runat="server" ID="txtDateED"></asp:TextBox>
+                    </div>
+                    <div class="col-md-3">
+                        <asp:Label runat="server" ID="lbDeliveryId" Text="DeliveryID" CssClass="form-label"></asp:Label>
+                        <asp:TextBox runat="server" ID="txtDelivery" CssClass="form-control"></asp:TextBox>
                     </div>
                     <div class="col-md-1">
                         <br />
                         <asp:Button runat="server" ID="btnSearch" Text="ค้นหา" OnClick="btnSearch_Click" CssClass="btn btn-outline-primary w-100" />
                     </div>
-                    <div class="col-md-1">
+
+                    <div class="row">
                         <br />
-                        <asp:Button runat="server" ID="btnExport" Text="Export" OnClick="btnExport_Click" CssClass="btn btn-outline-primary w-100" />
+                        <div class="col-md-4">
+                            <span>Import From Lalamove For Check</span>
+                            <asp:FileUpload runat="server" ID="fileupload1" />
+
+                            <asp:Button runat="server" ID="btnRun" Text="CHECK" CssClass="btn btn-outline-primary" OnClick="btnRun_Click" />
+                        </div>
+                        <div class="col-md-1">
+                            <asp:Label runat="server" ID="lbTypeExcel" Text="Type Export"></asp:Label>
+                            <asp:DropDownList runat="server" ID="ddlTypeExport" CssClass="btn" OnSelectedIndexChanged="ddlTypeExport_SelectedIndexChanged" AutoPostBack="true">
+                                <asp:ListItem Value="REP" Text="Report" Selected="True"></asp:ListItem>
+                                <asp:ListItem Value="SAP" Text="SAP"></asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+                        <div class="col-md-1">
+                            <br />
+                            <asp:Button runat="server" ID="btnExport" Text="Export" OnClick="btnExport_Click"  CssClass="btn btn-outline-primary w-100" UseSubmitBehavior="false"  />
+                        </div>
+                        <div class="col-md-4 border-primary" runat="server" id="dv_App">
+                            <span>สร้าง Budget ค่าคนส่งอัตโนมัติหรือใหม่?</span>
+                            <div style="display: flex;">
+                                <asp:Button runat="server" ID="btnUptoBudget" Text="นำไปตัด Budget" OnClick="btnUptoBudget_Click" CssClass="btn btn-outline-primary w-100" UseSubmitBehavior="false" />
+                                <asp:Button runat="server" ID="btnApprove" Text="Approve" OnClick="btnApprove_Click" CssClass="btn btn-outline-primary w-100" UseSubmitBehavior="false" Visible="false"/>
+                                <asp:Button runat="server" ID="btnReject" Text="Reject" OnClick="btnReject_Click" CssClass="btn btn-outline-danger w-100" UseSubmitBehavior="false" Visible="false"/>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row mt-3">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <span>* การขึ้น Budget เป็นการสร้างเอกสารลงค่าใช้จ่ายของค่าขนส่ง ในเวลา 01.15 น. ของทุกวัน หลังจากกดยืนยันให้ขึ้น Budget โดย Order Delivery ตรงกันกับทางระบบ Lalamove *</span><br />
+                        <span>* โปรดตรวจสอบให้แน่ใจก่อนทำการขึ้น Budget ทุกครั้ง *</span>
+                    </div>
+                </div>
+                <div class="row mt-3" runat="server" id="dv_gv_main">
                     <div class="col-12">
                         <asp:GridView runat="server" ID="gv_main" CssClass="table table-striped table-bordered table-hover table-sm small" AutoGenerateColumns="false">
                             <Columns>
+                                <asp:TemplateField Visible="false">
+                                    <HeaderTemplate>
+                                        <span>ขึ้น Budget</span>
+                                    </HeaderTemplate>
+                                    <ItemTemplate>
+                                        <asp:Label runat="server" ID="lbstatusBud" Visible="false" Text='<%# Bind("StatusBud") %>'></asp:Label>
+                                        <asp:ImageButton runat="server" ID="imgbtnCheckOrder" ImageUrl="~/Icon/correct.png" Visible="false" Width="30px" OnClick="imgbtnCheckOrder_Click"/>
+                                    </ItemTemplate>
+                                    <ItemStyle Width="50px" />
+                                </asp:TemplateField>
                                 <asp:TemplateField>
                                     <HeaderTemplate>
                                         <span>เลขที่ Order Delivery</span>
@@ -344,6 +396,16 @@
                                     <ItemTemplate>
                                         <asp:LinkButton runat="server" ID="lnkDeliveryNumber" Text='<%# Bind("DeliveryNumber") %>' OnClick="lnkDeliveryNumber_Click"></asp:LinkButton>
                                     </ItemTemplate>
+                                    <ItemStyle Width="100px" />
+                                </asp:TemplateField>
+                                <asp:TemplateField>
+                                    <HeaderTemplate>
+                                        <span>เวลา</span>
+                                    </HeaderTemplate>
+                                    <ItemTemplate>
+                                        <asp:Label runat="server" ID="lbDateTime" Text='<%# Bind("Date_Group") %>'></asp:Label>
+                                    </ItemTemplate>
+                                    <ItemStyle Width="100px" />
                                 </asp:TemplateField>
                                 <asp:TemplateField>
                                     <HeaderTemplate>
@@ -352,6 +414,7 @@
                                     <ItemTemplate>
                                         <asp:Label runat="server" ID="lbSiteStorage" Text='<%# Bind("SiteStorage") %>'></asp:Label>
                                     </ItemTemplate>
+                                    <ItemStyle Width="400px" />
                                 </asp:TemplateField>
                                 <asp:TemplateField>
                                     <HeaderTemplate>
@@ -360,15 +423,8 @@
                                     <ItemTemplate>
                                         <asp:Label runat="server" ID="lbSDpart" Text='<%# Bind("SDpart") %>'></asp:Label>
                                     </ItemTemplate>
+                                    <ItemStyle Width="200px" />
                                 </asp:TemplateField>
-                                <%--<asp:TemplateField>
-                                    <HeaderTemplate>
-                                        <span>ค่ารถ</span>
-                                    </HeaderTemplate>
-                                    <ItemTemplate>
-                                        <asp:Label runat="server" ID="lbPrice" Text='<%# Bind("Price") %>'></asp:Label>
-                                    </ItemTemplate>
-                                </asp:TemplateField>--%>
                                 <asp:TemplateField>
                                     <HeaderTemplate>
                                         <span>จำนวนกล่อง</span>
@@ -376,10 +432,59 @@
                                     <ItemTemplate>
                                         <asp:Label runat="server" ID="lbQTY" Text='<%# Bind("QTY") %>'></asp:Label>
                                     </ItemTemplate>
+                                    <ItemStyle Width="50px" />
+                                </asp:TemplateField>
+                                <asp:TemplateField>
+                                    <HeaderTemplate>
+                                        <span>ค่ารถ</span>
+                                    </HeaderTemplate>
+                                    <ItemTemplate>
+                                        <asp:Label runat="server" ID="lbPrice" Text='<%# Bind("Price") %>'></asp:Label>
+                                    </ItemTemplate>
+                                    <ItemStyle Width="50px" CssClass="text-end"/>
                                 </asp:TemplateField>
                             </Columns>
                         </asp:GridView>
                     </div>
+                </div>
+                <div class="row mt-3" id="dv_gv_import_Check" runat="server" visible="false">
+                    <asp:GridView runat="server" id="gv_import_Check" AutoGenerateColumns="false" CssClass="table table-hover table-bordered">
+                        <Columns>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <span>Delivery</span>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lbMatch" Text='<%# Bind("Match") %>' Visible="false"></asp:Label>
+                                    <asp:Label runat="server" ID="lbDeliveryID" Text='<%# Bind("DeliveryID") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <span>Date Complete</span>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lbDateComplete" Text='<%# Bind("dateComplete") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <span>Price E-Form</span>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lbPrice" Text='<%# Bind("price") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                            <asp:TemplateField>
+                                <HeaderTemplate>
+                                    <span>Price Real</span>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <asp:Label runat="server" ID="lbPrice_Lalamove" Text='<%# Bind("price_Lalamove") %>'></asp:Label>
+                                </ItemTemplate>
+                            </asp:TemplateField>
+                        </Columns>
+                    </asp:GridView>
                 </div>
             </div>
             <div runat="server" id="dv_detail" visible="false" class="marginDetail">
@@ -442,6 +547,11 @@
                                                                     <asp:Label runat="server" ID="lbQTY" Text='<%# Bind("QTY") %>'></asp:Label>
                                                                 </ItemTemplate>
                                                             </asp:TemplateField>
+                                                            <asp:TemplateField>
+                                                                <ItemTemplate>
+                                                                    <asp:Label runat="server" ID="lbPrice" Text='<%# Bind("Price") %>'></asp:Label>
+                                                                </ItemTemplate>
+                                                            </asp:TemplateField>
                                                         </Columns>
                                                     </asp:GridView>
                                                 </ItemTemplate>
@@ -457,6 +567,7 @@
         </ContentTemplate>
         <Triggers>
             <asp:PostBackTrigger ControlID ="btnExport" />
+            <asp:PostBackTrigger ControlID ="btnRun" />
         </Triggers>
     </asp:UpdatePanel>
 </asp:Content>

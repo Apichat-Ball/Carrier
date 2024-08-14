@@ -45,5 +45,6 @@ namespace Carrier.Model.InsideSFG_WF
         public string Flag_Clear { get; set; }
         public string UserID_Online_Commission { get; set; }
         public string UserID_Approve_Online_Com { get; set; }
+        public string Flag_IO { get; set; }
     }
 }

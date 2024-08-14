@@ -25,6 +25,6 @@ namespace Carrier.Model.Whale
         public string SAP_Storage_Received { get; set; }
         public string SAP_Site { get; set; }
         public string DC { get; set; }
-        public Nullable<int> ECommerce_Channel_ID { get; set; }
+        public int ECommerce_Channel_ID { get; set; }
     }
 }

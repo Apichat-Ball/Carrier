@@ -82,5 +82,12 @@ namespace Carrier.Model.InsideSFG_WF
         public string Vcard_URL { get; set; }
         public string ISContact { get; set; }
         public string ISContact_Leave { get; set; }
+        public Nullable<System.DateTime> Date_Contract { get; set; }
+        public string School_Name { get; set; }
+        public string Faculty { get; set; }
+        public string Program { get; set; }
+        public string Grade { get; set; }
+        public Nullable<System.DateTime> Accept_Date { get; set; }
+        public string Accept { get; set; }
     }
 }

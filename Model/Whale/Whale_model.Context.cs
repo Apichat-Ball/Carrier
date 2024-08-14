@@ -27,8 +27,12 @@ namespace Carrier.Model.Whale
     
         public virtual DbSet<Box> Boxes { get; set; }
         public virtual DbSet<City> Cities { get; set; }
-        public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<District> Districts { get; set; }
         public virtual DbSet<Province> Provinces { get; set; }
+        public virtual DbSet<Channel> Channels { get; set; }
+        public virtual DbSet<SalesOrder> SalesOrders { get; set; }
+        public virtual DbSet<SalesOrder_Item> SalesOrder_Item { get; set; }
+        public virtual DbSet<Customer_Brand> Customer_Brand { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
     }
 }

@@ -578,10 +578,10 @@
 
             </div>
             <div class="col-sm-12 col-md-3 border-2 my-2" >
-                <div class=" input-group" runat="server" id="dv_price" visible="false">
+                <%--<div class=" input-group" runat="server" id="dv_price" visible="false">
                     <span class="input-group-text">ราคา</span><br />
                     <asp:TextBox runat="server" ID="txtPriceDelivery" CssClass="form-control"></asp:TextBox>
-                </div>
+                </div>--%>
 
             </div>
             <div class="col-md-1">

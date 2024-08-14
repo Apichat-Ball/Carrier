@@ -34,5 +34,6 @@ namespace Carrier.Model.InsideSFG_WF
         public virtual DbSet<DEPARTMENT> DEPARTMENTs { get; set; }
         public virtual DbSet<Employee_Level> Employee_Level { get; set; }
         public virtual DbSet<POSITION> POSITIONs { get; set; }
+        public virtual DbSet<vBrandAndHeadFC> vBrandAndHeadFCs { get; set; }
     }
 }

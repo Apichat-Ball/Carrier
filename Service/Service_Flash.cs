@@ -1095,10 +1095,21 @@ namespace Carrier.Service
             }
             else
             {
-                var order = entities_Carrier.Order_Item.Where(w => w.Docno == lbDocno).ToList().FirstOrDefault();
-                order.Status = "C";
-                entities_Carrier.SaveChanges();
-                return "Cancel Order Success.";
+
+                var ordera = entities_Carrier.Orders.Where(w => w.Docno == lbDocno && w.Transport_Type == 2).FirstOrDefault();
+                if(ordera != null)
+                {
+                    var order = entities_Carrier.Order_Item.Where(w => w.Docno == lbDocno).ToList().FirstOrDefault();
+                    order.Status = "C";
+                    entities_Carrier.SaveChanges();
+                    return "Cancel Order Success.";
+                }
+                else
+                {
+                    return "Cancel Order Fail.";
+                }
+                
+                
             }
         }
         public string EditOrder(Order item, string pno, string typeSentKo)

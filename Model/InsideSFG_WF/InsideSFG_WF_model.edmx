@@ -136,6 +136,8 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
           <Property Name="divisionID" Type="int" Nullable="false" />
           <Property Name="department_" Type="varchar" MaxLength="50" />
           <Property Name="Flag" Type="nvarchar" MaxLength="1" />
+          <Property Name="eDepartment_" Type="nvarchar" MaxLength="50" />
+          <Property Name="thDepartment" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Employee">
           <Key>
@@ -209,6 +211,13 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
           <Property Name="Vcard_URL" Type="nvarchar" MaxLength="100" />
           <Property Name="ISContact" Type="varchar" MaxLength="5" />
           <Property Name="ISContact_Leave" Type="varchar" MaxLength="5" />
+          <Property Name="Date_Contract" Type="datetime" />
+          <Property Name="School_Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Faculty" Type="nvarchar" MaxLength="100" />
+          <Property Name="Program" Type="nvarchar" MaxLength="100" />
+          <Property Name="Grade" Type="nvarchar" MaxLength="10" />
+          <Property Name="Accept_Date" Type="datetime" />
+          <Property Name="Accept" Type="nvarchar" MaxLength="5" />
         </EntityType>
         <EntityType Name="Employee_Level">
           <Key>
@@ -232,6 +241,7 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.POSITION' does not have a primary
           <Property Name="ePosition" Type="varchar" MaxLength="50" />
           <Property Name="limitPay" Type="decimal" Precision="18" Scale="2" />
           <Property Name="Flag" Type="char" MaxLength="1" />
+          <Property Name="thPosition" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="WSHeadApproveBrand">
           <Key>
@@ -268,6 +278,25 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.POSITION' does not have a primary
           <Property Name="Flag_Clear" Type="char" MaxLength="5" />
           <Property Name="UserID_Online_Commission" Type="nvarchar(max)" />
           <Property Name="UserID_Approve_Online_Com" Type="varchar" MaxLength="100" />
+          <Property Name="Flag_IO" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'InsideSFG_WF.dbo.vBrandAndHeadFC' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vBrandAndHeadFC">
+          <Key>
+            <PropertyRef Name="departmentID" />
+            <PropertyRef Name="department_" />
+            <PropertyRef Name="ID_Brand" />
+          </Key>
+          <Property Name="departmentID" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="department_" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="50" />
+          <Property Name="Flag" Type="nvarchar" MaxLength="4" />
+          <Property Name="Brand" Type="varchar" MaxLength="50" />
+          <Property Name="BRANDABB" Type="nvarchar" MaxLength="4" />
+          <Property Name="ID_Brand" Type="nvarchar" MaxLength="6" Nullable="false" />
+          <Property Name="UserID_Approve" Type="nvarchar" MaxLength="10" />
+          <Property Name="ReserveGroupCompanyID" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityContainer Name="InsideSFG_WFModelStoreContainer">
           <EntitySet Name="BG_ForeCast" EntityType="Self.BG_ForeCast" Schema="dbo" store:Type="Tables" />
@@ -301,8 +330,22 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.POSITION' does not have a primary
     [POSITION].[position_] AS [position_], 
     [POSITION].[ePosition] AS [ePosition], 
     [POSITION].[limitPay] AS [limitPay], 
-    [POSITION].[Flag] AS [Flag]
+    [POSITION].[Flag] AS [Flag], 
+    [POSITION].[thPosition] AS [thPosition]
     FROM [dbo].[POSITION] AS [POSITION]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vBrandAndHeadFC" EntityType="Self.vBrandAndHeadFC" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vBrandAndHeadFC].[departmentID] AS [departmentID], 
+    [vBrandAndHeadFC].[department_] AS [department_], 
+    [vBrandAndHeadFC].[UserID] AS [UserID], 
+    [vBrandAndHeadFC].[Flag] AS [Flag], 
+    [vBrandAndHeadFC].[Brand] AS [Brand], 
+    [vBrandAndHeadFC].[BRANDABB] AS [BRANDABB], 
+    [vBrandAndHeadFC].[ID_Brand] AS [ID_Brand], 
+    [vBrandAndHeadFC].[UserID_Approve] AS [UserID_Approve], 
+    [vBrandAndHeadFC].[ReserveGroupCompanyID] AS [ReserveGroupCompanyID]
+    FROM [dbo].[vBrandAndHeadFC] AS [vBrandAndHeadFC]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -425,6 +468,13 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.POSITION' does not have a primary
           <Property Name="Vcard_URL" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="ISContact" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="ISContact_Leave" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="Date_Contract" Type="DateTime" Precision="3" />
+          <Property Name="School_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Faculty" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Program" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Grade" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Accept_Date" Type="DateTime" Precision="3" />
+          <Property Name="Accept" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="InsideSFG_WFEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="BG_HApprove" EntityType="Self.BG_HApprove" />
@@ -436,6 +486,7 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.POSITION' does not have a primary
           <EntitySet Name="DEPARTMENTs" EntityType="InsideSFG_WFModel.DEPARTMENT" />
           <EntitySet Name="Employee_Level" EntityType="InsideSFG_WFModel.Employee_Level" />
           <EntitySet Name="POSITIONs" EntityType="InsideSFG_WFModel.POSITION" />
+          <EntitySet Name="vBrandAndHeadFCs" EntityType="InsideSFG_WFModel.vBrandAndHeadFC" />
         </EntityContainer>
         <EntityType Name="BG_ForeCast">
           <Key>
@@ -548,6 +599,7 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.POSITION' does not have a primary
           <Property Name="Flag_Clear" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
           <Property Name="UserID_Online_Commission" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="UserID_Approve_Online_Com" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Flag_IO" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="DEPARTMENT">
           <Key>
@@ -558,6 +610,8 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.POSITION' does not have a primary
           <Property Name="divisionID" Type="Int32" Nullable="false" />
           <Property Name="department_" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Flag" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="eDepartment_" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="thDepartment" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Employee_Level">
           <Key>
@@ -579,6 +633,23 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.POSITION' does not have a primary
           <Property Name="ePosition" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="limitPay" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="Flag" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="thPosition" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="vBrandAndHeadFC">
+          <Key>
+            <PropertyRef Name="departmentID" />
+            <PropertyRef Name="department_" />
+            <PropertyRef Name="ID_Brand" />
+          </Key>
+          <Property Name="departmentID" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="department_" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UserID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Flag" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Brand" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BRANDABB" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="ID_Brand" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_Approve" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="ReserveGroupCompanyID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -634,6 +705,13 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.POSITION' does not have a primary
           <EntitySetMapping Name="Employees">
             <EntityTypeMapping TypeName="InsideSFG_WFModel.Employee">
               <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="Accept" ColumnName="Accept" />
+                <ScalarProperty Name="Accept_Date" ColumnName="Accept_Date" />
+                <ScalarProperty Name="Grade" ColumnName="Grade" />
+                <ScalarProperty Name="Program" ColumnName="Program" />
+                <ScalarProperty Name="Faculty" ColumnName="Faculty" />
+                <ScalarProperty Name="School_Name" ColumnName="School_Name" />
+                <ScalarProperty Name="Date_Contract" ColumnName="Date_Contract" />
                 <ScalarProperty Name="userID" ColumnName="userID" />
                 <ScalarProperty Name="masterID" ColumnName="masterID" />
                 <ScalarProperty Name="TypeEmployee" ColumnName="TypeEmployee" />
@@ -784,6 +862,7 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.POSITION' does not have a primary
           <EntitySetMapping Name="WSHeadApproveBrands">
             <EntityTypeMapping TypeName="InsideSFG_WFModel.WSHeadApproveBrand">
               <MappingFragment StoreEntitySet="WSHeadApproveBrand">
+                <ScalarProperty Name="Flag_IO" ColumnName="Flag_IO" />
                 <ScalarProperty Name="UserID_Approve_Online_Com" ColumnName="UserID_Approve_Online_Com" />
                 <ScalarProperty Name="UserID_Online_Commission" ColumnName="UserID_Online_Commission" />
                 <ScalarProperty Name="Flag_Clear" ColumnName="Flag_Clear" />
@@ -821,6 +900,8 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.POSITION' does not have a primary
           <EntitySetMapping Name="DEPARTMENTs">
             <EntityTypeMapping TypeName="InsideSFG_WFModel.DEPARTMENT">
               <MappingFragment StoreEntitySet="DEPARTMENT">
+                <ScalarProperty Name="thDepartment" ColumnName="thDepartment" />
+                <ScalarProperty Name="eDepartment_" ColumnName="eDepartment_" />
                 <ScalarProperty Name="Flag" ColumnName="Flag" />
                 <ScalarProperty Name="department_" ColumnName="department_" />
                 <ScalarProperty Name="divisionID" ColumnName="divisionID" />
@@ -843,11 +924,27 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.POSITION' does not have a primary
           <EntitySetMapping Name="POSITIONs">
             <EntityTypeMapping TypeName="InsideSFG_WFModel.POSITION">
               <MappingFragment StoreEntitySet="POSITION">
+                <ScalarProperty Name="thPosition" ColumnName="thPosition" />
                 <ScalarProperty Name="Flag" ColumnName="Flag" />
                 <ScalarProperty Name="limitPay" ColumnName="limitPay" />
                 <ScalarProperty Name="ePosition" ColumnName="ePosition" />
                 <ScalarProperty Name="position_" ColumnName="position_" />
                 <ScalarProperty Name="positionID" ColumnName="positionID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vBrandAndHeadFCs">
+            <EntityTypeMapping TypeName="InsideSFG_WFModel.vBrandAndHeadFC">
+              <MappingFragment StoreEntitySet="vBrandAndHeadFC">
+                <ScalarProperty Name="ReserveGroupCompanyID" ColumnName="ReserveGroupCompanyID" />
+                <ScalarProperty Name="UserID_Approve" ColumnName="UserID_Approve" />
+                <ScalarProperty Name="ID_Brand" ColumnName="ID_Brand" />
+                <ScalarProperty Name="BRANDABB" ColumnName="BRANDABB" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+                <ScalarProperty Name="Flag" ColumnName="Flag" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="department_" ColumnName="department_" />
+                <ScalarProperty Name="departmentID" ColumnName="departmentID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -1,0 +1,384 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Online_NonAPIModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Form_NonAPI">
+          <Key>
+            <PropertyRef Name="Docno" />
+          </Key>
+          <Property Name="Docno" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Date_Send" Type="datetime" />
+          <Property Name="DocStatus" Type="nvarchar" MaxLength="2" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="Revision" Type="int" />
+          <Property Name="POS_Date" Type="date" />
+          <Property Name="Transaction_Date" Type="datetime" />
+          <Property Name="StorageWM_ID" Type="nvarchar" MaxLength="4" />
+          <Property Name="Channel_ID" Type="nvarchar" MaxLength="4" />
+          <Property Name="Transaction_Type" Type="nvarchar" MaxLength="4" />
+          <Property Name="Ref_Order" Type="nvarchar" MaxLength="50" />
+          <Property Name="Ref_Order_Sales" Type="nvarchar" MaxLength="50" />
+          <Property Name="Payment_Type" Type="nvarchar" MaxLength="4" />
+          <Property Name="Shipping_Type" Type="nvarchar" MaxLength="4" />
+          <Property Name="CustomerFirstName" Type="nvarchar" MaxLength="200" />
+          <Property Name="CustomerLastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="CustomerPhone" Type="nvarchar" MaxLength="30" />
+          <Property Name="CustomerEmail" Type="nvarchar" MaxLength="50" />
+          <Property Name="AddressBilling_ID_Card" Type="nvarchar" MaxLength="200" />
+          <Property Name="AddressBilling_FirstName" Type="nvarchar" MaxLength="200" />
+          <Property Name="AddressBilling_LastName" Type="nvarchar" MaxLength="100" />
+          <Property Name="AddressBilling_Address1" Type="nvarchar(max)" />
+          <Property Name="AddressBilling_Address2" Type="nvarchar(max)" />
+          <Property Name="AddressBilling_PostCode" Type="nvarchar" MaxLength="100" />
+          <Property Name="AddressBilling_Province_ID" Type="nvarchar" MaxLength="4" />
+          <Property Name="AddressBilling_Amphur_ID" Type="nvarchar" MaxLength="4" />
+          <Property Name="AddressBilling_District_ID" Type="nvarchar" MaxLength="4" />
+          <Property Name="AddressBilling_Tel1" Type="nvarchar" MaxLength="100" />
+          <Property Name="AddressBilling_Tel2" Type="nvarchar" MaxLength="100" />
+          <Property Name="C_AddressShipping" Type="bit" />
+          <Property Name="AddressShipping_FirstName" Type="nvarchar" MaxLength="200" />
+          <Property Name="AddressShipping_LastName" Type="nvarchar" MaxLength="100" />
+          <Property Name="AddressShipping_Address1" Type="nvarchar(max)" />
+          <Property Name="AddressShipping_Address2" Type="nvarchar(max)" />
+          <Property Name="AddressShipping_PostCode" Type="nvarchar" MaxLength="100" />
+          <Property Name="AddressShipping_Province_ID" Type="nvarchar" MaxLength="4" />
+          <Property Name="AddressShipping_Amphur_ID" Type="nvarchar" MaxLength="4" />
+          <Property Name="AddressShipping_District_ID" Type="nvarchar" MaxLength="4" />
+          <Property Name="AddressShipping_Tel1" Type="nvarchar" MaxLength="100" />
+          <Property Name="AddressShipping_Tel2" Type="nvarchar" MaxLength="100" />
+          <Property Name="InventoryDocID" Type="int" />
+          <Property Name="Date_Tracking" Type="datetime" />
+          <Property Name="UserID_Tracking" Type="nvarchar" MaxLength="10" />
+          <Property Name="Date_Print" Type="datetime" />
+          <Property Name="UserID_Print" Type="nvarchar" MaxLength="10" />
+          <Property Name="UserID_GetOrder" Type="nvarchar" MaxLength="10" />
+          <Property Name="Remark" Type="nvarchar(max)" />
+          <Property Name="Date_Deliverynote" Type="datetime" />
+          <Property Name="UserID_Deliverynote" Type="nvarchar" MaxLength="10" />
+          <Property Name="Date_Check" Type="datetime" />
+          <Property Name="UserID_Check" Type="nvarchar" MaxLength="100" />
+          <Property Name="Flag_Check" Type="nvarchar" MaxLength="1" />
+          <Property Name="Note" Type="nvarchar(max)" />
+          <Property Name="Ref_Data" Type="nvarchar" MaxLength="20" />
+          <Property Name="Date_FNC" Type="datetime" />
+          <Property Name="UserID_FNC" Type="nvarchar" MaxLength="10" />
+          <Property Name="Rvd_Money_FNC" Type="date" />
+          <Property Name="Shippingprice" Type="float" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="200" />
+          <Property Name="Flag_Change" Type="nvarchar" MaxLength="1" />
+          <Property Name="DateDeli_FNC" Type="date" />
+          <Property Name="UserIDDeli_FNC" Type="nvarchar" MaxLength="10" />
+          <Property Name="Non_Report" Type="nvarchar" MaxLength="1" />
+          <Property Name="WMS_ShipmentID" Type="nvarchar" MaxLength="20" />
+          <Property Name="Type_Document" Type="nvarchar" MaxLength="10" />
+          <Property Name="Insert_Account" Type="bit" />
+        </EntityType>
+        <EntityType Name="Form_NonAPI_Item">
+          <Key>
+            <PropertyRef Name="Docno" />
+            <PropertyRef Name="No" />
+          </Key>
+          <Property Name="Docno" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="No" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SKU" Type="nvarchar" MaxLength="50" />
+          <Property Name="Unit" Type="int" />
+          <Property Name="PromoID" Type="int" />
+          <Property Name="retailPrice" Type="float" />
+          <Property Name="NetPrice" Type="float" />
+          <Property Name="Get_Product" Type="nvarchar" MaxLength="2" />
+          <Property Name="Tracking_No" Type="nvarchar" MaxLength="100" />
+          <Property Name="Box_ID" Type="nvarchar" MaxLength="4" />
+          <Property Name="Unit_Box" Type="int" />
+          <Property Name="LineNumber" Type="int" />
+          <Property Name="Promoition_ID" Type="nvarchar" MaxLength="4" />
+          <Property Name="Flag_Check" Type="nvarchar" MaxLength="1" />
+          <Property Name="Send_Item" Type="nvarchar" MaxLength="1" />
+          <Property Name="Non_Report" Type="nvarchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="Type_Channel">
+          <Key>
+            <PropertyRef Name="Channel_ID" />
+          </Key>
+          <Property Name="Channel_ID" Type="nvarchar" MaxLength="4" Nullable="false" />
+          <Property Name="Channel_Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="Flag_Active" Type="nvarchar" MaxLength="1" />
+          <Property Name="SiteID" Type="nvarchar" MaxLength="100" />
+          <Property Name="terminalID" Type="nvarchar" MaxLength="100" />
+          <Property Name="refCode" Type="nvarchar" MaxLength="8" />
+          <Property Name="Flag_Show" Type="nvarchar" MaxLength="1" />
+          <Property Name="Type_Process" Type="nvarchar" MaxLength="10" />
+          <Property Name="Flag_Transaction" Type="nvarchar" MaxLength="1" />
+          <Property Name="PaymentTypeCode" Type="nvarchar" MaxLength="20" />
+          <Property Name="Shared_Offline" Type="bit" />
+          <Property Name="Channel_Group" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityContainer Name="Online_NonAPIModelStoreContainer">
+          <EntitySet Name="Form_NonAPI" EntityType="Self.Form_NonAPI" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Form_NonAPI_Item" EntityType="Self.Form_NonAPI_Item" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Type_Channel" EntityType="Self.Type_Channel" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Online_NonAPIModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Form_NonAPI">
+          <Key>
+            <PropertyRef Name="Docno" />
+          </Key>
+          <Property Name="Docno" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date_Send" Type="DateTime" Precision="3" />
+          <Property Name="DocStatus" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="Revision" Type="Int32" />
+          <Property Name="POS_Date" Type="DateTime" Precision="0" />
+          <Property Name="Transaction_Date" Type="DateTime" Precision="3" />
+          <Property Name="StorageWM_ID" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Channel_ID" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Transaction_Type" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Ref_Order" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Ref_Order_Sales" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Payment_Type" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Shipping_Type" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerFirstName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerLastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerPhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AddressBilling_ID_Card" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="AddressBilling_FirstName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="AddressBilling_LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AddressBilling_Address1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AddressBilling_Address2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AddressBilling_PostCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AddressBilling_Province_ID" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="AddressBilling_Amphur_ID" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="AddressBilling_District_ID" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="AddressBilling_Tel1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AddressBilling_Tel2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="C_AddressShipping" Type="Boolean" />
+          <Property Name="AddressShipping_FirstName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="AddressShipping_LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AddressShipping_Address1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AddressShipping_Address2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="AddressShipping_PostCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AddressShipping_Province_ID" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="AddressShipping_Amphur_ID" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="AddressShipping_District_ID" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="AddressShipping_Tel1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AddressShipping_Tel2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="InventoryDocID" Type="Int32" />
+          <Property Name="Date_Tracking" Type="DateTime" Precision="3" />
+          <Property Name="UserID_Tracking" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Print" Type="DateTime" Precision="3" />
+          <Property Name="UserID_Print" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_GetOrder" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Deliverynote" Type="DateTime" Precision="3" />
+          <Property Name="UserID_Deliverynote" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Check" Type="DateTime" Precision="3" />
+          <Property Name="UserID_Check" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_Check" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Ref_Data" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Date_FNC" Type="DateTime" Precision="3" />
+          <Property Name="UserID_FNC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Rvd_Money_FNC" Type="DateTime" Precision="0" />
+          <Property Name="Shippingprice" Type="Double" />
+          <Property Name="FileName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_Change" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="DateDeli_FNC" Type="DateTime" Precision="0" />
+          <Property Name="UserIDDeli_FNC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Non_Report" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="WMS_ShipmentID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Type_Document" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Insert_Account" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Form_NonAPI_Item">
+          <Key>
+            <PropertyRef Name="Docno" />
+            <PropertyRef Name="No" />
+          </Key>
+          <Property Name="Docno" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="No" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SKU" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Unit" Type="Int32" />
+          <Property Name="PromoID" Type="Int32" />
+          <Property Name="retailPrice" Type="Double" />
+          <Property Name="NetPrice" Type="Double" />
+          <Property Name="Get_Product" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="Tracking_No" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Box_ID" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Unit_Box" Type="Int32" />
+          <Property Name="LineNumber" Type="Int32" />
+          <Property Name="Promoition_ID" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_Check" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="Send_Item" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="Non_Report" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Type_Channel">
+          <Key>
+            <PropertyRef Name="Channel_ID" />
+          </Key>
+          <Property Name="Channel_ID" Type="String" MaxLength="4" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Channel_Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_Active" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="SiteID" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="terminalID" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="refCode" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_Show" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="Type_Process" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_Transaction" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="PaymentTypeCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Shared_Offline" Type="Boolean" />
+          <Property Name="Channel_Group" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="Online_NonAPIEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Form_NonAPI" EntityType="Self.Form_NonAPI" />
+          <EntitySet Name="Form_NonAPI_Item" EntityType="Self.Form_NonAPI_Item" />
+          <EntitySet Name="Type_Channel" EntityType="Self.Type_Channel" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Online_NonAPIModelStoreContainer" CdmEntityContainer="Online_NonAPIEntities">
+          <EntitySetMapping Name="Form_NonAPI">
+            <EntityTypeMapping TypeName="Online_NonAPIModel.Form_NonAPI">
+              <MappingFragment StoreEntitySet="Form_NonAPI">
+                <ScalarProperty Name="Docno" ColumnName="Docno" />
+                <ScalarProperty Name="Date_Send" ColumnName="Date_Send" />
+                <ScalarProperty Name="DocStatus" ColumnName="DocStatus" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Revision" ColumnName="Revision" />
+                <ScalarProperty Name="POS_Date" ColumnName="POS_Date" />
+                <ScalarProperty Name="Transaction_Date" ColumnName="Transaction_Date" />
+                <ScalarProperty Name="StorageWM_ID" ColumnName="StorageWM_ID" />
+                <ScalarProperty Name="Channel_ID" ColumnName="Channel_ID" />
+                <ScalarProperty Name="Transaction_Type" ColumnName="Transaction_Type" />
+                <ScalarProperty Name="Ref_Order" ColumnName="Ref_Order" />
+                <ScalarProperty Name="Ref_Order_Sales" ColumnName="Ref_Order_Sales" />
+                <ScalarProperty Name="Payment_Type" ColumnName="Payment_Type" />
+                <ScalarProperty Name="Shipping_Type" ColumnName="Shipping_Type" />
+                <ScalarProperty Name="CustomerFirstName" ColumnName="CustomerFirstName" />
+                <ScalarProperty Name="CustomerLastName" ColumnName="CustomerLastName" />
+                <ScalarProperty Name="CustomerPhone" ColumnName="CustomerPhone" />
+                <ScalarProperty Name="CustomerEmail" ColumnName="CustomerEmail" />
+                <ScalarProperty Name="AddressBilling_ID_Card" ColumnName="AddressBilling_ID_Card" />
+                <ScalarProperty Name="AddressBilling_FirstName" ColumnName="AddressBilling_FirstName" />
+                <ScalarProperty Name="AddressBilling_LastName" ColumnName="AddressBilling_LastName" />
+                <ScalarProperty Name="AddressBilling_Address1" ColumnName="AddressBilling_Address1" />
+                <ScalarProperty Name="AddressBilling_Address2" ColumnName="AddressBilling_Address2" />
+                <ScalarProperty Name="AddressBilling_PostCode" ColumnName="AddressBilling_PostCode" />
+                <ScalarProperty Name="AddressBilling_Province_ID" ColumnName="AddressBilling_Province_ID" />
+                <ScalarProperty Name="AddressBilling_Amphur_ID" ColumnName="AddressBilling_Amphur_ID" />
+                <ScalarProperty Name="AddressBilling_District_ID" ColumnName="AddressBilling_District_ID" />
+                <ScalarProperty Name="AddressBilling_Tel1" ColumnName="AddressBilling_Tel1" />
+                <ScalarProperty Name="AddressBilling_Tel2" ColumnName="AddressBilling_Tel2" />
+                <ScalarProperty Name="C_AddressShipping" ColumnName="C_AddressShipping" />
+                <ScalarProperty Name="AddressShipping_FirstName" ColumnName="AddressShipping_FirstName" />
+                <ScalarProperty Name="AddressShipping_LastName" ColumnName="AddressShipping_LastName" />
+                <ScalarProperty Name="AddressShipping_Address1" ColumnName="AddressShipping_Address1" />
+                <ScalarProperty Name="AddressShipping_Address2" ColumnName="AddressShipping_Address2" />
+                <ScalarProperty Name="AddressShipping_PostCode" ColumnName="AddressShipping_PostCode" />
+                <ScalarProperty Name="AddressShipping_Province_ID" ColumnName="AddressShipping_Province_ID" />
+                <ScalarProperty Name="AddressShipping_Amphur_ID" ColumnName="AddressShipping_Amphur_ID" />
+                <ScalarProperty Name="AddressShipping_District_ID" ColumnName="AddressShipping_District_ID" />
+                <ScalarProperty Name="AddressShipping_Tel1" ColumnName="AddressShipping_Tel1" />
+                <ScalarProperty Name="AddressShipping_Tel2" ColumnName="AddressShipping_Tel2" />
+                <ScalarProperty Name="InventoryDocID" ColumnName="InventoryDocID" />
+                <ScalarProperty Name="Date_Tracking" ColumnName="Date_Tracking" />
+                <ScalarProperty Name="UserID_Tracking" ColumnName="UserID_Tracking" />
+                <ScalarProperty Name="Date_Print" ColumnName="Date_Print" />
+                <ScalarProperty Name="UserID_Print" ColumnName="UserID_Print" />
+                <ScalarProperty Name="UserID_GetOrder" ColumnName="UserID_GetOrder" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="Date_Deliverynote" ColumnName="Date_Deliverynote" />
+                <ScalarProperty Name="UserID_Deliverynote" ColumnName="UserID_Deliverynote" />
+                <ScalarProperty Name="Date_Check" ColumnName="Date_Check" />
+                <ScalarProperty Name="UserID_Check" ColumnName="UserID_Check" />
+                <ScalarProperty Name="Flag_Check" ColumnName="Flag_Check" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="Ref_Data" ColumnName="Ref_Data" />
+                <ScalarProperty Name="Date_FNC" ColumnName="Date_FNC" />
+                <ScalarProperty Name="UserID_FNC" ColumnName="UserID_FNC" />
+                <ScalarProperty Name="Rvd_Money_FNC" ColumnName="Rvd_Money_FNC" />
+                <ScalarProperty Name="Shippingprice" ColumnName="Shippingprice" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Flag_Change" ColumnName="Flag_Change" />
+                <ScalarProperty Name="DateDeli_FNC" ColumnName="DateDeli_FNC" />
+                <ScalarProperty Name="UserIDDeli_FNC" ColumnName="UserIDDeli_FNC" />
+                <ScalarProperty Name="Non_Report" ColumnName="Non_Report" />
+                <ScalarProperty Name="WMS_ShipmentID" ColumnName="WMS_ShipmentID" />
+                <ScalarProperty Name="Type_Document" ColumnName="Type_Document" />
+                <ScalarProperty Name="Insert_Account" ColumnName="Insert_Account" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Form_NonAPI_Item">
+            <EntityTypeMapping TypeName="Online_NonAPIModel.Form_NonAPI_Item">
+              <MappingFragment StoreEntitySet="Form_NonAPI_Item">
+                <ScalarProperty Name="Docno" ColumnName="Docno" />
+                <ScalarProperty Name="No" ColumnName="No" />
+                <ScalarProperty Name="SKU" ColumnName="SKU" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="PromoID" ColumnName="PromoID" />
+                <ScalarProperty Name="retailPrice" ColumnName="retailPrice" />
+                <ScalarProperty Name="NetPrice" ColumnName="NetPrice" />
+                <ScalarProperty Name="Get_Product" ColumnName="Get_Product" />
+                <ScalarProperty Name="Tracking_No" ColumnName="Tracking_No" />
+                <ScalarProperty Name="Box_ID" ColumnName="Box_ID" />
+                <ScalarProperty Name="Unit_Box" ColumnName="Unit_Box" />
+                <ScalarProperty Name="LineNumber" ColumnName="LineNumber" />
+                <ScalarProperty Name="Promoition_ID" ColumnName="Promoition_ID" />
+                <ScalarProperty Name="Flag_Check" ColumnName="Flag_Check" />
+                <ScalarProperty Name="Send_Item" ColumnName="Send_Item" />
+                <ScalarProperty Name="Non_Report" ColumnName="Non_Report" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Type_Channel">
+            <EntityTypeMapping TypeName="Online_NonAPIModel.Type_Channel">
+              <MappingFragment StoreEntitySet="Type_Channel">
+                <ScalarProperty Name="Channel_ID" ColumnName="Channel_ID" />
+                <ScalarProperty Name="Channel_Name" ColumnName="Channel_Name" />
+                <ScalarProperty Name="Flag_Active" ColumnName="Flag_Active" />
+                <ScalarProperty Name="SiteID" ColumnName="SiteID" />
+                <ScalarProperty Name="terminalID" ColumnName="terminalID" />
+                <ScalarProperty Name="refCode" ColumnName="refCode" />
+                <ScalarProperty Name="Flag_Show" ColumnName="Flag_Show" />
+                <ScalarProperty Name="Type_Process" ColumnName="Type_Process" />
+                <ScalarProperty Name="Flag_Transaction" ColumnName="Flag_Transaction" />
+                <ScalarProperty Name="PaymentTypeCode" ColumnName="PaymentTypeCode" />
+                <ScalarProperty Name="Shared_Offline" ColumnName="Shared_Offline" />
+                <ScalarProperty Name="Channel_Group" ColumnName="Channel_Group" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

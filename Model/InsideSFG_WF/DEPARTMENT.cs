@@ -18,5 +18,7 @@ namespace Carrier.Model.InsideSFG_WF
         public int divisionID { get; set; }
         public string department_ { get; set; }
         public string Flag { get; set; }
+        public string eDepartment_ { get; set; }
+        public string thDepartment { get; set; }
     }
 }

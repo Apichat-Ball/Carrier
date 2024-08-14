@@ -96,10 +96,47 @@
           <Property Name="Detail_Remark" Type="nvarchar(max)" />
           <Property Name="Department_IO_ID" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="MainExpense">
+          <Key>
+            <PropertyRef Name="Docno" />
+          </Key>
+          <Property Name="Docno" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Revision" Type="int" />
+          <Property Name="Date_Send" Type="datetime" />
+          <Property Name="Status_ID" Type="nvarchar" MaxLength="2" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="20" />
+          <Property Name="Date_Use" Type="date" />
+          <Property Name="Department_ID" Type="nvarchar" MaxLength="40" />
+          <Property Name="TypeBudget_ID" Type="int" />
+          <Property Name="Flag" Type="nvarchar" MaxLength="4" />
+          <Property Name="SAPRemark" Type="nvarchar" MaxLength="1" />
+          <Property Name="OD_Docno" Type="nvarchar" MaxLength="20" />
+          <Property Name="Remark" Type="nvarchar(max)" />
+          <Property Name="SyncStatus" Type="nvarchar" MaxLength="2" />
+          <Property Name="Version" Type="nvarchar" MaxLength="5" />
+          <Property Name="Site_Storage" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="MainExpense_Sub">
+          <Key>
+            <PropertyRef Name="Docno" />
+            <PropertyRef Name="Detail_ID" />
+            <PropertyRef Name="Brand_ID" />
+          </Key>
+          <Property Name="Docno" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Detail_ID" Type="int" Nullable="false" />
+          <Property Name="Detail" Type="nvarchar(max)" />
+          <Property Name="Estimate" Type="float" />
+          <Property Name="Actual" Type="float" />
+          <Property Name="Brand_ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Brand_Percent" Type="float" />
+          <Property Name="SiteStorage" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityContainer Name="BudgetModelStoreContainer">
           <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Department_IO" EntityType="Self.Department_IO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MainBudget" EntityType="Self.MainBudget" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MainExpense" EntityType="Self.MainExpense" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MainExpense_Sub" EntityType="Self.MainExpense_Sub" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -167,6 +204,8 @@
           <EntitySet Name="Departments" EntityType="Self.Department" />
           <EntitySet Name="MainBudgets" EntityType="Self.MainBudget" />
           <EntitySet Name="Department_IO" EntityType="BudgetModel.Department_IO" />
+          <EntitySet Name="MainExpenses" EntityType="BudgetModel.MainExpense" />
+          <EntitySet Name="MainExpense_Sub" EntityType="BudgetModel.MainExpense_Sub" />
         </EntityContainer>
         <EntityType Name="Department_IO">
           <Key>
@@ -200,6 +239,41 @@
           <Property Name="Per_Share" Type="Int32" />
           <Property Name="Ref_Cost_Number" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="NewFC_NextYear" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="MainExpense">
+          <Key>
+            <PropertyRef Name="Docno" />
+          </Key>
+          <Property Name="Docno" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Revision" Type="Int32" />
+          <Property Name="Date_Send" Type="DateTime" Precision="3" />
+          <Property Name="Status_ID" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="UserID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Use" Type="DateTime" Precision="0" />
+          <Property Name="Department_ID" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="TypeBudget_ID" Type="Int32" />
+          <Property Name="Flag" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="SAPRemark" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Name="OD_Docno" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SyncStatus" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="Version" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Site_Storage" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="MainExpense_Sub">
+          <Key>
+            <PropertyRef Name="Docno" />
+            <PropertyRef Name="Detail_ID" />
+            <PropertyRef Name="Brand_ID" />
+          </Key>
+          <Property Name="Docno" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Detail_ID" Type="Int32" Nullable="false" />
+          <Property Name="Detail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Estimate" Type="Double" />
+          <Property Name="Actual" Type="Double" />
+          <Property Name="Brand_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Brand_Percent" Type="Double" />
+          <Property Name="SiteStorage" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -295,6 +369,41 @@
                 <ScalarProperty Name="Date_Send" ColumnName="Date_Send" />
                 <ScalarProperty Name="Department_Name" ColumnName="Department_Name" />
                 <ScalarProperty Name="Department_ID" ColumnName="Department_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MainExpenses">
+            <EntityTypeMapping TypeName="BudgetModel.MainExpense">
+              <MappingFragment StoreEntitySet="MainExpense">
+                <ScalarProperty Name="Site_Storage" ColumnName="Site_Storage" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="SyncStatus" ColumnName="SyncStatus" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="OD_Docno" ColumnName="OD_Docno" />
+                <ScalarProperty Name="SAPRemark" ColumnName="SAPRemark" />
+                <ScalarProperty Name="Flag" ColumnName="Flag" />
+                <ScalarProperty Name="TypeBudget_ID" ColumnName="TypeBudget_ID" />
+                <ScalarProperty Name="Department_ID" ColumnName="Department_ID" />
+                <ScalarProperty Name="Date_Use" ColumnName="Date_Use" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Status_ID" ColumnName="Status_ID" />
+                <ScalarProperty Name="Date_Send" ColumnName="Date_Send" />
+                <ScalarProperty Name="Revision" ColumnName="Revision" />
+                <ScalarProperty Name="Docno" ColumnName="Docno" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MainExpense_Sub">
+            <EntityTypeMapping TypeName="BudgetModel.MainExpense_Sub">
+              <MappingFragment StoreEntitySet="MainExpense_Sub">
+                <ScalarProperty Name="SiteStorage" ColumnName="SiteStorage" />
+                <ScalarProperty Name="Brand_Percent" ColumnName="Brand_Percent" />
+                <ScalarProperty Name="Brand_ID" ColumnName="Brand_ID" />
+                <ScalarProperty Name="Actual" ColumnName="Actual" />
+                <ScalarProperty Name="Estimate" ColumnName="Estimate" />
+                <ScalarProperty Name="Detail" ColumnName="Detail" />
+                <ScalarProperty Name="Detail_ID" ColumnName="Detail_ID" />
+                <ScalarProperty Name="Docno" ColumnName="Docno" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

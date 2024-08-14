@@ -39,6 +39,7 @@
           <Property Name="SDpart" Type="nvarchar" MaxLength="50" />
           <Property Name="SiteStorage" Type="nvarchar" MaxLength="20" />
           <Property Name="StatusBud" Type="nvarchar" MaxLength="5" />
+          <Property Name="DocInFC" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="Comment_System">
           <Key>
@@ -60,6 +61,22 @@
           <Property Name="Event_Branch" Type="nvarchar(max)" />
           <Property Name="Event_Name" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="Flash_EX_Import">
+          <Key>
+            <PropertyRef Name="Docno" />
+            <PropertyRef Name="pno" />
+          </Key>
+          <Property Name="Docno" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Date_Process" Type="datetime" />
+          <Property Name="Date_Import" Type="datetime" />
+          <Property Name="pno" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Price" Type="float" />
+          <Property Name="Status_Match" Type="bit" />
+          <Property Name="Docno_Budget" Type="nvarchar" MaxLength="20" />
+          <Property Name="Status_Budget" Type="bit" />
+          <Property Name="Shop" Type="nvarchar" MaxLength="10" />
+          <Property Name="department_id" Type="int" />
+        </EntityType>
         <EntityType Name="History_Notify_Order">
           <Key>
             <PropertyRef Name="History_ID" />
@@ -71,6 +88,15 @@
           <Property Name="Docno" Type="nvarchar(max)" />
           <Property Name="Type_Send_KA" Type="nvarchar" MaxLength="20" />
           <Property Name="SaveFrom" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Lalamove_Import">
+          <Key>
+            <PropertyRef Name="Delivery_ID" />
+          </Key>
+          <Property Name="Delivery_ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Date_Complete" Type="datetime" />
+          <Property Name="Price" Type="float" />
+          <Property Name="Status_Match" Type="bit" />
         </EntityType>
         <EntityType Name="Notify">
           <Key>
@@ -233,7 +259,9 @@
           <EntitySet Name="Calculate_Car" EntityType="Self.Calculate_Car" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comment_System" EntityType="Self.Comment_System" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event_Shop" EntityType="Self.Event_Shop" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Flash_EX_Import" EntityType="Self.Flash_EX_Import" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="History_Notify_Order" EntityType="Self.History_Notify_Order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lalamove_Import" EntityType="Self.Lalamove_Import" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Notify" EntityType="Self.Notify" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order_Big_Box" EntityType="Self.Order_Big_Box" Schema="dbo" store:Type="Tables" />
@@ -268,6 +296,8 @@
           <EntitySet Name="RunDocnoes" EntityType="CarrierModel.RunDocno" />
           <EntitySet Name="Order_Big_Box" EntityType="CarrierModel.Order_Big_Box" />
           <EntitySet Name="Calculate_Car" EntityType="CarrierModel.Calculate_Car" />
+          <EntitySet Name="Lalamove_Import" EntityType="CarrierModel.Lalamove_Import" />
+          <EntitySet Name="Flash_EX_Import" EntityType="CarrierModel.Flash_EX_Import" />
         </EntityContainer>
         <EntityType Name="Article_Category">
           <Key>
@@ -490,6 +520,32 @@
           <Property Name="SDpart" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SiteStorage" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="StatusBud" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="DocInFC" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Lalamove_Import">
+          <Key>
+            <PropertyRef Name="Delivery_ID" />
+          </Key>
+          <Property Name="Delivery_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Complete" Type="DateTime" Precision="3" />
+          <Property Name="Price" Type="Double" />
+          <Property Name="Status_Match" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Flash_EX_Import">
+          <Key>
+            <PropertyRef Name="Docno" />
+            <PropertyRef Name="pno" />
+          </Key>
+          <Property Name="Docno" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Process" Type="DateTime" Precision="3" />
+          <Property Name="Date_Import" Type="DateTime" Precision="3" />
+          <Property Name="pno" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Double" />
+          <Property Name="Status_Match" Type="Boolean" />
+          <Property Name="Docno_Budget" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Status_Budget" Type="Boolean" />
+          <Property Name="Shop" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="department_id" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -718,6 +774,7 @@
           <EntitySetMapping Name="Calculate_Car">
             <EntityTypeMapping TypeName="CarrierModel.Calculate_Car">
               <MappingFragment StoreEntitySet="Calculate_Car">
+                <ScalarProperty Name="DocInFC" ColumnName="DocInFC" />
                 <ScalarProperty Name="StatusBud" ColumnName="StatusBud" />
                 <ScalarProperty Name="SiteStorage" ColumnName="SiteStorage" />
                 <ScalarProperty Name="SDpart" ColumnName="SDpart" />
@@ -728,6 +785,32 @@
                 <ScalarProperty Name="Docno" ColumnName="Docno" />
                 <ScalarProperty Name="BFID" ColumnName="BFID" />
                 <ScalarProperty Name="DeliveryNumber" ColumnName="DeliveryNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lalamove_Import">
+            <EntityTypeMapping TypeName="CarrierModel.Lalamove_Import">
+              <MappingFragment StoreEntitySet="Lalamove_Import">
+                <ScalarProperty Name="Status_Match" ColumnName="Status_Match" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Date_Complete" ColumnName="Date_Complete" />
+                <ScalarProperty Name="Delivery_ID" ColumnName="Delivery_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Flash_EX_Import">
+            <EntityTypeMapping TypeName="CarrierModel.Flash_EX_Import">
+              <MappingFragment StoreEntitySet="Flash_EX_Import">
+                <ScalarProperty Name="department_id" ColumnName="department_id" />
+                <ScalarProperty Name="Shop" ColumnName="Shop" />
+                <ScalarProperty Name="Status_Budget" ColumnName="Status_Budget" />
+                <ScalarProperty Name="Docno_Budget" ColumnName="Docno_Budget" />
+                <ScalarProperty Name="Status_Match" ColumnName="Status_Match" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="pno" ColumnName="pno" />
+                <ScalarProperty Name="Date_Import" ColumnName="Date_Import" />
+                <ScalarProperty Name="Date_Process" ColumnName="Date_Process" />
+                <ScalarProperty Name="Docno" ColumnName="Docno" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -74,7 +74,7 @@ namespace Carrier
             //สำหรับ Admin
             //Session.Clear();
             Session["_UserID"] = null;
-            //HttpContext.Current.Session["_UserID"] = "1984";
+            HttpContext.Current.Session["_UserID"] = "101635";
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();
@@ -95,7 +95,7 @@ namespace Carrier
                     if(Session["TypeSend"].ToString() == "2")
                     {
                         dv_Deliver.Visible = true;
-                        dv_price.Visible = true;
+                        //dv_price.Visible = true;
                     }
                 }
                 loadtable(1);
@@ -116,12 +116,23 @@ namespace Carrier
             var permission = carrier_Entities.Users.Where(w => w.UserID == user).FirstOrDefault();
             if (permission != null && permission.Permission == "Admin")
             {
+
+                var bfid = "";
+                if(txtDocnoSearch.Text != "" && txtDocnoSearch.Text.StartsWith("FL"))
+                {
+                    bfid = carrier_Entities.Order_Big_Box.Where(w => w.Docno.Contains(txtDocnoSearch.Text)).FirstOrDefault().BFID;
+                }
+                else
+                {
+                    bfid = txtDocnoSearch.Text;
+                }
+
                 dv_DO_Search.Visible = true;
                 var maxrow = 10;
                 var orderList = (from orderItem in carrier_Entities.Order_Item
                                  join bg in carrier_Entities.Order_Big_Box on orderItem.Docno equals bg.Docno
                                  join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
-                                 where (bg.BFID.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "") && order.Transport_Type == typsend
+                                 where ( bg.BFID.Contains(bfid) || bfid == "") && order.Transport_Type == typsend
                                  select new
                                  {
 
@@ -147,7 +158,7 @@ namespace Carrier
                                  }).ToList();
                 var orderFOC = (from orderItem in carrier_Entities.Order_Item
                                 join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
-                                where ( order.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "" ) && !order.Docno.StartsWith("FL") && order.Transport_Type == typsend
+                                where ( order.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "") && !order.Docno.StartsWith("FL") && order.Transport_Type == typsend
                                 select new
                                 {
 
@@ -287,7 +298,22 @@ namespace Carrier
                             }
                             break;
                         case "0":
+                            if (txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "" || txtDOSearch.Text != "")
+                            {
+                                orderList = orderList.Where(w =>
+                                ((w.pno ?? "").Contains(txtPnoSearch.Text.ToUpper()) || txtPnoSearch.Text == "")
+                                && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
+                                && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")
+                                && ((w.Remark != "" && w.Remark != null ? (w.Remark.Contains(':') ? (w.Remark.Split(':')[0].EndsWith("DO") ? (w.Remark.Split(':')[1].Contains(",") ? w.Remark.Split(':')[1].Split(',').ToList().Contains(txtDOSearch.Text) : w.Remark.Split(':')[1].Contains(txtDOSearch.Text))
+                                : false) : (w.Remark.Contains(txtDOSearch.Text))) : false)
+                                || txtDOSearch.Text == "")
+                                ).ToList(); ;
+                            }
+                            else
+                            {
+
                                 orderList = orderList.Where(w => w.DateSucces >= start && w.DateSucces <= end).ToList();
+                            }
                             break;
                     }
                     
@@ -2141,12 +2167,12 @@ namespace Carrier
             if(typsend == 2 && new string[] { "1","0"}.Contains(ddlStatusOrder.SelectedValue))
             {
                 dv_Deliver.Visible = true;
-                dv_price.Visible = true;
+                //dv_price.Visible = true;
             }
             else
             {
                 dv_Deliver.Visible = false;
-                dv_price.Visible = false;
+                //dv_price.Visible = false;
             }
             Session["TypeSend"] = ddlTypsend.SelectedValue;
             div_Page_Bar.Visible = true;
@@ -2224,19 +2250,19 @@ namespace Carrier
                 return;
             }
 
-            if (txtPriceDelivery.Text == "")
-            {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ยังไม่ได้ใส่จำนวนเงินครับ')", true);
-                txtPriceDelivery.Focus();
-                return;
-            }
+            //if (txtPriceDelivery.Text == "")
+            //{
+            //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ยังไม่ได้ใส่จำนวนเงินครับ')", true);
+            //    txtPriceDelivery.Focus();
+            //    return;
+            //}
 
-            if (!Double.TryParse(txtPriceDelivery.Text, out _))
-            {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('จำนวนเงินไม่ถูกต้อง')", true);
-                txtPriceDelivery.Focus();
-                return;
-            }
+            //if (!Double.TryParse(txtPriceDelivery.Text, out _))
+            //{
+            //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('จำนวนเงินไม่ถูกต้อง')", true);
+            //    txtPriceDelivery.Focus();
+            //    return;
+            //}
 
             var inbox = carrier_Entities.Order_Big_Box.Where(w => w.BFID == lkbDocno.Text).ToList();
             if (inbox.Count() != 0)
@@ -2273,12 +2299,12 @@ namespace Carrier
                 }
             }
 
-            var carAll = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == txtDeliveryOrder.Text).ToList();
-            foreach (var c in carAll)
-            {
-                c.Price = Convert.ToDouble((Convert.ToDouble(txtPriceDelivery.Text) / carAll.Count()).ToString("#,##0.00"));
-            }
-            carrier_Entities.SaveChanges();
+            //var carAll = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == txtDeliveryOrder.Text).ToList();
+            //foreach (var c in carAll)
+            //{
+            //    c.Price = Convert.ToDouble((Convert.ToDouble(txtPriceDelivery.Text) / carAll.Count()).ToString("#,##0.00"));
+            //}
+            //carrier_Entities.SaveChanges();
 
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('succes :"+ res + " บันทึกข้อมูลรถ Lalamove เรียบร้อยแล้วครับ');window.location='Default';", true);
 
@@ -2299,19 +2325,19 @@ namespace Carrier
                 return;
             }
 
-            if(txtPriceDelivery.Text == "")
-            {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ยังไม่ได้ใส่จำนวนเงินครับ')", true);
-                txtPriceDelivery.Focus();
-                return;
-            }
+            //if(txtPriceDelivery.Text == "")
+            //{
+            //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ยังไม่ได้ใส่จำนวนเงินครับ')", true);
+            //    txtPriceDelivery.Focus();
+            //    return;
+            //}
 
-            if(!Double.TryParse(txtPriceDelivery.Text,out _))
-            {
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('จำนวนเงินไม่ถูกต้อง')", true);
-                txtPriceDelivery.Focus();
-                return;
-            }
+            //if(!Double.TryParse(txtPriceDelivery.Text,out _))
+            //{
+            //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('จำนวนเงินไม่ถูกต้อง')", true);
+            //    txtPriceDelivery.Focus();
+            //    return;
+            //}
             foreach (GridViewRow row in gv_OrderAll.Rows)
             {
                 LinkButton lkbDocno = (LinkButton)row.FindControl("lkbDocno");
@@ -2356,12 +2382,12 @@ namespace Carrier
                 }
             }
 
-            var carAll = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == txtDeliveryOrder.Text).ToList();
-            foreach (var c in carAll)
-            {
-                c.Price = Convert.ToDouble((Convert.ToDouble(txtPriceDelivery.Text) / carAll.Count()).ToString("#,##0.00"));
-            }
-            carrier_Entities.SaveChanges();
+            //var carAll = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == txtDeliveryOrder.Text).ToList();
+            //foreach (var c in carAll)
+            //{
+            //    c.Price = Convert.ToDouble((Convert.ToDouble(txtPriceDelivery.Text) / carAll.Count()).ToString("#,##0"));
+            //}
+            //carrier_Entities.SaveChanges();
 
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('succes : บันทึกข้อมูล Lalamove เรียบร้อยแล้วครับ');window.location='Default';", true);
             //dv_Lalamove.Visible = false;

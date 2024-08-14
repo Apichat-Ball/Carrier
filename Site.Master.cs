@@ -63,7 +63,7 @@ namespace Carrier
             }
             else
             {
-                int userid = Convert.ToInt32(Session["_UserID"]);
+                int userid = Convert.ToInt32(lblUserID.Text == "" ?Session["_UserID"]: lblUserID.Text);
                 var objuser = (from tEmployee in entities_InsideSFG_WF.Employees
                                where tEmployee.userID == userid
                                     && tEmployee.StatWork == "Y"
@@ -82,6 +82,10 @@ namespace Carrier
                         div_Member.Visible = false;
                         div_Admin.Visible = true;
                         div1.Visible = true;
+                        if(userid == 101635)
+                        {
+                            div2.Visible = true;
+                        }
                     }
                     else
                     {

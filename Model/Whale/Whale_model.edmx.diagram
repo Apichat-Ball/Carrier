@@ -7,9 +7,13 @@
       <Diagram DiagramId="64782e4a878d4380aa017637dc495994" Name="Diagram1">
         <EntityTypeShape EntityType="WhaleModel.Box" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="WhaleModel.City" Width="1.5" PointX="3.75" PointY="0.75" />
-        <EntityTypeShape EntityType="WhaleModel.Customer" Width="1.5" PointX="0.75" PointY="3.75" />
         <EntityTypeShape EntityType="WhaleModel.District" Width="1.5" PointX="2.75" PointY="3.75" />
         <EntityTypeShape EntityType="WhaleModel.Province" Width="1.5" PointX="4.75" PointY="3.75" />
+        <EntityTypeShape EntityType="WhaleModel.Channel" Width="1.5" PointX="3.375" PointY="6.75" />
+        <EntityTypeShape EntityType="WhaleModel.SalesOrder" Width="1.5" PointX="5.375" PointY="6.75" />
+        <EntityTypeShape EntityType="WhaleModel.SalesOrder_Item" Width="1.5" PointX="7.375" PointY="0.75" />
+        <EntityTypeShape EntityType="WhaleModel.Customer_Brand" Width="1.5" PointX="7.375" PointY="6.75" />
+        <EntityTypeShape EntityType="WhaleModel.Customer" Width="1.5" PointX="0.75" PointY="6.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

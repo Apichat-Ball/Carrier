@@ -420,24 +420,6 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.TextBox txtDeliveryOrder;
 
         /// <summary>
-        /// dv_price control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dv_price;
-
-        /// <summary>
-        /// txtPriceDelivery control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPriceDelivery;
-
-        /// <summary>
         /// div_SendFree control.
         /// </summary>
         /// <remarks>

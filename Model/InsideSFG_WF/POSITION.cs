@@ -19,5 +19,6 @@ namespace Carrier.Model.InsideSFG_WF
         public string ePosition { get; set; }
         public Nullable<decimal> limitPay { get; set; }
         public string Flag { get; set; }
+        public string thPosition { get; set; }
     }
 }

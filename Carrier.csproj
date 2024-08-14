@@ -61,6 +61,12 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>packages\ExcelDataReader.DataSet.3.6.0\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
     <Reference Include="itextsharp, Version=5.5.13.3, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>packages\iTextSharp.5.5.13.3\lib\itextsharp.dll</HintPath>
     </Reference>
@@ -79,6 +85,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.Extensions" />
@@ -210,6 +217,7 @@
     <Content Include="Default.aspx" />
     <Content Include="Edit_Add_Profit.aspx" />
     <Content Include="favicon.ico" />
+    <Content Include="Flash_Import.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Guide_Carrier.aspx" />
     <Content Include="Home_Carrier.aspx" />
@@ -266,6 +274,16 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Online_Lazada_model.edmx</DependentUpon>
       <LastGenOutput>Online_Lazada_model.cs</LastGenOutput>
+    </Content>
+    <Content Include="Model\Online_NonAPI\Online_NonAPImodel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Online_NonAPImodel.edmx</DependentUpon>
+      <LastGenOutput>Online_NonAPImodel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Model\Online_NonAPI\Online_NonAPImodel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Online_NonAPImodel.edmx</DependentUpon>
+      <LastGenOutput>Online_NonAPImodel.cs</LastGenOutput>
     </Content>
     <Content Include="Model\Whale\Whale_model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -393,6 +411,13 @@
     </EntityDeploy>
     <Content Include="Model\Budget\Budgetmodel.edmx.diagram">
       <DependentUpon>Budgetmodel.edmx</DependentUpon>
+    </Content>
+    <EntityDeploy Include="Model\Online_NonAPI\Online_NonAPImodel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Online_NonAPImodel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Model\Online_NonAPI\Online_NonAPImodel.edmx.diagram">
+      <DependentUpon>Online_NonAPImodel.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
@@ -532,6 +557,13 @@
     <Compile Include="Edit_Add_Profit.aspx.designer.cs">
       <DependentUpon>Edit_Add_Profit.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Flash_Import.aspx.cs">
+      <DependentUpon>Flash_Import.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Flash_Import.aspx.designer.cs">
+      <DependentUpon>Flash_Import.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -574,6 +606,12 @@
     <Compile Include="Model\Budget\MainBudget.cs">
       <DependentUpon>Budgetmodel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\Budget\MainExpense.cs">
+      <DependentUpon>Budgetmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Budget\MainExpense_Sub.cs">
+      <DependentUpon>Budgetmodel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Carrier\API_Carrier_Log.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
@@ -604,7 +642,13 @@
     <Compile Include="Model\Carrier\Event_Shop.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\Carrier\Flash_EX_Import.cs">
+      <DependentUpon>Carrier_model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Carrier\History_Notify_Order.cs">
+      <DependentUpon>Carrier_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Carrier\Lalamove_Import.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Carrier\Notify.cs">
@@ -679,6 +723,9 @@
     <Compile Include="Model\InsideSFG_WF\POSITION.cs">
       <DependentUpon>InsideSFG_WF_model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\InsideSFG_WF\vBrandAndHeadFC.cs">
+      <DependentUpon>InsideSFG_WF_model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\InsideSFG_WF\WSHeadApproveBrand.cs">
       <DependentUpon>InsideSFG_WF_model.tt</DependentUpon>
     </Compile>
@@ -703,7 +750,34 @@
     <Compile Include="Model\Online_Lazada\PROVINCE.cs">
       <DependentUpon>Online_Lazada_model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\Online_NonAPI\Form_NonAPI.cs">
+      <DependentUpon>Online_NonAPImodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Online_NonAPI\Form_NonAPI_Item.cs">
+      <DependentUpon>Online_NonAPImodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Online_NonAPI\Online_NonAPImodel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Online_NonAPImodel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Online_NonAPI\Online_NonAPImodel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Online_NonAPImodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Online_NonAPI\Online_NonAPImodel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Online_NonAPImodel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Online_NonAPI\Type_Channel.cs">
+      <DependentUpon>Online_NonAPImodel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Whale\Box.cs">
+      <DependentUpon>Whale_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Whale\Channel.cs">
       <DependentUpon>Whale_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Whale\City.cs">
@@ -712,10 +786,19 @@
     <Compile Include="Model\Whale\Customer.cs">
       <DependentUpon>Whale_model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\Whale\Customer_Brand.cs">
+      <DependentUpon>Whale_model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\Whale\District.cs">
       <DependentUpon>Whale_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Whale\Province.cs">
+      <DependentUpon>Whale_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Whale\SalesOrder.cs">
+      <DependentUpon>Whale_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Whale\SalesOrder_Item.cs">
       <DependentUpon>Whale_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Whale\Whale_model.Context.cs">
@@ -757,6 +840,7 @@
     </Compile>
     <Compile Include="Service\Service_Budget.cs" />
     <Compile Include="Service\Service_Flash.cs" />
+    <Compile Include="Service\Service_Whale.cs" />
     <Compile Include="Site.Master.cs">
       <DependentUpon>Site.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

@@ -80,6 +80,13 @@
                             <a class="dropdown-item" href="Transport_Form_Lalamove.aspx">Report Lalamove</a>
                         </div>
                     </div>
+                    <div class="nav-item dropdown" runat="server" id="div2" visible="false">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdownMenuLink3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Flash Express
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink3">
+                            <a class="dropdown-item" href="Flash_Import.aspx">Import Flash Express</a>
+                        </div>
+                    </div>
                     <div id="divmenu" runat="server" class="navbar-nav mr-auto"></div>
                 </div>
                 <div class="float-end">
