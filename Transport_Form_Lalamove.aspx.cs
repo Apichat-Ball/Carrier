@@ -700,6 +700,7 @@ namespace Carrier
                 foreach (var BrandID in brand)
                 {
                     var siteStorage = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli && w.SDpart == BrandID.SDpart).GroupBy(g => g.SiteStorage).Select(s => s.Key).ToList();
+                    var Seek = budget_Entities.Departments.Where(w => w.Department_Name.StartsWith("SEEK") && w.Department_ID == BrandID.SDpart).FirstOrDefault();
 
                     foreach (var site in siteStorage)
                     {
@@ -708,7 +709,7 @@ namespace Carrier
                         var carOrder = carrier_Entities.Orders.Where(w => w.Docno == docnoOne).FirstOrDefault();
                         cuttemp temp = new cuttemp();
                         temp.date_use = Convert.ToDateTime(DateTime.Now.ToShortDateString());
-                        temp.depart_id = Docno.FirstOrDefault().SDpart;
+                        temp.depart_id = Seek == null ? Docno.FirstOrDefault().SDpart : "1619";
                         temp.detail_id = "5703";
                         temp.group_id = "5";
                         temp.head_id = "507";
@@ -716,6 +717,7 @@ namespace Carrier
                         temp.remark = "ค่ารถจัดส่ง Auto จากระบบ Courier Lalamove รอบ " + txtDateSt.Text + " - " + txtDateED.Text + " เลข DeliveryID:" + deli + " SiteStorage:" + site;
                         temp.typeBudget_id = carOrder.saleOn == "ONLINE" ? "1" : "2";
                         temp.userId = "101974";
+                        temp.site_storage = site;
                         var ss = service_Budget.Insert_CutBudget(temp);
 
                         if (ss == "สำเร็จ")
@@ -907,5 +909,6 @@ namespace Carrier
         public string remark { get; set; }
         public int half_month { get; set; }
         public string userId { get; set; }
+        public string site_storage { get; set; }
     }
 }

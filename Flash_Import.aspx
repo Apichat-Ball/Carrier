@@ -77,7 +77,7 @@
                     </div>
                     <div class="col-md-1">
                         <br />
-                        <asp:Button runat="server" ID="btnSearch" Text="ค้นหา" OnClick="btnSearch_Click" CssClass="btn btn-outline-primary w-100" />
+                        <asp:Button runat="server" ID="btnSearch" Text="ค้นหา" OnClick="btnSearch_Click" CssClass="btn btn-outline-primary w-100" UseSubmitBehavior="false" />
                     </div>
                 </div>
                 <div  class="row">
@@ -85,10 +85,16 @@
                         <span>Import From Flash</span>
                         <asp:FileUpload runat="server" ID="fileupload1" />
 
-                        <asp:Button runat="server" ID="btnRun" Text="Import" CssClass="btn btn-outline-primary" OnClick="btnRun_Click" />
+                        <asp:Button runat="server" ID="btnRun" Text="Import" CssClass="btn btn-outline-primary" OnClick="btnRun_Click" UseSubmitBehavior="false"/>
+                    </div>
+                    <div class="col-md-2">
+                        <asp:Button runat="server" ID="btnExport" Text="Export SAP" CssClass="btn btn-outline-primary" OnClick="btnExport_Click" UseSubmitBehavior="false"/>
                     </div>
                     <div class="col-md-3">
-                        <asp:Button runat="server" ID="btnExport" Text="Export SAP" CssClass="btn btn-outline-primary" OnClick="btnExport_Click" />
+                        <asp:Button runat="server" ID="btnUploadToBudget" Text="Upload to Budget" CssClass="btn btn-outline-primary" OnClick="btnUploadToBudget_Click" UseSubmitBehavior="false"/>
+                    </div>
+                    <div class="col-md-3">
+                        <asp:Button runat="server" ID="btnRejectUploadBud" Visible="false" Text="Reject" CssClass="btn btn-outline-primary" OnClick="btnRejectUploadBud_Click" UseSubmitBehavior="false"/>
                     </div>
                 </div>
             </div>
@@ -172,7 +178,7 @@
                                 <asp:TemplateField>
                                     <HeaderTemplate>
                                         <span>
-                                            
+                                            จากระบบ Courier
                                         </span>
                                     </HeaderTemplate>
                                     <ItemTemplate>
@@ -198,4 +204,5 @@
             <asp:PostBackTrigger ControlID="btnExport" />
         </Triggers>
     </asp:UpdatePanel>
+    
 </asp:Content>

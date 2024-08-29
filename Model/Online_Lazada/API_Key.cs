@@ -29,5 +29,7 @@ namespace Carrier.Model.Online_Lazada
         public Nullable<System.DateTime> refresh_expires_in { get; set; }
         public Nullable<System.DateTime> refresh_create { get; set; }
         public Nullable<System.DateTime> refresh_in { get; set; }
+        public string StorageLocation { get; set; }
+        public Nullable<int> Channel_ID { get; set; }
     }
 }

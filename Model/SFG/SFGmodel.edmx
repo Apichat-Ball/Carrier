@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SFGModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="SAP_VBRK_NEWSAP">
+          <Key>
+            <PropertyRef Name="VBELN" />
+          </Key>
+          <Property Name="VBELN" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="KUNRG" Type="char" MaxLength="8" Nullable="false" />
+          <Property Name="KUNAG" Type="char" MaxLength="8" Nullable="false" />
+          <Property Name="KNUMV" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="AUART" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="VDATU" Type="date" Nullable="false" />
+          <Property Name="AUDAT" Type="date" Nullable="false" />
+          <Property Name="ERDAT" Type="date" Nullable="false" />
+          <Property Name="VTWEG" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="SPART" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="ZOUNR" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="DATE_FOR_CHECK" Type="date" Nullable="false" />
+          <Property Name="VKORG" Type="varchar" MaxLength="4" />
+          <Property Name="post_code" Type="varchar" MaxLength="5" />
+          <Property Name="Refdoc" Type="varchar" MaxLength="50" />
+          <Property Name="BKTXT" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="SAP_VBRP_NEWSAP">
+          <Key>
+            <PropertyRef Name="BRAND" />
+            <PropertyRef Name="VBELN" />
+            <PropertyRef Name="POSNR" />
+            <PropertyRef Name="MATNR" />
+          </Key>
+          <Property Name="BRAND" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="VBELN" Type="char" MaxLength="10" Nullable="false" />
+          <Property Name="POSNR" Type="char" MaxLength="6" Nullable="false" />
+          <Property Name="MATNR" Type="char" MaxLength="18" Nullable="false" />
+          <Property Name="KBMENG" Type="numeric" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="LGORT" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="WERKS" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="SPART" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="WAVWR" Type="numeric" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="KZWI1" Type="numeric" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="KZWI2" Type="numeric" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="KZWI3" Type="numeric" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="KZWI4" Type="numeric" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="KZWI5" Type="numeric" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="KZWI6" Type="numeric" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="KBETR" Type="numeric" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="STYLE" Type="char" MaxLength="8" Nullable="false" />
+          <Property Name="COLOR" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="SIZE" Type="char" MaxLength="5" Nullable="false" />
+          <Property Name="DATE_FOR_CHECK" Type="date" Nullable="false" />
+          <Property Name="SHOP_GR" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="SFGModelStoreContainer">
+          <EntitySet Name="SAP_VBRK_NEWSAP" EntityType="Self.SAP_VBRK_NEWSAP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SAP_VBRP_NEWSAP" EntityType="Self.SAP_VBRP_NEWSAP" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SFGModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="SAP_VBRK_NEWSAP">
+          <Key>
+            <PropertyRef Name="VBELN" />
+          </Key>
+          <Property Name="VBELN" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="KUNRG" Type="String" MaxLength="8" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="KUNAG" Type="String" MaxLength="8" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="KNUMV" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="AUART" Type="String" MaxLength="4" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="VDATU" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="AUDAT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ERDAT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="VTWEG" Type="String" MaxLength="2" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="SPART" Type="String" MaxLength="2" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="ZOUNR" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="DATE_FOR_CHECK" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="VKORG" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="post_code" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="Refdoc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BKTXT" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="SAP_VBRP_NEWSAP">
+          <Key>
+            <PropertyRef Name="BRAND" />
+            <PropertyRef Name="VBELN" />
+            <PropertyRef Name="POSNR" />
+            <PropertyRef Name="MATNR" />
+          </Key>
+          <Property Name="BRAND" Type="String" MaxLength="2" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="VBELN" Type="String" MaxLength="10" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="POSNR" Type="String" MaxLength="6" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="MATNR" Type="String" MaxLength="18" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="KBMENG" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="LGORT" Type="String" MaxLength="4" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="WERKS" Type="String" MaxLength="4" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="SPART" Type="String" MaxLength="2" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="WAVWR" Type="Decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="KZWI1" Type="Decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="KZWI2" Type="Decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="KZWI3" Type="Decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="KZWI4" Type="Decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="KZWI5" Type="Decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="KZWI6" Type="Decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="KBETR" Type="Decimal" Precision="15" Scale="2" Nullable="false" />
+          <Property Name="STYLE" Type="String" MaxLength="8" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="COLOR" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="SIZE" Type="String" MaxLength="5" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="DATE_FOR_CHECK" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SHOP_GR" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="SFGEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="SAP_VBRK_NEWSAP" EntityType="Self.SAP_VBRK_NEWSAP" />
+          <EntitySet Name="SAP_VBRP_NEWSAP" EntityType="Self.SAP_VBRP_NEWSAP" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SFGModelStoreContainer" CdmEntityContainer="SFGEntities">
+          <EntitySetMapping Name="SAP_VBRK_NEWSAP">
+            <EntityTypeMapping TypeName="SFGModel.SAP_VBRK_NEWSAP">
+              <MappingFragment StoreEntitySet="SAP_VBRK_NEWSAP">
+                <ScalarProperty Name="VBELN" ColumnName="VBELN" />
+                <ScalarProperty Name="KUNRG" ColumnName="KUNRG" />
+                <ScalarProperty Name="KUNAG" ColumnName="KUNAG" />
+                <ScalarProperty Name="KNUMV" ColumnName="KNUMV" />
+                <ScalarProperty Name="AUART" ColumnName="AUART" />
+                <ScalarProperty Name="VDATU" ColumnName="VDATU" />
+                <ScalarProperty Name="AUDAT" ColumnName="AUDAT" />
+                <ScalarProperty Name="ERDAT" ColumnName="ERDAT" />
+                <ScalarProperty Name="VTWEG" ColumnName="VTWEG" />
+                <ScalarProperty Name="SPART" ColumnName="SPART" />
+                <ScalarProperty Name="ZOUNR" ColumnName="ZOUNR" />
+                <ScalarProperty Name="DATE_FOR_CHECK" ColumnName="DATE_FOR_CHECK" />
+                <ScalarProperty Name="VKORG" ColumnName="VKORG" />
+                <ScalarProperty Name="post_code" ColumnName="post_code" />
+                <ScalarProperty Name="Refdoc" ColumnName="Refdoc" />
+                <ScalarProperty Name="BKTXT" ColumnName="BKTXT" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SAP_VBRP_NEWSAP">
+            <EntityTypeMapping TypeName="SFGModel.SAP_VBRP_NEWSAP">
+              <MappingFragment StoreEntitySet="SAP_VBRP_NEWSAP">
+                <ScalarProperty Name="BRAND" ColumnName="BRAND" />
+                <ScalarProperty Name="VBELN" ColumnName="VBELN" />
+                <ScalarProperty Name="POSNR" ColumnName="POSNR" />
+                <ScalarProperty Name="MATNR" ColumnName="MATNR" />
+                <ScalarProperty Name="KBMENG" ColumnName="KBMENG" />
+                <ScalarProperty Name="LGORT" ColumnName="LGORT" />
+                <ScalarProperty Name="WERKS" ColumnName="WERKS" />
+                <ScalarProperty Name="SPART" ColumnName="SPART" />
+                <ScalarProperty Name="WAVWR" ColumnName="WAVWR" />
+                <ScalarProperty Name="KZWI1" ColumnName="KZWI1" />
+                <ScalarProperty Name="KZWI2" ColumnName="KZWI2" />
+                <ScalarProperty Name="KZWI3" ColumnName="KZWI3" />
+                <ScalarProperty Name="KZWI4" ColumnName="KZWI4" />
+                <ScalarProperty Name="KZWI5" ColumnName="KZWI5" />
+                <ScalarProperty Name="KZWI6" ColumnName="KZWI6" />
+                <ScalarProperty Name="KBETR" ColumnName="KBETR" />
+                <ScalarProperty Name="STYLE" ColumnName="STYLE" />
+                <ScalarProperty Name="COLOR" ColumnName="COLOR" />
+                <ScalarProperty Name="SIZE" ColumnName="SIZE" />
+                <ScalarProperty Name="DATE_FOR_CHECK" ColumnName="DATE_FOR_CHECK" />
+                <ScalarProperty Name="SHOP_GR" ColumnName="SHOP_GR" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

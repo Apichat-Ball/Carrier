@@ -13,18 +13,20 @@
           <Property Name="Brand" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="App_Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="50" />
-          <Property Name="App_Key" Type="nvarchar" MaxLength="200" />
-          <Property Name="App_Secret" Type="nvarchar" MaxLength="256" />
-          <Property Name="AccessToken" Type="nvarchar" MaxLength="100" />
+          <Property Name="App_Key" Type="nvarchar" MaxLength="500" />
+          <Property Name="App_Secret" Type="nvarchar" MaxLength="500" />
+          <Property Name="AccessToken" Type="nvarchar" MaxLength="1000" />
           <Property Name="Url" Type="nvarchar" MaxLength="100" />
           <Property Name="API_Path" Type="nvarchar" MaxLength="50" />
-          <Property Name="Code" Type="nvarchar" MaxLength="50" />
+          <Property Name="Code" Type="nvarchar" MaxLength="200" />
           <Property Name="Status_Token" Type="nvarchar" MaxLength="1" />
           <Property Name="Shop_ID" Type="nvarchar" MaxLength="50" />
           <Property Name="refresh_token" Type="nvarchar" MaxLength="100" />
           <Property Name="refresh_expires_in" Type="datetime" />
           <Property Name="refresh_create" Type="datetime" />
           <Property Name="refresh_in" Type="datetime" />
+          <Property Name="StorageLocation" Type="nvarchar" MaxLength="4" />
+          <Property Name="Channel_ID" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'Online_Lazada.dbo.PROVINCE' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -40,8 +42,28 @@ warning 6002: The table/view 'Online_Lazada.dbo.PROVINCE' does not have a primar
           <Property Name="PROVINCE_NAME" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="GEO_ID" Type="varchar" MaxLength="5" Nullable="false" />
         </EntityType>
+        <EntityType Name="SAP_Reference">
+          <Key>
+            <PropertyRef Name="FullTaxNo" />
+            <PropertyRef Name="OnlineRef" />
+            <PropertyRef Name="SKU" />
+            <PropertyRef Name="ItemLineNo" />
+          </Key>
+          <Property Name="FullTaxNo" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="BillingNo" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="FIDocNo" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="FIDocCom" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="FIDocYear" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="OnlineRef" Type="nvarchar" MaxLength="40" Nullable="false" />
+          <Property Name="SKU" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Flaguse" Type="bit" />
+          <Property Name="ItemLineNo" Type="int" Nullable="false" />
+          <Property Name="DocHeader" Type="varchar" MaxLength="20" />
+          <Property Name="DocDate" Type="date" />
+        </EntityType>
         <EntityContainer Name="Online_LazadaModelStoreContainer">
           <EntitySet Name="API_Key" EntityType="Self.API_Key" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SAP_Reference" EntityType="Self.SAP_Reference" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PROVINCE" EntityType="Self.PROVINCE" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [PROVINCE].[PROVINCE_ID] AS [PROVINCE_ID], 
@@ -63,22 +85,25 @@ warning 6002: The table/view 'Online_Lazada.dbo.PROVINCE' does not have a primar
           <Property Name="Brand" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="App_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="App_Key" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="App_Secret" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
-          <Property Name="AccessToken" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="App_Key" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="App_Secret" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="AccessToken" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Name="Url" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="API_Path" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="Status_Token" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
           <Property Name="Shop_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="refresh_token" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="refresh_expires_in" Type="DateTime" Precision="3" />
           <Property Name="refresh_create" Type="DateTime" Precision="3" />
           <Property Name="refresh_in" Type="DateTime" Precision="3" />
+          <Property Name="StorageLocation" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Channel_ID" Type="Int32" />
         </EntityType>
         <EntityContainer Name="Online_LazadaEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="API_Key" EntityType="Self.API_Key" />
           <EntitySet Name="PROVINCEs" EntityType="Online_LazadaModel.PROVINCE" />
+          <EntitySet Name="SAP_Reference" EntityType="Online_LazadaModel.SAP_Reference" />
         </EntityContainer>
         <EntityType Name="PROVINCE">
           <Key>
@@ -92,6 +117,25 @@ warning 6002: The table/view 'Online_Lazada.dbo.PROVINCE' does not have a primar
           <Property Name="PROVINCE_NAME" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="GEO_ID" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="SAP_Reference">
+          <Key>
+            <PropertyRef Name="FullTaxNo" />
+            <PropertyRef Name="OnlineRef" />
+            <PropertyRef Name="SKU" />
+            <PropertyRef Name="ItemLineNo" />
+          </Key>
+          <Property Name="FullTaxNo" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="BillingNo" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="FIDocNo" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="FIDocCom" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="FIDocYear" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="OnlineRef" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="SKU" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Flaguse" Type="Boolean" />
+          <Property Name="ItemLineNo" Type="Int32" Nullable="false" />
+          <Property Name="DocHeader" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DocDate" Type="DateTime" Precision="0" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -101,6 +145,8 @@ warning 6002: The table/view 'Online_Lazada.dbo.PROVINCE' does not have a primar
           <EntitySetMapping Name="API_Key">
             <EntityTypeMapping TypeName="Online_LazadaModel.API_Key">
               <MappingFragment StoreEntitySet="API_Key">
+                <ScalarProperty Name="Channel_ID" ColumnName="Channel_ID" />
+                <ScalarProperty Name="StorageLocation" ColumnName="StorageLocation" />
                 <ScalarProperty Name="Brand" ColumnName="Brand" />
                 <ScalarProperty Name="App_Name" ColumnName="App_Name" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
@@ -126,6 +172,23 @@ warning 6002: The table/view 'Online_Lazada.dbo.PROVINCE' does not have a primar
                 <ScalarProperty Name="PROVINCE_NAME" ColumnName="PROVINCE_NAME" />
                 <ScalarProperty Name="PROVINCE_CODE" ColumnName="PROVINCE_CODE" />
                 <ScalarProperty Name="PROVINCE_ID" ColumnName="PROVINCE_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SAP_Reference">
+            <EntityTypeMapping TypeName="Online_LazadaModel.SAP_Reference">
+              <MappingFragment StoreEntitySet="SAP_Reference">
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="DocHeader" ColumnName="DocHeader" />
+                <ScalarProperty Name="ItemLineNo" ColumnName="ItemLineNo" />
+                <ScalarProperty Name="Flaguse" ColumnName="Flaguse" />
+                <ScalarProperty Name="SKU" ColumnName="SKU" />
+                <ScalarProperty Name="OnlineRef" ColumnName="OnlineRef" />
+                <ScalarProperty Name="FIDocYear" ColumnName="FIDocYear" />
+                <ScalarProperty Name="FIDocCom" ColumnName="FIDocCom" />
+                <ScalarProperty Name="FIDocNo" ColumnName="FIDocNo" />
+                <ScalarProperty Name="BillingNo" ColumnName="BillingNo" />
+                <ScalarProperty Name="FullTaxNo" ColumnName="FullTaxNo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

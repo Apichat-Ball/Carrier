@@ -27,5 +27,6 @@ namespace Carrier.Model.Online_Lazada
     
         public virtual DbSet<API_Key> API_Key { get; set; }
         public virtual DbSet<PROVINCE> PROVINCEs { get; set; }
+        public virtual DbSet<SAP_Reference> SAP_Reference { get; set; }
     }
 }

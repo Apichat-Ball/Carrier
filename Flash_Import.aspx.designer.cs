@@ -150,6 +150,24 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.Button btnExport;
 
         /// <summary>
+        /// btnUploadToBudget control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnUploadToBudget;
+
+        /// <summary>
+        /// btnRejectUploadBud control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnRejectUploadBud;
+
+        /// <summary>
         /// dv_gv_import_Check control.
         /// </summary>
         /// <remarks>

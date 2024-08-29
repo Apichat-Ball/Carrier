@@ -76,6 +76,7 @@
           <Property Name="Status_Budget" Type="bit" />
           <Property Name="Shop" Type="nvarchar" MaxLength="10" />
           <Property Name="department_id" Type="int" />
+          <Property Name="saleOn" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="History_Notify_Order">
           <Key>
@@ -546,6 +547,7 @@
           <Property Name="Status_Budget" Type="Boolean" />
           <Property Name="Shop" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="department_id" Type="Int32" />
+          <Property Name="saleOn" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -801,6 +803,7 @@
           <EntitySetMapping Name="Flash_EX_Import">
             <EntityTypeMapping TypeName="CarrierModel.Flash_EX_Import">
               <MappingFragment StoreEntitySet="Flash_EX_Import">
+                <ScalarProperty Name="saleOn" ColumnName="saleOn" />
                 <ScalarProperty Name="department_id" ColumnName="department_id" />
                 <ScalarProperty Name="Shop" ColumnName="Shop" />
                 <ScalarProperty Name="Status_Budget" ColumnName="Status_Budget" />

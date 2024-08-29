@@ -82,7 +82,7 @@ namespace Carrier
                         div_Member.Visible = false;
                         div_Admin.Visible = true;
                         div1.Visible = true;
-                        if(userid == 101635)
+                        if(new int[] { 101635 , 108 }.Contains(userid) )
                         {
                             div2.Visible = true;
                         }

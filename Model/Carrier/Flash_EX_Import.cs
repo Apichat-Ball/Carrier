@@ -24,5 +24,6 @@ namespace Carrier.Model.Carrier
         public Nullable<bool> Status_Budget { get; set; }
         public string Shop { get; set; }
         public Nullable<int> department_id { get; set; }
+        public string saleOn { get; set; }
     }
 }

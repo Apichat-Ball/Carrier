@@ -44,11 +44,11 @@ namespace Carrier.Service
         public string Insert_CutBudget(cuttemp filter)
         {
 
-            var client = new RestClient("https://www.sfg-th.com/API_Budget/Insert_Cut_Budget");
+            var client = new RestClient("https://www.sfg-th.com/API_Budget/Insert_Cut_BudgetV2");
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
             request.AddHeader("Content-Type", "application/json");
-            request.AddJsonBody(new { detail_id = filter.detail_id, depart_id = filter.depart_id, date_use = filter.date_use, money = filter.money, typeBudget_id = filter.typeBudget_id, userId = filter.userId, remark = filter.remark });
+            request.AddJsonBody(new { detail_id = filter.detail_id, depart_id = filter.depart_id, date_use = filter.date_use, money = filter.money, typeBudget_id = filter.typeBudget_id, userId = filter.userId, remark = filter.remark , site_storage = filter.site_storage });
             IRestResponse response = client.Execute(request);
             JObject j = JObject.Parse(response.Content);
             if (j["code"].ToString() == "200")
