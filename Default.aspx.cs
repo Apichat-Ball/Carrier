@@ -29,47 +29,6 @@ namespace Carrier
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            //List<string> siteStorage = new List<string>() { "APMNAPM1" };
-            //var depart = (from d in budget_Entities.Departments
-            //              where new string[] { "F", "VIP" }.Contains(d.Flag) && !d.Department_Name.Contains("SEEK") && !d.Department_Name.Contains("SDC1")
-            //              select d.ShortBrand).Distinct().ToList();
-
-            //var seek = budget_Entities.Departments.Where(w => w.Department_Name.Contains("SEEK") && !new string[] { "1508", "1619" }.Contains(w.Department_ID)).Select(s => s.ShortBrand).Distinct().ToList();
-            //depart.AddRange(seek);
-            //var center = carrier_Entities.Site_Center.Select(s => s.Brand_Center_Name_Full).ToList();
-            //var brand = carrier_Entities.Site_Profit.Where(w => !center.Contains(w.Brand) && depart.Contains(w.Brand) && w.Brand != "seek shop" && !w.Site_Stroage.StartsWith("CENTER")).GroupBy(g => g.Brand).Select(s => s.Key).ToList();
-
-
-            //foreach (var siteS in siteStorage)
-            //{
-            //    var SStorage = siteS.ToUpper();
-            //    foreach (var b in brand)
-            //    {
-            //        var nothave = carrier_Entities.Site_Profit.Where(w => w.Brand == b && w.Site_Stroage == SStorage).FirstOrDefault();
-            //        if (nothave == null)
-            //        {
-            //            var site = carrier_Entities.Site_Profit.Where(w => w.Brand == b && w.Channel == "OFFLINE" && new string[] {"Shop"}.Contains(w.Sale_Channel)).FirstOrDefault();
-            //            if (site != null)
-            //            {
-            //                var newadd = new Site_Profit
-            //                {
-            //                    Brand = b,
-            //                    Channel = "OFFLINE",
-            //                    COMCODE = site.COMCODE,
-            //                    Profit = site.Profit,
-            //                    Costcenter = site.Costcenter,
-            //                    Site_Stroage = SStorage,
-            //                    Sale_Channel = "Shop",
-            //                    Date_Create = DateTime.Now
-            //                };
-            //                carrier_Entities.Site_Profit.Add(newadd);
-            //                carrier_Entities.SaveChanges();
-            //            }
-            //        }
-            //    }
-            //}
-
-
 
             //สำหรับ Admin
             //Session.Clear();

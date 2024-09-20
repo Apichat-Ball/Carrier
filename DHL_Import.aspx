@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" Title="Flash Import" AutoEventWireup="true" CodeBehind="Flash_Import.aspx.cs" Inherits="Carrier.Flash_Import" MasterPageFile="~/Site.Master" %>
+﻿<%@ Page Title="DHL" Language="C#" AutoEventWireup="true" CodeBehind="DHL_Import.aspx.cs" Inherits="Carrier.DHL_Import" MasterPageFile="~/Site.Master" %>
 
 
 <asp:Content runat="server" ID="BodyContent" ContentPlaceHolderID="MainContent">
@@ -16,12 +16,6 @@
 
         }
 
-
-        $(document).ready(
-            function () {
-
-            }
-        )
         
     </script>
 
@@ -59,7 +53,7 @@
             <div runat="server" id="dv_main" style="margin-top: 80px;">
                 <div class="row">
                     <div class="col-12">
-                        <h>Report Flash</h>
+                        <h>Report DHL</h>
                     </div>
                 </div>
                 <div class="row my-2" >
@@ -77,7 +71,7 @@
                     </div>
                     <div class="col-md-1">
                         <br />
-                        <asp:Button runat="server" ID="btnSearch" Text="ค้นหา" OnClick="btnSearch_Click" CssClass="btn btn-outline-primary w-100" UseSubmitBehavior="false" />
+                        <asp:Button runat="server" ID="btnSearch" Text="ค้นหา" CssClass="btn btn-outline-primary w-100" UseSubmitBehavior="false" />
                     </div>
                 </div>
                 <div  class="row">
@@ -91,45 +85,38 @@
                         <asp:Button runat="server" ID="btnExport" Text="Export SAP" CssClass="btn btn-outline-primary" OnClick="btnExport_Click" UseSubmitBehavior="false"/>
                     </div>
                     <div class="col-md-3">
-                        <asp:Button runat="server" ID="btnUploadToBudget" Text="Upload to Budget" CssClass="btn btn-outline-primary" OnClick="btnUploadToBudget_Click" UseSubmitBehavior="false"/>
+                        <asp:Button runat="server" ID="btnUploadToBudget" Text="Upload to Budget" OnClick="btnUploadToBudget_Click" CssClass="btn btn-outline-primary" UseSubmitBehavior="false"/>
                     </div>
                     <div class="col-md-3">
-                        <asp:Button runat="server" ID="btnRejectUploadBud" Visible="false" Text="Reject" CssClass="btn btn-outline-primary" OnClick="btnRejectUploadBud_Click" UseSubmitBehavior="false"/>
+                        <asp:Button runat="server" ID="btnRejectUploadBud" Visible="false" Text="Reject" OnClick="btnRejectUploadBud_Click" CssClass="btn btn-outline-primary"  UseSubmitBehavior="false"/>
                     </div>
                 </div>
             </div>
             <div runat="server" id="dv_gv_import_Check" visible="false">
                 <div class="row">
                     <div class="col">
-                        <asp:GridView runat="server" ID="gv_Import" EmptyDataText="ไม่พบข้อมูลในช่วงเวลานี้ครับ" AutoGenerateColumns="false" CssClass="table table-borderless table-hover"
+                        <asp:GridView runat="server" ID="gv_Import" EmptyDataText="ไม่พบข้อมูลในช่วงเวลานี้ครับ" AutoGenerateColumns="false"  CssClass="table table-borderless table-hover"
                             HeaderStyle-CssClass="fixedHeader">
                             <Columns>
                                 <asp:TemplateField>
-                                    <HeaderTemplate> 
-                                        <span>
-                                            วันที่ทำรายการ
-                                        </span>
+                                    <HeaderTemplate>
+                                        <span>วันที่จัดส่ง</span>
                                     </HeaderTemplate>
                                     <ItemTemplate>
-                                        <asp:Label runat="server" ID="lbDocno_Match" Text='<%# Bind("Docno_Match") %>' Visible="false"></asp:Label>
                                         <asp:Label runat="server" ID="lbDateProcess" Text='<%# Bind("DateProcess") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField>
                                     <HeaderTemplate>
-                                        <span>
-                                            รหัสพัสดุ
-                                        </span>
+                                        <span>TrackingNo</span>
                                     </HeaderTemplate>
                                     <ItemTemplate>
-                                        <asp:Label runat="server" ID="lbPno" Text='<%# Bind("Pno") %>'></asp:Label>
+                                        <asp:Label runat="server" ID="lbTrackingNo" Text='<%# Bind("TrackingNo") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField>
                                     <HeaderTemplate>
-                                        <span>
-                                            เลขที่เอกสาร
-                                        </span>
+                                        <span>เลขที่เอกสารใน Whale</span>
                                     </HeaderTemplate>
                                     <ItemTemplate>
                                         <asp:Label runat="server" ID="lbDocno" Text='<%# Bind("Docno") %>'></asp:Label>
@@ -137,9 +124,7 @@
                                 </asp:TemplateField>
                                 <asp:TemplateField>
                                     <HeaderTemplate>
-                                        <span>
-                                            ค่ารถ
-                                        </span>
+                                        <span>ราคา</span>
                                     </HeaderTemplate>
                                     <ItemTemplate>
                                         <asp:Label runat="server" ID="lbPrice" Text='<%# Bind("Price") %>'></asp:Label>
@@ -147,62 +132,37 @@
                                 </asp:TemplateField>
                                 <asp:TemplateField>
                                     <HeaderTemplate>
-                                        <span>
-                                            Shop
-                                        </span>
+                                        <span>Shop</span>
                                     </HeaderTemplate>
                                     <ItemTemplate>
-                                        <asp:Label runat="server" id="lbSiteStorage" Text='<%# Bind("sitestorage") %>'></asp:Label>
+                                        <asp:Label runat="server" ID="lbShop" Text='<%# Bind("sitestorage") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField>
                                     <HeaderTemplate>
-                                        <span>
-                                            แผนก
-                                        </span>
+                                        <span>Brand</span>
                                     </HeaderTemplate>
                                     <ItemTemplate>
-                                        <asp:Label runat="server" ID="lbDepartment_ID" Text='<%# Bind("Department_ID") %>'></asp:Label>
-                                    </ItemTemplate>
-                                </asp:TemplateField>
-                                <asp:TemplateField Visible="false">
-                                    <HeaderTemplate>
-                                        <span>
-                                            เลขที่เอกสารเบิกค่าใช้จ่าย
-                                        </span>
-                                    </HeaderTemplate>
-                                    <ItemTemplate>
-                                        <asp:Label runat="server" ID="lbDocnoInBud" ></asp:Label>
+                                        <asp:Label runat="server" ID="lbDepartment" Text='<%# Bind("Department") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField>
                                     <HeaderTemplate>
-                                        <span>
-                                            จากระบบ Courier
-                                        </span>
+                                        <span>เลขที่เอกสาร Budget</span>
                                     </HeaderTemplate>
                                     <ItemTemplate>
-                                        <asp:Image runat="server" ID="imgCheck" Width="30" />
+                                        <asp:Label runat="server" ID="lbDocBud" Text='<%# Bind("Docno_Bud") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <%--<asp:TemplateField>
-                                    <HeaderTemplate>
-                                        <span>จากระบบ</span>
-                                    </HeaderTemplate>
-                                    <ItemTemplate>
-                                        <asp:Label runat="server" ID="lbFrom" Text='<%# Bind("From") %>'></asp:Label>
-                                    </ItemTemplate>
-                                </asp:TemplateField>--%>
                             </Columns>
                         </asp:GridView>
                     </div>
                 </div>
             </div>
-        </ContentTemplate>
+            </ContentTemplate>
         <Triggers>
             <asp:PostBackTrigger ControlID="btnRun" />
             <asp:PostBackTrigger ControlID="btnExport" />
         </Triggers>
-    </asp:UpdatePanel>
-    
+        </asp:UpdatePanel>
 </asp:Content>

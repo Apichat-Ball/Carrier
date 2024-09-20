@@ -51,6 +51,24 @@
           <Property Name="CM_DateCreate" Type="datetime" />
           <Property Name="CM_Url" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="DHL_eCom_Import">
+          <Key>
+            <PropertyRef Name="Docno" />
+            <PropertyRef Name="Tracking_No" />
+            <PropertyRef Name="department_id" />
+          </Key>
+          <Property Name="Docno" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Tracking_No" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Date_Process" Type="datetime" />
+          <Property Name="Date_Import" Type="datetime" />
+          <Property Name="Price" Type="float" />
+          <Property Name="Shop" Type="nvarchar" MaxLength="10" />
+          <Property Name="department_id" Type="int" Nullable="false" />
+          <Property Name="QTY" Type="int" />
+          <Property Name="Docno_Budget" Type="nvarchar" MaxLength="20" />
+          <Property Name="Date_Budget" Type="datetime" />
+          <Property Name="Per_Price" Type="float" />
+        </EntityType>
         <EntityType Name="Event_Shop">
           <Key>
             <PropertyRef Name="Event_ID" />
@@ -259,6 +277,7 @@
           <EntitySet Name="Article_Category" EntityType="Self.Article_Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Calculate_Car" EntityType="Self.Calculate_Car" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comment_System" EntityType="Self.Comment_System" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DHL_eCom_Import" EntityType="Self.DHL_eCom_Import" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event_Shop" EntityType="Self.Event_Shop" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Flash_EX_Import" EntityType="Self.Flash_EX_Import" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="History_Notify_Order" EntityType="Self.History_Notify_Order" Schema="dbo" store:Type="Tables" />
@@ -299,6 +318,7 @@
           <EntitySet Name="Calculate_Car" EntityType="CarrierModel.Calculate_Car" />
           <EntitySet Name="Lalamove_Import" EntityType="CarrierModel.Lalamove_Import" />
           <EntitySet Name="Flash_EX_Import" EntityType="CarrierModel.Flash_EX_Import" />
+          <EntitySet Name="DHL_eCom_Import" EntityType="CarrierModel.DHL_eCom_Import" />
         </EntityContainer>
         <EntityType Name="Article_Category">
           <Key>
@@ -548,6 +568,24 @@
           <Property Name="Shop" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="department_id" Type="Int32" />
           <Property Name="saleOn" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="DHL_eCom_Import">
+          <Key>
+            <PropertyRef Name="Docno" />
+            <PropertyRef Name="Tracking_No" />
+            <PropertyRef Name="department_id" />
+          </Key>
+          <Property Name="Docno" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Tracking_No" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Process" Type="DateTime" Precision="3" />
+          <Property Name="Date_Import" Type="DateTime" Precision="3" />
+          <Property Name="Price" Type="Double" />
+          <Property Name="Shop" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="department_id" Type="Int32" Nullable="false" />
+          <Property Name="QTY" Type="Int32" />
+          <Property Name="Docno_Budget" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Budget" Type="DateTime" Precision="3" />
+          <Property Name="Per_Price" Type="Double" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -813,6 +851,23 @@
                 <ScalarProperty Name="pno" ColumnName="pno" />
                 <ScalarProperty Name="Date_Import" ColumnName="Date_Import" />
                 <ScalarProperty Name="Date_Process" ColumnName="Date_Process" />
+                <ScalarProperty Name="Docno" ColumnName="Docno" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DHL_eCom_Import">
+            <EntityTypeMapping TypeName="CarrierModel.DHL_eCom_Import">
+              <MappingFragment StoreEntitySet="DHL_eCom_Import">
+                <ScalarProperty Name="Per_Price" ColumnName="Per_Price" />
+                <ScalarProperty Name="Date_Budget" ColumnName="Date_Budget" />
+                <ScalarProperty Name="Docno_Budget" ColumnName="Docno_Budget" />
+                <ScalarProperty Name="QTY" ColumnName="QTY" />
+                <ScalarProperty Name="department_id" ColumnName="department_id" />
+                <ScalarProperty Name="Shop" ColumnName="Shop" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Date_Import" ColumnName="Date_Import" />
+                <ScalarProperty Name="Date_Process" ColumnName="Date_Process" />
+                <ScalarProperty Name="Tracking_No" ColumnName="Tracking_No" />
                 <ScalarProperty Name="Docno" ColumnName="Docno" />
               </MappingFragment>
             </EntityTypeMapping>

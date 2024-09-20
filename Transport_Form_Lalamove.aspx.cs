@@ -43,7 +43,15 @@ namespace Carrier
             var dateED = Convert.ToDateTime(txtDateED.Text);
             dateST = new DateTime(dateST.Year, dateST.Month, dateST.Day, 0, 0, 1);
             dateED = new DateTime(dateED.Year, dateED.Month, dateED.Day, 23, 59, 59);
-            var Delivery = carrier_Entities.Calculate_Car.Where(w => w.Date_Group >= dateST && w.Date_Group <= dateED && (w.DeliveryNumber.Contains(txtDelivery.Text) || txtDelivery.Text == "") && w.StatusBud == null).GroupBy(g => g.DeliveryNumber).Select(s => s.Key).ToList();
+            var Delivery = new List<string>();
+            if(txtDelivery.Text != "")
+            {
+                Delivery = carrier_Entities.Calculate_Car.Where(w =>  w.DeliveryNumber.Contains(txtDelivery.Text) || txtDelivery.Text == "").GroupBy(g => g.DeliveryNumber).Select(s => s.Key).ToList();
+            }
+            else
+            {
+                Delivery = carrier_Entities.Calculate_Car.Where(w => w.Date_Group >= dateST && w.Date_Group <= dateED && (w.DeliveryNumber.Contains(txtDelivery.Text) || txtDelivery.Text == "")).GroupBy(g => g.DeliveryNumber).Select(s => s.Key).ToList();
+            }
             List<Calculate_Car> cars = new List<Calculate_Car>();
             double priceTOtal = 0;
             int qtyTOtal = 0;
@@ -85,6 +93,9 @@ namespace Carrier
                 //car.Price = price;
                 car.QTY = docno.Count();
                 car.Date_Group = docno.OrderBy(o => o.Date_Group).FirstOrDefault().Date_Group;
+
+                car.Docno = Newtonsoft.Json.JsonConvert.SerializeObject(docno.Select(s => s.BFID).Distinct().ToList());
+
                 cars.Add(car);
                 priceTOtal += price ?? 0;
                 qtyTOtal += docno.Count();
@@ -125,8 +136,12 @@ namespace Carrier
                 mde.site = site;
                 var siteDigit = new string[] { "ZZ", "ZX", "Z6", "Z7", "ZY" }.Contains(site.Substring(0, 2)) ? site.Substring(0, 6) : site.Substring(0, 4);
                 var Cuscode = InsideSFG_WF_Entities.Customer_Tax.Where(w => w.CustomerCode == siteDigit).FirstOrDefault();
-                var provineInt = Convert.ToInt32(Cuscode.Province1);
-                mde.address = Cuscode.Address1 + " " + Cuscode.Area1 + " " + Cuscode.Zone1 + " " + Cuscode.Road1 + " " + Whale_Entities.Provinces.Where(w => w.Province_ID == provineInt).FirstOrDefault().Province_Name + " " + Cuscode.Postal1;
+                if(Cuscode != null)
+                {
+                    var provineInt = Convert.ToInt32(Cuscode.Province1);
+                    var provineName = Whale_Entities.Provinces.Where(w => w.Province_ID == provineInt).FirstOrDefault();
+                    mde.address = Cuscode.Address1 + " " + Cuscode.Area1 + " " + Cuscode.Zone1 + " " + Cuscode.Road1 + " " + (provineName != null ? provineName.Province_Name : "") + " " + Cuscode.Postal1;
+                }
                 var listInSite = cal.Where(w => w.SiteStorage == site).ToList();
                 foreach (var lis in listInSite)
                 {

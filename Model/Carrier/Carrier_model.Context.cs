@@ -44,5 +44,6 @@ namespace Carrier.Model.Carrier
         public virtual DbSet<Calculate_Car> Calculate_Car { get; set; }
         public virtual DbSet<Lalamove_Import> Lalamove_Import { get; set; }
         public virtual DbSet<Flash_EX_Import> Flash_EX_Import { get; set; }
+        public virtual DbSet<DHL_eCom_Import> DHL_eCom_Import { get; set; }
     }
 }

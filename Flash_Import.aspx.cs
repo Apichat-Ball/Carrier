@@ -132,12 +132,12 @@ namespace Carrier
 
 
                                                     var flash = new Flash_EX_Import();
-
+                                                    
                                                     flash.Date_Import = DateTime.Now;
                                                     flash.Date_Process = Convert.ToDateTime(item[0].ToString());
                                                     flash.Docno = item[1].ToString();
                                                     flash.pno = item[2].ToString();
-                                                    flash.Price = Convert.ToDouble(item[21].ToString());
+                                                    flash.Price = Convert.ToDouble(item[22].ToString());
                                                     flash.Status_Budget = false;
 
                                                     var dataTOCheck = new model_GV_Check();
@@ -216,23 +216,38 @@ namespace Carrier
                                                                            vbrk.KUNRG,
                                                                            vbrp.BRAND
                                                                        }).FirstOrDefault() ;
-                                                            var budget = budget_Entities.Departments.Where(w => w.ShortBrand == sap.BRAND).FirstOrDefault();
-                                                            if(budget != null)
+                                                            if(sap != null)
                                                             {
-                                                                dataTOCheck.sitestorage = sap.KUNRG.Substring(0, 4) + sap.BRAND + sap.KUNRG.Substring(4, 2);
-                                                                dataTOCheck.From = "Ecommerce";
-                                                                dataTOCheck.Department_ID = budget.Department_ID;
-                                                                flash.Shop = sap.KUNRG.Substring(0, 4) + sap.BRAND + sap.KUNRG.Substring(4, 2);
-                                                                flash.department_id = Convert.ToInt32(budget.Department_ID);
+                                                                var budget = budget_Entities.Departments.Where(w => w.ShortBrand == sap.BRAND).FirstOrDefault();
+                                                                if (budget != null)
+                                                                {
+                                                                    dataTOCheck.sitestorage = sap.KUNRG.Substring(0, 4) + sap.BRAND + sap.KUNRG.Substring(4, 2);
+                                                                    dataTOCheck.From = "Ecommerce";
+                                                                    dataTOCheck.Department_ID = budget.Department_ID;
+                                                                    flash.Shop = sap.KUNRG.Substring(0, 4) + sap.BRAND + sap.KUNRG.Substring(4, 2);
+                                                                    flash.department_id = Convert.ToInt32(budget.Department_ID);
+                                                                }
                                                             }
-                                                            if (new string[] { "ZX", "Z6" }.Contains(flash.Shop.Substring(0, 2)))
+                                                            else
                                                             {
-                                                                flash.saleOn = "ONLINE";
+                                                                flash.Shop = "";
+                                                            }
+                                                            if(flash.Shop != "")
+                                                            {
+                                                                if (new string[] { "ZX", "Z6" }.Contains(flash.Shop.Substring(0, 2)))
+                                                                {
+                                                                    flash.saleOn = "ONLINE";
+                                                                }
+                                                                else
+                                                                {
+                                                                    flash.saleOn = "OFFLINE";
+                                                                }
                                                             }
                                                             else
                                                             {
                                                                 flash.saleOn = "OFFLINE";
                                                             }
+                                                            
                                                         }
 
 
@@ -256,7 +271,7 @@ namespace Carrier
                                                         before.department_id = flash.department_id;
                                                         before.Shop = flash.Shop;
                                                         before.saleOn = flash.saleOn;
-                                                        before.Price = Convert.ToDouble(item[21].ToString());
+                                                        before.Price = Convert.ToDouble(item[22].ToString());
                                                         dataTOCheck.Docno_Bud = before.Docno_Budget;
 
                                                     }
@@ -523,7 +538,7 @@ namespace Carrier
         }
         public DataSet  LoadDataFlash(DateTime datest , DateTime dateed)
         {
-            var Flash = carrier_Entities.Flash_EX_Import.Where(w => w.Date_Process >= datest && w.Date_Process <= dateed && w.Status_Budget == false)
+            var Flash = carrier_Entities.Flash_EX_Import.Where(w => w.Date_Process >= datest && w.Date_Process <= dateed )
                 
                 .Select(s => new 
                 {
@@ -701,7 +716,7 @@ namespace Carrier
             //V2
 
 
-            var FlashV2 = carrier_Entities.Flash_EX_Import.Where(w => w.Date_Process >= datest && w.Date_Process <= dateed && w.Status_Budget == false)
+            var FlashV2 = carrier_Entities.Flash_EX_Import.Where(w => w.Date_Process >= datest && w.Date_Process <= dateed )
                 .Select(s => new
                 {
                     Account = "6050008",
@@ -942,6 +957,10 @@ namespace Carrier
             {
                 btnUploadToBudget.Text = "Approve";
                 btnRejectUploadBud.Visible = true;
+                dv_DateST.Style.Add("pointer-events", "none");
+                dv_DateED.Style.Add("pointer-events", "none");
+                txtDateSt.Enabled = false;
+                txtDateED.Enabled = false;
             }
             else if(btnUploadToBudget.Text == "Approve")
             {
@@ -974,15 +993,15 @@ namespace Carrier
 
                 foreach(var b in brand)
                 {
-                    var brand_name = insideSFG_WF_Entities.vBrandAndHeadFCs.Where(w => w.departmentID == b.ToString()).FirstOrDefault();
+                    var brand_name = budget_Entities.Departments.Where(w => w.Department_ID == b.ToString()).FirstOrDefault();
                     var site = flashIM.Where(w => w.department_id == b).ToList();
                     //Sitestorage
                     foreach(var si in site)
                     {
                         var seek = budget_Entities.Departments.Where(w => w.Department_ID == si.department_id.ToString() && w.Department_Name.StartsWith("SEEK")).FirstOrDefault();
-                        if (si.shop == "CENTER" || si.shop.StartsWith("ZY") || si.shop == "")
+                        if ((si.shop == "CENTER" || si.shop.StartsWith("ZY") || si.shop == "" || si.shop.StartsWith("Z6"))&& (si.shop.Length == 6 || si.shop.Length == 0))
                         {
-                            var siteOff = carrier_Entities.Flash_EX_Import.Where(w => w.department_id == b && w.Shop == si.shop && w.saleOn == si.saleon)
+                            var siteOff = carrier_Entities.Flash_EX_Import.Where(w => w.department_id == b && w.Shop == (si.shop == "" ? null : si.shop) && w.saleOn == si.saleon)
                                 .GroupBy(g => new
                                 {
                                     g.department_id,
@@ -995,30 +1014,111 @@ namespace Carrier
                                     price = c.Sum(v => v.Price),
                                     docno = c.Select(v => v.Docno).ToList()
                                 }).ToList();
-                            foreach (var siteCenter in siteOff)
+                            if(siteOff.Count() != 0)
                             {
-                                cuttemp temp = new cuttemp();
-                                temp.date_use = Convert.ToDateTime(DateTime.Now.ToShortDateString());
-                                temp.depart_id = seek == null ? b.ToString() : "1619";
-                                temp.detail_id = "5703";
-                                temp.group_id = "5";
-                                temp.head_id = "507";
-                                temp.money = Convert.ToDouble(siteCenter.price);
-                                temp.remark = "ค่ารถจัดส่ง Auto จากระบบ Courier Flash รอบ " + txtDateSt.Text + " - " + txtDateED.Text + " เลขที่เอกสาร :" + Newtonsoft.Json.JsonConvert.SerializeObject(siteCenter.docno) + " Site:" + si.shop;
-                                temp.typeBudget_id = siteCenter.saleOn == "OFFLINE"? "2":"1";
-                                temp.userId = "101974";
-                                temp.site_storage = si.shop;
-
-                                var budHave = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark)).FirstOrDefault();
-                                if (budHave == null)
+                                foreach (var siteCenter in siteOff)
                                 {
-                                    var ss = service_Budget.Insert_CutBudget(temp);
+                                    cuttemp temp = new cuttemp();
+                                    temp.date_use = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+                                    temp.depart_id = seek == null ? b.ToString() : "1619";
+                                    temp.detail_id = "5703";
+                                    temp.group_id = "5";
+                                    temp.head_id = "507";
+                                    temp.money = Convert.ToDouble(siteCenter.price);
+                                    temp.remark = "ค่ารถจัดส่ง Auto จากระบบ Courier Flash รอบ " + txtDateSt.Text + " - " + txtDateED.Text + " เลขที่เอกสาร :" + Newtonsoft.Json.JsonConvert.SerializeObject(siteCenter.docno) + " Site:" + si.shop;
+                                    temp.typeBudget_id = siteCenter.saleOn == "OFFLINE" ? "2" : "1";
+                                    temp.userId = "101974";
+                                    temp.site_storage = si.shop;
 
-                                    if (ss == "สำเร็จ")
+                                    var budHave = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark)).FirstOrDefault();
+                                    if (budHave == null)
+                                    {
+                                        var ss = service_Budget.Insert_CutBudget(temp);
+
+                                        if (ss == "สำเร็จ")
+                                        {
+                                            foreach (var docno in siteCenter.docno)
+                                            {
+                                                var depInt = seek == null ? b.ToString() : "1619";
+                                                var typeBud = siteCenter.saleOn == "OFFLINE" ? 2 : 1;
+                                                var budget = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark) && w.Department_ID == depInt && w.TypeBudget_ID == typeBud).FirstOrDefault();
+
+                                                var carFlashImport = carrier_Entities.Flash_EX_Import.Where(w => w.Docno == docno).FirstOrDefault();
+                                                carFlashImport.Docno_Budget = budget.Docno;
+                                                carFlashImport.Status_Budget = true;
+                                                carrier_Entities.SaveChanges();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            FailUpload.Add(temp);
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if(si.shop != "")
+                                {
+                                    var ShopAndBrand = si.shop.Substring(0, 4) + brand_name.ShortBrand + si.shop.Substring(4, 2);
+                                }
+
+                                siteOff = carrier_Entities.Flash_EX_Import.Where(w => w.department_id == b && w.Shop == (si.shop == ""? null : si.shop.Substring(0, 4) + brand_name.ShortBrand + si.shop.Substring(4, 2))  && w.saleOn == si.saleon)
+                                .GroupBy(g => new
+                                {
+                                    g.department_id,
+                                    g.saleOn
+                                })
+                                .Select(c => new
+                                {
+                                    c.Key.department_id,
+                                    c.Key.saleOn,
+                                    price = c.Sum(v => v.Price),
+                                    docno = c.Select(v => v.Docno).ToList()
+                                }).ToList();
+                                foreach (var siteCenter in siteOff)
+                                {
+                                    cuttemp temp = new cuttemp();
+                                    temp.date_use = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+                                    temp.depart_id = seek == null ? b.ToString() : "1619";
+                                    temp.detail_id = "5703";
+                                    temp.group_id = "5";
+                                    temp.head_id = "507";
+                                    temp.money = Convert.ToDouble(siteCenter.price);
+                                    temp.remark = "ค่ารถจัดส่ง Auto จากระบบ Courier Flash รอบ " + txtDateSt.Text + " - " + txtDateED.Text + " เลขที่เอกสาร :" + Newtonsoft.Json.JsonConvert.SerializeObject(siteCenter.docno) + " Site:" + si.shop;
+                                    temp.typeBudget_id = siteCenter.saleOn == "OFFLINE" ? "2" : "1";
+                                    temp.userId = "101974";
+                                    temp.site_storage = si.shop;
+
+                                    var budHave = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark)).FirstOrDefault();
+                                    if (budHave == null)
+                                    {
+                                        var ss = service_Budget.Insert_CutBudget(temp);
+
+                                        if (ss == "สำเร็จ")
+                                        {
+                                            foreach (var docno in siteCenter.docno)
+                                            {
+                                                var depInt = seek == null ? b.ToString() : "1619";
+                                                var typeBud = siteCenter.saleOn == "OFFLINE" ? 2 : 1;
+                                                var budget = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark) && w.Department_ID == depInt && w.TypeBudget_ID == typeBud).FirstOrDefault();
+
+                                                var carFlashImport = carrier_Entities.Flash_EX_Import.Where(w => w.Docno == docno).FirstOrDefault();
+                                                carFlashImport.Docno_Budget = budget.Docno;
+                                                carFlashImport.Status_Budget = true;
+                                                carrier_Entities.SaveChanges();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            FailUpload.Add(temp);
+                                        }
+                                    }
+                                    else
                                     {
                                         foreach (var docno in siteCenter.docno)
                                         {
-                                            var depInt = b.ToString();
+                                            var depInt = seek == null ? b.ToString() : "1619";
                                             var typeBud = siteCenter.saleOn == "OFFLINE" ? 2 : 1;
                                             var budget = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark) && w.Department_ID == depInt && w.TypeBudget_ID == typeBud).FirstOrDefault();
 
@@ -1028,12 +1128,9 @@ namespace Carrier
                                             carrier_Entities.SaveChanges();
                                         }
                                     }
-                                    else
-                                    {
-                                        FailUpload.Add(temp);
-                                    }
                                 }
                             }
+                            
                         }
                         else
                         {
@@ -1065,7 +1162,7 @@ namespace Carrier
                                 temp.remark = "ค่ารถจัดส่ง Auto จากระบบ Courier Flash รอบ " + txtDateSt.Text + " - " + txtDateED.Text + " เลขที่เอกสาร :" + Newtonsoft.Json.JsonConvert.SerializeObject(saleonInSite.docno) + " Site:" + si.shop;
                                 temp.typeBudget_id = saleonInSite.saleOn == "OFFLINE" ? "2" : "1";
                                 temp.userId = "101974";
-                                temp.site_storage = siteST + brand_name.BRANDABB + siteED;  
+                                temp.site_storage = siteST + brand_name.ShortBrand + siteED;  
 
                                 var budHave = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark)).FirstOrDefault();
                                 if(budHave == null)
@@ -1076,7 +1173,7 @@ namespace Carrier
                                     {
                                         foreach (var docno in saleonInSite.docno)
                                         {
-                                            var depInt = b.ToString();
+                                            var depInt = seek == null ? b.ToString() : "1619";
                                             var typeBud = saleonInSite.saleOn == "OFFLINE" ? 2 : 1;
                                             var budget = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark) && w.Department_ID == depInt && w.TypeBudget_ID == typeBud).FirstOrDefault();
 
@@ -1089,6 +1186,20 @@ namespace Carrier
                                     else
                                     {
                                         FailUpload.Add(temp);
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (var docno in saleonInSite.docno)
+                                    {
+                                        var depInt = seek == null ? b.ToString() : "1619";
+                                        var typeBud = saleonInSite.saleOn == "OFFLINE" ? 2 : 1;
+                                        var budget = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark) && w.Department_ID == depInt && w.TypeBudget_ID == typeBud).FirstOrDefault();
+
+                                        var carFlashImport = carrier_Entities.Flash_EX_Import.Where(w => w.Docno == docno).FirstOrDefault();
+                                        carFlashImport.Docno_Budget = budget.Docno;
+                                        carFlashImport.Status_Budget = true;
+                                        carrier_Entities.SaveChanges();
                                     }
                                 }
                                 
@@ -1125,6 +1236,10 @@ namespace Carrier
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('บันทึกสำเร็จ')", true);
 
                 }
+                dv_DateST.Style.Remove("pointer-events");
+                dv_DateED.Style.Remove("pointer-events");
+                txtDateSt.Enabled = true;
+                txtDateED.Enabled = true;
             }
         }
 
@@ -1132,6 +1247,10 @@ namespace Carrier
         {
             btnUploadToBudget.Text = "Upload to Budget";
             btnRejectUploadBud.Visible = false;
+            dv_DateST.Style.Remove("pointer-events");
+            dv_DateED.Style.Remove("pointer-events");
+            txtDateSt.Enabled = true;
+            txtDateED.Enabled = true;
         }
     }
     public class model_GV_Check

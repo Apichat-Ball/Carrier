@@ -400,6 +400,15 @@
                                 </asp:TemplateField>
                                 <asp:TemplateField>
                                     <HeaderTemplate>
+                                        <span>เลขที่เอกสาร</span>
+                                    </HeaderTemplate>
+                                    <ItemTemplate>
+                                        <asp:Label runat="server" ID="lbDocno" Text='<%# Bind("Docno") %>'></asp:Label>
+                                    </ItemTemplate>
+                                    <ItemStyle Width="100px" />
+                                </asp:TemplateField>
+                                <asp:TemplateField>
+                                    <HeaderTemplate>
                                         <span>เวลา</span>
                                     </HeaderTemplate>
                                     <ItemTemplate>

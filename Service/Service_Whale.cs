@@ -140,6 +140,7 @@ namespace Carrier.Service
                                //TypeDocument_Name = tTypeDocument.TypeDocument_Name,
                                //Code_Commission = tSalesOrders.Code_Commission
                                SKU = tItems.SKU,
+                               QTY = tItems.QTY
                            });
                            
             return objData;
