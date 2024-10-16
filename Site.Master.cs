@@ -76,15 +76,15 @@ namespace Carrier
                     var position = entities_InsideSFG_WF.POSITIONs.Where(w => w.positionID == objuser.positionID).Select(s => s.position_).FirstOrDefault();
                     lblDepartmentID.Text = "<span style='line-height:1;'>แผนก : " + depart + " ตำแหน่ง : " + position + "</span>";
                     var userPermission = carrier_Entities.Users.Where(w => w.UserID == userid).ToList();
-                    var permision = userPermission.Where(w=>w.Permission == "Admin").ToList();
-                    if(permision.Count == 1)
+                    var permision = userPermission.Where(w=>w.Permission == "Admin").FirstOrDefault();
+                    if(permision != null)
                     {
                         div_Member.Visible = false;
                         div_Admin.Visible = true;
-                        div1.Visible = true;
-                        if(new int[] { 101635 , 108 }.Contains(userid) )
+                        
+                        if(permision.ImportForSAP??false)
                         {
-                            div2.Visible = true;
+                            div1.Visible = true;
                         }
                     }
                     else

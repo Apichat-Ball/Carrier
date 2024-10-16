@@ -60,8 +60,12 @@ namespace Carrier
                 loadtable(1);
                 
                 loadComment();
-                
-
+                var userSession = Convert.ToInt32( Session["_UserID"].ToString());
+                var user = carrier_Entities.Users.Where(w => w.UserID == userSession && w.ImportForSAP == true).FirstOrDefault();
+                if(user != null)
+                {
+                    dv_Announce.Visible = true;
+                }
             }
             
         }

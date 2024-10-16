@@ -71,7 +71,7 @@
                     </div>
                     <div class="col-md-1">
                         <br />
-                        <asp:Button runat="server" ID="btnSearch" Text="ค้นหา" CssClass="btn btn-outline-primary w-100" UseSubmitBehavior="false" />
+                        <asp:Button runat="server" ID="btnSearch" Text="ค้นหา" CssClass="btn btn-outline-primary w-100" UseSubmitBehavior="false" OnClick="btnSearch_Click" />
                     </div>
                 </div>
                 <div  class="row">

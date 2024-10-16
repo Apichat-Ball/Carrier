@@ -271,6 +271,7 @@
           <Property Name="Email" Type="nvarchar(max)" />
           <Property Name="Permission" Type="nvarchar" MaxLength="20" />
           <Property Name="TypeWarehouse" Type="nvarchar" MaxLength="50" />
+          <Property Name="ImportForSAP" Type="bit" />
         </EntityType>
         <EntityContainer Name="CarrierModelStoreContainer">
           <EntitySet Name="API_Carrier_Log" EntityType="Self.API_Carrier_Log" Schema="dbo" store:Type="Tables" />
@@ -421,6 +422,7 @@
           <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Permission" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="TypeWarehouse" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ImportForSAP" Type="Boolean" />
         </EntityType>
         <EntityType Name="Order_Box">
           <Key>
@@ -693,6 +695,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="CarrierModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="ImportForSAP" ColumnName="ImportForSAP" />
                 <ScalarProperty Name="TypeWarehouse" ColumnName="TypeWarehouse" />
                 <ScalarProperty Name="Permission" ColumnName="Permission" />
                 <ScalarProperty Name="Email" ColumnName="Email" />

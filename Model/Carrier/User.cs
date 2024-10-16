@@ -19,5 +19,6 @@ namespace Carrier.Model.Carrier
         public string Email { get; set; }
         public string Permission { get; set; }
         public string TypeWarehouse { get; set; }
+        public Nullable<bool> ImportForSAP { get; set; }
     }
 }

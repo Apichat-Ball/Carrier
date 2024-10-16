@@ -298,6 +298,9 @@
             </div>
 
         </div>
+        <div class="row col-12 alert alert-warning mt-2" role="alert" runat="server" id="dv_Announce" visible="false">
+            <span>*Import ค่ารถของ Lalamove และ Flash ย้ายไปอยู๋ในแถบด้านบนชื่อ Tracking และเลือกหัวข้อที่ขึ้นต้นด้วย Import&Export *</span>
+        </div>
         <div class="row col-12" runat="server" id="dv_Comment">
             <asp:Label runat="server" ID="lbUpdateStatusComment" Text="ประกาศจากระบบ" CssClass="h3"></asp:Label><br />
             <div class="row col-12 overflow-auto" style="height: 80px">

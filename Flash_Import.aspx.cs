@@ -42,8 +42,36 @@ namespace Carrier
             {
                 txtDateSt.Text = DateTime.Now.AddMonths(-1).ToString("dd/MM/yyyy");
                 txtDateED.Text = DateTime.Now.ToString("dd/MM/yyyy");
+                
             }
             
+        }
+        public void FixedExpense()
+        {
+            var exxpense = budget_Entities.MainExpenses.Where(w => w.Docno.StartsWith("UP") && w.Remark.StartsWith("ค่ารถจัดส่ง Auto จากระบบ Courier Flash รอบ 01/09/2024 - 30/09/2024")).ToList();
+            foreach(var ex in exxpense)
+            {
+                //var carHave = carrier_Entities.Flash_EX_Import.Where(w => w.Docno_Budget == ex.Docno).ToList();
+                //foreach(var ca in carHave)
+                //{
+                //    var budDouble = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(ca.Docno)).ToList();
+                //    if(budDouble.Count() == 2)
+                //    {
+                //        var up = carrier_Entities.Flash_EX_Import.Where(w => w.Docno == ca.Docno).FirstOrDefault();
+                //        up.Docno_Budget = budDouble.OrderBy(o => o.Date_Send).FirstOrDefault().Docno;
+                //        carrier_Entities.SaveChanges();
+                //    }
+                //    else if(budDouble.Count() == 1)
+                //    {
+                //        var up = carrier_Entities.Flash_EX_Import.Where(w => w.Docno == ca.Docno).FirstOrDefault();
+                //        up.Docno_Budget = null;
+                //        up.Status_Budget = false;
+                //        carrier_Entities.SaveChanges();
+                //    }
+                //}
+
+
+            }
         }
 
         protected void btnRun_Click(object sender, EventArgs e)
@@ -350,7 +378,7 @@ namespace Carrier
         {
             var datest = Convert.ToDateTime(txtDateSt.Text);
             var dateed = Convert.ToDateTime(txtDateED.Text);
-            var flash = carrier_Entities.Flash_EX_Import.Where(w => w.Date_Process >= datest && w.Date_Process <= dateed)
+            var flash = carrier_Entities.Flash_EX_Import.Where(w => w.Date_Process >= datest && w.Date_Process <= dateed && (w.pno == txtPno.Text || txtPno.Text == ""))
                 .Select(s=> new
                 {
                     Docno_Match = s.Status_Match,
@@ -1001,7 +1029,7 @@ namespace Carrier
                         var seek = budget_Entities.Departments.Where(w => w.Department_ID == si.department_id.ToString() && w.Department_Name.StartsWith("SEEK")).FirstOrDefault();
                         if ((si.shop == "CENTER" || si.shop.StartsWith("ZY") || si.shop == "" || si.shop.StartsWith("Z6"))&& (si.shop.Length == 6 || si.shop.Length == 0))
                         {
-                            var siteOff = carrier_Entities.Flash_EX_Import.Where(w => w.department_id == b && w.Shop == (si.shop == "" ? null : si.shop) && w.saleOn == si.saleon)
+                            var siteOff = carrier_Entities.Flash_EX_Import.Where(w => w.department_id == b && w.Shop == (si.shop == "" ? null : si.shop) && w.saleOn == si.saleon && w.Date_Process >= dateSTOrigin && w.Date_Process <= dateEDOrigin && w.Status_Budget == false)
                                 .GroupBy(g => new
                                 {
                                     g.department_id,
@@ -1063,7 +1091,7 @@ namespace Carrier
                                     var ShopAndBrand = si.shop.Substring(0, 4) + brand_name.ShortBrand + si.shop.Substring(4, 2);
                                 }
 
-                                siteOff = carrier_Entities.Flash_EX_Import.Where(w => w.department_id == b && w.Shop == (si.shop == ""? null : si.shop.Substring(0, 4) + brand_name.ShortBrand + si.shop.Substring(4, 2))  && w.saleOn == si.saleon)
+                                siteOff = carrier_Entities.Flash_EX_Import.Where(w => w.department_id == b && w.Shop == (si.shop == ""? null : si.shop.Substring(0, 4) + brand_name.ShortBrand + si.shop.Substring(4, 2))  && w.saleOn == si.saleon && w.Date_Process >= dateSTOrigin && w.Date_Process <= dateEDOrigin && w.Status_Budget == false)
                                 .GroupBy(g => new
                                 {
                                     g.department_id,
@@ -1136,7 +1164,7 @@ namespace Carrier
                         {
                             var siteST = si.shop.Substring(0, 4);
                             var siteED = si.shop.Substring(4, 2);
-                            var siteOrder = carrier_Entities.Flash_EX_Import.Where(w => w.department_id == b && w.Shop.StartsWith(siteST) && w.Shop.EndsWith(siteED) && w.saleOn == si.saleon)
+                            var siteOrder = carrier_Entities.Flash_EX_Import.Where(w => w.department_id == b && w.Shop.StartsWith(siteST) && w.Shop.EndsWith(siteED) && w.saleOn == si.saleon && w.Date_Process >= dateSTOrigin && w.Date_Process <= dateEDOrigin && w.Status_Budget == false)
                                 .GroupBy(g => new
                                 {
                                     g.department_id,

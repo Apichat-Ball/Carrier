@@ -697,75 +697,96 @@ namespace Carrier
             var calNotBud = carrier_Entities.Lalamove_Import.Where(w=> w.Date_Complete < dateED && w.Date_Complete >= dateST).GroupBy(g => g.Delivery_ID).Select(s => s.Key).ToList();
             //var calNotBud = carrier_Entities.Calculate_Car.Where(w => w.Date_Group < dateED && w.Date_Group >= dateST).GroupBy(g => g.DeliveryNumber).Select(s => new { DeliveryNumber = s.Key }).ToList();
             
-            var calSuccess = carrier_Entities.Calculate_Car.Where(w => calNotBud.Contains(w.DeliveryNumber) && w.StatusBud == "F").ToList();
-            if (calSuccess.Count() != 0)
-            {
-                txtDateSt.Enabled = true;
-                txtDateED.Enabled = true;
-                //service_Budget.JSAlert("E", "ไม่สามารถบันทึกเข้า Budget ได้ เนื่องจากว่าในช่วงที่ต้องการได้เคยมีการขึ้น Budget ไปแล้วครับ");
-                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ไม่สามารถบันทึกเข้า Budget ได้ เนื่องจากว่าในช่วงที่ต้องการได้เคยมีการขึ้น Budget ไปแล้วครับ')", true);
-                return;
-            }
+            //var calSuccess = carrier_Entities.Calculate_Car.Where(w => calNotBud.Contains(w.DeliveryNumber) && w.StatusBud == "F").ToList();
+            //if (calSuccess.Count() != 0)
+            //{
+            //    txtDateSt.Enabled = true;
+            //    txtDateED.Enabled = true;
+            //    //service_Budget.JSAlert("E", "ไม่สามารถบันทึกเข้า Budget ได้ เนื่องจากว่าในช่วงที่ต้องการได้เคยมีการขึ้น Budget ไปแล้วครับ");
+            //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ไม่สามารถบันทึกเข้า Budget ได้ เนื่องจากว่าในช่วงที่ต้องการได้เคยมีการขึ้น Budget ไปแล้วครับ')", true);
+            //    return;
+            //}
             List<string> deliveryFail = new List<string>();
 
             foreach (var deli in calNotBud)
             {
-                var dateDelivery = carrier_Entities.Lalamove_Import.Where(w => w.Delivery_ID == deli).FirstOrDefault();
-                var brand = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli).GroupBy(g => g.SDpart).Select(s => new { SDpart = s.Key, QTY = s.Sum(x => x.QTY), Price = s.Sum(x => x.Price) }).ToList();
-                foreach (var BrandID in brand)
+                var carhave_inBud = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli);
+                var carApp_Success = carhave_inBud.Where(w => w.StatusBud == "F");
+                if(carApp_Success.Count() != 0)
                 {
-                    var siteStorage = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli && w.SDpart == BrandID.SDpart).GroupBy(g => g.SiteStorage).Select(s => s.Key).ToList();
-                    var Seek = budget_Entities.Departments.Where(w => w.Department_Name.StartsWith("SEEK") && w.Department_ID == BrandID.SDpart).FirstOrDefault();
-
-                    foreach (var site in siteStorage)
+                    //var docno = carApp_Success.FirstOrDefault().DocInFC;
+                    //var carNot_App = carhave_inBud.Where(w => w.StatusBud != "F");
+                    //if(carNot_App.Count() != 0)
+                    //{
+                    //    foreach (var aa in carNot_App.ToList())
+                    //    {
+                    //        aa.DocInFC = docno;
+                    //        aa.StatusBud = "F";
+                    //    }
+                    //    carrier_Entities.SaveChanges();
+                    //}
+                    
+                }
+                else
+                {
+                    var dateDelivery = carrier_Entities.Lalamove_Import.Where(w => w.Delivery_ID == deli).FirstOrDefault();
+                    var brand = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli).GroupBy(g => g.SDpart).Select(s => new { SDpart = s.Key, QTY = s.Sum(x => x.QTY), Price = s.Sum(x => x.Price) }).ToList();
+                    foreach (var BrandID in brand)
                     {
-                        var Docno = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli && w.SDpart == BrandID.SDpart && w.SiteStorage == site).ToList();
-                        var docnoOne = Docno.FirstOrDefault().Docno;
-                        var carOrder = carrier_Entities.Orders.Where(w => w.Docno == docnoOne).FirstOrDefault();
-                        cuttemp temp = new cuttemp();
-                        temp.date_use = Convert.ToDateTime(DateTime.Now.ToShortDateString());
-                        temp.depart_id = Seek == null ? Docno.FirstOrDefault().SDpart : "1619";
-                        temp.detail_id = "5703";
-                        temp.group_id = "5";
-                        temp.head_id = "507";
-                        temp.money = Convert.ToDouble(Docno.Sum(c=>c.Price));
-                        temp.remark = "ค่ารถจัดส่ง Auto จากระบบ Courier Lalamove รอบ " + txtDateSt.Text + " - " + txtDateED.Text + " เลข DeliveryID:" + deli + " SiteStorage:" + site;
-                        temp.typeBudget_id = carOrder.saleOn == "ONLINE" ? "1" : "2";
-                        temp.userId = "101974";
-                        temp.site_storage = site;
-                        var ss = service_Budget.Insert_CutBudget(temp);
+                        var siteStorage = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli && w.SDpart == BrandID.SDpart).GroupBy(g => g.SiteStorage).Select(s => s.Key).ToList();
+                        var Seek = budget_Entities.Departments.Where(w => w.Department_Name.StartsWith("SEEK") && w.Department_ID == BrandID.SDpart).FirstOrDefault();
 
-                        if (ss == "สำเร็จ")
+                        foreach (var site in siteStorage)
                         {
-                            var Delivery = "DeliveryID:" + deli;
-                            var SiteCar = "SiteStorage:" + site;
-                            var DocInFC = budget_Entities.MainExpense_Sub.Where(w => w.Docno.StartsWith("UP") && w.Detail.Contains(Delivery) && w.Detail.Contains(SiteCar)).FirstOrDefault();
-                            if(DocInFC != null)
-                            {
-                                var budExpense = budget_Entities.MainExpenses.Where(w => w.Docno == DocInFC.Docno).FirstOrDefault();
-                                budExpense.Site_Storage = site;
-                                DocInFC.SiteStorage = site;
-                                DocInFC.Brand_ID = Docno.FirstOrDefault().SDpart;
-                                DocInFC.Brand_Percent = 100;
+                            var Docno = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli && w.SDpart == BrandID.SDpart && w.SiteStorage == site).ToList();
+                            var docnoOne = Docno.FirstOrDefault().Docno;
+                            var carOrder = carrier_Entities.Orders.Where(w => w.Docno == docnoOne).FirstOrDefault();
+                            cuttemp temp = new cuttemp();
+                            temp.date_use = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+                            temp.depart_id = Seek == null ? Docno.FirstOrDefault().SDpart : "1619";
+                            temp.detail_id = "5703";
+                            temp.group_id = "5";
+                            temp.head_id = "507";
+                            temp.money = Convert.ToDouble(Docno.Sum(c => c.Price));
+                            temp.remark = "ค่ารถจัดส่ง Auto จากระบบ Courier Lalamove รอบ " + txtDateSt.Text + " - " + txtDateED.Text + " เลข DeliveryID:" + deli + " SiteStorage:" + site;
+                            temp.typeBudget_id = carOrder.saleOn == "ONLINE" ? "1" : "2";
+                            temp.userId = "101974";
+                            temp.site_storage = site;
+                            var ss = service_Budget.Insert_CutBudget(temp);
 
-                            }
-                            var carpass = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli && w.SDpart == BrandID.SDpart && w.SiteStorage == site).ToList();
-                            foreach (var c in carpass)
+                            if (ss == "สำเร็จ")
                             {
-                                c.StatusBud = "F";
-                                c.DocInFC = DocInFC.Docno;
+                                var Delivery = "DeliveryID:" + deli;
+                                var SiteCar = "SiteStorage:" + site;
+                                var DocInFC = budget_Entities.MainExpense_Sub.Where(w => w.Docno.StartsWith("UP") && w.Detail.Contains(Delivery) && w.Detail.Contains(SiteCar)).FirstOrDefault();
+                                if (DocInFC != null)
+                                {
+                                    var budExpense = budget_Entities.MainExpenses.Where(w => w.Docno == DocInFC.Docno).FirstOrDefault();
+                                    budExpense.Site_Storage = site;
+                                    DocInFC.SiteStorage = site;
+                                    DocInFC.Brand_ID = Docno.FirstOrDefault().SDpart;
+                                    DocInFC.Brand_Percent = 100;
+
+                                }
+                                var carpass = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli && w.SDpart == BrandID.SDpart && w.SiteStorage == site).ToList();
+                                foreach (var c in carpass)
+                                {
+                                    c.StatusBud = "F";
+                                    c.DocInFC = DocInFC.Docno;
+                                }
+                                carrier_Entities.SaveChanges();
                             }
-                            carrier_Entities.SaveChanges();
+                            else
+                            {
+                                deliveryFail.Add(deli);
+                            }
+
                         }
-                        else
-                        {
-                            deliveryFail.Add(deli);
-                        }
+
 
                     }
-
-
                 }
+                
                 carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log
                 {
                     dateSend = DateTime.Now,

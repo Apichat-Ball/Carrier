@@ -60,6 +60,15 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.Button btnUpdatePno;
 
         /// <summary>
+        /// dv_Announce control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dv_Announce;
+
+        /// <summary>
         /// dv_Comment control.
         /// </summary>
         /// <remarks>

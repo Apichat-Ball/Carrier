@@ -119,25 +119,57 @@ namespace Carrier
                                                         one.Date_Import = DateTime.Now;
                                                         one.Price = (total / totalQTY) * brand.TotalQTY;
                                                         one.Per_Price = (total / totalQTY);
-                                                        one.Shop = brand.Customer_Code;
+                                                        
                                                         var depart = budget_Entities.Departments.Where(w => w.ShortBrand == brand.Brand_Short ).FirstOrDefault();
                                                         one.department_id = Convert.ToInt32(depart.Department_ID);
                                                         one.QTY = brand.TotalQTY;
+
+                                                        dataC.sitestorage = brand.Customer_Code;
+                                                        
+                                                        if (brand.Customer_Code == "" || brand.Customer_Code == null)
+                                                        {
+                                                            var idCard = whale_Entities.SalesOrders.Where(w => w.Docno == brand.Docno).FirstOrDefault().b_IDCard;
+                                                            if (idCard == "" || idCard == null)
+                                                            {
+                                                                if (depart.Department_Name.Contains("SFG"))
+                                                                {
+                                                                    dataC.sitestorage = "ZXSFOL";
+                                                                }
+                                                                else
+                                                                {
+                                                                    dataC.sitestorage = "Z6SFOL";
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                if (depart.Department_Name.Contains("SFG"))
+                                                                {
+                                                                    dataC.sitestorage = "ZXETOL";
+                                                                }
+                                                                else
+                                                                {
+                                                                    dataC.sitestorage = "Z6ETOL";
+                                                                }
+                                                            }
+                                                        }
+                                                        one.Shop = dataC.sitestorage;
 
                                                         dataC.Department = "("+depart.ShortBrand+")"+ depart.Department_Name;
                                                         dataC.DateProcess = one.Date_Process?? DateTime.Now;
                                                         dataC.Docno = brand.Docno;
                                                         dataC.TrackingNo = trackingNo;
                                                         dataC.Price = ((total / totalQTY) * brand.TotalQTY)??0;
-                                                        dataC.sitestorage = brand.Customer_Code;
                                                         var importHave = carrier_Entities.DHL_eCom_Import.Where(w => w.Docno == brand.Docno && w.department_id == one.department_id).FirstOrDefault();
 
                                                         if(importHave != null)
                                                         {
+                                                            
                                                             importHave.Per_Price = (total / totalQTY);
+                                                            importHave.Shop = dataC.sitestorage;
                                                             carrier_Entities.SaveChanges();
                                                             dataC.Docno_Bud = importHave.Docno_Budget;
-                                                            dataC.Date_Budget = importHave.Date_Budget??DateTime.Now;
+                                                            dataC.Date_Budget = importHave.Date_Budget;
+                                                            
                                                         }
                                                         else
                                                         {
@@ -399,8 +431,8 @@ namespace Carrier
                 var sitestorage = (res.Shop.Substring(0, 2) == "Z6" ? res.Shop.Substring(0, 2) + "SF" + brand.ShortBrand + "OL" : res.Shop.Substring(0, 4) + brand.ShortBrand + res.Shop.Substring(4, 2)) ;
                 var carrYSite = carrier_Entities.Site_Profit.Where(w => w.Site_Stroage == sitestorage && w.Brand == brand.ShortBrand && w.Channel == "ONLINE").FirstOrDefault();
 
-                row[10] = carrYSite.Profit;
-                row[11] = carrYSite.Costcenter;
+                row[10] = carrYSite == null?"": carrYSite.Profit;
+                row[11] = carrYSite == null ? "" : carrYSite.Costcenter;
                 row[12] = "";
                 row[13] = "";
                 row[14] = res.Shop;
@@ -412,7 +444,7 @@ namespace Carrier
                 SAP.Rows.Add(row);
             }
             DataRow rowLast = SAP.NewRow();
-            rowLast[1] = "70477";
+            rowLast[1] = "70392";
             rowLast[2] = total;
             rowLast[5] = "VX";
 
@@ -425,8 +457,28 @@ namespace Carrier
 
         protected void btnUploadToBudget_Click(object sender, EventArgs e)
         {
-            if(btnUploadToBudget.Text == "Upload to Budget")
+            if (!DateTime.TryParse(txtDateSt.Text, out _))
             {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('รูปแบบวันที่เริ่มไม่ถูกต้อง')", true);
+
+                return;
+            }
+            if (!DateTime.TryParse(txtDateED.Text, out _))
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('รูปแบบวันที่สิ้นสุดไม่ถูกต้อง')", true);
+
+                return;
+            }
+            if(Convert.ToDateTime(txtDateSt.Text) > Convert.ToDateTime(txtDateED.Text))
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ระยะเวลาไม่ถูกต้อง')", true);
+
+                return;
+            }
+
+            if (btnUploadToBudget.Text == "Upload to Budget")
+            {
+                
                 dv_DateST.Style.Add("pointer-events", "none");
                 dv_DateED.Style.Add("pointer-events", "none");
                 btnUploadToBudget.Text = "Approve";
@@ -436,7 +488,7 @@ namespace Carrier
             {
                 var datest = Convert.ToDateTime(txtDateSt.Text);
                 var dateed = Convert.ToDateTime(txtDateED.Text);
-                var allDHL = carrier_Entities.DHL_eCom_Import.Where(w => w.Date_Process >= datest && w.Date_Process <= dateed && (w.Docno_Budget != ""&& w.Docno_Budget != null))
+                var allDHL = carrier_Entities.DHL_eCom_Import.Where(w => w.Date_Process >= datest && w.Date_Process <= dateed && (w.Docno_Budget == "" || w.Docno_Budget == null))
                     .GroupBy(g=>new
                     {
                         g.Tracking_No,
@@ -453,40 +505,62 @@ namespace Carrier
                 if(allDHL.Count() != 0)
                 {
                     List<string> trackFail = new List<string>();
-                    foreach (var Track in allDHL)
+                    
+                    try
                     {
-                        var seek = budget_Entities.Departments.Where(w => w.Department_ID == Track.Department_id.ToString() && w.Department_Name.StartsWith("SEEK")).FirstOrDefault();
-
-                        cuttemp temp = new cuttemp();
-                        temp.date_use = Convert.ToDateTime(DateTime.Now.ToShortDateString());
-                        temp.depart_id = seek == null ? Track.ToString() : "1619";
-                        temp.detail_id = "5703";
-                        temp.group_id = "5";
-                        temp.head_id = "507";
-                        temp.money = Track.Price ?? 0;
-                        temp.remark = "ค่ารถจัดส่ง Auto จากระบบ Courier DHL รอบ " + txtDateSt.Text + " - " + txtDateED.Text + " Tracking :" + Track.Tracking_No + " Site:" + Track.Shop;
-                        temp.typeBudget_id = "1";
-                        temp.userId = "101974";
-                        temp.site_storage = Track.Shop;
-
-                        var res = service_Budget.Insert_CutBudget(temp);
-                        if(res != "สำเร็จ")
+                        foreach (var Track in allDHL)
                         {
-                            trackFail.Add(Track.Tracking_No);
+                            var seek = budget_Entities.Departments.Where(w => w.Department_ID == Track.Department_id.ToString() && w.Department_Name.StartsWith("SEEK")).FirstOrDefault();
+                            var brand = budget_Entities.Departments.Where(w => w.Department_ID == Track.Department_id.ToString()).FirstOrDefault();
+                            cuttemp temp = new cuttemp();
+                            temp.date_use = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+                            temp.depart_id = seek == null ? Track.Department_id.ToString() : "1619";
+                            temp.detail_id = "5703";
+                            temp.group_id = "5";
+                            temp.head_id = "507";
+                            temp.money = Track.Price ?? 0;
+                            temp.remark = "ค่ารถจัดส่ง Auto จากระบบ Courier DHL รอบ " + txtDateSt.Text + " - " + txtDateED.Text + " Tracking:" + Track.Tracking_No + " Site:" + Track.Shop.Substring(0,4) + brand.ShortBrand + Track.Shop.Substring(4,2);
+                            temp.typeBudget_id = "1";
+                            temp.userId = "101974";
+                            temp.site_storage = Track.Shop.Substring(0, 4) + brand.ShortBrand + Track.Shop.Substring(4, 2);
+
+                            var res = service_Budget.Insert_CutBudget(temp);
+                            if (res != "สำเร็จ")
+                            {
+                                trackFail.Add(Track.Tracking_No);
+                            }
+                            else
+                            {
+                                var dep = seek == null ? Track.Department_id.ToString() : "1619";
+                                var bud = budget_Entities.MainExpenses.Where(w => w.Department_ID == dep && w.Remark.Contains("Tracking:" + Track.Tracking_No + " Site:" + Track.Shop.Substring(0, 4) + brand.ShortBrand + Track.Shop.Substring(4, 2))).FirstOrDefault();
+                                if(bud != null)
+                                {
+                                    var car = carrier_Entities.DHL_eCom_Import.Where(w => w.Tracking_No == Track.Tracking_No && w.department_id == Track.Department_id && w.Shop == Track.Shop).FirstOrDefault();
+                                    car.Docno_Budget = bud.Docno;
+                                    car.Date_Budget = DateTime.Now;
+                                    carrier_Entities.SaveChanges();
+                                }
+                            }
+                        }
+
+                        if (trackFail.Count() != 0)
+                        {
+                            trackFail = trackFail.Distinct().ToList();
+                            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('บันทึกสำเร็จ ยังมีบางรายการที่ไม่ผ่าน" + Newtonsoft.Json.JsonConvert.SerializeObject(trackFail) + "')", true);
+
+                        }
+                        else
+                        {
+                            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('บันทึกสำเร็จ')", true);
+
                         }
                     }
-
-                    if(trackFail.Count() != 0)
+                    catch(Exception ex)
                     {
-                        trackFail = trackFail.Distinct().ToList();
-                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('บันทึกสำเร็จ ยังมีบางรายการที่ไม่ผ่าน"+ Newtonsoft.Json.JsonConvert.SerializeObject(trackFail) + "')", true);
-
+                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('บันทึกไม่สำเร็จ')", true);
+                        return;
                     }
-                    else
-                    {
-                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('บันทึกสำเร็จ')", true);
-
-                    }
+                    
                 }
 
 
@@ -523,7 +597,7 @@ namespace Carrier
             public string Docno_Bud { get; set; }
             public string Department { get; set; }
             public string TrackingNo { get; set; }
-            public DateTime Date_Budget { get; set; }
+            public DateTime? Date_Budget { get; set; }
         }
 
 
@@ -538,6 +612,33 @@ namespace Carrier
             public string Shop { get; set; }
         }
         #endregion
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            var datest = Convert.ToDateTime(txtDateSt.Text);
+            var dateed = Convert.ToDateTime(txtDateED.Text).AddDays(1);
+            List<model_GV_Check_DHL> dhl = new List<model_GV_Check_DHL>();
+
+            var car = carrier_Entities.DHL_eCom_Import.Where(w => w.Date_Process >= datest && w.Date_Process <= dateed).ToList();
+            foreach(var item in car)
+            {
+                model_GV_Check_DHL dhl_one = new model_GV_Check_DHL();
+                dhl_one.DateProcess = (item.Date_Process??DateTime.Now);
+                dhl_one.Docno = item.Docno;
+                var depart = budget_Entities.Departments.Where(w => w.Department_ID == item.department_id.ToString()).FirstOrDefault();
+                dhl_one.Department = "(" + depart.ShortBrand + ")" + depart.Department_Name;
+                dhl_one.TrackingNo = item.Tracking_No;
+                dhl_one.sitestorage = item.Shop;
+                dhl_one.Date_Budget = item.Date_Budget;
+                dhl_one.Docno_Bud = item.Docno_Budget;
+                dhl_one.Price = item.Price??0;
+                dhl.Add(dhl_one);
+            }
+
+            gv_Import.DataSource = dhl.OrderBy(o => o.DateProcess).ToList();
+            gv_Import.DataBind();
+            dv_gv_import_Check.Visible = true;
+        }
     }
 
 }
