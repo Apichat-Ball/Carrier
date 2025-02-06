@@ -25,6 +25,17 @@
         <EntityTypeShape EntityType="CarrierModel.Lalamove_Import" Width="1.5" PointX="11.375" PointY="0.75" />
         <EntityTypeShape EntityType="CarrierModel.Flash_EX_Import" Width="1.5" PointX="0.75" PointY="11.75" />
         <EntityTypeShape EntityType="CarrierModel.DHL_eCom_Import" Width="1.5" PointX="11.375" PointY="3.75" />
+        <EntityTypeShape EntityType="CarrierModel.Carrier_Api_Key" Width="1.5" PointX="11.375" PointY="7.75" />
+        <EntityTypeShape EntityType="CarrierModel.Lalamove_Car_DeliveryItemSpecification_Categories" Width="1.5" PointX="11.375" PointY="11.75" />
+        <EntityTypeShape EntityType="CarrierModel.Lalamove_Car_DeliveryItemSpecification_HandlingInstructions" Width="1.5" PointX="13.375" PointY="0.75" />
+        <EntityTypeShape EntityType="CarrierModel.Lalamove_Car_DeliveryItemSpecification_Weight" Width="1.5" PointX="13.375" PointY="3.75" />
+        <EntityTypeShape EntityType="CarrierModel.Lalamove_Car_Local" Width="1.5" PointX="3.375" PointY="13.75" />
+        <EntityTypeShape EntityType="CarrierModel.Lalamove_Car_PlaceOrder" Width="1.5" PointX="13.375" PointY="6.75" />
+        <EntityTypeShape EntityType="CarrierModel.Lalamove_Car_Quotation" Width="1.5" PointX="13.375" PointY="9.75" />
+        <EntityTypeShape EntityType="CarrierModel.Lalamove_Car_SpecialRequests" Width="1.5" PointX="13.375" PointY="12.75" />
+        <EntityTypeShape EntityType="CarrierModel.Lalamove_Car_Stop" Width="1.5" PointX="5.375" PointY="14.75" />
+        <EntityTypeShape EntityType="CarrierModel.Lalamove_Car_Status" Width="1.5" PointX="7.375" PointY="14.75" />
+        <EntityTypeShape EntityType="CarrierModel.Lalamove_Location_Google_Temp" Width="1.5" PointX="9.375" PointY="14.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

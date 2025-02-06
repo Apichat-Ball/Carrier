@@ -89,5 +89,6 @@ namespace Carrier.Model.InsideSFG_WF
         public string Grade { get; set; }
         public Nullable<System.DateTime> Accept_Date { get; set; }
         public string Accept { get; set; }
+        public string UserID_View_Finger { get; set; }
     }
 }

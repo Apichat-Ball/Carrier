@@ -260,7 +260,7 @@ namespace Carrier
                                                             {
                                                                 flash.Shop = "";
                                                             }
-                                                            if(flash.Shop != "")
+                                                            if(flash.Shop != "" && flash.Shop != null)
                                                             {
                                                                 if (new string[] { "ZX", "Z6" }.Contains(flash.Shop.Substring(0, 2)))
                                                                 {
@@ -567,7 +567,6 @@ namespace Carrier
         public DataSet  LoadDataFlash(DateTime datest , DateTime dateed)
         {
             var Flash = carrier_Entities.Flash_EX_Import.Where(w => w.Date_Process >= datest && w.Date_Process <= dateed )
-                
                 .Select(s => new 
                 {
                     Posting_Date = s.Date_Process,
@@ -604,7 +603,7 @@ namespace Carrier
                 FItem.Amount = i.Amount;
                 total += i.Amount;
                 FItem.Tax_Code = i.Tax_Code;
-                FItem.Shop = i.Shop == null ? "" : i.Shop.Length == 6 ? i.Shop : i.Shop.Substring(0, 4) + i.Shop.Substring(6, 2);
+                FItem.Shop = i.Shop == null || i.Shop == "" ? "" : i.Shop.Length == 6 ? i.Shop : i.Shop.Substring(0, 4) + i.Shop.Substring(6, 2);
                 FItem.Assignment = i.Assignment;
                 if (car != null)
                 {
@@ -829,7 +828,7 @@ namespace Carrier
 
                         var sitestorage = "";
 
-                        if (site != null)
+                        if (site != null && site != "")
                         {
 
                             if (site == "CENTER" || site.StartsWith("ZY") )
@@ -868,7 +867,7 @@ namespace Carrier
                         rowV2[12] = "";
                         rowV2[13] = same.Shop;
                         rowV2[14] = "Flash";
-                        rowV2[15] = "(" + brand.ShortBrand + ")" + brand.Department_Name;
+                        rowV2[15] = brand == null ? "" : "(" + brand.ShortBrand + ")" + brand.Department_Name;
                         rowV2[16] = Newtonsoft.Json.JsonConvert.SerializeObject(same.docno);
                         rowV2[17] = same.เลขที่เอกสารใน_FC;
 
@@ -1023,6 +1022,7 @@ namespace Carrier
                 {
                     var brand_name = budget_Entities.Departments.Where(w => w.Department_ID == b.ToString()).FirstOrDefault();
                     var site = flashIM.Where(w => w.department_id == b).ToList();
+                    var brandid = insideSFG_WF_Entities.vBrandAndHeadFCs.Where(w => w.departmentID == b.ToString()).FirstOrDefault();
                     //Sitestorage
                     foreach(var si in site)
                     {
@@ -1061,7 +1061,9 @@ namespace Carrier
                                     var budHave = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark)).FirstOrDefault();
                                     if (budHave == null)
                                     {
+                                        
                                         var ss = service_Budget.Insert_CutBudget(temp);
+                                        
 
                                         if (ss == "สำเร็จ")
                                         {
@@ -1122,7 +1124,7 @@ namespace Carrier
                                     if (budHave == null)
                                     {
                                         var ss = service_Budget.Insert_CutBudget(temp);
-
+                                        
                                         if (ss == "สำเร็จ")
                                         {
                                             foreach (var docno in siteCenter.docno)
@@ -1195,6 +1197,43 @@ namespace Carrier
                                 var budHave = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark)).FirstOrDefault();
                                 if(budHave == null)
                                 {
+
+                                    var io = budget_Entities.Department_IO.Where(w => w.SiteStorage.Contains(si.shop) && w.Action_Start <= DateTime.Now && w.Action_End >= DateTime.Now).FirstOrDefault();
+                                    if(io != null)
+                                    {
+                                        var ioBrand = budget_Entities.Department_IO_Brand.Where(w => w.Department_ID == io.Department_ID && w.dateSt <= DateTime.Now && w.dateEd >= DateTime.Now);
+                                        foreach(var bio in ioBrand)
+                                        {
+                                            if(bio.Brand_ID == brandid.ID_Brand)
+                                            {
+                                                temp.depart_id = io.Department_ID;
+                                                temp.group_id = "13";
+                                                temp.head_id = "1324";
+                                                temp.detail_id = "132404";
+                                                temp.brand.Add(new cutCudget_brand_Filter
+                                                {
+                                                    brand_id = bio.Brand_ID,
+                                                    brand_percent = 100
+                                                });
+                                            }
+                                            else
+                                            {
+                                                temp.brand.Add(new cutCudget_brand_Filter
+                                                {
+                                                    brand_id = bio.Brand_ID,
+                                                    brand_percent = 0
+                                                });
+                                            }
+                                        }
+                                        if(temp.brand.Where(w=>w.brand_percent == 100).FirstOrDefault() == null)
+                                        {
+                                            temp.brand = new List<cutCudget_brand_Filter>();
+                                            temp.detail_id = "5703";
+                                            temp.group_id = "5";
+                                            temp.head_id = "507";
+                                            temp.depart_id = seek == null ? b.ToString() : "1619";
+                                        }
+                                    }
                                     var ss = service_Budget.Insert_CutBudget(temp);
 
                                     if (ss == "สำเร็จ")

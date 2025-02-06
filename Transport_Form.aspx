@@ -33,7 +33,7 @@
             padding: 3px;
         }
     </style>
-    <script type="text/javascript" src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js'></script>
+    <%--<script type="text/javascript" src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js'></script>--%>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
     <script type="text/javascript">
@@ -146,13 +146,41 @@
                                 </asp:DropDownList>
                             </div>
                         </div>
+                        <div class="row col-sm-12 col-md-6" runat="server" id="divLalaCar">
+                            <div class=" mb-2 ">
+                                <asp:Label runat="server" ID="Label3" Text="ประเภทการส่ง" CssClass=" s-15px "></asp:Label>
+                                <asp:DropDownList runat="server" ID="ddlCar" CssClass="btn border-1 dropdown-toggle s-15px shadow" OnSelectedIndexChanged="ddlCar_SelectedIndexChanged" AutoPostBack="true">
+                                    <asp:ListItem Text="เลือกรถเพื่อมารับของ" Value="0"></asp:ListItem>
+                                    <asp:ListItem Text="รถมอเตอร์ไซต์" Value="MOTORCYCLE"></asp:ListItem>
+                                    <asp:ListItem Text="รถกระบะตู้ทึบ" Value="TRUCK330"></asp:ListItem>
+                                    <asp:ListItem Text="รถเก๋ง 4 ประตู" Value="CAR"></asp:ListItem>
+                                    <asp:ListItem Text="รถกระบะ" Value="PICK_UP_TRUCK"></asp:ListItem>
 
+                                </asp:DropDownList>
+                            </div>
+                        </div>
+                        <div class="col-10 m-2">
+                            <div class="row border" runat="server" id="dv_DetailCar" visible="false">
+                                <div class="col-md-5 col-sm-5">
+                                    <asp:Image runat="server" ID="imgCar" Width="100%" />
+                                </div>
+                                <div class="col-md-7 col-sm-7">
+                                    <asp:Label runat="server" ID="lbCarSize" CssClass="form-text"></asp:Label>
+                                    <br />
+                                    <asp:Label runat="server" ID="lbCarDetail" CssClass="form-text"></asp:Label>
+                                    <br />
+                                    <asp:Label runat="server" ID="lbCarLoad" CssClass="form-text"></asp:Label>
+                                </div>
+
+                            </div>
+
+                        </div>
                         <asp:Label runat="server" ID="lbgroupSend" Text="ผู้ส่ง" CssClass="s-22px "></asp:Label>
                         <div class="border border-1 " style="border-radius: 15px; padding: 20px; width: 90%">
                             <div class="row col-sm-12 my-2">
                                 <div class=" input-group">
                                     <asp:Label runat="server" ID="lbFavorites" Text="Favorites" CssClass="input-group-text s-15px shadow" Visible="false"></asp:Label>
-                                    <asp:DropDownList runat="server" ID="ddlFavorites" CssClass="btn dropdown-toggle s-15px shadow" Visible="false" DataValueField="val" DataTextField="text" OnSelectedIndexChanged="ddlFavorites_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                    <asp:DropDownList runat="server" ID="ddlFavorites" CssClass="btn text-start  dropdown-toggle s-15px shadow" Visible="false" DataValueField="val" DataTextField="text" OnSelectedIndexChanged="ddlFavorites_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                 </div>
                             </div>
                             <div class="row col-sm-12 my-2">
@@ -171,19 +199,19 @@
                             <div class="row col-sm-12 my-2">
                                 <div class=" input-group">
                                     <asp:Label runat="server" ID="lbsrcProvinceName" Text="จังหวัด" CssClass="input-group-text s-15px shadow"></asp:Label>
-                                    <asp:DropDownList runat="server" ID="ddlsrcProvinceName" CssClass="btn   dropdown-toggle s-15px shadow" DataValueField="Province_ID" DataTextField="Province_Name" OnSelectedIndexChanged="ddlsrcProvinceName_SelectedIndexChanged" AutoPostBack="True"></asp:DropDownList>
+                                    <asp:DropDownList runat="server" ID="ddlsrcProvinceName" CssClass="btn text-start  dropdown-toggle s-15px shadow" DataValueField="Province_ID" DataTextField="Province_Name" OnSelectedIndexChanged="ddlsrcProvinceName_SelectedIndexChanged" AutoPostBack="True"></asp:DropDownList>
                                 </div>
                             </div>
                             <div class="row col-sm-12 my-2">
                                 <div class="input-group ">
                                     <asp:Label runat="server" ID="lbsrcCityName" Text="อำเภอ" CssClass=" input-group-text s-15px shadow"></asp:Label>
-                                    <asp:DropDownList runat="server" ID="ddlsrcCityName" CssClass="btn   dropdown-toggle s-15px shadow" DataValueField="City_ID" DataTextField="City_Name" OnSelectedIndexChanged="ddlsrcCityName_SelectedIndexChanged" AutoPostBack="True"></asp:DropDownList>
+                                    <asp:DropDownList runat="server" ID="ddlsrcCityName" CssClass="btn  text-start dropdown-toggle s-15px shadow" DataValueField="City_ID" DataTextField="City_Name" OnSelectedIndexChanged="ddlsrcCityName_SelectedIndexChanged" AutoPostBack="True"></asp:DropDownList>
                                 </div>
                             </div>
                             <div class="row col-sm-12 my-2">
                                 <div class=" input-group w-100">
                                     <asp:Label runat="server" ID="lbsrcDistrictName" Text="ตำบล" CssClass="input-group-text s-15px shadow"></asp:Label>
-                                    <asp:DropDownList runat="server" ID="ddlsrcDistrictName" CssClass="btn   dropdown-toggle s-15px shadow" DataValueField="Distinct_ID" DataTextField="Distinct_Name" OnSelectedIndexChanged="ddlsrcDistrictName_SelectedIndexChanged" AutoPostBack="True"></asp:DropDownList>
+                                    <asp:DropDownList runat="server" ID="ddlsrcDistrictName" CssClass="btn text-start  dropdown-toggle s-15px shadow" DataValueField="Distinct_ID" DataTextField="Distinct_Name" OnSelectedIndexChanged="ddlsrcDistrictName_SelectedIndexChanged" AutoPostBack="True"></asp:DropDownList>
                                 </div>
                             </div>
                             <div class="row col-sm-12 my-2">
@@ -222,7 +250,7 @@
                         <div class="row col-sm-12 my-2" style="margin-bottom: 10px;">
                             <div class="input-group ">
                                 <asp:Label runat="server" ID="lbExpress" Text="รูปแบบการจัดส่ง" CssClass="input-group-text s-15px shadow"></asp:Label>
-                                <asp:DropDownList runat="server" ID="ddlExpress" CssClass="btn   dropdown-toggle s-15px shadow" DataTextField="text" DataValueField="val" OnSelectedIndexChanged="ddlExpress_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                <asp:DropDownList runat="server" ID="ddlExpress" CssClass="btn  text-start dropdown-toggle s-15px shadow" DataTextField="text" DataValueField="val" OnSelectedIndexChanged="ddlExpress_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                 <%--<asp:TextBox runat="server" Text="Flash Express" Enabled="false" CssClass="form-control s-15px shadow text-center"></asp:TextBox>--%>
                             </div>
                         </div>
@@ -233,12 +261,7 @@
                                 <asp:RadioButton runat="server" ID="radioWorkOff" Text="OFFLINE" GroupName="SaleOn" CssClass="ml-4 mt-2 custom-radio " />
                             </div>
                         </div>
-                        <div class="row col-sm-12 my-2">
-                            <div class="input-group" runat="server" id="div_Receive">
-                                <asp:Label runat="server" ID="lbReceiveLocation" Text="ปลายทาง" CssClass="input-group-text s-15px shadow"></asp:Label>
-                                <asp:DropDownList runat="server" ID="ddlReceiveLocation" CssClass="btn dropdown-toggle s-15px shadow" DataValueField="val" DataTextField="text" OnSelectedIndexChanged="ddlReceiveLocation_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-                            </div>
-                        </div>
+                        
                         <div class="row col-sm-12 my-2">
                             <div class="input-group">
                                 <asp:Label runat="server" ID="Label4" Text="เบิกเพื่อใช้ในแผนก" CssClass="input-group-text s-15px shadow"></asp:Label>
@@ -266,6 +289,12 @@
                         <asp:Label runat="server" ID="Label2" Text="ผู้รับ" CssClass="s-22px"></asp:Label>
                         <div class="border border-1 " style="border-radius: 15px; padding: 20px; width: 100%">
                             <div class="row col-sm-12 my-2">
+                            <div class="input-group" runat="server" id="div_Receive">
+                                <asp:Label runat="server" ID="lbReceiveLocation" Text="ปลายทาง" CssClass="input-group-text s-15px shadow"></asp:Label>
+                                <asp:DropDownList runat="server" ID="ddlReceiveLocation" CssClass="btn text-start dropdown-toggle s-15px shadow" DataValueField="val" DataTextField="text" OnSelectedIndexChanged="ddlReceiveLocation_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                            </div>
+                        </div>
+                            <div class="row col-sm-12 my-2">
                                 <div class="input-group">
                                     <asp:Label runat="server" ID="lbdstName" Text="ชื่อ" CssClass="input-group-text s-15px shadow"></asp:Label>
                                     <asp:TextBox runat="server" ID="txtdstName" CssClass="form-control s-15px shadow" AutoCompleteType="Disabled"></asp:TextBox>
@@ -289,19 +318,19 @@
                             <div class="row  col-sm-12 my-2">
                                 <div class="input-group ">
                                     <asp:Label runat="server" ID="lbdstProvinceName" Text="จังหวัด " CssClass="input-group-text s-15px shadow"></asp:Label>
-                                    <asp:DropDownList runat="server" ID="ddldstProvinceName" CssClass="btn   dropdown-toggle s-15px shadow" DataValueField="Province_ID" DataTextField="Province_Name" OnSelectedIndexChanged="ddldstProvinceName_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                    <asp:DropDownList runat="server" ID="ddldstProvinceName" CssClass="btn text-start  dropdown-toggle s-15px shadow" DataValueField="Province_ID" DataTextField="Province_Name" OnSelectedIndexChanged="ddldstProvinceName_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                 </div>
                             </div>
                             <div class="row  col-sm-12 my-2">
                                 <div class=" input-group">
                                     <asp:Label runat="server" ID="lbdstCityName" Text="อำเภอ" CssClass="input-group-text s-15px shadow"></asp:Label>
-                                    <asp:DropDownList runat="server" ID="ddldstCityName" CssClass="btn   dropdown-toggle s-15px shadow" DataValueField="City_ID" DataTextField="City_Name" OnSelectedIndexChanged="ddldstCityName_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                    <asp:DropDownList runat="server" ID="ddldstCityName" CssClass="btn  text-start dropdown-toggle s-15px shadow" DataValueField="City_ID" DataTextField="City_Name" OnSelectedIndexChanged="ddldstCityName_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                 </div>
                             </div>
                             <div class="row  col-sm-12 my-2">
                                 <div class="input-group">
                                     <asp:Label runat="server" ID="lbdstDistrictName" Text="ตำบล" CssClass="input-group-text s-15px shadow"></asp:Label>
-                                    <asp:DropDownList runat="server" ID="ddldstDistrictName" CssClass="btn   dropdown-toggle s-15px shadow" DataValueField="Distinct_ID" DataTextField="Distinct_Name" OnSelectedIndexChanged="ddldstDistrictName_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                                    <asp:DropDownList runat="server" ID="ddldstDistrictName" CssClass="btn text-start  dropdown-toggle s-15px shadow" DataValueField="Distinct_ID" DataTextField="Distinct_Name" OnSelectedIndexChanged="ddldstDistrictName_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
                                 </div>
                             </div>
                             <div class="row  col-sm-12 my-2">
@@ -322,6 +351,48 @@
                         </div>
                     </div>
                 </div>
+                <div class="row my-2" runat="server" id="dv_Address_Google" visible="false" >
+                    <span class="text-center">โปรดเลือกที่อยู่ที่ถูกต้อง เพื่อความแม่นยำต่อการจัดส่ง</span>
+                    <div class="row">
+                        <div class="col m-2">
+                            <span>ที่อยู่ผู้ส่ง : </span>
+                            <asp:Label runat="server" ID="lbSRCAddress_Detail_Google" Visible="false"></asp:Label>
+                            <asp:DropDownList runat="server" ID="ddlSRC" CssClass="btn shadow" DataTextField="AddressDetail" DataValueField="No" OnSelectedIndexChanged="ddlSRC_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                            <asp:Label runat="server" ID="lbSRCCount" CssClass="mb-2"></asp:Label>
+                            <br />
+                            <iframe
+                            width="600"
+                            height="450"
+                            style="border: 0"
+                            loading="lazy"
+                            allowfullscreen
+                            referrerpolicy="no-referrer-when-downgrade"
+                            runat="server" id="iframe_SRC"
+                            ></iframe>
+                        </div>
+                        <div class="col m-2">
+                            <span>ที่อยู่ผู้รับ : </span>
+                            <asp:Label runat="server" ID="lbDSTAddress_Detail_Google" Visible="false"></asp:Label>
+                            <asp:DropDownList runat="server" ID="ddlDST" CssClass="btn shadow" DataTextField="AddressDetail" DataValueField="No" OnSelectedIndexChanged="ddlDST_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+                            <asp:Label runat="server" ID="lbDSTCount" CssClass="mb-2"></asp:Label>
+                            <br />
+                            <iframe
+                            width="600"
+                            height="450"
+                            style="border: 0"
+                            loading="lazy"
+                            allowfullscreen
+                            referrerpolicy="no-referrer-when-downgrade"
+                            runat="server" id="iframe_DST"
+                            ></iframe>
+                        </div>
+
+                    </div>
+                    
+                    <div style="text-align-last: center;" class="my-2">
+                        <asp:Button runat="server" ID="btnClearLocation_Google" CssClass="btn btn-warning" Text="แก้ไขที่อยู่" OnClick="btnClearLocation_Google_Click" UseSubmitBehavior="false" />
+                    </div>
+                </div>
 
                 <div class="row text-center">
                     <h3>
@@ -334,7 +405,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <asp:GridView runat="server" ID="gv_Big_Box" EmptyDataText="No Reccord." CssClass="table table-hover table-bordered small" Width="100%" AutoGenerateColumns="false" BorderStyle="None" RowStyle-BorderColor="Gray" RowStyle-CssClass="" AlternatingRowStyle-BackColor="LightGray">
+                    <asp:GridView runat="server" ID="gv_Big_Box" EmptyDataText="No Reccord." CssClass="table table-hover  table-bordered small" Width="100%" AutoGenerateColumns="false" BorderStyle="None" RowStyle-BorderColor="Gray" RowStyle-CssClass="" >
                         <Columns>
                             <asp:TemplateField  ItemStyle-HorizontalAlign="Center">
                                 <ItemTemplate>
@@ -502,12 +573,13 @@
                         </div>
                     </div>
                 </div>--%>
-
+                
 
                 <div class="row">
 
                     <div style="display: flex; justify-content: center;" class="mt-3">
-                        <asp:Button runat="server" ID="btnSave" Text="SAVE" CssClass="text-center btn btn-success s-15px" Width="100%" OnClick="btnSave_Click" />
+                        <asp:Button runat="server" ID="btnCheck" Text="Check" CssClass="text-center btn btn-warning s-15px" Width="100%" OnClick="btnCheck_Click"  Visible="false"/>
+                        <asp:Button runat="server" ID="btnSave" Text="SAVE" CssClass="text-center btn btn-success s-15px" Width="100%" OnClick="btnSave_Click" Visible="false" />
                     </div>
                     <div style="display: none;">
                         <div class="col-sm-2 input-group mb-2 w-25">

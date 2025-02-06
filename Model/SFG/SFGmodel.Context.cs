@@ -27,5 +27,7 @@ namespace Carrier.Model.SFG
     
         public virtual DbSet<SAP_VBRK_NEWSAP> SAP_VBRK_NEWSAP { get; set; }
         public virtual DbSet<SAP_VBRP_NEWSAP> SAP_VBRP_NEWSAP { get; set; }
+        public virtual DbSet<vSAP_Site> vSAP_Site { get; set; }
+        public virtual DbSet<vSAP_Site2> vSAP_Site2 { get; set; }
     }
 }

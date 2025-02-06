@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="SFGModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="SFGModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="SAP_VBRK_NEWSAP">
           <Key>
             <PropertyRef Name="VBELN" />
@@ -55,12 +55,99 @@
           <Property Name="DATE_FOR_CHECK" Type="date" Nullable="false" />
           <Property Name="SHOP_GR" Type="char" MaxLength="1" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'SFG.dbo.vSAP_Site' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vSAP_Site">
+          <Key>
+            <PropertyRef Name="SITE" />
+            <PropertyRef Name="SITENAME" />
+            <PropertyRef Name="REGION" />
+            <PropertyRef Name="LOCATION" />
+            <PropertyRef Name="CHANNEL" />
+            <PropertyRef Name="SITEGROUP" />
+            <PropertyRef Name="TYPE" />
+            <PropertyRef Name="GROUPSHOPTYPE" />
+            <PropertyRef Name="SHOPTYPE" />
+          </Key>
+          <Property Name="SITE" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="SITENAME" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="REGION" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LOCATION" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CHANNEL" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SITEGROUP" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TYPE" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="GROUPSHOPTYPE" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SHOPTYPE" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="POST" Type="varchar" MaxLength="10" />
+          <Property Name="Latitude" Type="decimal" Precision="18" Scale="10" />
+          <Property Name="Longitude" Type="decimal" Precision="18" Scale="10" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'SFG.dbo.vSAP_Site2' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vSAP_Site2">
+          <Key>
+            <PropertyRef Name="SITE" />
+            <PropertyRef Name="REGION" />
+            <PropertyRef Name="LOCATION" />
+            <PropertyRef Name="SITEGROUP" />
+            <PropertyRef Name="TYPE" />
+            <PropertyRef Name="GROUPSHOPTYPE" />
+            <PropertyRef Name="SHOPTYPE" />
+          </Key>
+          <Property Name="SiteStorage" Type="varchar" MaxLength="15" />
+          <Property Name="SITE" Type="char" MaxLength="4" Nullable="false" />
+          <Property Name="BrandName" Type="varchar" MaxLength="50" />
+          <Property Name="SITENAME" Type="varchar" MaxLength="100" />
+          <Property Name="REGION" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LOCATION" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CHANNEL" Type="varchar" MaxLength="50" />
+          <Property Name="SITEGROUP" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TYPE" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="GROUPSHOPTYPE" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SHOPTYPE" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="POST" Type="varchar" MaxLength="10" />
+          <Property Name="Latitude" Type="decimal" Precision="18" Scale="10" />
+          <Property Name="Longitude" Type="decimal" Precision="18" Scale="10" />
+        </EntityType>
         <EntityContainer Name="SFGModelStoreContainer">
           <EntitySet Name="SAP_VBRK_NEWSAP" EntityType="Self.SAP_VBRK_NEWSAP" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SAP_VBRP_NEWSAP" EntityType="Self.SAP_VBRP_NEWSAP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vSAP_Site" EntityType="Self.vSAP_Site" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vSAP_Site].[SITE] AS [SITE], 
+    [vSAP_Site].[SITENAME] AS [SITENAME], 
+    [vSAP_Site].[REGION] AS [REGION], 
+    [vSAP_Site].[LOCATION] AS [LOCATION], 
+    [vSAP_Site].[CHANNEL] AS [CHANNEL], 
+    [vSAP_Site].[SITEGROUP] AS [SITEGROUP], 
+    [vSAP_Site].[TYPE] AS [TYPE], 
+    [vSAP_Site].[GROUPSHOPTYPE] AS [GROUPSHOPTYPE], 
+    [vSAP_Site].[SHOPTYPE] AS [SHOPTYPE], 
+    [vSAP_Site].[POST] AS [POST], 
+    [vSAP_Site].[Latitude] AS [Latitude], 
+    [vSAP_Site].[Longitude] AS [Longitude]
+    FROM [dbo].[vSAP_Site] AS [vSAP_Site]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vSAP_Site2" EntityType="Self.vSAP_Site2" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [vSAP_Site2].[SiteStorage] AS [SiteStorage], 
+    [vSAP_Site2].[SITE] AS [SITE], 
+    [vSAP_Site2].[BrandName] AS [BrandName], 
+    [vSAP_Site2].[SITENAME] AS [SITENAME], 
+    [vSAP_Site2].[REGION] AS [REGION], 
+    [vSAP_Site2].[LOCATION] AS [LOCATION], 
+    [vSAP_Site2].[CHANNEL] AS [CHANNEL], 
+    [vSAP_Site2].[SITEGROUP] AS [SITEGROUP], 
+    [vSAP_Site2].[TYPE] AS [TYPE], 
+    [vSAP_Site2].[GROUPSHOPTYPE] AS [GROUPSHOPTYPE], 
+    [vSAP_Site2].[SHOPTYPE] AS [SHOPTYPE], 
+    [vSAP_Site2].[POST] AS [POST], 
+    [vSAP_Site2].[Latitude] AS [Latitude], 
+    [vSAP_Site2].[Longitude] AS [Longitude]
+    FROM [dbo].[vSAP_Site2] AS [vSAP_Site2]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="SFGModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -117,7 +204,59 @@
         <EntityContainer Name="SFGEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="SAP_VBRK_NEWSAP" EntityType="Self.SAP_VBRK_NEWSAP" />
           <EntitySet Name="SAP_VBRP_NEWSAP" EntityType="Self.SAP_VBRP_NEWSAP" />
+          <EntitySet Name="vSAP_Site" EntityType="SFGModel.vSAP_Site" />
+          <EntitySet Name="vSAP_Site2" EntityType="SFGModel.vSAP_Site2" />
         </EntityContainer>
+        <EntityType Name="vSAP_Site">
+          <Key>
+            <PropertyRef Name="SITE" />
+            <PropertyRef Name="SITENAME" />
+            <PropertyRef Name="REGION" />
+            <PropertyRef Name="LOCATION" />
+            <PropertyRef Name="CHANNEL" />
+            <PropertyRef Name="SITEGROUP" />
+            <PropertyRef Name="TYPE" />
+            <PropertyRef Name="GROUPSHOPTYPE" />
+            <PropertyRef Name="SHOPTYPE" />
+          </Key>
+          <Property Name="SITE" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="false" />
+          <Property Name="SITENAME" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="REGION" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LOCATION" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CHANNEL" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SITEGROUP" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TYPE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="GROUPSHOPTYPE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SHOPTYPE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="POST" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Latitude" Type="Decimal" Precision="18" Scale="10" />
+          <Property Name="Longitude" Type="Decimal" Precision="18" Scale="10" />
+        </EntityType>
+        <EntityType Name="vSAP_Site2">
+          <Key>
+            <PropertyRef Name="SITE" />
+            <PropertyRef Name="REGION" />
+            <PropertyRef Name="LOCATION" />
+            <PropertyRef Name="SITEGROUP" />
+            <PropertyRef Name="TYPE" />
+            <PropertyRef Name="GROUPSHOPTYPE" />
+            <PropertyRef Name="SHOPTYPE" />
+          </Key>
+          <Property Name="SiteStorage" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="SITE" Type="String" Nullable="false" MaxLength="4" FixedLength="true" Unicode="false" />
+          <Property Name="BrandName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SITENAME" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="REGION" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LOCATION" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CHANNEL" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SITEGROUP" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TYPE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="GROUPSHOPTYPE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SHOPTYPE" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="POST" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Latitude" Type="Decimal" Precision="18" Scale="10" />
+          <Property Name="Longitude" Type="Decimal" Precision="18" Scale="10" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -170,6 +309,44 @@
                 <ScalarProperty Name="SIZE" ColumnName="SIZE" />
                 <ScalarProperty Name="DATE_FOR_CHECK" ColumnName="DATE_FOR_CHECK" />
                 <ScalarProperty Name="SHOP_GR" ColumnName="SHOP_GR" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vSAP_Site">
+            <EntityTypeMapping TypeName="SFGModel.vSAP_Site">
+              <MappingFragment StoreEntitySet="vSAP_Site">
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="POST" ColumnName="POST" />
+                <ScalarProperty Name="SHOPTYPE" ColumnName="SHOPTYPE" />
+                <ScalarProperty Name="GROUPSHOPTYPE" ColumnName="GROUPSHOPTYPE" />
+                <ScalarProperty Name="TYPE" ColumnName="TYPE" />
+                <ScalarProperty Name="SITEGROUP" ColumnName="SITEGROUP" />
+                <ScalarProperty Name="CHANNEL" ColumnName="CHANNEL" />
+                <ScalarProperty Name="LOCATION" ColumnName="LOCATION" />
+                <ScalarProperty Name="REGION" ColumnName="REGION" />
+                <ScalarProperty Name="SITENAME" ColumnName="SITENAME" />
+                <ScalarProperty Name="SITE" ColumnName="SITE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vSAP_Site2">
+            <EntityTypeMapping TypeName="SFGModel.vSAP_Site2">
+              <MappingFragment StoreEntitySet="vSAP_Site2">
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="POST" ColumnName="POST" />
+                <ScalarProperty Name="SHOPTYPE" ColumnName="SHOPTYPE" />
+                <ScalarProperty Name="GROUPSHOPTYPE" ColumnName="GROUPSHOPTYPE" />
+                <ScalarProperty Name="TYPE" ColumnName="TYPE" />
+                <ScalarProperty Name="SITEGROUP" ColumnName="SITEGROUP" />
+                <ScalarProperty Name="CHANNEL" ColumnName="CHANNEL" />
+                <ScalarProperty Name="LOCATION" ColumnName="LOCATION" />
+                <ScalarProperty Name="REGION" ColumnName="REGION" />
+                <ScalarProperty Name="SITENAME" ColumnName="SITENAME" />
+                <ScalarProperty Name="BrandName" ColumnName="BrandName" />
+                <ScalarProperty Name="SITE" ColumnName="SITE" />
+                <ScalarProperty Name="SiteStorage" ColumnName="SiteStorage" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

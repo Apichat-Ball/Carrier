@@ -218,6 +218,7 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.Customer_Tax' does not have a pri
           <Property Name="Grade" Type="nvarchar" MaxLength="10" />
           <Property Name="Accept_Date" Type="datetime" />
           <Property Name="Accept" Type="nvarchar" MaxLength="5" />
+          <Property Name="UserID_View_Finger" Type="nvarchar" MaxLength="300" />
         </EntityType>
         <EntityType Name="Employee_Level">
           <Key>
@@ -242,6 +243,12 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.POSITION' does not have a primary
           <Property Name="limitPay" Type="decimal" Precision="18" Scale="2" />
           <Property Name="Flag" Type="char" MaxLength="1" />
           <Property Name="thPosition" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="SAP_Site">
+          <Key>
+            <PropertyRef Name="SiteStorage" />
+          </Key>
+          <Property Name="SiteStorage" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="WSHeadApproveBrand">
           <Key>
@@ -305,6 +312,7 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.vBrandAndHeadFC' does not have a 
           <EntitySet Name="DEPARTMENT" EntityType="Self.DEPARTMENT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Employee_Level" EntityType="Self.Employee_Level" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SAP_Site" EntityType="Self.SAP_Site" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WSHeadApproveBrand" EntityType="Self.WSHeadApproveBrand" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Customer_Tax" EntityType="Self.Customer_Tax" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -475,6 +483,7 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.vBrandAndHeadFC' does not have a 
           <Property Name="Grade" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Accept_Date" Type="DateTime" Precision="3" />
           <Property Name="Accept" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="UserID_View_Finger" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="InsideSFG_WFEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="BG_HApprove" EntityType="Self.BG_HApprove" />
@@ -487,6 +496,7 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.vBrandAndHeadFC' does not have a 
           <EntitySet Name="Employee_Level" EntityType="InsideSFG_WFModel.Employee_Level" />
           <EntitySet Name="POSITIONs" EntityType="InsideSFG_WFModel.POSITION" />
           <EntitySet Name="vBrandAndHeadFCs" EntityType="InsideSFG_WFModel.vBrandAndHeadFC" />
+          <EntitySet Name="SAP_Site" EntityType="InsideSFG_WFModel.SAP_Site" />
         </EntityContainer>
         <EntityType Name="BG_ForeCast">
           <Key>
@@ -651,6 +661,12 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.vBrandAndHeadFC' does not have a 
           <Property Name="UserID_Approve" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="ReserveGroupCompanyID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="SAP_Site">
+          <Key>
+            <PropertyRef Name="SiteStorage" />
+          </Key>
+          <Property Name="SiteStorage" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -705,6 +721,7 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.vBrandAndHeadFC' does not have a 
           <EntitySetMapping Name="Employees">
             <EntityTypeMapping TypeName="InsideSFG_WFModel.Employee">
               <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="UserID_View_Finger" ColumnName="UserID_View_Finger" />
                 <ScalarProperty Name="Accept" ColumnName="Accept" />
                 <ScalarProperty Name="Accept_Date" ColumnName="Accept_Date" />
                 <ScalarProperty Name="Grade" ColumnName="Grade" />
@@ -945,6 +962,13 @@ warning 6002: The table/view 'InsideSFG_WF.dbo.vBrandAndHeadFC' does not have a 
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="department_" ColumnName="department_" />
                 <ScalarProperty Name="departmentID" ColumnName="departmentID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SAP_Site">
+            <EntityTypeMapping TypeName="InsideSFG_WFModel.SAP_Site">
+              <MappingFragment StoreEntitySet="SAP_Site">
+                <ScalarProperty Name="SiteStorage" ColumnName="SiteStorage" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

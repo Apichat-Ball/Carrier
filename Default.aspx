@@ -28,7 +28,7 @@
         }
 
         .img-mt--12px {
-            margin-top: -26px;
+            margin-top: -5px;
             margin-left: -52px;
             margin-right: 64px;
         }
@@ -346,7 +346,7 @@
                 <div class="col-sm-12 col-md-6 col-lg-4 col-xl-3 gy-3">
                     <div class=" input-group">
                         <asp:Label runat="server" ID="Label1" Text="สถานะเอกสาร" CssClass="input-group-text small"></asp:Label>
-                        <asp:DropDownList runat="server" ID="ddlStatusOrder" CssClass="btn dropdown-item-text s-15px shadow small" OnSelectedIndexChanged="ddlStatusOrder_SelectedIndexChanged" AutoPostBack="true">
+                        <asp:DropDownList runat="server" ID="ddlStatusOrder" CssClass="btn text-start dropdown-item-text s-15px shadow small" OnSelectedIndexChanged="ddlStatusOrder_SelectedIndexChanged" AutoPostBack="true">
                             <asp:ListItem Text="ยังไม่ได้เรียกรถ" Value="1" Selected="True"></asp:ListItem>
                             <asp:ListItem Text="เรียกรถแล้ว" Value="2"></asp:ListItem>
                             <asp:ListItem Text="ยกเลิก" Value="3"></asp:ListItem>
@@ -397,7 +397,8 @@
                     <asp:Label runat="server" ID="lbStatusSearch" Text="First" Visible="false"></asp:Label>
                     <%--</div>--%>
                 </div>
-                <div class="col-sm-12 col-md-12 col-lg-2 col-xl-1 gy-3">
+                <div class="col-xl-1"></div>
+                <div class="col-sm-12 col-md-12 col-lg-2 col-xl-2 gy-3">
                     <%--<div class="col-sm-1">--%>
                     <asp:Button runat="server" ID="btnExport" Text="Export/Day" CssClass="btn btn-primary w-100" OnClick="btnExport_Click" UseSubmitBehavior="false" ToolTip="" />
                     <%--</div>--%>
@@ -405,7 +406,7 @@
                 <div class="col-sm-12 col-md-12 col-lg-2 col-xl-1 gy-3">
                     <div class=" input-group" style="flex-wrap: nowrap;">
                         <asp:Label runat="server" ID="Label3" Text="บริษัทขนส่ง" CssClass="input-group-text small "></asp:Label>
-                        <asp:DropDownList runat="server" ID="ddlTypsend" CssClass="btn dropdown-item-text s-15px shadow small maxwidthnone" OnSelectedIndexChanged="ddlStatusOrder_SelectedIndexChanged" AutoPostBack="true">
+                        <asp:DropDownList runat="server" ID="ddlTypsend" CssClass="btn text-start dropdown-item-text s-15px shadow small maxwidthnone" OnSelectedIndexChanged="ddlStatusOrder_SelectedIndexChanged" AutoPostBack="true">
                             <asp:ListItem Text="FlashExpress" Value="1" Selected="True"></asp:ListItem>
                             <asp:ListItem Text="Lalamove" Value="2"></asp:ListItem>
                         </asp:DropDownList>

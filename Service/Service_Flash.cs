@@ -4,6 +4,7 @@ using Carrier.Model.InsideSFG_WF;
 using Carrier.Model.Online_Lazada;
 using Carrier.Model.Whale;
 using Carrier.Model.Budget;
+using Carrier.Model.SFG;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Newtonsoft.Json.Linq;
@@ -30,6 +31,8 @@ namespace Carrier.Service
         CarrierEntities entities_Carrier;
         InsideSFG_WFEntities entities_InsideSFG_WF;
         BudgetEntities budget_Entities;
+        SFGEntities sFG_Entities;
+        
 
         public Service_Flash()
         {
@@ -38,6 +41,7 @@ namespace Carrier.Service
             entities_Carrier = new CarrierEntities();
             entities_InsideSFG_WF = new InsideSFG_WFEntities();
             budget_Entities = new BudgetEntities();
+            sFG_Entities = new SFGEntities();
         }
         public Model_Trackingno CreateOrderFLASH(string docno, string favor)
         {
@@ -54,7 +58,8 @@ namespace Carrier.Service
                                     "&dstDetailAddress=" + (objOrder.dstDetailAddress == null ? "" : objOrder.dstDetailAddress)
                                         + (objOrder.dstDistrictName != null && objOrder.dstDistrictName != "" ? " " + objOrder.dstDistrictName : "")
                                         + (objOrder.dstCityName != null && objOrder.dstCityName != "" ? " " + objOrder.dstCityName : "")
-                                        + (objOrder.dstProvinceName != null && objOrder.dstProvinceName != "" ? " " + objOrder.dstProvinceName : "");
+                                        + (objOrder.dstProvinceName != null && objOrder.dstProvinceName != "" ? " " + objOrder.dstProvinceName : "") +
+                                        "&dstDistrictName=" + (objOrder.dstDistrictName != null && objOrder.dstDistrictName != "" ? " " + objOrder.dstDistrictName : "");
                 if (objOrder.dstPhone == "" || objOrder.dstPhone == "-" || objOrder.dstPhone == " ")
                 {
                     headerpara += "&dstName=" + objOrder.dstName +
@@ -805,7 +810,7 @@ namespace Carrier.Service
             
             return d;
         }
-        public string Validate_Transport(Order item, string receive, string favorites)
+        public string Validate_Transport(Order item, string receive, string favorites, string Car)
         {
             if (item.srcName == "")
             {
@@ -905,6 +910,29 @@ namespace Carrier.Service
             }
             else
             {
+
+                var site = sFG_Entities.vSAP_Site2.Where(w=>w.SiteStorage == item.siteStorage).FirstOrDefault();
+                var BrandBud = budget_Entities.Departments.Where(w => w.Department_ID == item.SDpart).Select(s => s.ShortBrand).FirstOrDefault();
+                var siteCar = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage == item.siteStorage && w.Brand == BrandBud && w.Channel == item.saleOn).FirstOrDefault();
+                if(site != null && siteCar == null)
+                {
+                    var profit = entities_InsideSFG_WF.BG_HApprove_Profitcenter.Where(w => w.Depart_Short == BrandBud).FirstOrDefault();
+                    if(profit != null)
+                    {
+                        Site_Profit sitestorageAdd = new Site_Profit();
+                        sitestorageAdd.Brand = BrandBud;
+                        sitestorageAdd.Channel = item.saleOn;
+                        sitestorageAdd.COMCODE = profit.ComCode;
+                        sitestorageAdd.Profit = item.saleOn == "OFFLINE" ? profit.Profit_Offline : profit.Profit_Online;
+                        sitestorageAdd.Costcenter = item.saleOn == "OFFLINE" ? profit.CostCenter_Offline : profit.CostCenter_Online;
+                        sitestorageAdd.Site_Stroage = item.siteStorage;
+                        sitestorageAdd.Sale_Channel = item.saleChannel;
+                        sitestorageAdd.Date_Create = DateTime.Now;
+                        entities_Carrier.Site_Profit.Add(sitestorageAdd);
+                        entities_Carrier.SaveChanges();
+                    }
+                }
+
                 //if (item.SDpart == "1619")
                 //{
                 //    var seek = budget_Entities.Departments.Where(w => w.Department_Name.Contains("SEEK") && w.Flag == "F" && w.Department_ID != "1619" && w.ShortBrand != "" ).Select(s=>s.ShortBrand).ToList();
@@ -1039,6 +1067,10 @@ namespace Carrier.Service
                 //}
             }
 
+            if(item.Transport_Type == 2 && Car == "0")
+            {
+                return "กรุณาเลือกประเภทรถมารับ";
+            }
 
             return "PASS";
         }

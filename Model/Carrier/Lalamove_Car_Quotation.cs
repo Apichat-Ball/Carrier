@@ -12,17 +12,13 @@ namespace Carrier.Model.Carrier
     using System;
     using System.Collections.Generic;
     
-    public partial class Order_Big_Box
+    public partial class Lalamove_Car_Quotation
     {
-        public int RunID { get; set; }
-        public string BFID { get; set; }
-        public string Docno { get; set; }
-        public string Status { get; set; }
-        public string StatusNotifyCode { get; set; }
-        public string StatusNotifyText { get; set; }
-        public string StatusCal { get; set; }
-        public string Lala_Car_Key { get; set; }
-        public string Lala_Car_Status { get; set; }
-        public string status_Auto { get; set; }
+        public string quotationId { get; set; }
+        public Nullable<System.DateTime> scheduleAt { get; set; }
+        public Nullable<System.DateTime> expiresAt { get; set; }
+        public string serviceType { get; set; }
+        public Nullable<double> priceBreakdown_total { get; set; }
+        public Nullable<int> item_quantity { get; set; }
     }
 }

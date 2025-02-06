@@ -12,17 +12,16 @@ namespace Carrier.Model.Carrier
     using System;
     using System.Collections.Generic;
     
-    public partial class Order_Big_Box
+    public partial class Carrier_Api_Key
     {
-        public int RunID { get; set; }
-        public string BFID { get; set; }
-        public string Docno { get; set; }
-        public string Status { get; set; }
-        public string StatusNotifyCode { get; set; }
-        public string StatusNotifyText { get; set; }
-        public string StatusCal { get; set; }
-        public string Lala_Car_Key { get; set; }
-        public string Lala_Car_Status { get; set; }
-        public string status_Auto { get; set; }
+        public int Api_No { get; set; }
+        public string Transport_Type { get; set; }
+        public string Url { get; set; }
+        public string API_Key { get; set; }
+        public string API_Secret { get; set; }
+        public string UserID { get; set; }
+        public string Email { get; set; }
+        public string Userweb { get; set; }
+        public string Pass { get; set; }
     }
 }

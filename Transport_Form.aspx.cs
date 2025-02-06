@@ -13,6 +13,8 @@ using Carrier.Service;
 using System.IO;
 using System.Net;
 using System.Web.Services;
+using RestSharp;
+using Newtonsoft.Json.Linq;
 
 namespace Carrier
 {
@@ -25,6 +27,7 @@ namespace Carrier
         BudgetEntities budget_Entities;
 
         Service_Flash service_Flashs;
+        Service_Budget service_Budget;
         public Transport_Form()
         {
             Carrier_Entities = new CarrierEntities();
@@ -32,7 +35,9 @@ namespace Carrier
             Whale_Entities = new WhaleEntities();
             Online_Lazada_Entities = new Online_LazadaEntities();
             budget_Entities = new BudgetEntities();
+
             service_Flashs = new Service_Flash();
+            service_Budget = new Service_Budget();
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -109,22 +114,78 @@ namespace Carrier
                                      datesend = order.Date_send,
                                      status = orderItem.Status
                                  }).ToList().FirstOrDefault();
-
+                    var bgbox = Carrier_Entities.Order_Big_Box.Where(w => w.BFID == txtDocno.Text).FirstOrDefault();
                     loadPage(query.datesend);
                     ddlTypeSend.SelectedValue = query.TypeSend.ToString();
                     ddlTypeSend.Enabled = false;
                     ddlExpress.SelectedValue = query.Transport_Type.ToString();
                     ddlExpress.Enabled = query.TypeSend.ToString() == "1" && PM != null ? true: false;
-                    if(query.Transport_Type == 2 && query.status == null && PM != null)
+                    if (query.Transport_Type == 2  )
                     {
-                        btnNotiLalamove.Visible = true;
-                        dv_deliveryID.Visible = true;
-                        
+                        if(PM != null)
+                        {
+                            if (query.status == null)
+                            {
+                                btnNotiLalamove.Visible = true;
+                                dv_deliveryID.Visible = true;
+                                divLalaCar.Visible = true;
+                                ddlCar.Enabled = false;
+                                dv_DetailCar.Visible = true;
+                                ddlCar.SelectedValue = bgbox.Lala_Car_Key;
+                                setCar();
+                            }
+                            else
+                            {
+                                btnNotiLalamove.Visible = false;
+                                dv_deliveryID.Visible = false;
+                                divLalaCar.Visible = true;
+                                ddlCar.Enabled = false;
+                                dv_DetailCar.Visible = true;
+                                ddlCar.SelectedValue = bgbox.Lala_Car_Key;
+                                setCar();
+                            }
+
+
+                            
+                            
+                        }
+                        else
+                        {
+                            btnNotiLalamove.Visible = false;
+                            dv_deliveryID.Visible = false;
+                            divLalaCar.Visible = true;
+                            ddlCar.Enabled = false;
+                            dv_DetailCar.Visible = true;
+                            ddlCar.SelectedValue = bgbox.Lala_Car_Key;
+                            setCar();
+                        }
+
+                        var location = Carrier_Entities.Lalamove_Location_Google_Temp.Where(w => w.BFID == txtDocno.Text).ToList();
+                        if (location.Count() != 0)
+                        {
+                            var src = location.Where(w => w.path == "SRC").FirstOrDefault();
+                            iframe_SRC.Src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow&q=" + src.Lat + "," + src.Lng + "&language=TH";
+                            lbSRCAddress_Detail_Google.Visible = true;
+                            lbSRCAddress_Detail_Google.Text = src.Address_Out;
+                            ddlSRC.Visible = false;
+
+                            var dst = location.Where(w => w.path == "DST").FirstOrDefault();
+                            iframe_DST.Src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow&q=" + dst.Lat + "," + dst.Lng + "&language=TH";
+                            lbDSTAddress_Detail_Google.Visible = true;
+                            lbDSTAddress_Detail_Google.Text = dst.Address_Out;
+                            ddlDST.Visible = false;
+
+                            btnClearLocation_Google.Visible = false;
+                            dv_Address_Google.Visible = true;
+                        }
                     }
                     else
                     {
                         btnNotiLalamove.Visible = false;
                         dv_deliveryID.Visible = false;
+                        divLalaCar.Visible = true;
+                        dv_DetailCar.Visible = false;
+                        ddlCar.SelectedValue = "0";
                     }
 
                     txtsrcName.Text = query.SrcName;
@@ -284,7 +345,7 @@ namespace Carrier
                     }
                     else
                     {
-                        gv_Big_Box.HeaderRow.Cells[0].Visible = false;
+                        gv_Big_Box.HeaderRow.Cells[0].Visible = true;
                         gv_Big_Box.HeaderRow.Cells[2].Visible = false;
                         divPrintAll.Visible = false;
                         var calcar = Carrier_Entities.Calculate_Car.Where(w => w.Docno == query.Docno).FirstOrDefault();
@@ -382,12 +443,61 @@ namespace Carrier
                             }
                             else
                             {
-                                if(orderIt.Status == "C")
+                                if(orderIt.Status == "SL")
+                                {
+                                    var checkBigBox = Carrier_Entities.Order_Big_Box.Where(w => w.BFID == txtDocno.Text && w.Docno == lbBBoxID.Text).FirstOrDefault();
+                                    if (checkBigBox.Lala_Car_Status != null)
+                                    {
+                                        var codeStatus = checkBigBox.Lala_Car_Status;
+                                        var statusTH = Carrier_Entities.Lalamove_Car_Status.Where(w => w.Status_Lala_Code == codeStatus).FirstOrDefault();
+                                        if (statusTH != null)
+                                        {
+                                            lbStatuspno.Text = statusTH.Status_Lala_Name_TH;
+                                            switch (statusTH.Status_Lala_Code)
+                                            {
+                                                case "PICKED_UP":
+                                                case "ON_GOING":
+                                                case "ASSIGNING_DRIVER":
+                                                    lbStatuspno.BackColor = System.Drawing.Color.Orange;
+                                                    lbStatuspno.ForeColor = System.Drawing.Color.White;
+                                                    lbStatuspno.CssClass = "status-tracking";
+                                                    break;
+                                                case "CANCELED":
+                                                case "EXPIRED":
+                                                    lbStatuspno.BackColor = System.Drawing.Color.PaleVioletRed;
+                                                    lbStatuspno.ForeColor = System.Drawing.Color.White;
+                                                    lbStatuspno.CssClass = "status-tracking";
+                                                    break;
+                                                case "COMPLETED":
+                                                    lbStatuspno.BackColor = System.Drawing.Color.LimeGreen;
+                                                    lbStatuspno.ForeColor = System.Drawing.Color.White;
+                                                    lbStatuspno.CssClass = "status-tracking";
+                                                    break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            lbStatuspno.Text = "ส่งผ่าน Lalamove";
+                                            lbStatuspno.BackColor = System.Drawing.Color.LimeGreen;
+                                            lbStatuspno.ForeColor = System.Drawing.Color.White;
+                                            lbStatuspno.CssClass = "status-tracking";
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        lbStatuspno.Text = "ส่งผ่าน Lalamove";
+                                    }
+                                    gv_Big_Box.HeaderRow.Cells[6].Text = "สถานะกล่อง";
+                                    lbStatuspno.Visible = true;
+                                }
+                                else if(orderIt.Status == "C")
                                 {
                                     lbStatuspno.Text = "ยกเลิกแล้ว";
                                     gv_Big_Box.HeaderRow.Cells[6].Text = "สถานะกล่อง";
                                     lbStatuspno.Visible = true;
                                 }
+                                
                                 
                             }
                         }
@@ -407,9 +517,13 @@ namespace Carrier
                         }
                         else
                         {
-                            lbStatuspno.BackColor = System.Drawing.Color.LimeGreen;
-                            lbStatuspno.ForeColor = System.Drawing.Color.White;
-                            lbStatuspno.CssClass = "status-tracking";
+                            if(orderIt.Status != "SL")
+                            {
+                                lbStatuspno.BackColor = System.Drawing.Color.LimeGreen;
+                                lbStatuspno.ForeColor = System.Drawing.Color.White;
+                                lbStatuspno.CssClass = "status-tracking";
+                            }
+                            
                         }
 
                         
@@ -422,7 +536,7 @@ namespace Carrier
                         }
                         else
                         {
-                            row.Cells[0].Visible = false;
+                            row.Cells[0].Visible = true;
                             row.Cells[2].Visible = false;
                         }
 
@@ -571,11 +685,21 @@ namespace Carrier
                     ddlReceiveLocation.DataBind();
                     lbFavorites.Visible = true;
                     ddlFavorites.Visible = true;
-                    if (ddlExpress.SelectedValue == "1")
-                    {
+                    //if (ddlExpress.SelectedValue == "1")
+                    //{
                         ddlTypeSend.SelectedValue = "1";
                         ddlTypeSend.Enabled = false;
-                    }
+                        divLalaCar.Visible = false;
+                        dv_DetailCar.Visible = false;
+                        btnCheck.Visible = false;
+                        btnSave.Visible = true;
+                    //}
+                    //else
+                    //{
+                    //    btnCheck.Visible = true;
+                    //    btnSave.Visible = false;
+                        
+                    //}
 
                     gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
                     gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
@@ -898,14 +1022,14 @@ namespace Carrier
                     ddlsrcProvinceName.SelectedValue = "1";
                     var provinceSFG = Convert.ToInt32(ddlsrcProvinceName.SelectedValue);
 
-                    ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSFG).OrderBy(o=>o.City_Name).ToList();
+                    ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSFG).OrderBy(o => o.City_Name).ToList();
                     ddlsrcCityName.DataBind();
                     ddlsrcCityName.SelectedValue = "20";
                     ddlsrcCityName.Enabled = true;
 
                     ddlsrcDistrictName.Enabled = true;
                     var citySFG = Convert.ToInt32(ddlsrcCityName.SelectedValue);
-                    ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citySFG).OrderBy(o=>o.Distinct_Name).ToList();
+                    ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citySFG).OrderBy(o => o.Distinct_Name).ToList();
                     ddlsrcDistrictName.DataBind();
                     ddlsrcDistrictName.SelectedValue = "119";
                     txtsrcPostalCode.Text = "10120";
@@ -921,18 +1045,27 @@ namespace Carrier
                     ddlsrcProvinceName.SelectedValue = "5";
                     var provinceSDC1 = Convert.ToInt32(ddlsrcProvinceName.SelectedValue);
 
-                    ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSDC1).OrderBy(o=>o.City_Name).ToList();
+                    ddlsrcCityName.DataSource = Whale_Entities.Cities.Where(w => w.Province_ID == provinceSDC1).OrderBy(o => o.City_Name).ToList();
                     ddlsrcCityName.DataBind();
                     ddlsrcCityName.SelectedValue = "755";
                     ddlsrcCityName.Enabled = true;
 
                     ddlsrcDistrictName.Enabled = true;
                     var citySDC1 = Convert.ToInt32(ddlsrcCityName.SelectedValue);
-                    ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citySDC1).OrderBy(o=>o.Distinct_Name).ToList();
+                    ddlsrcDistrictName.DataSource = Whale_Entities.Districts.Where(w => w.City_ID == citySDC1).OrderBy(o => o.Distinct_Name).ToList();
                     ddlsrcDistrictName.DataBind();
                     ddlsrcDistrictName.SelectedValue = "483";
                     txtsrcPostalCode.Text = "13170";
-                    txtsrcDetailAddress.Text = "บริษัท เอส.ดี.ซี วัน จำกัด " + "59/1 ม.1 ";
+                    if (ddlExpress.SelectedValue == "2")
+                    {
+                        txtsrcDetailAddress.Text = "S.D.C ONE CO.,LTD. 59/, 1 ";
+
+                    }
+                    else
+                    {
+
+                        txtsrcDetailAddress.Text = "บริษัท เอส.ดี.ซี วัน จำกัด " + "59/1 ม.1 ";
+                    }
 
                     break;
                 case "ROX":
@@ -989,7 +1122,15 @@ namespace Carrier
                         ddldstDistrictName.DataBind();
                         ddldstDistrictName.SelectedValue = "483";
                         txtdstPostalCode.Text = "13170";
-                        txtdstDetailAddress.Text = "บริษัท เอส.ดี.ซี วัน จำกัด " + "59/1 ม.1 ";
+                        if(ddlExpress.SelectedValue == "2")
+                        {
+                            txtdstDetailAddress.Text = "S.D.C ONE CO.,LTD. 59/, 1 ";
+                        }
+                        else
+                        {
+                            txtdstDetailAddress.Text = "บริษัท เอส.ดี.ซี วัน จำกัด " + "59/1 ม.1 ";
+                        }
+                        
                         break;
                     case "SFG":
 
@@ -1218,7 +1359,16 @@ namespace Carrier
             GridViewRow row = (GridViewRow)btnPDF.NamingContainer;
             Label lbBBoxID = (Label)row.FindControl("lbBBoxID");
             //เปิดหน้าแสดง PDF
-            Response.Redirect("Transport_bill?Docno=" + lbBBoxID.Text);
+            if(ddlExpress.SelectedValue == "1")
+            {
+                Response.Redirect("Transport_bill?Docno=" + lbBBoxID.Text);
+            }
+            else
+            {
+
+                Response.Redirect("https://www.sfg-th.com/Lalamove_Driver/Lalamove_PrintLabel.aspx?BFID=" + service_Budget.Encrypt(txtDocno.Text));
+            }
+            
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
@@ -1241,6 +1391,11 @@ namespace Carrier
                 //    newId = newId.Substring(0, 2) + newId.Substring(2, 10 - lastId.ToString().Length) + lastId.ToString();
                 //}
                 #endregion
+
+                //if(ddlExpress.SelectedValue == "2")
+                //{
+                //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ขณะนี้ระบบ Lalamove กำลังปรับปรุงอาจใช้เวลาประมาณ 1 - 2 วัน')", true);
+                //}
 
                 #region CancelOrder
                 var docnoC = txtDocno.Text;
@@ -1365,7 +1520,7 @@ namespace Carrier
                             {
                                 item.saleOn = radioWorkOff.Text;
                             }
-                            var vali = service_Flashs.Validate_Transport(item, ddlReceiveLocation.SelectedValue, ddlFavorites.SelectedValue);
+                            var vali = service_Flashs.Validate_Transport(item, ddlReceiveLocation.SelectedValue, ddlFavorites.SelectedValue, ddlCar.SelectedValue);
                             if (vali != "PASS")
                             {
                                 checkVali.Add(vali);
@@ -1379,6 +1534,7 @@ namespace Carrier
                     }
                     else
                     {
+                        var docnoForSendmail = "";
                         foreach (GridViewRow row in gv_Big_Box.Rows)
                         {
                             if (row.RowIndex != ss)
@@ -1448,7 +1604,7 @@ namespace Carrier
                                                        srcPostal = tax.Postal1
 
                                                    }).ToList().FirstOrDefault();
-
+                                docnoForSendmail = newId;
                                 //เก็บข้อมูลทั้งหมดที่กรอกเพื่อไป check และไปใช้ส่ง api และเก็บเข้า base
                                 var item = new Order
                                 {
@@ -1497,73 +1653,75 @@ namespace Carrier
                                 //var vali = service_Flashs.Validate_Transport(item, ddlReceiveLocation.SelectedValue, ddlFavorites.SelectedValue);
                                 //if (vali == "PASS")
                                 //{
-                                    Carrier_Entities.Orders.Add(item);
-                                    Carrier_Entities.SaveChanges();
-                                    if (item.Transport_Type == 1)
+                                Carrier_Entities.Orders.Add(item);
+                                Carrier_Entities.SaveChanges();
+                                if (item.Transport_Type == 1)
+                                {
+                                    var res = service_Flashs.CreateOrderFLASH(newId, ddlFavorites.SelectedValue);
+                                    //Check การสร้าง order 
+                                    if (res.success == true)
                                     {
-                                        var res = service_Flashs.CreateOrderFLASH(newId, ddlFavorites.SelectedValue);
-                                        //Check การสร้าง order 
-                                        if (res.success == true)
+                                        String originalPath = new Uri(HttpContext.Current.Request.Url.AbsoluteUri).OriginalString;
+                                        string filePath = originalPath.Substring(0, originalPath.LastIndexOf("/Transport_Form")) + "/PDFFile/" + newId + ".pdf";
+                                        //Check path ของไฟล์ที่จะเปิดว่าเปิดได้หรือเปล่าถ้าได้ให้ลบ
+                                        if (File.Exists(filePath))
                                         {
-                                            String originalPath = new Uri(HttpContext.Current.Request.Url.AbsoluteUri).OriginalString;
-                                            string filePath = originalPath.Substring(0, originalPath.LastIndexOf("/Transport_Form")) + "/PDFFile/" + newId + ".pdf";
-                                            //Check path ของไฟล์ที่จะเปิดว่าเปิดได้หรือเปล่าถ้าได้ให้ลบ
-                                            if (File.Exists(filePath))
-                                            {
-                                                File.Delete(filePath);
-                                            }
-                                            //ทำการสร้างไฟล์ขึ้นมาใหม่
-                                            var returnText = service_Flashs.Get_Docment(newId, "/Transport_Form");
-                                            btnSave.Visible = false;
-
-                                            foreach (GridViewRow rows in gv_Small_Box.Rows)
-                                            {
-                                                Carrier_Entities.Order_Box.Add(new Order_Box { Docno = newId, Box_ID = Convert.ToInt32(((Label)rows.FindControl("lbBox_ID")).Text), Box_Name = ((Label)rows.FindControl("lbBox_Name")).Text, Qty = Convert.ToInt32(((TextBox)rows.FindControl("txtQty")).Text) });
-                                            }
-                                            Carrier_Entities.SaveChanges();
-                                            ClientScript.RegisterStartupScript(this.GetType(), "Success", "<script type='text/javascript'>alert('succes : " + res.success + " Tracking NO : " + res.trackingno + "');window.location='Transport_Form?Docno=" + BBID + "';</script>'");
-
-                                            Carrier_Entities.Order_Big_Box.Add(new Order_Big_Box { BFID = BBID, Docno = newId, Status = "A" });
-                                            Carrier_Entities.SaveChanges();
+                                            File.Delete(filePath);
                                         }
-                                        else
-                                        {
-                                            var Run = Carrier_Entities.RunDocnoes.Where(w => w.Type == "BF" && w.Year == DateTime.Now.Year).FirstOrDefault();
-                                            Run.RunNo = Run.RunNo - 1;
-                                            Carrier_Entities.SaveChanges();
-                                            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Process : " + res.success + " Message : " + res.trackingno + "')", true);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        Order_Item order = new Order_Item
-                                        {
-                                            Docno = item.Docno,
-                                            Date_Success = null,
-                                            sign = null,
-                                            pno = null,
-                                            mchId = null,
-                                            sortCode = null,
-                                            dstStoreName = null,
-                                            sortingLineCode = null,
-                                            Qty = 1,
-                                            earlyFlightEnabled = null,
-                                            packEnabled = null,
-                                            upcountryCharge = null,
-                                            TypeSendKO = ddlFavorites.SelectedValue == "select" ? "SFG" : ddlFavorites.SelectedValue,
-                                            
-                                        };
-                                        Carrier_Entities.Order_Item.Add(order);
-                                        Carrier_Entities.SaveChanges();
+                                        //ทำการสร้างไฟล์ขึ้นมาใหม่
+                                        var returnText = service_Flashs.Get_Docment(newId, "/Transport_Form");
+                                        btnSave.Visible = false;
+
                                         foreach (GridViewRow rows in gv_Small_Box.Rows)
                                         {
                                             Carrier_Entities.Order_Box.Add(new Order_Box { Docno = newId, Box_ID = Convert.ToInt32(((Label)rows.FindControl("lbBox_ID")).Text), Box_Name = ((Label)rows.FindControl("lbBox_Name")).Text, Qty = Convert.ToInt32(((TextBox)rows.FindControl("txtQty")).Text) });
                                         }
                                         Carrier_Entities.SaveChanges();
-                                        ClientScript.RegisterStartupScript(this.GetType(), "Success", "<script type='text/javascript'>alert('succes : Succes ');window.location='Transport_Form?Docno=" + BBID + "';</script>'");
+                                        ClientScript.RegisterStartupScript(this.GetType(), "Success", "<script type='text/javascript'>alert('succes : " + res.success + " Tracking NO : " + res.trackingno + "');window.location='Transport_Form?Docno=" + BBID + "';</script>'");
+
                                         Carrier_Entities.Order_Big_Box.Add(new Order_Big_Box { BFID = BBID, Docno = newId, Status = "A" });
                                         Carrier_Entities.SaveChanges();
                                     }
+                                    else
+                                    {
+                                        var Run = Carrier_Entities.RunDocnoes.Where(w => w.Type == "BF" && w.Year == DateTime.Now.Year).FirstOrDefault();
+                                        Run.RunNo = Run.RunNo - 1;
+                                        Carrier_Entities.SaveChanges();
+                                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Process : " + res.success + " Message : " + res.trackingno + "')", true);
+                                    }
+                                }
+                                else
+                                {
+                                    Order_Item order = new Order_Item
+                                    {
+                                        Docno = item.Docno,
+                                        Date_Success = null,
+                                        sign = null,
+                                        pno = null,
+                                        mchId = null,
+                                        sortCode = null,
+                                        dstStoreName = null,
+                                        sortingLineCode = null,
+                                        Qty = 1,
+                                        earlyFlightEnabled = null,
+                                        packEnabled = null,
+                                        upcountryCharge = null,
+                                        TypeSendKO = ddlFavorites.SelectedValue == "select" ? "SFG" : ddlFavorites.SelectedValue,
+
+                                    };
+                                    Carrier_Entities.Order_Item.Add(order);
+                                    foreach (GridViewRow rows in gv_Small_Box.Rows)
+                                    {
+                                        Carrier_Entities.Order_Box.Add(new Order_Box { Docno = newId, Box_ID = Convert.ToInt32(((Label)rows.FindControl("lbBox_ID")).Text), Box_Name = ((Label)rows.FindControl("lbBox_Name")).Text, Qty = Convert.ToInt32(((TextBox)rows.FindControl("txtQty")).Text) });
+                                    }
+                                    ClientScript.RegisterStartupScript(this.GetType(), "Success", "<script type='text/javascript'>alert('succes : Succes ');window.location='Transport_Form?Docno=" + BBID + "';</script>'");
+                                    Carrier_Entities.Order_Big_Box.Add(new Order_Big_Box { BFID = BBID, Docno = newId, Status = "A", Lala_Car_Key = ddlCar.SelectedValue /*, status_Auto = "AUTO"*/ });
+                                    Carrier_Entities.SaveChanges();
+
+                                    
+
+
+                                }
 
 
 
@@ -1576,6 +1734,45 @@ namespace Carrier
                             }
 
                         }
+
+                        //SendMail
+
+                        //if (ddlExpress.SelectedValue == "2")
+                        //{
+                        //    var googleUpdateLocation = Carrier_Entities.Lalamove_Location_Google_Temp.Where(w => w.Userid == lbuserID.Text && w.BFID == null).ToList();
+                        //    if(googleUpdateLocation.Count() != 0)
+                        //    {
+                        //        foreach(var g in googleUpdateLocation)
+                        //        {
+                        //            if(ddlSRC.SelectedItem.Text == g.Address_Out)
+                        //            {
+                        //                g.BFID = BBID;
+                        //            }
+                                    
+                        //            if(ddlDST.SelectedItem.Text == g.Address_Out)
+                        //            {
+                        //                g.BFID = BBID;
+                        //            }
+                        //        }
+                        //    }
+                        //    Carrier_Entities.SaveChanges();
+
+                        //    //Send Mail
+                        //    var userid = Convert.ToInt32(lbuserID.Text);
+                        //    var UserCreate = InsideSFG_WF_Entities.Employees.Where(w => w.userID == userid).FirstOrDefault();
+                        //    var userMaster = InsideSFG_WF_Entities.Employees.Where(w => w.userID == UserCreate.masterID).FirstOrDefault();
+                        //    service_Budget.SendMail(userMaster.email.ToString(), null, "ยืนยันการเรียกรถรับพัสดุ - LALAMOVE",
+                        //        "<HTML><body>" +
+                        //        "<p>เรียน คุณ" + userMaster.name +
+                        //        "</p></br>" +
+                        //        "<p>&emsp;คุณ" + UserCreate.name + " " + UserCreate.surname + " ได้ดำเนินการสร้างเอกสารและเตรียมพัสดุพร้อมสำหรับการจัดส่งเรียบร้อยแล้ว" +
+                        //        "</p>" +
+                        //        "<p>กรุณาตรวจสอบรายละเอียดและยืนยันการเรียกรถเพื่อดำเนินการจัดส่งต่อไป" +
+                        //        "</p></br>" +
+                        //        "<p><a href=\"https://www.sfg-th.com/Lalamove_Driver/Approve_Order.aspx?BFID=" + service_Budget.Encrypt(BBID) + "&User=" + service_Budget.Encrypt(userMaster.userID.ToString()) + "\">[เปิดเอกสารเพื่อตรวจสอบและยืนยัน]</a>" +
+                        //        "</p>" +
+                        //        "</body></HTML>");
+                        //}
                     }
                     
                 }
@@ -1641,6 +1838,52 @@ namespace Carrier
             }
         }
 
+        public List<addressTOGoogle> GetLocation(string Address,string path)
+        {
+            var client = new RestClient("https://maps.googleapis.com/maps/api/geocode/json?address="+ Address + "&key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow" );
+            client.Timeout = -1;
+            var request = new RestRequest(Method.GET);
+            request.AlwaysMultipartFormData = true;
+            IRestResponse response = client.Execute(request);
+            List<addressTOGoogle> latlng = new List<addressTOGoogle>();
+            try
+            {
+                JObject j = JObject.Parse(response.Content);
+                var tempLocation = Carrier_Entities.Lalamove_Location_Google_Temp.Where(w => w.Userid == lbuserID.Text && w.path == path && w.BFID == null).ToList();
+                Carrier_Entities.Lalamove_Location_Google_Temp.RemoveRange(tempLocation);
+                Carrier_Entities.SaveChanges();
+                if (j["status"].ToString() == "OK")
+                {
+                    var n = 1;
+                    foreach(var i in j["results"])
+                    {
+                        addressTOGoogle ll = new addressTOGoogle();
+                        ll.No = n;
+                        ll.AddressDetail = i["formatted_address"].ToString();
+                        ll.lat = i["geometry"]["location"]["lat"].ToString();
+                        ll.lng = i["geometry"]["location"]["lng"].ToString();
+                        latlng.Add(ll);
+                        n++;
+                        Carrier_Entities.Lalamove_Location_Google_Temp.Add(new Lalamove_Location_Google_Temp
+                        {
+                            datecreate = DateTime.Now,
+                            Address_In = Address,
+                            Address_Out = ll.AddressDetail,
+                            Lat = Convert.ToDouble(ll.lat),
+                            Lng = Convert.ToDouble(ll.lng),
+                            Userid = lbuserID.Text,
+                            path = path
+
+                        });
+                        Carrier_Entities.SaveChanges();
+                    }
+                }
+            }catch(Exception ex)
+            {
+                return null;
+            }
+            return latlng;
+        }
         #endregion
 
         //คือการสร้างอีกหน้าเพื่อเรียกใช้งาน method static
@@ -1697,13 +1940,49 @@ namespace Carrier
             {
                 ddlTypeSend.SelectedValue = "1";
                 ddlTypeSend.Enabled = true;
+                divLalaCar.Visible = true;
+                dv_DetailCar.Visible = true;
+                ddlCar.SelectedValue = "0";
+                setCar();
+                //btnCheck.Visible = true;
+                //btnSave.Visible = false;
+
             }
             else
             {
                 ddlTypeSend.SelectedValue = "1";
                 ddlTypeSend.Enabled = false;
+                divLalaCar.Visible = false;
+                dv_DetailCar.Visible = false;
+                //btnCheck.Visible = false;
+                //btnSave.Visible = true;
+                //iframe_SRC.Src = "";
+                //ddlSRC.DataSource = new List<object>();
+                //ddlSRC.DataBind();
+                //iframe_DST.Src = "";
+                //ddlDST.DataSource = new List<object>();
+                //ddlDST.DataBind();
+                //dv_Address_Google.Visible = false;
             }
+            
             setTableBigBoxNoHeader();
+        }
+
+        public void setCar()
+        {
+            if (ddlCar.SelectedValue != "0")
+            {
+                var car = Carrier_Entities.Lalamove_Car_Local.Where(w => w.Location_Code == "TH BKK" && w.Car_Key == ddlCar.SelectedValue).FirstOrDefault();
+                lbCarDetail.Text = (car.Description_TH == "" ? car.Description : car.Description_TH);
+                lbCarSize.Text = car.Length + " x " + car.Width + "\n" + car.Height + " M";
+                imgCar.ImageUrl = car.Url_img;
+                lbCarLoad.Text = "สามารถบรรจุได้ " + car.Car_Load + " " + car.Car_Load_Unit;
+                dv_DetailCar.Visible = true;
+            }
+            else
+            {
+                dv_DetailCar.Visible = false;
+            }
         }
 
         protected void btnSearchSite_Click(object sender, EventArgs e)
@@ -1918,6 +2197,271 @@ namespace Carrier
 
 
         }
+
+        protected void ddlCar_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            setCar();
+            setTableBigBox();
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+        }
+
+        protected void btnCheck_Click(object sender, EventArgs e)
+        {
+            var ss = Request.QueryString["PM"] != null ? 1 : gv_Big_Box.Rows.Count - 1;
+            List<string> checkVali = new List<string>();
+            foreach (GridViewRow row in gv_Big_Box.Rows)
+            {
+                if (row.RowIndex != ss)
+                {
+                    DropDownList ddlarticleCategory = (DropDownList)row.FindControl("ddlarticleCategory");
+                    TextBox txtremark = (TextBox)row.FindControl("txtremark");
+                    GridView gv_Small_Box = (GridView)row.FindControl("gv_Small_Box");
+
+                    var item = new Order
+                    {
+                        Date_send = DateTime.Now,
+                        UserID = Convert.ToInt32(lbuserID.Text),
+                        articleCategory = Convert.ToInt32(ddlarticleCategory.SelectedValue),
+                        ExpressCategory = Convert.ToInt32(ddlExpress.SelectedValue),
+                        srcName = txtsrcName.Text,
+                        srcPhone = txtsrcPhone.Text,
+                        srcProvinceName = ddlsrcProvinceName.SelectedItem.Text,
+                        srcCityName = ddlsrcCityName.SelectedItem == null ? "" : ddlsrcCityName.SelectedItem.Text,
+                        srcDistrictName = ddlsrcDistrictName.SelectedItem == null ? "" : ddlsrcDistrictName.SelectedItem.Text,
+                        srcPostalCode = txtsrcPostalCode.Text,
+                        srcDetailAddress = txtsrcDetailAddress.Text,
+                        Ref_Order = "Carrier",
+                        dstName = txtdstName.Text,
+                        dstPhone = (txtdstPhone.Text.Contains(" ") ? "-" : txtdstPhone.Text),
+                        dstHomePhone = txtdstHomePhone.Text,
+                        dstProvinceName = ddldstProvinceName.SelectedItem.Text,
+                        dstCityName = ddldstCityName.SelectedItem == null ? "" : ddldstCityName.SelectedItem.Text,
+                        dstDistrictName = ddldstDistrictName.SelectedItem == null ? "" : ddldstDistrictName.SelectedItem.Text,
+                        dstPostalCode = txtdstPostalCode.Text,
+                        dstDetailAddress = txtdstDetailAddress.Text,
+                        insured = 0,
+                        Transport_Type = Convert.ToInt32(ddlExpress.SelectedValue),
+                        weight = Convert.ToInt32(txtweight.Text),
+                        width = Convert.ToInt32(txtwidth.Text),
+                        length = Convert.ToInt32(txtlength.Text),
+                        height = Convert.ToInt32(txtheight.Text),
+                        remark = txtremark.Text,
+                        SDpart = ddlSDpart.SelectedValue,
+                        siteStorage = txtSiteStorage.Text.ToUpper(),
+                        saleChannel = ddlReceiveLocation.SelectedValue == "select" ? "" : ddlReceiveLocation.SelectedValue,
+                        TypeSend = Convert.ToInt32(ddlTypeSend.SelectedValue),
+
+                    };
+                    if (radioWorkOn.Checked)
+                    {
+                        item.saleOn = radioWorkOn.Text;
+                    }
+                    else
+                    {
+                        item.saleOn = radioWorkOff.Text;
+                    }
+                    var vali = service_Flashs.Validate_Transport(item, ddlReceiveLocation.SelectedValue, ddlFavorites.SelectedValue, ddlCar.SelectedValue);
+                    if (vali != "PASS")
+                    {
+                        checkVali.Add(vali);
+                    }
+                }
+            }
+
+            if (checkVali.Where(w => w != "PASS").ToList().Count() != 0)
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('" + checkVali.Where(w => w != "PASS").FirstOrDefault() + "')", true);
+                setTableBigBox();
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                return;
+            }
+
+            if (txtsrcDetailAddress.Text.Contains("https://"))
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('รูปแบบรายละเอียดที่อยู่ผู้ส่งไม่ถูกต้อง')", true);
+                setTableBigBox();
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                return;
+            }
+            if (txtdstDetailAddress.Text.Contains("https://"))
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('รูปแบบรายละเอียดที่อยู่ผู้ส่งไม่ถูกต้อง')", true);
+                setTableBigBox();
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                return;
+            }
+
+            dv_Address_Google.Visible = true;
+            btnSave.Visible = true;
+            btnCheck.Visible = false;
+            var srcaddress = txtsrcDetailAddress.Text + " " + ddlsrcDistrictName.SelectedItem.Text + " " + ddlsrcCityName.SelectedItem.Text + " " + ddlsrcProvinceName.SelectedItem.Text + " " + txtsrcPostalCode.Text;
+            var srcList = GetLocation(srcaddress, "SRC");
+            ddlSRC.DataSource = srcList;
+            ddlSRC.DataBind();
+            if(srcList.Count() <= 1)
+            {
+                ddlSRC.Visible = false;
+                lbSRCAddress_Detail_Google.Visible = true;
+                lbSRCAddress_Detail_Google.Text = srcList.FirstOrDefault().AddressDetail;
+            }
+            var latlngSRC = srcList.Where(w => w.No == Convert.ToInt32(ddlSRC.SelectedValue)).FirstOrDefault();
+            iframe_SRC.Src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow&q=" + latlngSRC.lat+","+ latlngSRC.lng ;
+
+            var dstaddress = txtdstDetailAddress.Text + " " + ddldstDistrictName.SelectedItem.Text + " " + ddldstCityName.SelectedItem.Text + " " + ddldstProvinceName.SelectedItem.Text + " " + txtdstPostalCode.Text;
+            var dstList = GetLocation(dstaddress, "DST");
+            ddlDST.DataSource = dstList;
+            ddlDST.DataBind();
+            if (dstList.Count() <= 1)
+            {
+                ddlDST.Visible = false;
+                lbDSTAddress_Detail_Google.Visible = true;
+                lbDSTAddress_Detail_Google.Text = dstList.FirstOrDefault().AddressDetail;
+            }
+            var latlngDST = dstList.Where(w => w.No == Convert.ToInt32(ddlSRC.SelectedValue)).FirstOrDefault();
+            iframe_DST.Src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow&q=" + latlngDST.lat+","+ latlngDST.lng ;
+
+            setTableBigBox();
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+
+            ddlTypeSend.Enabled = false;
+            ddlCar.Enabled = false;
+            ddlFavorites.Enabled = false;
+            txtsrcName.Enabled = false;
+            txtsrcPhone.Enabled = false;
+            ddlsrcProvinceName.Enabled = false;
+            ddlsrcCityName.Enabled = false;
+            ddlsrcDistrictName.Enabled = false;
+            txtsrcPostalCode.Enabled = false;
+            txtsrcDetailAddress.Enabled = false;
+            ddlExpress.Enabled = false;
+            radioWorkOn.Enabled = false;
+            radioWorkOff.Enabled = false;
+            ddlReceiveLocation.Enabled = false;
+            ddlSDpart.Enabled = false;
+            txtSiteStorage.Enabled = false;
+            btnSearchSite.Enabled = false;
+            btnClearSite.Enabled = false;
+            txtdstName.Enabled = false;
+            txtdstPhone.Enabled = false;
+            txtdstHomePhone.Enabled = false;
+            ddldstProvinceName.Enabled = false;
+            ddldstCityName.Enabled = false;
+            ddldstDistrictName.Enabled = false;
+            txtdstPostalCode.Enabled = false;
+            txtdstDetailAddress.Enabled = false;
+
+        }
+
+        protected void ddlSRC_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var gettemplocaltion = Carrier_Entities.Lalamove_Location_Google_Temp.Where(w => w.Userid == lbuserID.Text && w.Address_Out == ddlSRC.SelectedItem.Text).FirstOrDefault();
+            iframe_SRC.Src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow&q=" + gettemplocaltion.Lat + ","+ gettemplocaltion.Lng + "&language=TH";
+            setTableBigBox();
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+        }
+
+        protected void ddlDST_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var gettemplocaltion = Carrier_Entities.Lalamove_Location_Google_Temp.Where(w => w.Userid == lbuserID.Text && w.Address_Out == ddlDST.SelectedItem.Text).FirstOrDefault();
+            iframe_DST.Src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow&q=" + gettemplocaltion.Lat + "," + gettemplocaltion.Lng + "&language=TH";
+            setTableBigBox();
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+        }
+
+        protected void btnClearLocation_Google_Click(object sender, EventArgs e)
+        {
+            dv_Address_Google.Visible = false;
+            btnSave.Visible = false;
+            btnCheck.Visible = true;
+
+            setTableBigBox();
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+            gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+
+            ddlTypeSend.Enabled = true;
+            ddlCar.Enabled = true;
+            ddlFavorites.Enabled = true;
+            txtsrcName.Enabled = true;
+            txtsrcPhone.Enabled = true;
+            ddlsrcProvinceName.Enabled = true;
+            ddlsrcCityName.Enabled = true;
+            ddlsrcDistrictName.Enabled = true;
+            txtsrcPostalCode.Enabled = true;
+            txtsrcDetailAddress.Enabled = true;
+            ddlExpress.Enabled = true;
+            radioWorkOn.Enabled = true;
+            radioWorkOff.Enabled = true;
+            ddlReceiveLocation.Enabled = true;
+            ddlSDpart.Enabled = true;
+            txtSiteStorage.Enabled = true;
+            btnSearchSite.Enabled = true;
+            btnClearSite.Enabled = true;
+            txtdstName.Enabled = true;
+            txtdstPhone.Enabled = true;
+            txtdstHomePhone.Enabled = true;
+            ddldstProvinceName.Enabled = true;
+            ddldstCityName.Enabled = true;
+            ddldstDistrictName.Enabled = true;
+            txtdstPostalCode.Enabled = true;
+            txtdstDetailAddress.Enabled = true;
+        }
+    }
+
+
+    public class addressTOGoogle
+    {
+        public int No { get; set; }
+        public string AddressDetail { get; set; }
+        public string lat { get; set; }
+        public string lng { get; set; }
+
     }
     public class newBox
     {

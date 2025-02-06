@@ -35,5 +35,6 @@ namespace Carrier.Model.InsideSFG_WF
         public virtual DbSet<Employee_Level> Employee_Level { get; set; }
         public virtual DbSet<POSITION> POSITIONs { get; set; }
         public virtual DbSet<vBrandAndHeadFC> vBrandAndHeadFCs { get; set; }
+        public virtual DbSet<SAP_Site> SAP_Site { get; set; }
     }
 }

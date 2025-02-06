@@ -368,10 +368,54 @@ namespace Carrier
                     }
                     if (lbStatusItem.Text == "SL")
                     {
-                        lbTimeTrackingText.Text = "ส่งผ่าน Lalamove";
-                        imgbtnCancelOrder.Visible = false;
-                        lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
-                        lbTimeTrackingText.CssClass = "status-tracking";
+                        if(checkBigBox.FirstOrDefault().Lala_Car_Status != null)
+                        {
+                            var codeStatus = checkBigBox.FirstOrDefault().Lala_Car_Status;
+                            var statusTH = carrier_Entities.Lalamove_Car_Status.Where(w => w.Status_Lala_Code == codeStatus).FirstOrDefault();
+                            if(statusTH != null)
+                            {
+                                lbTimeTrackingText.Text = statusTH.Status_Lala_Name_TH;
+                                switch (statusTH.Status_Lala_Code)
+                                {
+                                    case "PICKED_UP":
+                                    case "ON_GOING":
+                                    case "ASSIGNING_DRIVER":
+                                        lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
+                                        lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                        lbTimeTrackingText.CssClass = "status-tracking";
+                                        break;
+                                    case "CANCELED":
+                                    case "EXPIRED":
+                                        lbTimeTrackingText.BackColor = System.Drawing.Color.PaleVioletRed;
+                                        lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                        lbTimeTrackingText.CssClass = "status-tracking";
+                                        break;
+                                    case "COMPLETED":
+                                        lbTimeTrackingText.BackColor = System.Drawing.Color.LimeGreen;
+                                        lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                        lbTimeTrackingText.CssClass = "status-tracking";
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                lbTimeTrackingText.Text = "ส่งผ่าน Lalamove";
+                                lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
+                                lbTimeTrackingText.CssClass = "status-tracking";
+                            }
+                            
+                            imgbtnCancelOrder.Visible = false;
+                            
+                        }
+                        else
+                        {
+                            lbTimeTrackingText.Text = "ส่งผ่าน Lalamove";
+                            imgbtnCancelOrder.Visible = false;
+                            lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
+                            lbTimeTrackingText.CssClass = "status-tracking";
+                        }
+
+                        
                     }
                     Label lbBrand = (Label)row.FindControl("lbBrand");
                     var Brand = (from BG_HA in insideSFG_WF_Entities.BG_HApprove

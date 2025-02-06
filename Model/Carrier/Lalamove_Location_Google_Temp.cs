@@ -12,17 +12,15 @@ namespace Carrier.Model.Carrier
     using System;
     using System.Collections.Generic;
     
-    public partial class Order_Big_Box
+    public partial class Lalamove_Location_Google_Temp
     {
-        public int RunID { get; set; }
+        public System.DateTime datecreate { get; set; }
+        public string Userid { get; set; }
+        public string Address_In { get; set; }
+        public string Address_Out { get; set; }
+        public Nullable<double> Lat { get; set; }
+        public Nullable<double> Lng { get; set; }
+        public string path { get; set; }
         public string BFID { get; set; }
-        public string Docno { get; set; }
-        public string Status { get; set; }
-        public string StatusNotifyCode { get; set; }
-        public string StatusNotifyText { get; set; }
-        public string StatusCal { get; set; }
-        public string Lala_Car_Key { get; set; }
-        public string Lala_Car_Status { get; set; }
-        public string status_Auto { get; set; }
     }
 }

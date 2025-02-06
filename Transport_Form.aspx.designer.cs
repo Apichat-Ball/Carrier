@@ -159,6 +159,78 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.DropDownList ddlTypeSend;
 
         /// <summary>
+        /// divLalaCar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divLalaCar;
+
+        /// <summary>
+        /// Label3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label3;
+
+        /// <summary>
+        /// ddlCar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlCar;
+
+        /// <summary>
+        /// dv_DetailCar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dv_DetailCar;
+
+        /// <summary>
+        /// imgCar control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image imgCar;
+
+        /// <summary>
+        /// lbCarSize control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbCarSize;
+
+        /// <summary>
+        /// lbCarDetail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbCarDetail;
+
+        /// <summary>
+        /// lbCarLoad control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbCarLoad;
+
+        /// <summary>
         /// lbgroupSend control.
         /// </summary>
         /// <remarks>
@@ -411,33 +483,6 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.RadioButton radioWorkOff;
 
         /// <summary>
-        /// div_Receive control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div_Receive;
-
-        /// <summary>
-        /// lbReceiveLocation control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbReceiveLocation;
-
-        /// <summary>
-        /// ddlReceiveLocation control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlReceiveLocation;
-
-        /// <summary>
         /// Label4 control.
         /// </summary>
         /// <remarks>
@@ -544,6 +589,33 @@ namespace Carrier
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label2;
+
+        /// <summary>
+        /// div_Receive control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div_Receive;
+
+        /// <summary>
+        /// lbReceiveLocation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbReceiveLocation;
+
+        /// <summary>
+        /// ddlReceiveLocation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlReceiveLocation;
 
         /// <summary>
         /// lbdstName control.
@@ -717,6 +789,96 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.TextBox txtdstDetailAddress;
 
         /// <summary>
+        /// dv_Address_Google control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dv_Address_Google;
+
+        /// <summary>
+        /// lbSRCAddress_Detail_Google control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbSRCAddress_Detail_Google;
+
+        /// <summary>
+        /// ddlSRC control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlSRC;
+
+        /// <summary>
+        /// lbSRCCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbSRCCount;
+
+        /// <summary>
+        /// iframe_SRC control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlIframe iframe_SRC;
+
+        /// <summary>
+        /// lbDSTAddress_Detail_Google control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbDSTAddress_Detail_Google;
+
+        /// <summary>
+        /// ddlDST control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlDST;
+
+        /// <summary>
+        /// lbDSTCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbDSTCount;
+
+        /// <summary>
+        /// iframe_DST control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlIframe iframe_DST;
+
+        /// <summary>
+        /// btnClearLocation_Google control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnClearLocation_Google;
+
+        /// <summary>
         /// divPrintAll control.
         /// </summary>
         /// <remarks>
@@ -742,6 +904,15 @@ namespace Carrier
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gv_Big_Box;
+
+        /// <summary>
+        /// btnCheck control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCheck;
 
         /// <summary>
         /// btnSave control.

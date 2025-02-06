@@ -48,7 +48,7 @@ namespace Carrier.Service
             client.Timeout = -1;
             var request = new RestRequest(Method.POST);
             request.AddHeader("Content-Type", "application/json");
-            request.AddJsonBody(new { detail_id = filter.detail_id, depart_id = filter.depart_id, date_use = filter.date_use, money = filter.money, typeBudget_id = filter.typeBudget_id, userId = filter.userId, remark = filter.remark , site_storage = filter.site_storage });
+            request.AddJsonBody(new { detail_id = filter.detail_id, depart_id = filter.depart_id, date_use = filter.date_use, money = filter.money, typeBudget_id = filter.typeBudget_id, userId = filter.userId, remark = filter.remark , site_storage = filter.site_storage , brand = filter.brand });
             IRestResponse response = client.Execute(request);
             JObject j = JObject.Parse(response.Content);
             if (j["code"].ToString() == "200")
@@ -128,6 +128,38 @@ namespace Carrier.Service
             ScriptManager.RegisterStartupScript(myPage, myPage.GetType(), "script_ref_name", scriptText, true);
         }
 
+        public Return_Forecast_Process Process_Forecast(string departmentid, string dateuse, string typebudgetid, string headid, string detailid)
+        {
+            var client = new RestClient("https://www.sfg-th.com/API_Budget/Get_ForecastV2");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Content-Type", "application/json");
+            var format = "dd/MM/yyyy";
+            var dateG = DateTime.ParseExact(dateuse, format, null).ToString();
+
+            request.AddJsonBody(new
+            {
+                departmentid = departmentid == "-" ? "" : departmentid,
+                dateuse = dateuse,
+                typebudgetid = typebudgetid,
+                headid = (headid == "0" || headid == "" ? null : headid),
+                detailid = (detailid == "0" || detailid == "" ? null : detailid)
+            });
+
+            IRestResponse response = client.Execute(request);
+
+            JObject j = JObject.Parse(response.Content);
+            var getForecast_val = new Return_Forecast_Process { foreacast = 0, expense = 0 };
+
+            if (j["code"].ToString() == "200")
+            {
+                getForecast_val.foreacast = Convert.ToDecimal(j["forecast"].ToString());
+                getForecast_val.expense = Convert.ToDecimal(j["expense"].ToString());
+            }
+
+            return getForecast_val;
+        }
+
         //Email
 
         readonly System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient();
@@ -169,6 +201,12 @@ namespace Carrier.Service
 
         }
 
+
+        public class Return_Forecast_Process
+        {
+            public decimal foreacast { get; set; }
+            public decimal expense { get; set; }
+        }
     }
     public class Return_Create_MainExpense
     {

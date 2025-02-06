@@ -30,5 +30,7 @@ namespace Carrier.Model.Budget
         public virtual DbSet<Department_IO> Department_IO { get; set; }
         public virtual DbSet<MainExpense> MainExpenses { get; set; }
         public virtual DbSet<MainExpense_Sub> MainExpense_Sub { get; set; }
+        public virtual DbSet<Department_IO_Brand> Department_IO_Brand { get; set; }
+        public virtual DbSet<Log_Budget> Log_Budget { get; set; }
     }
 }

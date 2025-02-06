@@ -7,6 +7,8 @@
       <Diagram DiagramId="fc4353e441b34a1cb45352356e824dd3" Name="Diagram1">
         <EntityTypeShape EntityType="SFGModel.SAP_VBRK_NEWSAP" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="SFGModel.SAP_VBRP_NEWSAP" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SFGModel.vSAP_Site" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="SFGModel.vSAP_Site2" Width="1.5" PointX="5.375" PointY="5.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -42,5 +42,6 @@ namespace Carrier.Model.Budget
         public Nullable<int> Per_Share { get; set; }
         public string Ref_Cost_Number { get; set; }
         public Nullable<bool> NewFC_NextYear { get; set; }
+        public string ReturnStatus { get; set; }
     }
 }

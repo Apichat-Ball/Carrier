@@ -368,9 +368,12 @@ namespace Carrier
                         //ค่ารถจัดส่ง Auto จากระบบ Courier Lalamove รอบ 08/04/2024 - 30/04/2024 เลข DeliveryID:119975549306 SiteStorage:OPPLOPM1
                         var Delivery = "DeliveryID:" + l.DeliveryID;
                         var SiteCar = "SiteStorage:" + l.Shop;
+                        var DocnoINBudgets = budget_Entities.MainExpenses.Where(w => w.Docno.StartsWith("UP") &&  w.Remark.Contains(Delivery) && w.Remark.Contains(SiteCar)  );
 
-                        var DocnoINBudget = budget_Entities.MainExpense_Sub.Where(w => w.Docno.StartsWith("UP") &&  w.Detail.Contains(Delivery) && w.Detail.Contains(SiteCar)).FirstOrDefault();
-                        if(DocnoINBudget != null)
+                        var io = budget_Entities.Department_IO.Where(w => w.Status_ID == "F" && w.SiteStorage.Contains(SiteCar) && w.Ref_Cost_Number == "" && DocnoINBudgets.FirstOrDefault().Date_Use >= w.Action_Start && DocnoINBudgets.FirstOrDefault().Date_Use <= w.Action_End).FirstOrDefault();
+                        
+                        var DocnoINBudget = io != null? DocnoINBudgets.Where(w => w.Department_ID == io.Department_ID).FirstOrDefault() : DocnoINBudgets.FirstOrDefault();
+                        if (DocnoINBudget != null)
                         {
                             l.เลขที่เอกสารใน_FC = DocnoINBudget.Docno;
                         }
@@ -563,7 +566,7 @@ namespace Carrier
                                         else
                                         {
                                             var delivery = item[0].ToString();
-                                            var cal = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == delivery).ToList();
+                                            var cal = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == delivery);
                                             dataLalamove.Add(new modelFromLalamove
                                             {
                                                 DeliveryID = item[0].ToString(),
@@ -733,46 +736,108 @@ namespace Carrier
                     var brand = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli).GroupBy(g => g.SDpart).Select(s => new { SDpart = s.Key, QTY = s.Sum(x => x.QTY), Price = s.Sum(x => x.Price) }).ToList();
                     foreach (var BrandID in brand)
                     {
+                        var brand_id = InsideSFG_WF_Entities.vBrandAndHeadFCs.Where(w => w.departmentID == BrandID.SDpart).FirstOrDefault();
                         var siteStorage = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli && w.SDpart == BrandID.SDpart).GroupBy(g => g.SiteStorage).Select(s => s.Key).ToList();
                         var Seek = budget_Entities.Departments.Where(w => w.Department_Name.StartsWith("SEEK") && w.Department_ID == BrandID.SDpart).FirstOrDefault();
 
                         foreach (var site in siteStorage)
                         {
+
                             var Docno = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli && w.SDpart == BrandID.SDpart && w.SiteStorage == site).ToList();
                             var docnoOne = Docno.FirstOrDefault().Docno;
                             var carOrder = carrier_Entities.Orders.Where(w => w.Docno == docnoOne).FirstOrDefault();
-                            cuttemp temp = new cuttemp();
-                            temp.date_use = Convert.ToDateTime(DateTime.Now.ToShortDateString());
-                            temp.depart_id = Seek == null ? Docno.FirstOrDefault().SDpart : "1619";
-                            temp.detail_id = "5703";
-                            temp.group_id = "5";
-                            temp.head_id = "507";
-                            temp.money = Convert.ToDouble(Docno.Sum(c => c.Price));
-                            temp.remark = "ค่ารถจัดส่ง Auto จากระบบ Courier Lalamove รอบ " + txtDateSt.Text + " - " + txtDateED.Text + " เลข DeliveryID:" + deli + " SiteStorage:" + site;
-                            temp.typeBudget_id = carOrder.saleOn == "ONLINE" ? "1" : "2";
-                            temp.userId = "101974";
-                            temp.site_storage = site;
-                            var ss = service_Budget.Insert_CutBudget(temp);
+                            var ss = "";
+                            var io = budget_Entities.Department_IO.Where(w => w.SiteStorage.Contains(site) && w.Action_Start <= DateTime.Now && w.Action_End >= DateTime.Now && w.Status_ID == "F" && w.Status_IO == "Y" && w.Ref_Cost_Number == "").FirstOrDefault();
+                            var Depart_TOUp = "";
+                            if(io != null)
+                            {
+                                var datenow = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+                                var ioBrand = budget_Entities.Department_IO_Brand.Where(w => w.Department_ID == io.Department_ID && w.dateSt <= datenow && w.dateEd >= datenow);
+                                cuttemp temp = new cuttemp();
+                                temp.date_use = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+                                temp.depart_id = Seek == null ? Docno.FirstOrDefault().SDpart : "1619";
+                                temp.detail_id = "5703";
+                                temp.group_id = "5";
+                                temp.head_id = "507";
+                                temp.money = Convert.ToDouble(Docno.Sum(c => c.Price));
+                                temp.remark = "ค่ารถจัดส่ง Auto จากระบบ Courier Lalamove รอบ " + txtDateSt.Text + " - " + txtDateED.Text + " เลข DeliveryID:" + deli + " SiteStorage:" + site;
+                                temp.typeBudget_id = carOrder.saleOn == "ONLINE" ? "1" : "2";
+                                temp.userId = "101974";
+                                temp.site_storage = site;
+                                foreach(var i in ioBrand)
+                                {
+                                    if (i.Brand_ID == brand_id.ID_Brand)
+                                    {
+                                        temp.brand.Add(new cutCudget_brand_Filter
+                                        {
+                                            brand_id = i.Brand_ID,
+                                            brand_percent = 100,
+                                            SiteStorage = i.Site_Storage_B
+                                        });
+                                        temp.depart_id = i.Department_ID;
+                                        temp.group_id = "13";
+                                        temp.head_id = "1324";
+                                        temp.detail_id = "132404";
+                                    }
+                                    else
+                                    {
+                                        temp.brand.Add(new cutCudget_brand_Filter
+                                        {
+                                            brand_id = i.Brand_ID,
+                                            brand_percent = 0
+                                        });
+                                    }
+                                    
+                                }
+                                if(temp.brand.Where(w=>w.brand_percent == 100).FirstOrDefault() == null)
+                                {
+                                    temp.brand = null;
+                                    //temp.depart_id = Seek == null ? Docno.FirstOrDefault().SDpart : "1619";
+                                }
+
+                                 ss = service_Budget.Insert_CutBudget(temp);
+                            }
+                            else
+                            {
+                                cuttemp temp = new cuttemp();
+                                temp.date_use = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+                                temp.depart_id = Seek == null ? Docno.FirstOrDefault().SDpart : "1619";
+                                temp.detail_id = "5703";
+                                temp.group_id = "5";
+                                temp.head_id = "507";
+                                temp.money = Convert.ToDouble(Docno.Sum(c => c.Price));
+                                temp.remark = "ค่ารถจัดส่ง Auto จากระบบ Courier Lalamove รอบ " + txtDateSt.Text + " - " + txtDateED.Text + " เลข DeliveryID:" + deli + " SiteStorage:" + site;
+                                temp.typeBudget_id = carOrder.saleOn == "ONLINE" ? "1" : "2";
+                                temp.userId = "101974";
+                                temp.site_storage = site;
+                                 ss = service_Budget.Insert_CutBudget(temp);
+                            }
+
+                            
 
                             if (ss == "สำเร็จ")
                             {
                                 var Delivery = "DeliveryID:" + deli;
                                 var SiteCar = "SiteStorage:" + site;
-                                var DocInFC = budget_Entities.MainExpense_Sub.Where(w => w.Docno.StartsWith("UP") && w.Detail.Contains(Delivery) && w.Detail.Contains(SiteCar)).FirstOrDefault();
-                                if (DocInFC != null)
+                                var departid = Seek == null ? Docno.FirstOrDefault().SDpart : "1619";
+
+                                var DocInFC = budget_Entities.MainExpense_Sub.Where(w => w.Docno.StartsWith("UP") && w.Detail.Contains(Delivery) && w.Detail.Contains(SiteCar));
+                                var docnoFC = DocInFC.Select(s => s.Docno).ToList();
+                                var docnoMain = budget_Entities.MainExpenses.Where(w => docnoFC.Contains(w.Docno) ).FirstOrDefault();
+                                if (docnoMain != null)
                                 {
-                                    var budExpense = budget_Entities.MainExpenses.Where(w => w.Docno == DocInFC.Docno).FirstOrDefault();
-                                    budExpense.Site_Storage = site;
-                                    DocInFC.SiteStorage = site;
-                                    DocInFC.Brand_ID = Docno.FirstOrDefault().SDpart;
-                                    DocInFC.Brand_Percent = 100;
+                                    var budExpenseSub = DocInFC.Where(w=>w.Docno == docnoMain.Docno).FirstOrDefault();
+                                    docnoMain.Site_Storage = site;
+                                    budExpenseSub.SiteStorage = site;
+                                    budExpenseSub.Brand_ID = Docno.FirstOrDefault().SDpart;
+                                    budExpenseSub.Brand_Percent = 100;
 
                                 }
                                 var carpass = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli && w.SDpart == BrandID.SDpart && w.SiteStorage == site).ToList();
                                 foreach (var c in carpass)
                                 {
                                     c.StatusBud = "F";
-                                    c.DocInFC = DocInFC.Docno;
+                                    c.DocInFC = docnoMain.Docno;
                                 }
                                 carrier_Entities.SaveChanges();
                             }
@@ -946,5 +1011,16 @@ namespace Carrier
         public int half_month { get; set; }
         public string userId { get; set; }
         public string site_storage { get; set; }
+        public List<cutCudget_brand_Filter> brand { get; set; }
+        public cuttemp()
+        {
+            brand = new List<cutCudget_brand_Filter>();
+        }
+    }
+    public class cutCudget_brand_Filter
+    {
+        public string brand_id { get; set; }
+        public double brand_percent { get; set; }
+        public string SiteStorage { get; set; }
     }
 }

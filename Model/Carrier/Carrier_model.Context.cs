@@ -45,5 +45,16 @@ namespace Carrier.Model.Carrier
         public virtual DbSet<Lalamove_Import> Lalamove_Import { get; set; }
         public virtual DbSet<Flash_EX_Import> Flash_EX_Import { get; set; }
         public virtual DbSet<DHL_eCom_Import> DHL_eCom_Import { get; set; }
+        public virtual DbSet<Carrier_Api_Key> Carrier_Api_Key { get; set; }
+        public virtual DbSet<Lalamove_Car_DeliveryItemSpecification_Categories> Lalamove_Car_DeliveryItemSpecification_Categories { get; set; }
+        public virtual DbSet<Lalamove_Car_DeliveryItemSpecification_HandlingInstructions> Lalamove_Car_DeliveryItemSpecification_HandlingInstructions { get; set; }
+        public virtual DbSet<Lalamove_Car_DeliveryItemSpecification_Weight> Lalamove_Car_DeliveryItemSpecification_Weight { get; set; }
+        public virtual DbSet<Lalamove_Car_Local> Lalamove_Car_Local { get; set; }
+        public virtual DbSet<Lalamove_Car_PlaceOrder> Lalamove_Car_PlaceOrder { get; set; }
+        public virtual DbSet<Lalamove_Car_Quotation> Lalamove_Car_Quotation { get; set; }
+        public virtual DbSet<Lalamove_Car_SpecialRequests> Lalamove_Car_SpecialRequests { get; set; }
+        public virtual DbSet<Lalamove_Car_Stop> Lalamove_Car_Stop { get; set; }
+        public virtual DbSet<Lalamove_Car_Status> Lalamove_Car_Status { get; set; }
+        public virtual DbSet<Lalamove_Location_Google_Temp> Lalamove_Location_Google_Temp { get; set; }
     }
 }

@@ -10,6 +10,8 @@
         <EntityTypeShape EntityType="BudgetModel.Department_IO" Width="1.5" PointX="5.375" PointY="0.75" />
         <EntityTypeShape EntityType="BudgetModel.MainExpense" Width="1.5" PointX="7.375" PointY="0.75" />
         <EntityTypeShape EntityType="BudgetModel.MainExpense_Sub" Width="1.5" PointX="7.375" PointY="5.75" />
+        <EntityTypeShape EntityType="BudgetModel.Department_IO_Brand" Width="1.5" PointX="9.75" PointY="0.75" />
+        <EntityTypeShape EntityType="BudgetModel.Log_Budget" Width="1.5" PointX="0.75" PointY="9.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

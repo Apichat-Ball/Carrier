@@ -41,6 +41,20 @@
           <Property Name="StatusBud" Type="nvarchar" MaxLength="5" />
           <Property Name="DocInFC" Type="nvarchar" MaxLength="20" />
         </EntityType>
+        <EntityType Name="Carrier_Api_Key">
+          <Key>
+            <PropertyRef Name="Api_No" />
+          </Key>
+          <Property Name="Api_No" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Transport_Type" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Url" Type="nvarchar(max)" />
+          <Property Name="API_Key" Type="nvarchar" MaxLength="100" />
+          <Property Name="API_Secret" Type="nvarchar" MaxLength="100" />
+          <Property Name="UserID" Type="nvarchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Userweb" Type="nvarchar" MaxLength="50" />
+          <Property Name="Pass" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Comment_System">
           <Key>
             <PropertyRef Name="CM_ID" />
@@ -108,6 +122,127 @@
           <Property Name="Type_Send_KA" Type="nvarchar" MaxLength="20" />
           <Property Name="SaveFrom" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <EntityType Name="Lalamove_Car_DeliveryItemSpecification_Categories">
+          <Key>
+            <PropertyRef Name="DeliveryItemSpecification_categories_ID" />
+            <PropertyRef Name="Location_Code" />
+            <PropertyRef Name="Car_Key" />
+          </Key>
+          <Property Name="DeliveryItemSpecification_categories_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Location_Code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Car_Key" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DeliveryItemSpecification_categories" Type="nvarchar" MaxLength="50" />
+          <Property Name="Date_Save" Type="datetime" />
+          <Property Name="DeliveryItemSpecification_Categories_TH" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_DeliveryItemSpecification_HandlingInstructions">
+          <Key>
+            <PropertyRef Name="DeliveryItemSpecification_handlingInstructions_id" />
+            <PropertyRef Name="Location_Code" />
+            <PropertyRef Name="Car_Key" />
+          </Key>
+          <Property Name="DeliveryItemSpecification_handlingInstructions_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Location_Code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Car_Key" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DeliveryItemSpecification_handlingInstructions" Type="nvarchar" MaxLength="50" />
+          <Property Name="Date_Save" Type="datetime" />
+          <Property Name="DeliveryItemSpecification_handlingInstructions_TH" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_DeliveryItemSpecification_Weight">
+          <Key>
+            <PropertyRef Name="DeliveryItemSpecification_weight_ID" />
+            <PropertyRef Name="Location_Code" />
+            <PropertyRef Name="Car_Key" />
+          </Key>
+          <Property Name="DeliveryItemSpecification_weight_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Location_Code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Car_Key" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DeliveryItemSpecification_weight" Type="nvarchar" MaxLength="50" />
+          <Property Name="Date_Save" Type="datetime" />
+          <Property Name="DeliveryItemSpecification_weight_TH" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_Local">
+          <Key>
+            <PropertyRef Name="Location_Code" />
+            <PropertyRef Name="Car_Key" />
+          </Key>
+          <Property Name="Location_Code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Location_name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Car_Key" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="Length" Type="float" />
+          <Property Name="Width" Type="float" />
+          <Property Name="Height" Type="float" />
+          <Property Name="Car_Load" Type="float" />
+          <Property Name="Car_Load_Unit" Type="nvarchar" MaxLength="10" />
+          <Property Name="Date_save" Type="datetime" />
+          <Property Name="Car_Key_TH" Type="nvarchar(max)" />
+          <Property Name="Description_TH" Type="nvarchar(max)" />
+          <Property Name="Url_img" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_PlaceOrder">
+          <Key>
+            <PropertyRef Name="OrderID" />
+            <PropertyRef Name="quotationId" />
+          </Key>
+          <Property Name="OrderID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="quotationId" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="driverId" Type="nvarchar" MaxLength="20" />
+          <Property Name="shareLink" Type="nvarchar(max)" />
+          <Property Name="status" Type="nvarchar" MaxLength="30" />
+          <Property Name="BFID" Type="nvarchar" MaxLength="20" />
+          <Property Name="Date_Status" Type="datetime" />
+          <Property Name="Status_Import" Type="nvarchar" MaxLength="5" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_Quotation">
+          <Key>
+            <PropertyRef Name="quotationId" />
+          </Key>
+          <Property Name="quotationId" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="scheduleAt" Type="datetime" />
+          <Property Name="expiresAt" Type="datetime" />
+          <Property Name="serviceType" Type="nvarchar" MaxLength="50" />
+          <Property Name="priceBreakdown_total" Type="float" />
+          <Property Name="item_quantity" Type="int" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_SpecialRequests">
+          <Key>
+            <PropertyRef Name="SpecialRequests_ID" />
+            <PropertyRef Name="Location_Code" />
+          </Key>
+          <Property Name="SpecialRequests_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Location_Code" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Car_Key" Type="nvarchar" MaxLength="50" />
+          <Property Name="SpecialRequests_Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="SpecialRequests_description" Type="nvarchar(max)" />
+          <Property Name="SpecialRequests_Parent_type" Type="nvarchar(max)" />
+          <Property Name="SpecialRequests_Max" Type="int" />
+          <Property Name="SpecialRequests_Date_save" Type="datetime" />
+          <Property Name="SpecialRequest_Name_TH" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_Status">
+          <Key>
+            <PropertyRef Name="Status_Lala_Code" />
+          </Key>
+          <Property Name="Status_Lala_Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status_Lala_Name_TH" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_Stop">
+          <Key>
+            <PropertyRef Name="quotationId" />
+            <PropertyRef Name="stopId" />
+          </Key>
+          <Property Name="quotationId" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="stopId" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="coordinates_lat" Type="nvarchar" MaxLength="30" />
+          <Property Name="coordinates_lng" Type="nvarchar" MaxLength="30" />
+          <Property Name="address" Type="nvarchar(max)" />
+          <Property Name="name" Type="nvarchar" MaxLength="50" />
+          <Property Name="phone" Type="nvarchar" MaxLength="20" />
+          <Property Name="remark" Type="nvarchar(max)" />
+          <Property Name="StopNo" Type="int" />
+          <Property Name="Docno" Type="nvarchar" MaxLength="20" />
+        </EntityType>
         <EntityType Name="Lalamove_Import">
           <Key>
             <PropertyRef Name="Delivery_ID" />
@@ -116,6 +251,19 @@
           <Property Name="Date_Complete" Type="datetime" />
           <Property Name="Price" Type="float" />
           <Property Name="Status_Match" Type="bit" />
+        </EntityType>
+        <EntityType Name="Lalamove_Location_Google_Temp">
+          <Key>
+            <PropertyRef Name="datecreate" />
+          </Key>
+          <Property Name="datecreate" Type="datetime" Nullable="false" />
+          <Property Name="Userid" Type="nvarchar" MaxLength="20" />
+          <Property Name="Address_In" Type="nvarchar(max)" />
+          <Property Name="Address_Out" Type="nvarchar(max)" />
+          <Property Name="Lat" Type="float" />
+          <Property Name="Lng" Type="float" />
+          <Property Name="path" Type="nvarchar" MaxLength="10" />
+          <Property Name="BFID" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="Notify">
           <Key>
@@ -185,6 +333,9 @@
           <Property Name="StatusNotifyCode" Type="nvarchar" MaxLength="3" />
           <Property Name="StatusNotifyText" Type="nvarchar" MaxLength="100" />
           <Property Name="StatusCal" Type="nvarchar" MaxLength="5" />
+          <Property Name="Lala_Car_Key" Type="nvarchar" MaxLength="50" />
+          <Property Name="Lala_Car_Status" Type="nvarchar" MaxLength="50" />
+          <Property Name="status_Auto" Type="nvarchar" MaxLength="5" />
         </EntityType>
         <EntityType Name="Order_Box">
           <Key>
@@ -277,12 +428,23 @@
           <EntitySet Name="API_Carrier_Log" EntityType="Self.API_Carrier_Log" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Article_Category" EntityType="Self.Article_Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Calculate_Car" EntityType="Self.Calculate_Car" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Carrier_Api_Key" EntityType="Self.Carrier_Api_Key" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comment_System" EntityType="Self.Comment_System" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DHL_eCom_Import" EntityType="Self.DHL_eCom_Import" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event_Shop" EntityType="Self.Event_Shop" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Flash_EX_Import" EntityType="Self.Flash_EX_Import" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="History_Notify_Order" EntityType="Self.History_Notify_Order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lalamove_Car_DeliveryItemSpecification_Categories" EntityType="Self.Lalamove_Car_DeliveryItemSpecification_Categories" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lalamove_Car_DeliveryItemSpecification_HandlingInstructions" EntityType="Self.Lalamove_Car_DeliveryItemSpecification_HandlingInstructions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lalamove_Car_DeliveryItemSpecification_Weight" EntityType="Self.Lalamove_Car_DeliveryItemSpecification_Weight" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lalamove_Car_Local" EntityType="Self.Lalamove_Car_Local" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lalamove_Car_PlaceOrder" EntityType="Self.Lalamove_Car_PlaceOrder" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lalamove_Car_Quotation" EntityType="Self.Lalamove_Car_Quotation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lalamove_Car_SpecialRequests" EntityType="Self.Lalamove_Car_SpecialRequests" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lalamove_Car_Status" EntityType="Self.Lalamove_Car_Status" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lalamove_Car_Stop" EntityType="Self.Lalamove_Car_Stop" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Lalamove_Import" EntityType="Self.Lalamove_Import" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lalamove_Location_Google_Temp" EntityType="Self.Lalamove_Location_Google_Temp" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Notify" EntityType="Self.Notify" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order_Big_Box" EntityType="Self.Order_Big_Box" Schema="dbo" store:Type="Tables" />
@@ -320,6 +482,17 @@
           <EntitySet Name="Lalamove_Import" EntityType="CarrierModel.Lalamove_Import" />
           <EntitySet Name="Flash_EX_Import" EntityType="CarrierModel.Flash_EX_Import" />
           <EntitySet Name="DHL_eCom_Import" EntityType="CarrierModel.DHL_eCom_Import" />
+          <EntitySet Name="Carrier_Api_Key" EntityType="CarrierModel.Carrier_Api_Key" />
+          <EntitySet Name="Lalamove_Car_DeliveryItemSpecification_Categories" EntityType="CarrierModel.Lalamove_Car_DeliveryItemSpecification_Categories" />
+          <EntitySet Name="Lalamove_Car_DeliveryItemSpecification_HandlingInstructions" EntityType="CarrierModel.Lalamove_Car_DeliveryItemSpecification_HandlingInstructions" />
+          <EntitySet Name="Lalamove_Car_DeliveryItemSpecification_Weight" EntityType="CarrierModel.Lalamove_Car_DeliveryItemSpecification_Weight" />
+          <EntitySet Name="Lalamove_Car_Local" EntityType="CarrierModel.Lalamove_Car_Local" />
+          <EntitySet Name="Lalamove_Car_PlaceOrder" EntityType="CarrierModel.Lalamove_Car_PlaceOrder" />
+          <EntitySet Name="Lalamove_Car_Quotation" EntityType="CarrierModel.Lalamove_Car_Quotation" />
+          <EntitySet Name="Lalamove_Car_SpecialRequests" EntityType="CarrierModel.Lalamove_Car_SpecialRequests" />
+          <EntitySet Name="Lalamove_Car_Stop" EntityType="CarrierModel.Lalamove_Car_Stop" />
+          <EntitySet Name="Lalamove_Car_Status" EntityType="CarrierModel.Lalamove_Car_Status" />
+          <EntitySet Name="Lalamove_Location_Google_Temp" EntityType="CarrierModel.Lalamove_Location_Google_Temp" />
         </EntityContainer>
         <EntityType Name="Article_Category">
           <Key>
@@ -526,6 +699,9 @@
           <Property Name="StatusNotifyCode" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
           <Property Name="StatusNotifyText" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="StatusCal" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Lala_Car_Key" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Lala_Car_Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="status_Auto" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Calculate_Car">
           <Key>
@@ -588,6 +764,154 @@
           <Property Name="Docno_Budget" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Date_Budget" Type="DateTime" Precision="3" />
           <Property Name="Per_Price" Type="Double" />
+        </EntityType>
+        <EntityType Name="Carrier_Api_Key">
+          <Key>
+            <PropertyRef Name="Api_No" />
+          </Key>
+          <Property Name="Api_No" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Transport_Type" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="API_Key" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="API_Secret" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UserID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Userweb" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Pass" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_DeliveryItemSpecification_Categories">
+          <Key>
+            <PropertyRef Name="DeliveryItemSpecification_categories_ID" />
+            <PropertyRef Name="Location_Code" />
+            <PropertyRef Name="Car_Key" />
+          </Key>
+          <Property Name="DeliveryItemSpecification_categories_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Location_Code" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Car_Key" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryItemSpecification_categories" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Save" Type="DateTime" Precision="3" />
+          <Property Name="DeliveryItemSpecification_Categories_TH" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_DeliveryItemSpecification_HandlingInstructions">
+          <Key>
+            <PropertyRef Name="DeliveryItemSpecification_handlingInstructions_id" />
+            <PropertyRef Name="Location_Code" />
+            <PropertyRef Name="Car_Key" />
+          </Key>
+          <Property Name="DeliveryItemSpecification_handlingInstructions_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Location_Code" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Car_Key" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryItemSpecification_handlingInstructions" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Save" Type="DateTime" Precision="3" />
+          <Property Name="DeliveryItemSpecification_handlingInstructions_TH" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_DeliveryItemSpecification_Weight">
+          <Key>
+            <PropertyRef Name="DeliveryItemSpecification_weight_ID" />
+            <PropertyRef Name="Location_Code" />
+            <PropertyRef Name="Car_Key" />
+          </Key>
+          <Property Name="DeliveryItemSpecification_weight_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Location_Code" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Car_Key" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryItemSpecification_weight" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Save" Type="DateTime" Precision="3" />
+          <Property Name="DeliveryItemSpecification_weight_TH" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_Local">
+          <Key>
+            <PropertyRef Name="Location_Code" />
+            <PropertyRef Name="Car_Key" />
+          </Key>
+          <Property Name="Location_Code" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Location_name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Car_Key" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Length" Type="Double" />
+          <Property Name="Width" Type="Double" />
+          <Property Name="Height" Type="Double" />
+          <Property Name="Car_Load" Type="Double" />
+          <Property Name="Car_Load_Unit" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Date_save" Type="DateTime" Precision="3" />
+          <Property Name="Car_Key_TH" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description_TH" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Url_img" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_PlaceOrder">
+          <Key>
+            <PropertyRef Name="OrderID" />
+            <PropertyRef Name="quotationId" />
+          </Key>
+          <Property Name="OrderID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="quotationId" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="driverId" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="shareLink" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="status" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="BFID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Status" Type="DateTime" Precision="3" />
+          <Property Name="Status_Import" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_Quotation">
+          <Key>
+            <PropertyRef Name="quotationId" />
+          </Key>
+          <Property Name="quotationId" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="scheduleAt" Type="DateTime" Precision="3" />
+          <Property Name="expiresAt" Type="DateTime" Precision="3" />
+          <Property Name="serviceType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="priceBreakdown_total" Type="Double" />
+          <Property Name="item_quantity" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_SpecialRequests">
+          <Key>
+            <PropertyRef Name="SpecialRequests_ID" />
+            <PropertyRef Name="Location_Code" />
+          </Key>
+          <Property Name="SpecialRequests_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Location_Code" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Car_Key" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SpecialRequests_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SpecialRequests_description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SpecialRequests_Parent_type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SpecialRequests_Max" Type="Int32" />
+          <Property Name="SpecialRequests_Date_save" Type="DateTime" Precision="3" />
+          <Property Name="SpecialRequest_Name_TH" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_Stop">
+          <Key>
+            <PropertyRef Name="quotationId" />
+            <PropertyRef Name="stopId" />
+          </Key>
+          <Property Name="quotationId" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="stopId" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="coordinates_lat" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="coordinates_lng" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StopNo" Type="Int32" />
+          <Property Name="Docno" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Lalamove_Car_Status">
+          <Key>
+            <PropertyRef Name="Status_Lala_Code" />
+          </Key>
+          <Property Name="Status_Lala_Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status_Lala_Name_TH" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Lalamove_Location_Google_Temp">
+          <Key>
+            <PropertyRef Name="datecreate" />
+          </Key>
+          <Property Name="datecreate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Userid" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Address_In" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Address_Out" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Lat" Type="Double" />
+          <Property Name="Lng" Type="Double" />
+          <Property Name="path" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="BFID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -804,6 +1128,9 @@
           <EntitySetMapping Name="Order_Big_Box">
             <EntityTypeMapping TypeName="CarrierModel.Order_Big_Box">
               <MappingFragment StoreEntitySet="Order_Big_Box">
+                <ScalarProperty Name="status_Auto" ColumnName="status_Auto" />
+                <ScalarProperty Name="Lala_Car_Status" ColumnName="Lala_Car_Status" />
+                <ScalarProperty Name="Lala_Car_Key" ColumnName="Lala_Car_Key" />
                 <ScalarProperty Name="StatusCal" ColumnName="StatusCal" />
                 <ScalarProperty Name="StatusNotifyText" ColumnName="StatusNotifyText" />
                 <ScalarProperty Name="StatusNotifyCode" ColumnName="StatusNotifyCode" />
@@ -872,6 +1199,155 @@
                 <ScalarProperty Name="Date_Process" ColumnName="Date_Process" />
                 <ScalarProperty Name="Tracking_No" ColumnName="Tracking_No" />
                 <ScalarProperty Name="Docno" ColumnName="Docno" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Carrier_Api_Key">
+            <EntityTypeMapping TypeName="CarrierModel.Carrier_Api_Key">
+              <MappingFragment StoreEntitySet="Carrier_Api_Key">
+                <ScalarProperty Name="Pass" ColumnName="Pass" />
+                <ScalarProperty Name="Userweb" ColumnName="Userweb" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="API_Secret" ColumnName="API_Secret" />
+                <ScalarProperty Name="API_Key" ColumnName="API_Key" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Transport_Type" ColumnName="Transport_Type" />
+                <ScalarProperty Name="Api_No" ColumnName="Api_No" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lalamove_Car_DeliveryItemSpecification_Categories">
+            <EntityTypeMapping TypeName="CarrierModel.Lalamove_Car_DeliveryItemSpecification_Categories">
+              <MappingFragment StoreEntitySet="Lalamove_Car_DeliveryItemSpecification_Categories">
+                <ScalarProperty Name="DeliveryItemSpecification_Categories_TH" ColumnName="DeliveryItemSpecification_Categories_TH" />
+                <ScalarProperty Name="Date_Save" ColumnName="Date_Save" />
+                <ScalarProperty Name="DeliveryItemSpecification_categories" ColumnName="DeliveryItemSpecification_categories" />
+                <ScalarProperty Name="Car_Key" ColumnName="Car_Key" />
+                <ScalarProperty Name="Location_Code" ColumnName="Location_Code" />
+                <ScalarProperty Name="DeliveryItemSpecification_categories_ID" ColumnName="DeliveryItemSpecification_categories_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lalamove_Car_DeliveryItemSpecification_HandlingInstructions">
+            <EntityTypeMapping TypeName="CarrierModel.Lalamove_Car_DeliveryItemSpecification_HandlingInstructions">
+              <MappingFragment StoreEntitySet="Lalamove_Car_DeliveryItemSpecification_HandlingInstructions">
+                <ScalarProperty Name="DeliveryItemSpecification_handlingInstructions_TH" ColumnName="DeliveryItemSpecification_handlingInstructions_TH" />
+                <ScalarProperty Name="Date_Save" ColumnName="Date_Save" />
+                <ScalarProperty Name="DeliveryItemSpecification_handlingInstructions" ColumnName="DeliveryItemSpecification_handlingInstructions" />
+                <ScalarProperty Name="Car_Key" ColumnName="Car_Key" />
+                <ScalarProperty Name="Location_Code" ColumnName="Location_Code" />
+                <ScalarProperty Name="DeliveryItemSpecification_handlingInstructions_id" ColumnName="DeliveryItemSpecification_handlingInstructions_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lalamove_Car_DeliveryItemSpecification_Weight">
+            <EntityTypeMapping TypeName="CarrierModel.Lalamove_Car_DeliveryItemSpecification_Weight">
+              <MappingFragment StoreEntitySet="Lalamove_Car_DeliveryItemSpecification_Weight">
+                <ScalarProperty Name="DeliveryItemSpecification_weight_TH" ColumnName="DeliveryItemSpecification_weight_TH" />
+                <ScalarProperty Name="Date_Save" ColumnName="Date_Save" />
+                <ScalarProperty Name="DeliveryItemSpecification_weight" ColumnName="DeliveryItemSpecification_weight" />
+                <ScalarProperty Name="Car_Key" ColumnName="Car_Key" />
+                <ScalarProperty Name="Location_Code" ColumnName="Location_Code" />
+                <ScalarProperty Name="DeliveryItemSpecification_weight_ID" ColumnName="DeliveryItemSpecification_weight_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lalamove_Car_Local">
+            <EntityTypeMapping TypeName="CarrierModel.Lalamove_Car_Local">
+              <MappingFragment StoreEntitySet="Lalamove_Car_Local">
+                <ScalarProperty Name="Url_img" ColumnName="Url_img" />
+                <ScalarProperty Name="Description_TH" ColumnName="Description_TH" />
+                <ScalarProperty Name="Car_Key_TH" ColumnName="Car_Key_TH" />
+                <ScalarProperty Name="Date_save" ColumnName="Date_save" />
+                <ScalarProperty Name="Car_Load_Unit" ColumnName="Car_Load_Unit" />
+                <ScalarProperty Name="Car_Load" ColumnName="Car_Load" />
+                <ScalarProperty Name="Height" ColumnName="Height" />
+                <ScalarProperty Name="Width" ColumnName="Width" />
+                <ScalarProperty Name="Length" ColumnName="Length" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Car_Key" ColumnName="Car_Key" />
+                <ScalarProperty Name="Location_name" ColumnName="Location_name" />
+                <ScalarProperty Name="Location_Code" ColumnName="Location_Code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lalamove_Car_PlaceOrder">
+            <EntityTypeMapping TypeName="CarrierModel.Lalamove_Car_PlaceOrder">
+              <MappingFragment StoreEntitySet="Lalamove_Car_PlaceOrder">
+                <ScalarProperty Name="Status_Import" ColumnName="Status_Import" />
+                <ScalarProperty Name="Date_Status" ColumnName="Date_Status" />
+                <ScalarProperty Name="BFID" ColumnName="BFID" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="shareLink" ColumnName="shareLink" />
+                <ScalarProperty Name="driverId" ColumnName="driverId" />
+                <ScalarProperty Name="quotationId" ColumnName="quotationId" />
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lalamove_Car_Quotation">
+            <EntityTypeMapping TypeName="CarrierModel.Lalamove_Car_Quotation">
+              <MappingFragment StoreEntitySet="Lalamove_Car_Quotation">
+                <ScalarProperty Name="item_quantity" ColumnName="item_quantity" />
+                <ScalarProperty Name="priceBreakdown_total" ColumnName="priceBreakdown_total" />
+                <ScalarProperty Name="serviceType" ColumnName="serviceType" />
+                <ScalarProperty Name="expiresAt" ColumnName="expiresAt" />
+                <ScalarProperty Name="scheduleAt" ColumnName="scheduleAt" />
+                <ScalarProperty Name="quotationId" ColumnName="quotationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lalamove_Car_SpecialRequests">
+            <EntityTypeMapping TypeName="CarrierModel.Lalamove_Car_SpecialRequests">
+              <MappingFragment StoreEntitySet="Lalamove_Car_SpecialRequests">
+                <ScalarProperty Name="SpecialRequest_Name_TH" ColumnName="SpecialRequest_Name_TH" />
+                <ScalarProperty Name="SpecialRequests_Date_save" ColumnName="SpecialRequests_Date_save" />
+                <ScalarProperty Name="SpecialRequests_Max" ColumnName="SpecialRequests_Max" />
+                <ScalarProperty Name="SpecialRequests_Parent_type" ColumnName="SpecialRequests_Parent_type" />
+                <ScalarProperty Name="SpecialRequests_description" ColumnName="SpecialRequests_description" />
+                <ScalarProperty Name="SpecialRequests_Name" ColumnName="SpecialRequests_Name" />
+                <ScalarProperty Name="Car_Key" ColumnName="Car_Key" />
+                <ScalarProperty Name="Location_Code" ColumnName="Location_Code" />
+                <ScalarProperty Name="SpecialRequests_ID" ColumnName="SpecialRequests_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lalamove_Car_Stop">
+            <EntityTypeMapping TypeName="CarrierModel.Lalamove_Car_Stop">
+              <MappingFragment StoreEntitySet="Lalamove_Car_Stop">
+                <ScalarProperty Name="Docno" ColumnName="Docno" />
+                <ScalarProperty Name="StopNo" ColumnName="StopNo" />
+                <ScalarProperty Name="remark" ColumnName="remark" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="address" ColumnName="address" />
+                <ScalarProperty Name="coordinates_lng" ColumnName="coordinates_lng" />
+                <ScalarProperty Name="coordinates_lat" ColumnName="coordinates_lat" />
+                <ScalarProperty Name="stopId" ColumnName="stopId" />
+                <ScalarProperty Name="quotationId" ColumnName="quotationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lalamove_Car_Status">
+            <EntityTypeMapping TypeName="CarrierModel.Lalamove_Car_Status">
+              <MappingFragment StoreEntitySet="Lalamove_Car_Status">
+                <ScalarProperty Name="Status_Lala_Name_TH" ColumnName="Status_Lala_Name_TH" />
+                <ScalarProperty Name="Status_Lala_Code" ColumnName="Status_Lala_Code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lalamove_Location_Google_Temp">
+            <EntityTypeMapping TypeName="CarrierModel.Lalamove_Location_Google_Temp">
+              <MappingFragment StoreEntitySet="Lalamove_Location_Google_Temp">
+                <ScalarProperty Name="BFID" ColumnName="BFID" />
+                <ScalarProperty Name="path" ColumnName="path" />
+                <ScalarProperty Name="Lng" ColumnName="Lng" />
+                <ScalarProperty Name="Lat" ColumnName="Lat" />
+                <ScalarProperty Name="Address_Out" ColumnName="Address_Out" />
+                <ScalarProperty Name="Address_In" ColumnName="Address_In" />
+                <ScalarProperty Name="Userid" ColumnName="Userid" />
+                <ScalarProperty Name="datecreate" ColumnName="datecreate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

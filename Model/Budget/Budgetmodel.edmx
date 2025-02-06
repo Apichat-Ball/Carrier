@@ -50,6 +50,41 @@
           <Property Name="Per_Share" Type="int" />
           <Property Name="Ref_Cost_Number" Type="nvarchar" MaxLength="10" />
           <Property Name="NewFC_NextYear" Type="bit" />
+          <Property Name="ReturnStatus" Type="nvarchar" MaxLength="2" />
+        </EntityType>
+        <EntityType Name="Department_IO_Brand">
+          <Key>
+            <PropertyRef Name="Department_ID" />
+            <PropertyRef Name="Brand_ID" />
+            <PropertyRef Name="Revision" />
+          </Key>
+          <Property Name="Department_ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Brand_ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Percent_Brand" Type="float" />
+          <Property Name="Rent_Brand" Type="float" />
+          <Property Name="PR01" Type="float" />
+          <Property Name="Discount" Type="float" />
+          <Property Name="COGS" Type="float" />
+          <Property Name="NOPEX" Type="float" />
+          <Property Name="Version" Type="int" />
+          <Property Name="PR01_G" Type="float" />
+          <Property Name="Discount_G" Type="float" />
+          <Property Name="Area" Type="float" />
+          <Property Name="Site_Storage_B" Type="nvarchar(max)" />
+          <Property Name="NewFC" Type="nvarchar" MaxLength="5" />
+          <Property Name="dateSt" Type="datetime" />
+          <Property Name="dateEd" Type="datetime" />
+          <Property Name="Revision" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Log_Budget">
+          <Key>
+            <PropertyRef Name="Date_Send" />
+          </Key>
+          <Property Name="Date_Send" Type="datetime" Nullable="false" />
+          <Property Name="Path" Type="nvarchar" MaxLength="100" />
+          <Property Name="Code" Type="int" />
+          <Property Name="Req" Type="nvarchar(max)" />
+          <Property Name="Res" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="MainBudget">
           <Key>
@@ -134,6 +169,8 @@
         <EntityContainer Name="BudgetModelStoreContainer">
           <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Department_IO" EntityType="Self.Department_IO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Department_IO_Brand" EntityType="Self.Department_IO_Brand" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Log_Budget" EntityType="Self.Log_Budget" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MainBudget" EntityType="Self.MainBudget" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MainExpense" EntityType="Self.MainExpense" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MainExpense_Sub" EntityType="Self.MainExpense_Sub" Schema="dbo" store:Type="Tables" />
@@ -206,6 +243,8 @@
           <EntitySet Name="Department_IO" EntityType="BudgetModel.Department_IO" />
           <EntitySet Name="MainExpenses" EntityType="BudgetModel.MainExpense" />
           <EntitySet Name="MainExpense_Sub" EntityType="BudgetModel.MainExpense_Sub" />
+          <EntitySet Name="Department_IO_Brand" EntityType="BudgetModel.Department_IO_Brand" />
+          <EntitySet Name="Log_Budget" EntityType="BudgetModel.Log_Budget" />
         </EntityContainer>
         <EntityType Name="Department_IO">
           <Key>
@@ -239,6 +278,7 @@
           <Property Name="Per_Share" Type="Int32" />
           <Property Name="Ref_Cost_Number" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="NewFC_NextYear" Type="Boolean" />
+          <Property Name="ReturnStatus" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="MainExpense">
           <Key>
@@ -274,6 +314,40 @@
           <Property Name="Brand_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Brand_Percent" Type="Double" />
           <Property Name="SiteStorage" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Department_IO_Brand">
+          <Key>
+            <PropertyRef Name="Department_ID" />
+            <PropertyRef Name="Brand_ID" />
+            <PropertyRef Name="Revision" />
+          </Key>
+          <Property Name="Department_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Brand_ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Percent_Brand" Type="Double" />
+          <Property Name="Rent_Brand" Type="Double" />
+          <Property Name="PR01" Type="Double" />
+          <Property Name="Discount" Type="Double" />
+          <Property Name="COGS" Type="Double" />
+          <Property Name="NOPEX" Type="Double" />
+          <Property Name="Version" Type="Int32" />
+          <Property Name="PR01_G" Type="Double" />
+          <Property Name="Discount_G" Type="Double" />
+          <Property Name="Area" Type="Double" />
+          <Property Name="Site_Storage_B" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NewFC" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="dateSt" Type="DateTime" Precision="3" />
+          <Property Name="dateEd" Type="DateTime" Precision="3" />
+          <Property Name="Revision" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Log_Budget">
+          <Key>
+            <PropertyRef Name="Date_Send" />
+          </Key>
+          <Property Name="Date_Send" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Path" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="Int32" />
+          <Property Name="Req" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Res" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -341,6 +415,7 @@
           <EntitySetMapping Name="Department_IO">
             <EntityTypeMapping TypeName="BudgetModel.Department_IO">
               <MappingFragment StoreEntitySet="Department_IO">
+                <ScalarProperty Name="ReturnStatus" ColumnName="ReturnStatus" />
                 <ScalarProperty Name="NewFC_NextYear" ColumnName="NewFC_NextYear" />
                 <ScalarProperty Name="Ref_Cost_Number" ColumnName="Ref_Cost_Number" />
                 <ScalarProperty Name="Per_Share" ColumnName="Per_Share" />
@@ -404,6 +479,40 @@
                 <ScalarProperty Name="Detail" ColumnName="Detail" />
                 <ScalarProperty Name="Detail_ID" ColumnName="Detail_ID" />
                 <ScalarProperty Name="Docno" ColumnName="Docno" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Department_IO_Brand">
+            <EntityTypeMapping TypeName="BudgetModel.Department_IO_Brand">
+              <MappingFragment StoreEntitySet="Department_IO_Brand">
+                <ScalarProperty Name="Revision" ColumnName="Revision" />
+                <ScalarProperty Name="dateEd" ColumnName="dateEd" />
+                <ScalarProperty Name="dateSt" ColumnName="dateSt" />
+                <ScalarProperty Name="NewFC" ColumnName="NewFC" />
+                <ScalarProperty Name="Site_Storage_B" ColumnName="Site_Storage_B" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="Discount_G" ColumnName="Discount_G" />
+                <ScalarProperty Name="PR01_G" ColumnName="PR01_G" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="NOPEX" ColumnName="NOPEX" />
+                <ScalarProperty Name="COGS" ColumnName="COGS" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="PR01" ColumnName="PR01" />
+                <ScalarProperty Name="Rent_Brand" ColumnName="Rent_Brand" />
+                <ScalarProperty Name="Percent_Brand" ColumnName="Percent_Brand" />
+                <ScalarProperty Name="Brand_ID" ColumnName="Brand_ID" />
+                <ScalarProperty Name="Department_ID" ColumnName="Department_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Log_Budget">
+            <EntityTypeMapping TypeName="BudgetModel.Log_Budget">
+              <MappingFragment StoreEntitySet="Log_Budget">
+                <ScalarProperty Name="Res" ColumnName="Res" />
+                <ScalarProperty Name="Req" ColumnName="Req" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+                <ScalarProperty Name="Date_Send" ColumnName="Date_Send" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
