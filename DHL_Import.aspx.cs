@@ -105,7 +105,7 @@ namespace Carrier
 
                                                 var order = Get_Order_Whale(docno).ToList() ;
                                                 var totalQTY = order.Sum(s => s.TotalQTY);
-                                                var total = Convert.ToDouble(item[56].ToString());
+                                                var total = Convert.ToDouble(item[57].ToString());
                                                 
                                                 try
                                                 {
@@ -166,6 +166,7 @@ namespace Carrier
                                                             
                                                             importHave.Per_Price = (total / totalQTY);
                                                             importHave.Shop = dataC.sitestorage;
+                                                            importHave.Price = ((total / totalQTY) * brand.TotalQTY) ?? 0;
                                                             carrier_Entities.SaveChanges();
                                                             dataC.Docno_Bud = importHave.Docno_Budget;
                                                             dataC.Date_Budget = importHave.Date_Budget;

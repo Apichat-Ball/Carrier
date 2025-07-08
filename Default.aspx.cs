@@ -33,14 +33,14 @@ namespace Carrier
             //สำหรับ Admin
             //Session.Clear();
             Session["_UserID"] = null;
-            //HttpContext.Current.Session["_UserID"] = "101635";
+            //HttpContext.Current.Session["_UserID"] = "102063";
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();
             }
             if (Session["_UserID"] == null)
             {
-                Response.Redirect("http://www.sfg-th.com/Login/Default.aspx?Page=Carrier/");
+                Response.Redirect("https://www.sfg-th.com/Login/Default.aspx?Page=Carrier/");
             }
             lbuserid.Text = Session["_UserID"].ToString();
             if (!IsPostBack)
@@ -233,7 +233,7 @@ namespace Carrier
                             }
                             else
                             {
-                                orderList = orderList.Where(w => w.DateSucces >= start && w.DateSucces <= end && w.statusAuto == null).ToList();
+                                orderList = orderList.Where(w => w.DateSucces >= start && w.DateSucces <= end ).ToList();
                             }
                             break;
                         case "3":
@@ -267,7 +267,7 @@ namespace Carrier
                             }
                             else
                             {
-                                orderList = orderList.Where(w => w.DateSucces >= start && w.DateSucces <= end && w.statusAuto == null).ToList();
+                                orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end ).ToList();
                             }
                             break;
                         case "0":
@@ -280,12 +280,12 @@ namespace Carrier
                                 && ((w.Remark != "" && w.Remark != null ? (w.Remark.Contains(':') ? (w.Remark.Split(':')[0].EndsWith("DO") ? (w.Remark.Split(':')[1].Contains(",") ? w.Remark.Split(':')[1].Split(',').ToList().Contains(txtDOSearch.Text) : w.Remark.Split(':')[1].Contains(txtDOSearch.Text))
                                 : false) : (w.Remark.Contains(txtDOSearch.Text))) : false)
                                 || txtDOSearch.Text == "")
-                                ).ToList(); ;
+                                ).ToList(); 
                             }
                             else
                             {
 
-                                orderList = orderList.Where(w => w.DateSucces >= start && w.DateSucces <= end && w.statusAuto == null).ToList();
+                                orderList = orderList.Where(w => w.dateCreate >= start && w.dateCreate <= end ).ToList();
                             }
                             break;
                     }
@@ -302,6 +302,7 @@ namespace Carrier
                         BigBox = BigBox.Where(w => w.Status == "C");
                     }
                     var DocnoGroup = BigBox.Select(s => s.Docno);
+                    var orderListCloonDoc = orderList.Select(s=>s.Docno).ToList();
                     var orderListCloon = orderList.ToList();
                     var orderGroup = orderList.FindAll(f => DocnoGroup.Contains(f.Docno));
                     foreach(var gro in orderGroup)
@@ -312,10 +313,10 @@ namespace Carrier
 
                     if(new string[] { "1","2"}.Contains(ddlStatusOrder.SelectedValue) && txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "")
                     {
-                        var DocnoHaveFromClone = orderListCloon.Select(s => s.Docno).ToList();
-                        BigBox = BigBox.Where(w => DocnoHaveFromClone.Contains(w.Docno));
+                        //var DocnoHaveFromClone = orderListCloon.Select(s => s.Docno).ToList();
+                        //BigBox = BigBox.Where(w => DocnoHaveFromClone.Contains(w.Docno));
                     }
-                    var groupBox = BigBox.GroupBy(g => new { g.BFID }).Select(s=>new { s.Key.BFID, docno = s.Select(d=>d.Docno).FirstOrDefault()}).ToList();
+                    var groupBox = BigBox.Where(w=> orderListCloonDoc.Contains(w.Docno)).GroupBy(g => new { g.BFID }).Select(s=>new { s.Key.BFID, docno = s.Select(d=>d.Docno).FirstOrDefault()}).ToList();
 
                     foreach(var Box in groupBox)
                     {
@@ -416,7 +417,7 @@ namespace Carrier
                         }
                         else
                         {
-                            gv_OrderAll.HeaderRow.Cells[0].Visible = true;
+                            //gv_OrderAll.HeaderRow.Cells[0].Visible = true;
                         }
                     }
                     
@@ -447,7 +448,7 @@ namespace Carrier
                         }
                         else
                         {
-                            row.Cells[0].Visible = true;
+                            //row.Cells[0].Visible = true;
                         }
 
                         var userid = Convert.ToInt32(lbUserCreate.Text);
@@ -735,7 +736,7 @@ namespace Carrier
                            
                         }
                         
-                        gv_OrderAll.Columns[0].Visible = true;
+                        //gv_OrderAll.Columns[0].Visible = true;
                         gv_OrderAll.Columns[10].Visible = true;
                         gv_OrderAll.Columns[11].Visible = true;
                         gv_OrderAll.Columns[12].Visible = true;
@@ -1212,7 +1213,7 @@ namespace Carrier
                     }
                     else
                     {
-                        gv_OrderAll.HeaderRow.Cells[0].Visible = true;
+                        //gv_OrderAll.HeaderRow.Cells[0].Visible = true;
                     }
                 }
 
@@ -1240,7 +1241,7 @@ namespace Carrier
                     }
                     else
                     {
-                        row.Cells[0].Visible = true;
+                        //row.Cells[0].Visible = true;
                     }
 
                     var userid = Convert.ToInt32(lbUserCreate.Text);
@@ -1523,7 +1524,7 @@ namespace Carrier
 
                     }
 
-                    gv_OrderAll.Columns[0].Visible = true;
+                    //gv_OrderAll.Columns[0].Visible = true;
                     gv_OrderAll.Columns[10].Visible = true;
                     gv_OrderAll.Columns[11].Visible = true;
                     gv_OrderAll.Columns[12].Visible = true;
@@ -1835,9 +1836,8 @@ namespace Carrier
 
 
                     #region V2
-                    var lastNolist = carrier_Entities.History_Notify_Order.ToList();
                     var lastNo = "";
-                    var checkNO = lastNolist.OrderByDescending(o => o.History_ID).FirstOrDefault().History_NO;
+                    var checkNO = carrier_Entities.History_Notify_Order.OrderByDescending(o => o.History_ID).FirstOrDefault().History_NO;
                     if (checkNO.Length == 8)
                     {
                         lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00000";
@@ -2178,6 +2178,7 @@ namespace Carrier
 
         protected void ddlStatusOrder_SelectedIndexChanged(object sender, EventArgs e)
         {
+            
             loadtable(1);
 
             var typsend = Convert.ToInt32(ddlTypsend.SelectedValue);

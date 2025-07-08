@@ -22,5 +22,9 @@ namespace Carrier.Model.Carrier
         public string BFID { get; set; }
         public Nullable<System.DateTime> Date_Status { get; set; }
         public string Status_Import { get; set; }
+        public string driver_name { get; set; }
+        public string driver_phone { get; set; }
+        public string driver_photo { get; set; }
+        public string driver_plateNumber { get; set; }
     }
 }

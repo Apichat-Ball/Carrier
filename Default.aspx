@@ -416,6 +416,7 @@
             </div>
             <div class="row mt-2 align-center">
                 <asp:Label runat="server" ID="lbAlert" Text="* ปุ่ม Export/Day เป็นรายงานของการเรียกรถ Flash ให้มารับที่จุดรับของ ซึ่งจะรวมรายการตั้งแต่ 16.30 น. ของเมื่อวานถึง 16.30น. ของวันนี้ *" ForeColor="Red"></asp:Label>
+                <asp:Label runat="server" ID="lbAlert2" Text="* การเรียกรถ Flash Express จะทำการเรียกอัตโนมัติเวลา 12.00 น. วันละ 1 ครั้ง *" ForeColor="Red"></asp:Label>
             </div>
 
         </div>
@@ -423,7 +424,7 @@
                 <asp:GridView runat="server" ID="gv_OrderAll" Width="1500px" EmptyDataText="ไม่มีการสร้างรายการ" AutoGenerateColumns="false" CssClass="table table-striped table-bordered table-hover table-sm small"
                     HeaderStyle-HorizontalAlign="Center">
                     <Columns>
-                        <asp:TemplateField>
+                        <asp:TemplateField Visible="false">
                             <HeaderTemplate>
                                 <asp:CheckBox runat="server" ID="cbAll" ToolTip="เลือกทั้งหมด" CssClass="m-2" OnCheckedChanged="cbAll_CheckedChanged" AutoPostBack="true" />
                             </HeaderTemplate>
@@ -572,7 +573,7 @@
                 </div>
             </div>
            
-            <div class="col-sm-12 col-md-3 border-2 my-2" >
+            <div class="col-sm-12 col-md-3 border-2 my-2" runat="server" id="dv_txtDeliveryOrder" visible="false">
                 
                 <div class=" input-group" runat="server" id="dv_Deliver" visible="false">
 
@@ -598,7 +599,7 @@
                             <asp:ImageButton runat="server" ID="btnLalamove" OnClick="btnLalamove_Click" Width="110px" CssClass="mt-2 mg-Lala" ImageUrl="~/Icon/Lalamove.png" Visible="false" />
                         </div>
                         <div class="col-6">
-                            <asp:ImageButton runat="server" ID="btnNotify" OnClick="btnNotifications_Click" Width="100px" CssClass="img-mt--12px" ImageUrl="~/Icon/fast-delivery.png" />
+                            <asp:ImageButton runat="server" ID="btnNotify" OnClick="btnNotifications_Click" Width="100px" CssClass="img-mt--12px" ImageUrl="~/Icon/fast-delivery.png" Visible="false" />
                         </div>
                     </div>
                 </div>

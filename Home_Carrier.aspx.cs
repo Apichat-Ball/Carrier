@@ -33,7 +33,7 @@ namespace Carrier
             }
             if (Session["_UserID"] == null)
             {
-                Response.Redirect("https://www.sfg-th.com/Login/");
+                Response.Redirect("https://www.sfg-th.com/Login/Default.aspx?Page=Carrier/");
             }
             lbuserid.Text = Session["_UserID"].ToString();
             if (!IsPostBack)
@@ -56,9 +56,26 @@ namespace Carrier
                     ddlFavorites.DataSource = allFavorite;
                     ddlFavorites.DataBind();
                     ddlFavorites.Items.Insert(3, new ListItem{ Value = "ROX", Text = "R.O.X.Flagship store" });*/
+
+            List<string> docnoInBFID = new List<string>();
+            if (txtDocnoSearch.Text != "" && txtDocnoSearch.Text.StartsWith("FL"))
+            {
+                docnoInBFID = carrier_Entities.Order_Big_Box.Where(w => w.Docno.Contains(txtDocnoSearch.Text)).Select(s => s.Docno).ToList();
+            }
+            else if(txtDocnoSearch.Text != "" )
+            {
+
+                var docInBig = carrier_Entities.Order_Big_Box.Where(w => w.BFID == txtDocnoSearch.Text).Select(s=>s.Docno).ToList();
+                docnoInBFID.AddRange(docInBig);
+            }
+            else
+            {
+                docnoInBFID = new List<string>() ;
+            }
+
             var orderList = (from orderItem in carrier_Entities.Order_Item
                              join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
-                             where order.UserID == user // && orderItem.Status != "C"
+                             where order.UserID == user && (docnoInBFID.Contains(order.Docno) || docnoInBFID.Count == 0) // && orderItem.Status != "C"
                              select new
                              {
                                  Docno = orderItem.Docno,
@@ -84,7 +101,7 @@ namespace Carrier
                 var end = DateTime.ParseExact(txtDateEnd.Text, format, enUS, DateTimeStyles.None);
                 if(lbstatusSearch.Text == "First")
                 {
-                    orderList = orderList.Where(w =>w.status != "C" && w.status != "A" && w.status != "SP" && w.status != "SL").ToList();
+                    orderList = orderList.Where(w =>w.status != "C" && w.status != "A" && w.status != "SP" /*&& w.status != "SL"*/).ToList();
                 }
                 else
                 {
@@ -93,15 +110,13 @@ namespace Carrier
                         if (txtPnoSearch.Text != "")
                         {
                             orderList = orderList.Where(w =>  w.pno != null).ToList();
-                            orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
-                            && (w.pno.StartsWith(txtPnoSearch.Text.ToUpper()) || txtPnoSearch.Text == "")
+                            orderList = orderList.Where(w => (w.pno.StartsWith(txtPnoSearch.Text.ToUpper()) || txtPnoSearch.Text == "")
                             && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
                             && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
                         }
                         else
                         {
-                            orderList = orderList.Where(w => (w.Docno.Contains(txtDocnoSearch.Text) || txtDocnoSearch.Text == "")
-                            && (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
+                            orderList = orderList.Where(w => (w.dstName.Contains(txtDstNameSearch.Text) || txtDstNameSearch.Text == "")
                             && (w.ArticleCategory.Contains(txtArticleSearch.Text) || txtArticleSearch.Text == "")).ToList();
                         }
 
@@ -114,16 +129,17 @@ namespace Carrier
                 }
 
                 #region Test
-                var BigBox = carrier_Entities.Order_Big_Box.ToList();
+                var BigBox = carrier_Entities.Order_Big_Box.AsQueryable();
                 if(txtDocnoSearch.Text != "" || txtPnoSearch.Text != "" || txtDstNameSearch.Text != "" || txtArticleSearch.Text != "" || lbstatusSearch.Text != "First")
                 {
-                    BigBox = BigBox.ToList();
+                    
                 }
                 else
                 {
-                    BigBox = BigBox.Where(w => w.Status == "A").ToList();
+                    BigBox = BigBox.Where(w => w.Status == "A");
                 }
                 var DocnoGroup = BigBox.Select(s => s.Docno).ToList();
+                var orderListCloonDOc = orderList.Select(s=>s.Docno).ToList();
                 var orderListCloon = orderList.ToList();
                 var orderGroup = orderList.FindAll(f => DocnoGroup.Contains(f.Docno));
                 foreach (var gro in orderGroup)
@@ -131,7 +147,7 @@ namespace Carrier
 
                     orderList.Remove(gro);
                 }
-                var groupBox = BigBox.GroupBy(g => new { g.BFID }).Select(s => new { s.Key.BFID, docno = s.Select(d => d.Docno).FirstOrDefault() }).ToList();
+                var groupBox = BigBox.Where(w=> orderListCloonDOc.Contains(w.Docno)).GroupBy(g => new { g.BFID }).Select(s => new { s.Key.BFID, docno = s.Select(d => d.Docno).FirstOrDefault() }).ToList();
 
                 foreach (var Box in groupBox)
                 {
@@ -368,44 +384,54 @@ namespace Carrier
                     }
                     if (lbStatusItem.Text == "SL")
                     {
-                        if(checkBigBox.FirstOrDefault().Lala_Car_Status != null)
+                        if(checkBigBox.Count() != 0)
                         {
-                            var codeStatus = checkBigBox.FirstOrDefault().Lala_Car_Status;
-                            var statusTH = carrier_Entities.Lalamove_Car_Status.Where(w => w.Status_Lala_Code == codeStatus).FirstOrDefault();
-                            if(statusTH != null)
+                            if (checkBigBox.FirstOrDefault().Lala_Car_Status != null)
                             {
-                                lbTimeTrackingText.Text = statusTH.Status_Lala_Name_TH;
-                                switch (statusTH.Status_Lala_Code)
+                                var codeStatus = checkBigBox.FirstOrDefault().Lala_Car_Status;
+                                var statusTH = carrier_Entities.Lalamove_Car_Status.Where(w => w.Status_Lala_Code == codeStatus).FirstOrDefault();
+                                if (statusTH != null)
                                 {
-                                    case "PICKED_UP":
-                                    case "ON_GOING":
-                                    case "ASSIGNING_DRIVER":
-                                        lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
-                                        lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
-                                        lbTimeTrackingText.CssClass = "status-tracking";
-                                        break;
-                                    case "CANCELED":
-                                    case "EXPIRED":
-                                        lbTimeTrackingText.BackColor = System.Drawing.Color.PaleVioletRed;
-                                        lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
-                                        lbTimeTrackingText.CssClass = "status-tracking";
-                                        break;
-                                    case "COMPLETED":
-                                        lbTimeTrackingText.BackColor = System.Drawing.Color.LimeGreen;
-                                        lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
-                                        lbTimeTrackingText.CssClass = "status-tracking";
-                                        break;
+                                    lbTimeTrackingText.Text = statusTH.Status_Lala_Name_TH;
+                                    switch (statusTH.Status_Lala_Code)
+                                    {
+                                        case "PICKED_UP":
+                                        case "ON_GOING":
+                                        case "ASSIGNING_DRIVER":
+                                            lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
+                                            lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                            lbTimeTrackingText.CssClass = "status-tracking";
+                                            break;
+                                        case "CANCELED":
+                                        case "EXPIRED":
+                                            lbTimeTrackingText.BackColor = System.Drawing.Color.PaleVioletRed;
+                                            lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                            lbTimeTrackingText.CssClass = "status-tracking";
+                                            break;
+                                        case "COMPLETED":
+                                            lbTimeTrackingText.BackColor = System.Drawing.Color.LimeGreen;
+                                            lbTimeTrackingText.ForeColor = System.Drawing.Color.White;
+                                            lbTimeTrackingText.CssClass = "status-tracking";
+                                            break;
+                                    }
                                 }
+                                else
+                                {
+                                    lbTimeTrackingText.Text = "ส่งผ่าน Lalamove";
+                                    lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
+                                    lbTimeTrackingText.CssClass = "status-tracking";
+                                }
+
+                                imgbtnCancelOrder.Visible = false;
+
                             }
                             else
                             {
                                 lbTimeTrackingText.Text = "ส่งผ่าน Lalamove";
+                                imgbtnCancelOrder.Visible = false;
                                 lbTimeTrackingText.BackColor = System.Drawing.Color.Orange;
                                 lbTimeTrackingText.CssClass = "status-tracking";
                             }
-                            
-                            imgbtnCancelOrder.Visible = false;
-                            
                         }
                         else
                         {

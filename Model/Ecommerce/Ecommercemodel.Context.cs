@@ -7,16 +7,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Carrier.Model.Online_Lazada
+namespace Carrier.Model.Ecommerce
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class Online_LazadaEntities : DbContext
+    public partial class ECommerceEntities : DbContext
     {
-        public Online_LazadaEntities()
-            : base("name=Online_LazadaEntities")
+        public ECommerceEntities()
+            : base("name=ECommerceEntities")
         {
         }
     
@@ -25,11 +25,8 @@ namespace Carrier.Model.Online_Lazada
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<API_Key> API_Key { get; set; }
-        public virtual DbSet<PROVINCE> PROVINCEs { get; set; }
-        public virtual DbSet<SAP_Reference> SAP_Reference { get; set; }
-        public virtual DbSet<API_Shopify_GetOrderItems> API_Shopify_GetOrderItems { get; set; }
-        public virtual DbSet<API_Shopify_GetOrders> API_Shopify_GetOrders { get; set; }
-        public virtual DbSet<API_Shopify_Items> API_Shopify_Items { get; set; }
+        public virtual DbSet<Channel> Channels { get; set; }
+        public virtual DbSet<Form_Order> Form_Order { get; set; }
+        public virtual DbSet<Form_Orderitem> Form_Orderitem { get; set; }
     }
 }

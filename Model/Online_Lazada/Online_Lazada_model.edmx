@@ -15,18 +15,88 @@
           <Property Name="Email" Type="nvarchar" MaxLength="50" />
           <Property Name="App_Key" Type="nvarchar" MaxLength="500" />
           <Property Name="App_Secret" Type="nvarchar" MaxLength="500" />
-          <Property Name="AccessToken" Type="nvarchar" MaxLength="1000" />
+          <Property Name="AccessToken" Type="nvarchar(max)" />
           <Property Name="Url" Type="nvarchar" MaxLength="100" />
           <Property Name="API_Path" Type="nvarchar" MaxLength="50" />
           <Property Name="Code" Type="nvarchar" MaxLength="200" />
           <Property Name="Status_Token" Type="nvarchar" MaxLength="1" />
           <Property Name="Shop_ID" Type="nvarchar" MaxLength="50" />
-          <Property Name="refresh_token" Type="nvarchar" MaxLength="100" />
+          <Property Name="refresh_token" Type="nvarchar" MaxLength="1000" />
           <Property Name="refresh_expires_in" Type="datetime" />
           <Property Name="refresh_create" Type="datetime" />
           <Property Name="refresh_in" Type="datetime" />
           <Property Name="StorageLocation" Type="nvarchar" MaxLength="4" />
           <Property Name="Channel_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="API_Shopify_GetOrderItems">
+          <Key>
+            <PropertyRef Name="AccountAPI" />
+            <PropertyRef Name="ShopifyOrderID" />
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="AccountAPI" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="ShopifyOrderID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="sku" Type="nvarchar" MaxLength="50" />
+          <Property Name="quantity" Type="int" />
+          <Property Name="price" Type="float" />
+          <Property Name="total_discount" Type="float" />
+        </EntityType>
+        <EntityType Name="API_Shopify_GetOrders">
+          <Key>
+            <PropertyRef Name="AccountAPI" />
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="AccountAPI" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ID" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="OrderID" Type="nvarchar" MaxLength="20" />
+          <Property Name="ShopifyOrderID" Type="nvarchar" MaxLength="20" />
+          <Property Name="OrderDate" Type="datetime" />
+          <Property Name="OrderUpdatedDate" Type="datetime" />
+          <Property Name="order_number" Type="nvarchar" MaxLength="20" />
+          <Property Name="financial_status" Type="nvarchar" MaxLength="50" />
+          <Property Name="fulfillment_status" Type="nvarchar" MaxLength="50" />
+          <Property Name="s_Name" Type="nvarchar" MaxLength="1000" />
+          <Property Name="s_Address1" Type="nvarchar" MaxLength="2000" />
+          <Property Name="s_Address2" Type="nvarchar" MaxLength="2000" />
+          <Property Name="s_City" Type="nvarchar" MaxLength="200" />
+          <Property Name="s_State" Type="nvarchar" MaxLength="200" />
+          <Property Name="s_Pincode" Type="nvarchar" MaxLength="10" />
+          <Property Name="s_Phone" Type="nvarchar" MaxLength="20" />
+          <Property Name="s_Email" Type="nvarchar" MaxLength="1000" />
+          <Property Name="b_Name" Type="nvarchar" MaxLength="1000" />
+          <Property Name="b_Address1" Type="nvarchar" MaxLength="2000" />
+          <Property Name="b_Address2" Type="nvarchar" MaxLength="2000" />
+          <Property Name="b_City" Type="nvarchar" MaxLength="200" />
+          <Property Name="b_State" Type="nvarchar" MaxLength="200" />
+          <Property Name="b_Pincode" Type="nvarchar" MaxLength="10" />
+          <Property Name="b_Phone" Type="nvarchar" MaxLength="20" />
+          <Property Name="b_Email" Type="nvarchar" MaxLength="1000" />
+          <Property Name="Flash_outTradeNo" Type="nvarchar" MaxLength="20" />
+          <Property Name="Flash_pno" Type="nvarchar" MaxLength="20" />
+          <Property Name="Flag_Item" Type="bit" />
+          <Property Name="Date_Send" Type="datetime" />
+          <Property Name="Channel_ID" Type="int" />
+          <Property Name="StorageWM_ID" Type="int" />
+          <Property Name="Docno" Type="nvarchar" MaxLength="20" />
+          <Property Name="shipping_price" Type="float" />
+        </EntityType>
+        <EntityType Name="API_Shopify_Items">
+          <Key>
+            <PropertyRef Name="AccountAPI" />
+            <PropertyRef Name="variant_id" />
+            <PropertyRef Name="product_id" />
+            <PropertyRef Name="inventory_item_id" />
+          </Key>
+          <Property Name="AccountAPI" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="variant_id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="product_id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="inventory_item_id" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="sku" Type="nvarchar" MaxLength="50" />
+          <Property Name="status" Type="nvarchar" MaxLength="50" />
+          <Property Name="created_at" Type="datetime" />
+          <Property Name="updated_at" Type="datetime" />
+          <Property Name="Date_Send" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'Online_Lazada.dbo.PROVINCE' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -63,6 +133,9 @@ warning 6002: The table/view 'Online_Lazada.dbo.PROVINCE' does not have a primar
         </EntityType>
         <EntityContainer Name="Online_LazadaModelStoreContainer">
           <EntitySet Name="API_Key" EntityType="Self.API_Key" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="API_Shopify_GetOrderItems" EntityType="Self.API_Shopify_GetOrderItems" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="API_Shopify_GetOrders" EntityType="Self.API_Shopify_GetOrders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="API_Shopify_Items" EntityType="Self.API_Shopify_Items" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SAP_Reference" EntityType="Self.SAP_Reference" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PROVINCE" EntityType="Self.PROVINCE" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -87,13 +160,13 @@ warning 6002: The table/view 'Online_Lazada.dbo.PROVINCE' does not have a primar
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="App_Key" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="App_Secret" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="AccessToken" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="AccessToken" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Url" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="API_Path" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Code" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="Status_Token" Type="String" MaxLength="1" FixedLength="false" Unicode="true" />
           <Property Name="Shop_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="refresh_token" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="refresh_token" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Name="refresh_expires_in" Type="DateTime" Precision="3" />
           <Property Name="refresh_create" Type="DateTime" Precision="3" />
           <Property Name="refresh_in" Type="DateTime" Precision="3" />
@@ -104,6 +177,9 @@ warning 6002: The table/view 'Online_Lazada.dbo.PROVINCE' does not have a primar
           <EntitySet Name="API_Key" EntityType="Self.API_Key" />
           <EntitySet Name="PROVINCEs" EntityType="Online_LazadaModel.PROVINCE" />
           <EntitySet Name="SAP_Reference" EntityType="Online_LazadaModel.SAP_Reference" />
+          <EntitySet Name="API_Shopify_GetOrderItems" EntityType="Online_LazadaModel.API_Shopify_GetOrderItems" />
+          <EntitySet Name="API_Shopify_GetOrders" EntityType="Online_LazadaModel.API_Shopify_GetOrders" />
+          <EntitySet Name="API_Shopify_Items" EntityType="Online_LazadaModel.API_Shopify_Items" />
         </EntityContainer>
         <EntityType Name="PROVINCE">
           <Key>
@@ -135,6 +211,76 @@ warning 6002: The table/view 'Online_Lazada.dbo.PROVINCE' does not have a primar
           <Property Name="ItemLineNo" Type="Int32" Nullable="false" />
           <Property Name="DocHeader" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="DocDate" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="API_Shopify_GetOrderItems">
+          <Key>
+            <PropertyRef Name="AccountAPI" />
+            <PropertyRef Name="ShopifyOrderID" />
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="AccountAPI" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="ShopifyOrderID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="sku" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="quantity" Type="Int32" />
+          <Property Name="price" Type="Double" />
+          <Property Name="total_discount" Type="Double" />
+        </EntityType>
+        <EntityType Name="API_Shopify_GetOrders">
+          <Key>
+            <PropertyRef Name="AccountAPI" />
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="AccountAPI" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="OrderID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ShopifyOrderID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="OrderDate" Type="DateTime" Precision="3" />
+          <Property Name="OrderUpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="order_number" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="financial_status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="fulfillment_status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="s_Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="s_Address1" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="s_Address2" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="s_City" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="s_State" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="s_Pincode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="s_Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="s_Email" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="b_Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="b_Address1" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="b_Address2" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="b_City" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="b_State" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="b_Pincode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="b_Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="b_Email" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="Flash_outTradeNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Flash_pno" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_Item" Type="Boolean" />
+          <Property Name="Date_Send" Type="DateTime" Precision="3" />
+          <Property Name="Channel_ID" Type="Int32" />
+          <Property Name="StorageWM_ID" Type="Int32" />
+          <Property Name="Docno" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="shipping_price" Type="Double" />
+        </EntityType>
+        <EntityType Name="API_Shopify_Items">
+          <Key>
+            <PropertyRef Name="AccountAPI" />
+            <PropertyRef Name="variant_id" />
+            <PropertyRef Name="product_id" />
+            <PropertyRef Name="inventory_item_id" />
+          </Key>
+          <Property Name="AccountAPI" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="variant_id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="product_id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="inventory_item_id" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="sku" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="created_at" Type="DateTime" Precision="3" />
+          <Property Name="updated_at" Type="DateTime" Precision="3" />
+          <Property Name="Date_Send" Type="DateTime" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -192,7 +338,74 @@ warning 6002: The table/view 'Online_Lazada.dbo.PROVINCE' does not have a primar
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          <EntitySetMapping Name="API_Shopify_GetOrderItems">
+            <EntityTypeMapping TypeName="Online_LazadaModel.API_Shopify_GetOrderItems">
+              <MappingFragment StoreEntitySet="API_Shopify_GetOrderItems">
+                <ScalarProperty Name="total_discount" ColumnName="total_discount" />
+                <ScalarProperty Name="price" ColumnName="price" />
+                <ScalarProperty Name="quantity" ColumnName="quantity" />
+                <ScalarProperty Name="sku" ColumnName="sku" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="ShopifyOrderID" ColumnName="ShopifyOrderID" />
+                <ScalarProperty Name="AccountAPI" ColumnName="AccountAPI" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="API_Shopify_GetOrders">
+            <EntityTypeMapping TypeName="Online_LazadaModel.API_Shopify_GetOrders">
+              <MappingFragment StoreEntitySet="API_Shopify_GetOrders">
+                <ScalarProperty Name="shipping_price" ColumnName="shipping_price" />
+                <ScalarProperty Name="Docno" ColumnName="Docno" />
+                <ScalarProperty Name="StorageWM_ID" ColumnName="StorageWM_ID" />
+                <ScalarProperty Name="Channel_ID" ColumnName="Channel_ID" />
+                <ScalarProperty Name="Date_Send" ColumnName="Date_Send" />
+                <ScalarProperty Name="Flag_Item" ColumnName="Flag_Item" />
+                <ScalarProperty Name="Flash_pno" ColumnName="Flash_pno" />
+                <ScalarProperty Name="Flash_outTradeNo" ColumnName="Flash_outTradeNo" />
+                <ScalarProperty Name="b_Email" ColumnName="b_Email" />
+                <ScalarProperty Name="b_Phone" ColumnName="b_Phone" />
+                <ScalarProperty Name="b_Pincode" ColumnName="b_Pincode" />
+                <ScalarProperty Name="b_State" ColumnName="b_State" />
+                <ScalarProperty Name="b_City" ColumnName="b_City" />
+                <ScalarProperty Name="b_Address2" ColumnName="b_Address2" />
+                <ScalarProperty Name="b_Address1" ColumnName="b_Address1" />
+                <ScalarProperty Name="b_Name" ColumnName="b_Name" />
+                <ScalarProperty Name="s_Email" ColumnName="s_Email" />
+                <ScalarProperty Name="s_Phone" ColumnName="s_Phone" />
+                <ScalarProperty Name="s_Pincode" ColumnName="s_Pincode" />
+                <ScalarProperty Name="s_State" ColumnName="s_State" />
+                <ScalarProperty Name="s_City" ColumnName="s_City" />
+                <ScalarProperty Name="s_Address2" ColumnName="s_Address2" />
+                <ScalarProperty Name="s_Address1" ColumnName="s_Address1" />
+                <ScalarProperty Name="s_Name" ColumnName="s_Name" />
+                <ScalarProperty Name="fulfillment_status" ColumnName="fulfillment_status" />
+                <ScalarProperty Name="financial_status" ColumnName="financial_status" />
+                <ScalarProperty Name="order_number" ColumnName="order_number" />
+                <ScalarProperty Name="OrderUpdatedDate" ColumnName="OrderUpdatedDate" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="ShopifyOrderID" ColumnName="ShopifyOrderID" />
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="AccountAPI" ColumnName="AccountAPI" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="API_Shopify_Items">
+            <EntityTypeMapping TypeName="Online_LazadaModel.API_Shopify_Items">
+              <MappingFragment StoreEntitySet="API_Shopify_Items">
+                <ScalarProperty Name="Date_Send" ColumnName="Date_Send" />
+                <ScalarProperty Name="updated_at" ColumnName="updated_at" />
+                <ScalarProperty Name="created_at" ColumnName="created_at" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="sku" ColumnName="sku" />
+                <ScalarProperty Name="inventory_item_id" ColumnName="inventory_item_id" />
+                <ScalarProperty Name="product_id" ColumnName="product_id" />
+                <ScalarProperty Name="variant_id" ColumnName="variant_id" />
+                <ScalarProperty Name="AccountAPI" ColumnName="AccountAPI" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

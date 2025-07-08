@@ -1,0 +1,399 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ECommerceModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Channel">
+          <Key>
+            <PropertyRef Name="Channel_ID" />
+          </Key>
+          <Property Name="Channel_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Channel_Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="PrefixChannel" Type="nvarchar" MaxLength="8" />
+          <Property Name="Type_Transfer" Type="nvarchar" MaxLength="10" />
+          <Property Name="Type_Transaction" Type="nvarchar" MaxLength="10" />
+          <Property Name="SiteID" Type="int" />
+          <Property Name="TerminalID" Type="int" />
+          <Property Name="PaymentTypeCode" Type="nvarchar" MaxLength="10" />
+          <Property Name="WMK_Channel_ID" Type="nvarchar" MaxLength="4" />
+          <Property Name="WMK_StorageWM" Type="nvarchar" MaxLength="4" />
+          <Property Name="Flag_Status" Type="bit" />
+          <Property Name="Flag_Create" Type="bit" />
+          <Property Name="Type_Company" Type="nvarchar" MaxLength="4" />
+          <Property Name="Pickup_Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Pickup_Address" Type="nvarchar" MaxLength="200" />
+          <Property Name="Pickup_City" Type="nvarchar" MaxLength="100" />
+          <Property Name="Pickup_Province" Type="nvarchar" MaxLength="100" />
+          <Property Name="Pickup_Postcode" Type="nvarchar" MaxLength="5" />
+          <Property Name="Pickup_Phone" Type="nvarchar" MaxLength="20" />
+          <Property Name="Pickup_Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Group_Type" Type="nvarchar" MaxLength="50" />
+          <Property Name="Start_Event" Type="date" />
+          <Property Name="End_Event" Type="date" />
+          <Property Name="Gateway_payment" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Form_Order">
+          <Key>
+            <PropertyRef Name="Docno" />
+          </Key>
+          <Property Name="Docno" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Date_Send" Type="datetime" />
+          <Property Name="StatusOrder_ID" Type="int" />
+          <Property Name="UserID" Type="int" />
+          <Property Name="Transaction_Date" Type="datetime" />
+          <Property Name="TransactionType_ID" Type="int" />
+          <Property Name="Ref_Order" Type="nvarchar" MaxLength="50" />
+          <Property Name="CustomerName" Type="nvarchar" MaxLength="1000" />
+          <Property Name="CustomerPhone" Type="nvarchar" MaxLength="50" />
+          <Property Name="CustomerEmail" Type="nvarchar" MaxLength="50" />
+          <Property Name="s_Name" Type="nvarchar" MaxLength="300" />
+          <Property Name="s_Phone1" Type="nvarchar" MaxLength="15" />
+          <Property Name="s_Phone2" Type="nvarchar" MaxLength="15" />
+          <Property Name="s_Address1" Type="nvarchar(max)" />
+          <Property Name="s_District_Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="s_Province_ID" Type="int" />
+          <Property Name="s_City_ID" Type="int" />
+          <Property Name="s_PostCode" Type="int" />
+          <Property Name="s_Amphur_ID" Type="int" />
+          <Property Name="s_District_ID" Type="int" />
+          <Property Name="s_Address2" Type="nvarchar(max)" />
+          <Property Name="Same_Address" Type="bit" />
+          <Property Name="b_Etax" Type="bit" />
+          <Property Name="b_EmailEtax" Type="nvarchar" MaxLength="400" />
+          <Property Name="b_BranchID" Type="nvarchar" MaxLength="5" />
+          <Property Name="b_ID_Card" Type="nvarchar" MaxLength="13" />
+          <Property Name="b_Name" Type="nvarchar" MaxLength="300" />
+          <Property Name="b_Address1" Type="nvarchar(max)" />
+          <Property Name="b_Address2" Type="nvarchar(max)" />
+          <Property Name="b_District_ID" Type="int" />
+          <Property Name="b_District_Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="b_City_ID" Type="int" />
+          <Property Name="b_City_Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="b_Province_ID" Type="int" />
+          <Property Name="b_Province_Name" Type="nvarchar" MaxLength="1000" />
+          <Property Name="b_PostCode" Type="int" />
+          <Property Name="b_Phone1" Type="nvarchar" MaxLength="15" />
+          <Property Name="b_Phone2" Type="nvarchar" MaxLength="15" />
+          <Property Name="b_Amphur_ID" Type="int" />
+          <Property Name="Shipping_Price" Type="float" />
+          <Property Name="Remark_Print" Type="nvarchar" MaxLength="500" />
+          <Property Name="Date_Tracking" Type="datetime" />
+          <Property Name="UserID_Tracking" Type="nvarchar" MaxLength="10" />
+          <Property Name="Remark" Type="nvarchar(max)" />
+          <Property Name="Url_QuickPay" Type="nvarchar" MaxLength="200" />
+          <Property Name="Expiry_Payment" Type="datetime" />
+          <Property Name="P_qpID" Type="nvarchar(max)" />
+          <Property Name="P_approvalCode" Type="nvarchar" MaxLength="10" />
+          <Property Name="P_referenceNo" Type="nvarchar" MaxLength="10" />
+          <Property Name="P_transactionDateTime" Type="datetime" />
+          <Property Name="TrackingNo" Type="nvarchar" MaxLength="30" />
+          <Property Name="Docno_WMK" Type="nvarchar" MaxLength="20" />
+          <Property Name="Shared_Customer" Type="bit" />
+          <Property Name="FB_Customer" Type="bit" />
+          <Property Name="Short_URL" Type="nvarchar(max)" />
+          <Property Name="InventoryDocID" Type="int" />
+          <Property Name="UserID_Commission" Type="int" />
+          <Property Name="Code_Commission" Type="nvarchar" MaxLength="10" />
+          <Property Name="Payment_ID" Type="nvarchar" MaxLength="20" />
+          <Property Name="Sitestorage" Type="nvarchar" MaxLength="8" />
+          <Property Name="RecheckEtax" Type="nvarchar" MaxLength="2" />
+        </EntityType>
+        <EntityType Name="Form_Orderitem">
+          <Key>
+            <PropertyRef Name="Docno" />
+            <PropertyRef Name="No" />
+          </Key>
+          <Property Name="Docno" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="No" Type="int" Nullable="false" />
+          <Property Name="SKU" Type="nvarchar" MaxLength="30" />
+          <Property Name="Unit" Type="int" />
+          <Property Name="PromoID" Type="int" />
+          <Property Name="retailPrice" Type="float" />
+          <Property Name="NetPrice" Type="float" />
+          <Property Name="Tracking_No" Type="nvarchar" MaxLength="100" />
+          <Property Name="Box_ID" Type="nvarchar" MaxLength="4" />
+          <Property Name="Unit_Box" Type="int" />
+          <Property Name="Channel_ID" Type="int" />
+          <Property Name="StatusItem_ID" Type="int" />
+          <Property Name="POS_Date" Type="date" />
+          <Property Name="Flag_Return" Type="bit" />
+        </EntityType>
+        <EntityContainer Name="ECommerceModelStoreContainer">
+          <EntitySet Name="Channel" EntityType="Self.Channel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Form_Order" EntityType="Self.Form_Order" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Form_Orderitem" EntityType="Self.Form_Orderitem" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ECommerceModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Channel">
+          <Key>
+            <PropertyRef Name="Channel_ID" />
+          </Key>
+          <Property Name="Channel_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Channel_Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="PrefixChannel" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Type_Transfer" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Type_Transaction" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SiteID" Type="Int32" />
+          <Property Name="TerminalID" Type="Int32" />
+          <Property Name="PaymentTypeCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="WMK_Channel_ID" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="WMK_StorageWM" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Flag_Status" Type="Boolean" />
+          <Property Name="Flag_Create" Type="Boolean" />
+          <Property Name="Type_Company" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Pickup_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Pickup_Address" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Pickup_City" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Pickup_Province" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Pickup_Postcode" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Pickup_Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Pickup_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Group_Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Start_Event" Type="DateTime" Precision="0" />
+          <Property Name="End_Event" Type="DateTime" Precision="0" />
+          <Property Name="Gateway_payment" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Form_Order">
+          <Key>
+            <PropertyRef Name="Docno" />
+          </Key>
+          <Property Name="Docno" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Date_Send" Type="DateTime" Precision="3" />
+          <Property Name="StatusOrder_ID" Type="Int32" />
+          <Property Name="UserID" Type="Int32" />
+          <Property Name="Transaction_Date" Type="DateTime" Precision="3" />
+          <Property Name="TransactionType_ID" Type="Int32" />
+          <Property Name="Ref_Order" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerName" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="s_Name" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="s_Phone1" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="s_Phone2" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="s_Address1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="s_District_Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="s_Province_ID" Type="Int32" />
+          <Property Name="s_City_ID" Type="Int32" />
+          <Property Name="s_PostCode" Type="Int32" />
+          <Property Name="s_Amphur_ID" Type="Int32" />
+          <Property Name="s_District_ID" Type="Int32" />
+          <Property Name="s_Address2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Same_Address" Type="Boolean" />
+          <Property Name="b_Etax" Type="Boolean" />
+          <Property Name="b_EmailEtax" Type="String" MaxLength="400" FixedLength="false" Unicode="true" />
+          <Property Name="b_BranchID" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="b_ID_Card" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
+          <Property Name="b_Name" Type="String" MaxLength="300" FixedLength="false" Unicode="true" />
+          <Property Name="b_Address1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="b_Address2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="b_District_ID" Type="Int32" />
+          <Property Name="b_District_Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="b_City_ID" Type="Int32" />
+          <Property Name="b_City_Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="b_Province_ID" Type="Int32" />
+          <Property Name="b_Province_Name" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="b_PostCode" Type="Int32" />
+          <Property Name="b_Phone1" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="b_Phone2" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="b_Amphur_ID" Type="Int32" />
+          <Property Name="Shipping_Price" Type="Double" />
+          <Property Name="Remark_Print" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Date_Tracking" Type="DateTime" Precision="3" />
+          <Property Name="UserID_Tracking" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Url_QuickPay" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Expiry_Payment" Type="DateTime" Precision="3" />
+          <Property Name="P_qpID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="P_approvalCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="P_referenceNo" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="P_transactionDateTime" Type="DateTime" Precision="3" />
+          <Property Name="TrackingNo" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Docno_WMK" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Shared_Customer" Type="Boolean" />
+          <Property Name="FB_Customer" Type="Boolean" />
+          <Property Name="Short_URL" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="InventoryDocID" Type="Int32" />
+          <Property Name="UserID_Commission" Type="Int32" />
+          <Property Name="Code_Commission" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Payment_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Sitestorage" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="RecheckEtax" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Form_Orderitem">
+          <Key>
+            <PropertyRef Name="Docno" />
+            <PropertyRef Name="No" />
+          </Key>
+          <Property Name="Docno" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="No" Type="Int32" Nullable="false" />
+          <Property Name="SKU" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Unit" Type="Int32" />
+          <Property Name="PromoID" Type="Int32" />
+          <Property Name="retailPrice" Type="Double" />
+          <Property Name="NetPrice" Type="Double" />
+          <Property Name="Tracking_No" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Box_ID" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="Unit_Box" Type="Int32" />
+          <Property Name="Channel_ID" Type="Int32" />
+          <Property Name="StatusItem_ID" Type="Int32" />
+          <Property Name="POS_Date" Type="DateTime" Precision="0" />
+          <Property Name="Flag_Return" Type="Boolean" />
+        </EntityType>
+        <EntityContainer Name="ECommerceEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Channels" EntityType="Self.Channel" />
+          <EntitySet Name="Form_Order" EntityType="Self.Form_Order" />
+          <EntitySet Name="Form_Orderitem" EntityType="Self.Form_Orderitem" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ECommerceModelStoreContainer" CdmEntityContainer="ECommerceEntities">
+          <EntitySetMapping Name="Channels">
+            <EntityTypeMapping TypeName="ECommerceModel.Channel">
+              <MappingFragment StoreEntitySet="Channel">
+                <ScalarProperty Name="Channel_ID" ColumnName="Channel_ID" />
+                <ScalarProperty Name="Channel_Name" ColumnName="Channel_Name" />
+                <ScalarProperty Name="PrefixChannel" ColumnName="PrefixChannel" />
+                <ScalarProperty Name="Type_Transfer" ColumnName="Type_Transfer" />
+                <ScalarProperty Name="Type_Transaction" ColumnName="Type_Transaction" />
+                <ScalarProperty Name="SiteID" ColumnName="SiteID" />
+                <ScalarProperty Name="TerminalID" ColumnName="TerminalID" />
+                <ScalarProperty Name="PaymentTypeCode" ColumnName="PaymentTypeCode" />
+                <ScalarProperty Name="WMK_Channel_ID" ColumnName="WMK_Channel_ID" />
+                <ScalarProperty Name="WMK_StorageWM" ColumnName="WMK_StorageWM" />
+                <ScalarProperty Name="Flag_Status" ColumnName="Flag_Status" />
+                <ScalarProperty Name="Flag_Create" ColumnName="Flag_Create" />
+                <ScalarProperty Name="Type_Company" ColumnName="Type_Company" />
+                <ScalarProperty Name="Pickup_Name" ColumnName="Pickup_Name" />
+                <ScalarProperty Name="Pickup_Address" ColumnName="Pickup_Address" />
+                <ScalarProperty Name="Pickup_City" ColumnName="Pickup_City" />
+                <ScalarProperty Name="Pickup_Province" ColumnName="Pickup_Province" />
+                <ScalarProperty Name="Pickup_Postcode" ColumnName="Pickup_Postcode" />
+                <ScalarProperty Name="Pickup_Phone" ColumnName="Pickup_Phone" />
+                <ScalarProperty Name="Pickup_Email" ColumnName="Pickup_Email" />
+                <ScalarProperty Name="Group_Type" ColumnName="Group_Type" />
+                <ScalarProperty Name="Start_Event" ColumnName="Start_Event" />
+                <ScalarProperty Name="End_Event" ColumnName="End_Event" />
+                <ScalarProperty Name="Gateway_payment" ColumnName="Gateway_payment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Form_Order">
+            <EntityTypeMapping TypeName="ECommerceModel.Form_Order">
+              <MappingFragment StoreEntitySet="Form_Order">
+                <ScalarProperty Name="Docno" ColumnName="Docno" />
+                <ScalarProperty Name="Date_Send" ColumnName="Date_Send" />
+                <ScalarProperty Name="StatusOrder_ID" ColumnName="StatusOrder_ID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Transaction_Date" ColumnName="Transaction_Date" />
+                <ScalarProperty Name="TransactionType_ID" ColumnName="TransactionType_ID" />
+                <ScalarProperty Name="Ref_Order" ColumnName="Ref_Order" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="CustomerPhone" ColumnName="CustomerPhone" />
+                <ScalarProperty Name="CustomerEmail" ColumnName="CustomerEmail" />
+                <ScalarProperty Name="s_Name" ColumnName="s_Name" />
+                <ScalarProperty Name="s_Phone1" ColumnName="s_Phone1" />
+                <ScalarProperty Name="s_Phone2" ColumnName="s_Phone2" />
+                <ScalarProperty Name="s_Address1" ColumnName="s_Address1" />
+                <ScalarProperty Name="s_District_Name" ColumnName="s_District_Name" />
+                <ScalarProperty Name="s_Province_ID" ColumnName="s_Province_ID" />
+                <ScalarProperty Name="s_City_ID" ColumnName="s_City_ID" />
+                <ScalarProperty Name="s_PostCode" ColumnName="s_PostCode" />
+                <ScalarProperty Name="s_Amphur_ID" ColumnName="s_Amphur_ID" />
+                <ScalarProperty Name="s_District_ID" ColumnName="s_District_ID" />
+                <ScalarProperty Name="s_Address2" ColumnName="s_Address2" />
+                <ScalarProperty Name="Same_Address" ColumnName="Same_Address" />
+                <ScalarProperty Name="b_Etax" ColumnName="b_Etax" />
+                <ScalarProperty Name="b_EmailEtax" ColumnName="b_EmailEtax" />
+                <ScalarProperty Name="b_BranchID" ColumnName="b_BranchID" />
+                <ScalarProperty Name="b_ID_Card" ColumnName="b_ID_Card" />
+                <ScalarProperty Name="b_Name" ColumnName="b_Name" />
+                <ScalarProperty Name="b_Address1" ColumnName="b_Address1" />
+                <ScalarProperty Name="b_Address2" ColumnName="b_Address2" />
+                <ScalarProperty Name="b_District_ID" ColumnName="b_District_ID" />
+                <ScalarProperty Name="b_District_Name" ColumnName="b_District_Name" />
+                <ScalarProperty Name="b_City_ID" ColumnName="b_City_ID" />
+                <ScalarProperty Name="b_City_Name" ColumnName="b_City_Name" />
+                <ScalarProperty Name="b_Province_ID" ColumnName="b_Province_ID" />
+                <ScalarProperty Name="b_Province_Name" ColumnName="b_Province_Name" />
+                <ScalarProperty Name="b_PostCode" ColumnName="b_PostCode" />
+                <ScalarProperty Name="b_Phone1" ColumnName="b_Phone1" />
+                <ScalarProperty Name="b_Phone2" ColumnName="b_Phone2" />
+                <ScalarProperty Name="b_Amphur_ID" ColumnName="b_Amphur_ID" />
+                <ScalarProperty Name="Shipping_Price" ColumnName="Shipping_Price" />
+                <ScalarProperty Name="Remark_Print" ColumnName="Remark_Print" />
+                <ScalarProperty Name="Date_Tracking" ColumnName="Date_Tracking" />
+                <ScalarProperty Name="UserID_Tracking" ColumnName="UserID_Tracking" />
+                <ScalarProperty Name="Remark" ColumnName="Remark" />
+                <ScalarProperty Name="Url_QuickPay" ColumnName="Url_QuickPay" />
+                <ScalarProperty Name="Expiry_Payment" ColumnName="Expiry_Payment" />
+                <ScalarProperty Name="P_qpID" ColumnName="P_qpID" />
+                <ScalarProperty Name="P_approvalCode" ColumnName="P_approvalCode" />
+                <ScalarProperty Name="P_referenceNo" ColumnName="P_referenceNo" />
+                <ScalarProperty Name="P_transactionDateTime" ColumnName="P_transactionDateTime" />
+                <ScalarProperty Name="TrackingNo" ColumnName="TrackingNo" />
+                <ScalarProperty Name="Docno_WMK" ColumnName="Docno_WMK" />
+                <ScalarProperty Name="Shared_Customer" ColumnName="Shared_Customer" />
+                <ScalarProperty Name="FB_Customer" ColumnName="FB_Customer" />
+                <ScalarProperty Name="Short_URL" ColumnName="Short_URL" />
+                <ScalarProperty Name="InventoryDocID" ColumnName="InventoryDocID" />
+                <ScalarProperty Name="UserID_Commission" ColumnName="UserID_Commission" />
+                <ScalarProperty Name="Code_Commission" ColumnName="Code_Commission" />
+                <ScalarProperty Name="Payment_ID" ColumnName="Payment_ID" />
+                <ScalarProperty Name="Sitestorage" ColumnName="Sitestorage" />
+                <ScalarProperty Name="RecheckEtax" ColumnName="RecheckEtax" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Form_Orderitem">
+            <EntityTypeMapping TypeName="ECommerceModel.Form_Orderitem">
+              <MappingFragment StoreEntitySet="Form_Orderitem">
+                <ScalarProperty Name="Docno" ColumnName="Docno" />
+                <ScalarProperty Name="No" ColumnName="No" />
+                <ScalarProperty Name="SKU" ColumnName="SKU" />
+                <ScalarProperty Name="Unit" ColumnName="Unit" />
+                <ScalarProperty Name="PromoID" ColumnName="PromoID" />
+                <ScalarProperty Name="retailPrice" ColumnName="retailPrice" />
+                <ScalarProperty Name="NetPrice" ColumnName="NetPrice" />
+                <ScalarProperty Name="Tracking_No" ColumnName="Tracking_No" />
+                <ScalarProperty Name="Box_ID" ColumnName="Box_ID" />
+                <ScalarProperty Name="Unit_Box" ColumnName="Unit_Box" />
+                <ScalarProperty Name="Channel_ID" ColumnName="Channel_ID" />
+                <ScalarProperty Name="StatusItem_ID" ColumnName="StatusItem_ID" />
+                <ScalarProperty Name="POS_Date" ColumnName="POS_Date" />
+                <ScalarProperty Name="Flag_Return" ColumnName="Flag_Return" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

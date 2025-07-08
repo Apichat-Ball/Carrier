@@ -8,7 +8,10 @@
         <EntityTypeShape EntityType="Online_LazadaModel.API_Key" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="Online_LazadaModel.PROVINCE" Width="1.5" PointX="3.375" PointY="0.75" />
         <EntityTypeShape EntityType="Online_LazadaModel.SAP_Reference" Width="1.5" PointX="3.375" PointY="3.75" />
-      </Diagram>
+        <EntityTypeShape EntityType="Online_LazadaModel.API_Shopify_GetOrderItems" Width="1.5" PointX="5.75" PointY="0.75" />
+        <EntityTypeShape EntityType="Online_LazadaModel.API_Shopify_GetOrders" Width="1.5" PointX="5.75" PointY="4.75" />
+        <EntityTypeShape EntityType="Online_LazadaModel.API_Shopify_Items" Width="1.5" PointX="0.75" PointY="6.75" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

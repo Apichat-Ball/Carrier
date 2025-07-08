@@ -330,6 +330,15 @@ namespace Carrier
         protected global::System.Web.UI.WebControls.Label lbAlert;
 
         /// <summary>
+        /// lbAlert2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbAlert2;
+
+        /// <summary>
         /// gv_OrderAll control.
         /// </summary>
         /// <remarks>
@@ -409,6 +418,15 @@ namespace Carrier
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lkNext;
+
+        /// <summary>
+        /// dv_txtDeliveryOrder control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dv_txtDeliveryOrder;
 
         /// <summary>
         /// dv_Deliver control.

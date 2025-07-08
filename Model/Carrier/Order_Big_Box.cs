@@ -24,5 +24,8 @@ namespace Carrier.Model.Carrier
         public string Lala_Car_Key { get; set; }
         public string Lala_Car_Status { get; set; }
         public string status_Auto { get; set; }
+        public Nullable<System.DateTime> DateSend_Mail { get; set; }
+        public string SpecialRequests_Name { get; set; }
+        public string Remark_Driver { get; set; }
     }
 }

@@ -23,8 +23,22 @@ namespace Carrier
         {
             if (!IsPostBack)
             {
-                LoadUpdateNotify();
-                //CreateBudget();
+                if(Request.QueryString["Action"] != null)
+                {
+                    switch (Request.QueryString["Action"].ToString())
+                    {
+                        case "LoadUpdateNotify":
+                            LoadUpdateNotify();
+                            break;
+                        case "CallAuto":
+                            LoadUpdateNotify();
+                            System.Threading.Thread.Sleep(1000);
+                            CallAuto();
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
         }
         public void LoadUpdateNotify()
@@ -88,78 +102,182 @@ namespace Carrier
             }
         }
 
-        //public void CreateBudget()
-        //{
-        //    var dateRate = DateTime.Now.AddDays(-7);
-        //    var dateCurrent = new DateTime(dateRate.Year, dateRate.Month, dateRate.Day, 0, 0, 1);
-        //    var calNotBud = carrier_Entities.Calculate_Car.Where(w => w.StatusBud == "A" && w.Date_Group < dateCurrent).GroupBy(g=>g.DeliveryNumber).Select(s=>new { DeliveryNumber = s.Key }).ToList();
-        //    foreach(var deli in calNotBud)
-        //    {
-        //        var brand = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli.DeliveryNumber).GroupBy(g=> g.SDpart).Select(s=>new { SDpart = s.Key , QTY = s.Sum(x=>x.QTY) , Price = s.Sum(x=>x.Price) }).ToList();
-        //        foreach(var BrandID in brand)
-        //        {
-        //            var siteStorage = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli.DeliveryNumber && w.SDpart == BrandID.SDpart).GroupBy(g=>g.SiteStorage).Select(s=>s.Key).ToList();
-        //            var siteString = "";
-        //            foreach(var site in siteStorage)
-        //            {
-        //                if(site == siteStorage.LastOrDefault())
-        //                {
-        //                    siteString += site;
-        //                }
-        //                else
-        //                {
-        //                    siteString += site + ",";
-        //                }
-                        
-        //            }
-        //            modelToCreate req = new modelToCreate();
-        //            req.Department_ID = BrandID.SDpart;
-        //            req.TypeBudget_ID = 2;
-        //            req.Detail_ID = "5703";
-        //            req.Detail = "ค่ารถจัดส่ง Auto จากระบบ Courier Lalamove เลข DeliveryID:"+deli.DeliveryNumber +" SiteStorage:" + siteString;
-        //            req.OD_Docno = "";
-        //            req.Date_Use = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
+        public void CallAuto()
+        {
+            var dateOld = DateTime.Now.AddDays(-7);
+            var dateOldFixed = new DateTime(dateOld.Year, dateOld.Month, dateOld.Day, 0, 0, 1);
+            var ordNotPrint = (from orderItem in carrier_Entities.Order_Item
+                             join order in carrier_Entities.Orders on orderItem.Docno equals order.Docno
+                             where (orderItem.Status == null || orderItem.Status == "") && order.Transport_Type == 1 && order.Date_send >= dateOldFixed && order.Date_send <= DateTime.Now
+                             select new { Docno = order.Docno, pno = orderItem.pno }).ToList();
+            //var ordNotPrint = (from b in carrier_Entities.Order_Big_Box
+            //                   join o in carrier_Entities.Orders on b.Docno equals o.Docno
+            //                   join i in carrier_Entities.Order_Item on o.Docno equals i.Docno
+            //                   where o.Transport_Type == 1  && (i.Status == null || i.Status == "") && o.Date_send >= dateOldFixed && o.Date_send <= DateTime.Now && b.Status == "A"
+                               
+            //                   select new { Docno = o.Docno , pno = i.pno }).ToList();
+            if (ordNotPrint.Count() != 0)
+            {
+                var Orderpno = ordNotPrint.Select(s => s.pno);
+                var responseNotifyList = service_Flashs.Notify(Orderpno.ToList());
 
-        //            var usIdHeadstr = budget_Entities.Departments.Where(w=>w.Department_ID == BrandID.SDpart).FirstOrDefault().UserID;
-        //            var usIdHead = Convert.ToInt32(usIdHeadstr.Contains(",") ? usIdHeadstr.Split(',')[0] : usIdHeadstr);
-        //            var usAppID = InsideSFG_WF_Entities.Employees.Where(w => w.userID == usIdHead).FirstOrDefault();
-        //            var departIO = budget_Entities.Department_IO.Where(w => w.Department_ID == BrandID.SDpart).ToList();
-        //            if (departIO.Count() == 0)
-        //            {
-        //                var departmentDetail = InsideSFG_WF_Entities.BG_HApprove.Where(w => w.departmentID == BrandID.SDpart && new string[] { "S", "B" }.Contains(w.Sta)).FirstOrDefault();
-        //                req.UserId_Approve = usIdHead.ToString();
-        //            }
-        //            else
-        //            {
-        //                req.UserId_Approve = usIdHead.ToString();
-        //            }
-        //            req.UserID = 101974;
-        //            req.Estimate = Convert.ToDouble(BrandID.Price);
-        //            req.Actual = Convert.ToDouble(BrandID.Price);
 
-        //            var res = service_Budget.Create_MainExpense(req);
-        //            if (res.code == "S")
-        //            {
-        //                var carpass = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli.DeliveryNumber && w.SDpart == BrandID.SDpart).ToList();
-        //                foreach(var c in carpass)
-        //                {
-        //                    c.StatusBud = "F";
-        //                }
-        //                carrier_Entities.SaveChanges();
-        //            }
-        //        }
+                //List<messageNotify> messageNoti = new List<messageNotify>();
+                DateTime dateSuccess = DateTime.Now;
+                List<History_Notify_Order> his = new List<History_Notify_Order>();
+                #region V2
+                var lastNo = "";
+                var checkNO = carrier_Entities.History_Notify_Order.OrderByDescending(o => o.History_ID).FirstOrDefault().History_NO;
+                if (checkNO.Length == 8)
+                {
+                    lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00000";
+                }
+                else if (checkNO.Substring(3, 2) != DateTime.Now.Year.ToString().Substring(2, 2))
+                {
+                    lastNo = "HIS" + DateTime.Now.Year.ToString().Substring(2, 2) + "00000";
+                }
+                else
+                {
+                    lastNo = checkNO;
+                }
+                var lenght = (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString().Length;
+                var newNo = lastNo.Substring(0, 10 - lenght) + (Convert.ToInt32(lastNo.Substring(5, 5)) + 1).ToString();
+                #endregion
+                foreach (var responseNotify in responseNotifyList)
+                {
+                    var mess = "เลขที่พัสดุที่ : ";
+                    if (responseNotify.code == 1)
+                    {
+                        var lastpno = responseNotify.pno.LastOrDefault();
+                        foreach (var pno in responseNotify.pno)
+                        {
+                            var orderItem = carrier_Entities.Order_Item.Where(w => w.pno == pno).FirstOrDefault();
+                            orderItem.Status = "A";
+                            orderItem.CodeResponse = responseNotify.code;
+                            orderItem.ticketPickupId = responseNotify.ticketPickupId;
+                            orderItem.Date_Success = dateSuccess;
+                            if (lastpno == pno)
+                            {
+                                mess += pno + " เรียกรถเรียบร้อยแล้ว";
+                            }
+                            else
+                            {
+                                mess += pno + ",";
+                            }
+                            his.Add(new History_Notify_Order
+                            {
+                                History_NO = newNo,
+                                Docno = orderItem.Docno,
+                                Date_Notify = dateSuccess,
+                                pno = pno,
+                                Type_Send_KA = orderItem.TypeSendKO,
+                                SaveFrom = "Auto"
+                            });
+                        }
+                        carrier_Entities.Notifies.Add(new Notify
+                        {
+                            TicketPickupId = responseNotify.ticketPickupId,
+                            StaffInfoId = responseNotify.staffInfoId,
+                            StaffInfoName = responseNotify.staffInfoName,
+                            StaffInfoPhone = responseNotify.staffInfoPhone,
+                            UpCountryNote = responseNotify.upCountryNote,
+                            TimeoutAtText = responseNotify.timeoutAtText,
+                            TicketMessage = responseNotify.ticketMessage,
+                            DateNotify = responseNotify.dateSuccess,
+                            warehouseNo = responseNotify.warehouseNo
+                        });
+                        carrier_Entities.SaveChanges();
+                    }
+                    else
+                    {
+                        if (responseNotify.code == 1010)
+                        {
+                            var notiOld = carrier_Entities.Notifies.Where(w => w.warehouseNo == responseNotify.warehouseNo).OrderByDescending(r => r.DateNotify).ToList();
+                            foreach (var pno in responseNotify.pno)
+                            {
+                                var lastpno = responseNotify.pno.LastOrDefault();
+                                var orderItem = carrier_Entities.Order_Item.Where(w => w.pno == pno).FirstOrDefault();
+                                if (notiOld == null)
+                                {
+                                    orderItem.Status = "A";
+                                    orderItem.CodeResponse = 1;
+                                    orderItem.Date_Success = dateSuccess;
+                                    //orderItem.ticketPickupId = ;
+                                    carrier_Entities.SaveChanges();
+                                }
+                                else
+                                {
+                                    orderItem.Status = "A";
+                                    orderItem.CodeResponse = 1;
+                                    orderItem.ticketPickupId = notiOld.Select(s => s.TicketPickupId).FirstOrDefault();
+                                    orderItem.Date_Success = dateSuccess;
+                                    carrier_Entities.SaveChanges();
+                                }
+                                if (lastpno == pno)
+                                {
+                                    mess += pno + " เรียกรถเรียบร้อยแล้ว";
+                                }
+                                else
+                                {
+                                    mess += pno + ",";
+                                }
+                                var hisNoti = carrier_Entities.History_Notify_Order.Where(w => w.pno == pno).FirstOrDefault();
+                                if (hisNoti == null)
+                                {
+                                    his.Add(new History_Notify_Order
+                                    {
+                                        History_NO = newNo,
+                                        Docno = orderItem.Docno,
+                                        Date_Notify = dateSuccess,
+                                        pno = pno,
+                                        Type_Send_KA = orderItem.TypeSendKO,
+                                        SaveFrom = "Auto"
+                                    });
+                                }
+                            }
+                        }
+                        else
+                        {
 
-        //        carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log
-        //        {
-        //            dateSend = DateTime.Now,
-        //            path = "RunAuto/CreateBudget",
-        //            request = "Delivery:"+ deli.DeliveryNumber,
-        //            respon = "Pass",
-        //            status = "1"
-        //        });
-        //        carrier_Entities.SaveChanges();
-        //    }
-        //}
+                            var lastpno = responseNotify.pno.LastOrDefault();
+                            foreach (var pno in responseNotify.pno)
+                            {
+                                var orderItem = carrier_Entities.Order_Item.Where(w => w.pno == pno).FirstOrDefault();
+                                orderItem.CodeResponse = responseNotify.code;
+                                carrier_Entities.SaveChanges();
+                                if (lastpno == pno)
+                                {
+                                    mess += pno + " ไม่สามารถเรียกรถได้";
+                                }
+                                else
+                                {
+                                    mess += pno + ",";
+                                }
+                            }
+                            //messageNoti.Add(new messageNotify { code = 1, message = mess });
+                        }
+                    }
+                    var history = carrier_Entities.History_Notify_Order.Where(w => Orderpno.ToList().Contains(w.pno)).ToList();
+                    carrier_Entities.API_Carrier_Log.Add(new API_Carrier_Log
+                    {
+                        dateSend = DateTime.Now,
+                        path = "Carrier/RunAuto_ADD_History_Notify",
+                        request = Newtonsoft.Json.JsonConvert.SerializeObject(history),
+                        status = responseNotify.code.ToString(),
+                        respon = mess
+                    });
+                    carrier_Entities.SaveChanges();
+                }
+                if (his.Count != 0)
+                {
+                    carrier_Entities.History_Notify_Order.AddRange(his);
+                    carrier_Entities.SaveChanges();
+                }
+            }
+
+        }
+
+
         
 
     }

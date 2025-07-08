@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Carrier.Model.Carrier;
 using Carrier.Model.Budget;
+using Carrier.Model.Budget_2025;
 using Carrier.Model.Whale;
 using Carrier.Model.InsideSFG_WF;
 using Carrier.Service;
@@ -23,6 +24,7 @@ namespace Carrier
         Service_Budget service_Budget = new Service_Budget();
         CarrierEntities carrier_Entities = new CarrierEntities();
         BudgetEntities budget_Entities = new BudgetEntities();
+        Budget_2025Entities budget_2025_Entities = new Budget_2025Entities();
         WhaleEntities Whale_Entities = new WhaleEntities();
         InsideSFG_WFEntities InsideSFG_WF_Entities = new InsideSFG_WFEntities();
 
@@ -576,6 +578,10 @@ namespace Carrier
                                                 price = Convert.ToDouble((cal.Sum(s => s.Price) ?? 0).ToString("#,##0"))
                                             });
                                             total.price_Lalamove += -Convert.ToDouble(item[3].ToString());
+                                            foreach(var c in cal.ToList())
+                                            {
+                                                c.Price = ((-Convert.ToDouble(item[3].ToString())) / cal.Count()); 
+                                            }
                                             total.price += Convert.ToDouble((cal.Sum(s => s.Price) ?? 0).ToString("#,##0"));
 
                                             var car = carrier_Entities.Lalamove_Import.Where(w => w.Delivery_ID == delivery).FirstOrDefault();
@@ -747,12 +753,19 @@ namespace Carrier
                             var docnoOne = Docno.FirstOrDefault().Docno;
                             var carOrder = carrier_Entities.Orders.Where(w => w.Docno == docnoOne).FirstOrDefault();
                             var ss = "";
-                            var io = budget_Entities.Department_IO.Where(w => w.SiteStorage.Contains(site) && w.Action_Start <= DateTime.Now && w.Action_End >= DateTime.Now && w.Status_ID == "F" && w.Status_IO == "Y" && w.Ref_Cost_Number == "").FirstOrDefault();
+                            var io = (from i in budget_2025_Entities.Department_IO_2025
+                                        join b in budget_2025_Entities.Department_IO_2025_Brand on i.Department_IO_ID equals b.Department_IO_ID
+                                        where i.Action_Start <= DateTime.Now && i.Action_End >= DateTime.Now && i.Status_IO == "Y" && i.Status_ID == "F" && b.Site_Storage_B.Contains(site)
+                                        select new
+                                        {
+                                            i.Department_IO_ID
+                                        }).FirstOrDefault();
+                            //var io = budget_Entities.Department_IO.Where(w => w.SiteStorage.Contains(site) && w.Action_Start <= DateTime.Now && w.Action_End >= DateTime.Now && w.Status_ID == "F" && w.Status_IO == "Y" && w.Ref_Cost_Number == "").FirstOrDefault();
                             var Depart_TOUp = "";
                             if(io != null)
                             {
                                 var datenow = Convert.ToDateTime(DateTime.Now.ToShortDateString());
-                                var ioBrand = budget_Entities.Department_IO_Brand.Where(w => w.Department_ID == io.Department_ID && w.dateSt <= datenow && w.dateEd >= datenow);
+                                var ioBrand = budget_2025_Entities.Department_IO_2025_Brand.Where(w => w.Department_IO_ID == io.Department_IO_ID && w.dateST <= datenow && w.dateED >= datenow && w.Status == "F");
                                 cuttemp temp = new cuttemp();
                                 temp.date_use = Convert.ToDateTime(DateTime.Now.ToShortDateString());
                                 temp.depart_id = Seek == null ? Docno.FirstOrDefault().SDpart : "1619";
@@ -774,7 +787,7 @@ namespace Carrier
                                             brand_percent = 100,
                                             SiteStorage = i.Site_Storage_B
                                         });
-                                        temp.depart_id = i.Department_ID;
+                                        temp.depart_id = i.Department_IO_ID;
                                         temp.group_id = "13";
                                         temp.head_id = "1324";
                                         temp.detail_id = "132404";
@@ -784,7 +797,8 @@ namespace Carrier
                                         temp.brand.Add(new cutCudget_brand_Filter
                                         {
                                             brand_id = i.Brand_ID,
-                                            brand_percent = 0
+                                            brand_percent = 0,
+                                            SiteStorage = i.Site_Storage_B
                                         });
                                     }
                                     

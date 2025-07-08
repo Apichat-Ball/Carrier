@@ -193,6 +193,10 @@
           <Property Name="BFID" Type="nvarchar" MaxLength="20" />
           <Property Name="Date_Status" Type="datetime" />
           <Property Name="Status_Import" Type="nvarchar" MaxLength="5" />
+          <Property Name="driver_name" Type="nvarchar(max)" />
+          <Property Name="driver_phone" Type="nvarchar" MaxLength="20" />
+          <Property Name="driver_photo" Type="nvarchar(max)" />
+          <Property Name="driver_plateNumber" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Lalamove_Car_Quotation">
           <Key>
@@ -336,6 +340,9 @@
           <Property Name="Lala_Car_Key" Type="nvarchar" MaxLength="50" />
           <Property Name="Lala_Car_Status" Type="nvarchar" MaxLength="50" />
           <Property Name="status_Auto" Type="nvarchar" MaxLength="5" />
+          <Property Name="DateSend_Mail" Type="datetime" />
+          <Property Name="SpecialRequests_Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="Remark_Driver" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="Order_Box">
           <Key>
@@ -702,6 +709,9 @@
           <Property Name="Lala_Car_Key" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Lala_Car_Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="status_Auto" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="DateSend_Mail" Type="DateTime" Precision="3" />
+          <Property Name="SpecialRequests_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Remark_Driver" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Calculate_Car">
           <Key>
@@ -850,6 +860,10 @@
           <Property Name="BFID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Date_Status" Type="DateTime" Precision="3" />
           <Property Name="Status_Import" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="driver_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="driver_phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="driver_photo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="driver_plateNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Lalamove_Car_Quotation">
           <Key>
@@ -1128,6 +1142,9 @@
           <EntitySetMapping Name="Order_Big_Box">
             <EntityTypeMapping TypeName="CarrierModel.Order_Big_Box">
               <MappingFragment StoreEntitySet="Order_Big_Box">
+                <ScalarProperty Name="Remark_Driver" ColumnName="Remark_Driver" />
+                <ScalarProperty Name="SpecialRequests_Name" ColumnName="SpecialRequests_Name" />
+                <ScalarProperty Name="DateSend_Mail" ColumnName="DateSend_Mail" />
                 <ScalarProperty Name="status_Auto" ColumnName="status_Auto" />
                 <ScalarProperty Name="Lala_Car_Status" ColumnName="Lala_Car_Status" />
                 <ScalarProperty Name="Lala_Car_Key" ColumnName="Lala_Car_Key" />
@@ -1275,6 +1292,10 @@
           <EntitySetMapping Name="Lalamove_Car_PlaceOrder">
             <EntityTypeMapping TypeName="CarrierModel.Lalamove_Car_PlaceOrder">
               <MappingFragment StoreEntitySet="Lalamove_Car_PlaceOrder">
+                <ScalarProperty Name="driver_plateNumber" ColumnName="driver_plateNumber" />
+                <ScalarProperty Name="driver_photo" ColumnName="driver_photo" />
+                <ScalarProperty Name="driver_phone" ColumnName="driver_phone" />
+                <ScalarProperty Name="driver_name" ColumnName="driver_name" />
                 <ScalarProperty Name="Status_Import" ColumnName="Status_Import" />
                 <ScalarProperty Name="Date_Status" ColumnName="Date_Status" />
                 <ScalarProperty Name="BFID" ColumnName="BFID" />

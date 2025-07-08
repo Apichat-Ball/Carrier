@@ -526,75 +526,77 @@ namespace Carrier.Service
                 resnotity = new responseNotify();
 
                 //ROX
-                var rox = Order_Noti.Where(w => w.TypeSendKo == "ROX").ToList();
-                if (rox.Count != 0)
-                {
-                    try
-                    {
-                        foreach (var r in rox)
-                        {
-                            Order_Noti.Remove(r);
-                        }
-                        var last = rox.LastOrDefault();
-                        var random = "mdchId=" + last.mchId + "&sendTime=" + DateTime.Now;
-                        var Md5 = MD5_hash(random);
-                        var header =
-                            "estimateParcelNumber=" + rox.Count() +
-                            "&mchId=" + last.mchId +
-                            "&nonceStr=" + Md5 +
-                            "&warehouseNo=" + "RXSFRXM1";
+                #region ROX
+                //var rox = Order_Noti.Where(w => w.TypeSendKo == "ROX").ToList();
+                //if (rox.Count != 0)
+                //{
+                //    try
+                //    {
+                //        foreach (var r in rox)
+                //        {
+                //            Order_Noti.Remove(r);
+                //        }
+                //        var last = rox.LastOrDefault();
+                //        var random = "mdchId=" + last.mchId + "&sendTime=" + DateTime.Now;
+                //        var Md5 = MD5_hash(random);
+                //        var header =
+                //            "estimateParcelNumber=" + rox.Count() +
+                //            "&mchId=" + last.mchId +
+                //            "&nonceStr=" + Md5 +
+                //            "&warehouseNo=" + "RXSFRXM1";
 
-                        string sign = sha256_hash(header + "&key=" + keyFlash.key).ToUpper();
-                        var client = new RestClient("https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign);
-                        client.Timeout = -1;
-                        var request = new RestRequest(Method.POST);
-                        request.AlwaysMultipartFormData = true;
-                        IRestResponse response = client.Execute(request);
-                        JObject j = JObject.Parse(response.Content);
-                        var pno = rox.Select(s => s.pno).ToList();
-                        if (Convert.ToInt32(j["code"]) == 1)
-                        {
-                            resnotity.pno = pno;
-                            resnotity.code = Convert.ToInt32(j["code"]);
-                            resnotity.message = j["message"].ToString();
-                            resnotity.ticketPickupId = j["data"]["ticketPickupId"].ToString();
-                            resnotity.staffInfoId = Convert.ToInt32(j["data"]["staffInfoId"]);
-                            resnotity.staffInfoName = j["data"]["staffInfoName"].ToString();
-                            resnotity.staffInfoPhone = j["data"]["staffInfoPhone"].ToString();
-                            resnotity.upCountryNote = j["data"]["upCountryNote"].ToString();
-                            resnotity.timeoutAtText = j["data"]["timeoutAtText"].ToString();
-                            resnotity.ticketMessage = j["data"]["ticketMessage"].ToString();
-                            resnotity.dateSuccess = DateTime.Now;
-                            resnotity.warehouseNo = "RXSFRXM1";
-                            entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Service_Flash/Notify", request = "https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign, status = resnotity.code.ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(resnotity) });
-                            entities_Carrier.SaveChanges();
-                        }
-                        else
-                        {
-                            resnotity.pno = pno;
-                            resnotity.code = Convert.ToInt32(j["code"]);
-                            resnotity.message = j["message"].ToString();
-                            resnotity.warehouseNo = "RXSFRXM1";
-                            entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Service_Flash/Notify", request = "https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign, status = resnotity.code.ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(resnotity) });
-                            entities_Carrier.SaveChanges();
+                //        string sign = sha256_hash(header + "&key=" + keyFlash.key).ToUpper();
+                //        var client = new RestClient("https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign);
+                //        client.Timeout = -1;
+                //        var request = new RestRequest(Method.POST);
+                //        request.AlwaysMultipartFormData = true;
+                //        IRestResponse response = client.Execute(request);
+                //        JObject j = JObject.Parse(response.Content);
+                //        var pno = rox.Select(s => s.pno).ToList();
+                //        if (Convert.ToInt32(j["code"]) == 1)
+                //        {
+                //            resnotity.pno = pno;
+                //            resnotity.code = Convert.ToInt32(j["code"]);
+                //            resnotity.message = j["message"].ToString();
+                //            resnotity.ticketPickupId = j["data"]["ticketPickupId"].ToString();
+                //            resnotity.staffInfoId = Convert.ToInt32(j["data"]["staffInfoId"]);
+                //            resnotity.staffInfoName = j["data"]["staffInfoName"].ToString();
+                //            resnotity.staffInfoPhone = j["data"]["staffInfoPhone"].ToString();
+                //            resnotity.upCountryNote = j["data"]["upCountryNote"].ToString();
+                //            resnotity.timeoutAtText = j["data"]["timeoutAtText"].ToString();
+                //            resnotity.ticketMessage = j["data"]["ticketMessage"].ToString();
+                //            resnotity.dateSuccess = DateTime.Now;
+                //            resnotity.warehouseNo = "RXSFRXM1";
+                //            entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Service_Flash/Notify", request = "https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign, status = resnotity.code.ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(resnotity) });
+                //            entities_Carrier.SaveChanges();
+                //        }
+                //        else
+                //        {
+                //            resnotity.pno = pno;
+                //            resnotity.code = Convert.ToInt32(j["code"]);
+                //            resnotity.message = j["message"].ToString();
+                //            resnotity.warehouseNo = "RXSFRXM1";
+                //            entities_Carrier.API_Carrier_Log.Add(new API_Carrier_Log { dateSend = DateTime.Now, path = "Carrier/Service_Flash/Notify", request = "https://api.flashexpress.com/open/v1/notify?" + header + "&sign=" + sign, status = resnotity.code.ToString(), fromFlash = Newtonsoft.Json.JsonConvert.SerializeObject(j), respon = Newtonsoft.Json.JsonConvert.SerializeObject(resnotity) });
+                //            entities_Carrier.SaveChanges();
 
-                        }
-                        listResnotify.Add(resnotity);
-                    }
-                    catch(Exception ex)
-                    {
-                        SendMail("apichat.f@sfg-th.com", null, "Error",
-                            "<Html><body>" +
-                            "<p>ROX</p>" +
-                            "<p>Path : ServiceFlash/Notify</p>" +
-                            "<p>" + Newtonsoft.Json.JsonConvert.SerializeObject(rox) + "</p>" +
-                            "<p>Error : " + ex.Message + "</p>" +
-                            "</body></Html>");
-                    }
+                //        }
+                //        listResnotify.Add(resnotity);
+                //    }
+                //    catch(Exception ex)
+                //    {
+                //        SendMail("apichat.f@sfg-th.com", null, "Error",
+                //            "<Html><body>" +
+                //            "<p>ROX</p>" +
+                //            "<p>Path : ServiceFlash/Notify</p>" +
+                //            "<p>" + Newtonsoft.Json.JsonConvert.SerializeObject(rox) + "</p>" +
+                //            "<p>Error : " + ex.Message + "</p>" +
+                //            "</body></Html>");
+                //    }
                     
-                }
+                //}
 
-                resnotity = new responseNotify();
+                //resnotity = new responseNotify();
+                #endregion
 
                 //SFG
                 if (Order_Noti.Count != 0)
@@ -874,19 +876,21 @@ namespace Carrier.Service
                     return "กรุณาเลือกผุ้ส่ง";
                 }
             }
-            if (item.srcName.Length > 50)
-            {
-                return "ชื่อผู้ส่งต้องมีความยาวไม่เกิน 50 ตัวอักษร";
-            }
-            else if (item.srcName.Contains("&"))
+            //if (item.srcName.Length > 50)
+            //{
+            //    return "ชื่อผู้ส่งต้องมีความยาวไม่เกิน 50 ตัวอักษร";
+            //}
+            //else 
+            if (item.srcName.Contains("&"))
             {
                 return "ชื่อผู้ส่งไม่สามารถใส่อักษรพิเศษได้แก่ &";
             }
-            if (item.dstName.Length > 50)
-            {
-                return "ชื่อผู้รับต้องมีความยาวไม่เกิน 50 ตัวอักษร";
-            }
-            else if (item.dstName.Contains("&"))
+            //if (item.dstName.Length > 50)
+            //{
+            //    return "ชื่อผู้รับต้องมีความยาวไม่เกิน 50 ตัวอักษร";
+            //}
+            //else 
+            if (item.dstName.Contains("&"))
             {
                 return "ชื่อผู้รับไม่สามารถใส่อักษรพิเศษได้แก่ &";
             }
@@ -895,10 +899,14 @@ namespace Carrier.Service
                 return "ช่องหมายเหตุห้ามใส่เครื่องหมาย +";
             }
 
-            if (item.dstDetailAddress.Contains("#") || item.dstDetailAddress.Contains("*") || item.dstDetailAddress.Contains("+"))
+            if(item.Transport_Type == 1)
             {
-                return "ที่อยู่รายละเอียดผู้รับห้ามใช้ตัวอักษรดังนี้ # * +";
+                if (item.dstDetailAddress.Contains("#") || item.dstDetailAddress.Contains("*") || item.dstDetailAddress.Contains("+"))
+                {
+                    return "ที่อยู่รายละเอียดผู้รับห้ามใช้ตัวอักษรดังนี้ # * +";
+                }
             }
+            
 
             if (item.siteStorage.Length < 6)
             {
@@ -1090,6 +1098,7 @@ namespace Carrier.Service
                     if (objuser != null)
                     {
                         HttpContext.Current.Session["_UserID"] = objuser.userID.ToString();
+
                         return new User { UserID = objuser.userID, Username = objuser.username_ + " " + objuser.surname };
                     }
                     else { return null; }

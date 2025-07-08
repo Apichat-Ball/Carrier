@@ -224,6 +224,7 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Dashbord.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="DHL_Import.aspx" />
     <Content Include="Edit_Add_Profit.aspx" />
@@ -256,6 +257,16 @@
       <DependentUpon>Budgetmodel.edmx</DependentUpon>
       <LastGenOutput>Budgetmodel.cs</LastGenOutput>
     </Content>
+    <Content Include="Model\Budget_2025\Budget2025model.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Budget2025model.edmx</DependentUpon>
+      <LastGenOutput>Budget2025model.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Model\Budget_2025\Budget2025model.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Budget2025model.edmx</DependentUpon>
+      <LastGenOutput>Budget2025model.cs</LastGenOutput>
+    </Content>
     <Content Include="Model\Carrier\Carrier_model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Carrier_model.edmx</DependentUpon>
@@ -265,6 +276,16 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Carrier_model.edmx</DependentUpon>
       <LastGenOutput>Carrier_model.cs</LastGenOutput>
+    </Content>
+    <Content Include="Model\Ecommerce\Ecommercemodel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Ecommercemodel.edmx</DependentUpon>
+      <LastGenOutput>Ecommercemodel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Model\Ecommerce\Ecommercemodel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Ecommercemodel.edmx</DependentUpon>
+      <LastGenOutput>Ecommercemodel.cs</LastGenOutput>
     </Content>
     <Content Include="Model\InsideSFG_WF\InsideSFG_WF_model.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -447,6 +468,20 @@
     <Content Include="Model\SFG\SFGmodel.edmx.diagram">
       <DependentUpon>SFGmodel.edmx</DependentUpon>
     </Content>
+    <EntityDeploy Include="Model\Budget_2025\Budget2025model.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Budget2025model.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Model\Budget_2025\Budget2025model.edmx.diagram">
+      <DependentUpon>Budget2025model.edmx</DependentUpon>
+    </Content>
+    <EntityDeploy Include="Model\Ecommerce\Ecommercemodel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Ecommercemodel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Model\Ecommerce\Ecommercemodel.edmx.diagram">
+      <DependentUpon>Ecommercemodel.edmx</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery-3.5.1.min.js" />
@@ -571,6 +606,13 @@
     <Compile Include="Contact.aspx.designer.cs">
       <DependentUpon>Contact.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Dashbord.aspx.cs">
+      <DependentUpon>Dashbord.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Dashbord.aspx.designer.cs">
+      <DependentUpon>Dashbord.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -652,6 +694,27 @@
     </Compile>
     <Compile Include="Model\Budget\MainExpense_Sub.cs">
       <DependentUpon>Budgetmodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Budget_2025\Budget2025model.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Budget2025model.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Budget_2025\Budget2025model.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Budget2025model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Budget_2025\Budget2025model.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Budget2025model.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Budget_2025\Department_IO_2025.cs">
+      <DependentUpon>Budget2025model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Budget_2025\Department_IO_2025_Brand.cs">
+      <DependentUpon>Budget2025model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Carrier\API_Carrier_Log.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>
@@ -761,6 +824,30 @@
     <Compile Include="Model\Carrier\User.cs">
       <DependentUpon>Carrier_model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Model\Ecommerce\Channel.cs">
+      <DependentUpon>Ecommercemodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Ecommerce\Ecommercemodel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Ecommercemodel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Ecommerce\Ecommercemodel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Ecommercemodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Ecommerce\Ecommercemodel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Ecommercemodel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Ecommerce\Form_Order.cs">
+      <DependentUpon>Ecommercemodel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Ecommerce\Form_Orderitem.cs">
+      <DependentUpon>Ecommercemodel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Model\InsideSFG_WF\BG_ForeCast.cs">
       <DependentUpon>InsideSFG_WF_model.tt</DependentUpon>
     </Compile>
@@ -810,6 +897,15 @@
       <DependentUpon>InsideSFG_WF_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Online_Lazada\API_Key.cs">
+      <DependentUpon>Online_Lazada_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Online_Lazada\API_Shopify_GetOrderItems.cs">
+      <DependentUpon>Online_Lazada_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Online_Lazada\API_Shopify_GetOrders.cs">
+      <DependentUpon>Online_Lazada_model.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Online_Lazada\API_Shopify_Items.cs">
       <DependentUpon>Online_Lazada_model.tt</DependentUpon>
     </Compile>
     <Compile Include="Model\Online_Lazada\Online_Lazada_model.Context.cs">

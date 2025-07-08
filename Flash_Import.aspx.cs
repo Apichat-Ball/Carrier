@@ -10,11 +10,13 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Carrier.Model.Carrier;
 using Carrier.Model.Budget;
+using Carrier.Model.Budget_2025;
 using Carrier.Model.Whale;
 using Carrier.Model.InsideSFG_WF;
 using Carrier.Model.Online_NonAPI;
 using Carrier.Model.Online_Lazada;
 using Carrier.Model.SFG;
+using Carrier.Model.Ecommerce;
 using Carrier.Service;
 using static Carrier.Service.Service_Whale;
 using ClosedXML.Excel;
@@ -25,11 +27,13 @@ namespace Carrier
     {
         CarrierEntities carrier_Entities = new CarrierEntities();
         BudgetEntities budget_Entities = new BudgetEntities();
+        Budget_2025Entities budget_2025_Entities = new Budget_2025Entities();
         WhaleEntities whale_Entities = new WhaleEntities();
         Online_NonAPIEntities entities_Online_NonAPI = new Online_NonAPIEntities();
         Online_LazadaEntities online_Lazada_Entities = new Online_LazadaEntities();
         InsideSFG_WFEntities insideSFG_WF_Entities = new InsideSFG_WFEntities();
         SFGEntities sFG_Entities = new SFGEntities();
+        ECommerceEntities eCommerce_Entities = new ECommerceEntities();
         
 
         Service_Flash service_Flash = new Service_Flash();
@@ -134,7 +138,7 @@ namespace Carrier
                                         {
                                             if (DateTime.TryParse(item[0].ToString(), out _))
                                             {
-                                                var docno = item[1].ToString();
+                                                var docno = item[1].ToString().Trim();
                                                 var pno = item[2].ToString();
                                                 
                                                 
@@ -163,15 +167,14 @@ namespace Carrier
                                                     
                                                     flash.Date_Import = DateTime.Now;
                                                     flash.Date_Process = Convert.ToDateTime(item[0].ToString());
-                                                    flash.Docno = item[1].ToString();
-                                                    flash.pno = item[2].ToString();
+                                                    flash.Docno = docno;
+                                                    flash.pno = pno;
                                                     flash.Price = Convert.ToDouble(item[22].ToString());
                                                     flash.Status_Budget = false;
 
                                                     var dataTOCheck = new model_GV_Check();
-                                                    
 
-                                                    var whaleOrder = Get_Order_Whale(docno).FirstOrDefault();
+
 
                                                     if (carHave != null)
                                                     {
@@ -191,96 +194,249 @@ namespace Carrier
                                                     else
                                                     {
 
-                                                        //var Ecommerce = Get_Order_Ecommerce(docno);
-                                                        if (whaleOrder != null)
+                                                        #region New
+                                                        switch (flash.Docno.StartsWith("SO") ? "SO" : flash.Docno.StartsWith("OPC") ? "OPC" : flash.Docno.StartsWith("6") ? "Shopify" : "")
                                                         {
-                                                            var departTrue = "";
-                                                            var depart = insideSFG_WF_Entities.vBrandAndHeadFCs.Where(w => w.BRANDABB == whaleOrder.Brand_Short).FirstOrDefault();
-                                                            if(whaleOrder.Customer_Code != null)
-                                                            {
-                                                                if (whaleOrder.Customer_Code.Length == 6 )
+                                                            case "SO":
+                                                                var whaleOrder = Get_Order_Whale(docno).FirstOrDefault();
+
+                                                                if (whaleOrder != null)
                                                                 {
-                                                                    if (whaleOrder.Customer_Code.StartsWith("ZY") || whaleOrder.Customer_Code == "CENTER")
+                                                                    var departTrue = "";
+                                                                    var depart = insideSFG_WF_Entities.vBrandAndHeadFCs.Where(w => w.BRANDABB == whaleOrder.Brand_Short).FirstOrDefault();
+                                                                    if (whaleOrder.Customer_Code != null)
                                                                     {
-                                                                        flash.Shop = whaleOrder.Customer_Code;
+                                                                        if (whaleOrder.Customer_Code.Length == 6)
+                                                                        {
+                                                                            if (whaleOrder.Customer_Code.StartsWith("ZY") || whaleOrder.Customer_Code == "CENTER")
+                                                                            {
+                                                                                flash.Shop = whaleOrder.Customer_Code;
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                flash.Shop = whaleOrder.Customer_Code.Substring(0, 4) + whaleOrder.Brand_Short + whaleOrder.Customer_Code.Substring(4, 2);
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            flash.Shop = whaleOrder.Customer_Code;
+                                                                        }
+                                                                    }
+
+
+
+                                                                    if (depart == null)
+                                                                    {
+                                                                        departTrue = budget_Entities.Departments.Where(w => w.ShortBrand == whaleOrder.Brand_Short).FirstOrDefault().Department_ID;
                                                                     }
                                                                     else
                                                                     {
-                                                                        flash.Shop = whaleOrder.Customer_Code.Substring(0, 4) + whaleOrder.Brand_Short + whaleOrder.Customer_Code.Substring(4, 2);
+                                                                        departTrue = depart.departmentID;
+                                                                    }
+                                                                    flash.department_id = Convert.ToInt32(departTrue);
+                                                                    shop = whaleOrder.Customer_Code;
+                                                                    dateprocess = whaleOrder.Date_Send ?? DateTime.Now;
+                                                                    dataTOCheck.sitestorage = flash.Shop;
+                                                                    dataTOCheck.From = "Whale";
+                                                                    dataTOCheck.Department_ID = departTrue;
+                                                                    if (new string[] { "ZX", "Z6" }.Contains(flash.Shop.Substring(0, 2)))
+                                                                    {
+                                                                        flash.saleOn = "ONLINE";
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        flash.saleOn = "OFFLINE";
+                                                                    }
+                                                                }
+
+                                                                break;
+                                                            case "OPC":
+                                                                var sap = (from vbrk in sFG_Entities.SAP_VBRK_NEWSAP
+                                                                           join vbrp in sFG_Entities.SAP_VBRP_NEWSAP on vbrk.VBELN equals vbrp.VBELN
+                                                                           where vbrk.Refdoc == flash.Docno
+                                                                           select new
+                                                                           {
+                                                                               vbrk.Refdoc,
+                                                                               vbrk.KUNRG,
+                                                                               vbrp.BRAND
+                                                                           }).FirstOrDefault();
+                                                                if (sap != null)
+                                                                {
+                                                                    var budget = budget_Entities.Departments.Where(w => w.ShortBrand == sap.BRAND).FirstOrDefault();
+                                                                    if (budget != null)
+                                                                    {
+                                                                        dataTOCheck.sitestorage = sap.KUNRG.Substring(0, 4) + sap.BRAND + sap.KUNRG.Substring(4, 2);
+                                                                        dataTOCheck.From = "Ecommerce";
+                                                                        dataTOCheck.Department_ID = budget.Department_ID;
+                                                                        flash.Shop = sap.KUNRG.Substring(0, 4) + sap.BRAND + sap.KUNRG.Substring(4, 2);
+                                                                        flash.department_id = Convert.ToInt32(budget.Department_ID);
+                                                                        flash.saleOn = "ONLINE";
                                                                     }
                                                                 }
                                                                 else
                                                                 {
-                                                                    flash.Shop = whaleOrder.Customer_Code;
+                                                                    var ecom = (from i in eCommerce_Entities.Form_Orderitem
+                                                                                join c in eCommerce_Entities.Channels on i.Channel_ID equals c.Channel_ID
+                                                                                where i.Docno == flash.Docno
+                                                                                select new
+                                                                                {
+                                                                                    c.PrefixChannel,
+                                                                                    brand = i.SKU.Substring(0, 2)
+                                                                                }).FirstOrDefault();
+                                                                    var budget = budget_Entities.Departments.Where(w => w.ShortBrand == ecom.brand).FirstOrDefault();
+                                                                    if (budget != null)
+                                                                    {
+                                                                        dataTOCheck.sitestorage = ecom.PrefixChannel;
+                                                                        dataTOCheck.From = "Ecommerce";
+                                                                        dataTOCheck.Department_ID = budget.Department_ID;
+                                                                        flash.Shop = ecom.PrefixChannel;
+                                                                        flash.department_id = Convert.ToInt32(budget.Department_ID);
+                                                                        flash.saleOn = "ONLINE";
+                                                                    }
                                                                 }
-                                                            }
-                                                            
+
+                                                                break;
+                                                            case "Shopify":
+                                                                var shopify = online_Lazada_Entities.API_Shopify_GetOrders.Where(w => w.ShopifyOrderID == flash.Docno).FirstOrDefault();
+                                                                var whaleOrders = Get_Order_Whale(shopify.Docno).FirstOrDefault();
+
+                                                                if (whaleOrders != null)
+                                                                {
+                                                                    var departTrue = "";
+                                                                    var depart = insideSFG_WF_Entities.vBrandAndHeadFCs.Where(w => w.BRANDABB == whaleOrders.Brand_Short).FirstOrDefault();
+                                                                    if (whaleOrders.Customer_Code != null)
+                                                                    {
+                                                                        if (whaleOrders.Customer_Code.Length == 6)
+                                                                        {
+                                                                            if (whaleOrders.Customer_Code.StartsWith("ZY") || whaleOrders.Customer_Code == "CENTER")
+                                                                            {
+                                                                                flash.Shop = whaleOrders.Customer_Code;
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                flash.Shop = whaleOrders.Customer_Code.Substring(0, 4) + whaleOrders.Brand_Short + whaleOrders.Customer_Code.Substring(4, 2);
+                                                                            }
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            flash.Shop = whaleOrders.Customer_Code;
+                                                                        }
+                                                                    }
 
 
-                                                            if (depart == null)
-                                                            {
-                                                                departTrue = budget_Entities.Departments.Where(w => w.ShortBrand == whaleOrder.Brand_Short).FirstOrDefault().Department_ID;
-                                                            }
-                                                            else
-                                                            {
-                                                                departTrue = depart.departmentID;
-                                                            }
-                                                            flash.department_id = Convert.ToInt32(departTrue);
-                                                            shop = whaleOrder.Customer_Code;
-                                                            dateprocess = whaleOrder.Date_Send ?? DateTime.Now;
-                                                            dataTOCheck.sitestorage = flash.Shop;
-                                                            dataTOCheck.From = "Whale";
-                                                            dataTOCheck.Department_ID = departTrue;
-                                                            flash.saleOn = "ONLINE";
-                                                        }
-                                                        else
-                                                        {
-                                                            var sap = (from vbrk in sFG_Entities.SAP_VBRK_NEWSAP
-                                                                       join vbrp in sFG_Entities.SAP_VBRP_NEWSAP on vbrk.VBELN equals vbrp.VBELN
-                                                                       where vbrk.Refdoc == flash.Docno
-                                                                       select new
-                                                                       {
-                                                                           vbrk.Refdoc,
-                                                                           vbrk.KUNRG,
-                                                                           vbrp.BRAND
-                                                                       }).FirstOrDefault() ;
-                                                            if(sap != null)
-                                                            {
-                                                                var budget = budget_Entities.Departments.Where(w => w.ShortBrand == sap.BRAND).FirstOrDefault();
-                                                                if (budget != null)
-                                                                {
-                                                                    dataTOCheck.sitestorage = sap.KUNRG.Substring(0, 4) + sap.BRAND + sap.KUNRG.Substring(4, 2);
-                                                                    dataTOCheck.From = "Ecommerce";
-                                                                    dataTOCheck.Department_ID = budget.Department_ID;
-                                                                    flash.Shop = sap.KUNRG.Substring(0, 4) + sap.BRAND + sap.KUNRG.Substring(4, 2);
-                                                                    flash.department_id = Convert.ToInt32(budget.Department_ID);
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                flash.Shop = "";
-                                                            }
-                                                            if(flash.Shop != "" && flash.Shop != null)
-                                                            {
-                                                                if (new string[] { "ZX", "Z6" }.Contains(flash.Shop.Substring(0, 2)))
-                                                                {
+
+                                                                    if (depart == null)
+                                                                    {
+                                                                        departTrue = budget_Entities.Departments.Where(w => w.ShortBrand == whaleOrders.Brand_Short).FirstOrDefault().Department_ID;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        departTrue = depart.departmentID;
+                                                                    }
+                                                                    flash.department_id = Convert.ToInt32(departTrue);
+                                                                    shop = whaleOrders.Customer_Code;
+                                                                    dateprocess = whaleOrders.Date_Send ?? DateTime.Now;
+                                                                    dataTOCheck.sitestorage = flash.Shop;
+                                                                    dataTOCheck.From = "Shopify";
+                                                                    dataTOCheck.Department_ID = departTrue;
                                                                     flash.saleOn = "ONLINE";
+
                                                                 }
-                                                                else
-                                                                {
-                                                                    flash.saleOn = "OFFLINE";
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                flash.saleOn = "OFFLINE";
-                                                            }
-                                                            
+                                                                break;
+                                                            default:
+                                                                break;
                                                         }
+                                                        #endregion
+
+                                                        #region Old
+                                                        //if (whaleOrder != null)
+                                                        //{
+                                                        //    var departTrue = "";
+                                                        //    var depart = insideSFG_WF_Entities.vBrandAndHeadFCs.Where(w => w.BRANDABB == whaleOrder.Brand_Short).FirstOrDefault();
+                                                        //    if (whaleOrder.Customer_Code != null)
+                                                        //    {
+                                                        //        if (whaleOrder.Customer_Code.Length == 6)
+                                                        //        {
+                                                        //            if (whaleOrder.Customer_Code.StartsWith("ZY") || whaleOrder.Customer_Code == "CENTER")
+                                                        //            {
+                                                        //                flash.Shop = whaleOrder.Customer_Code;
+                                                        //            }
+                                                        //            else
+                                                        //            {
+                                                        //                flash.Shop = whaleOrder.Customer_Code.Substring(0, 4) + whaleOrder.Brand_Short + whaleOrder.Customer_Code.Substring(4, 2);
+                                                        //            }
+                                                        //        }
+                                                        //        else
+                                                        //        {
+                                                        //            flash.Shop = whaleOrder.Customer_Code;
+                                                        //        }
+                                                        //    }
 
 
-                                                        
-                                                        
+
+                                                        //    if (depart == null)
+                                                        //    {
+                                                        //        departTrue = budget_Entities.Departments.Where(w => w.ShortBrand == whaleOrder.Brand_Short).FirstOrDefault().Department_ID;
+                                                        //    }
+                                                        //    else
+                                                        //    {
+                                                        //        departTrue = depart.departmentID;
+                                                        //    }
+                                                        //    flash.department_id = Convert.ToInt32(departTrue);
+                                                        //    shop = whaleOrder.Customer_Code;
+                                                        //    dateprocess = whaleOrder.Date_Send ?? DateTime.Now;
+                                                        //    dataTOCheck.sitestorage = flash.Shop;
+                                                        //    dataTOCheck.From = "Whale";
+                                                        //    dataTOCheck.Department_ID = departTrue;
+                                                        //    flash.saleOn = "ONLINE";
+                                                        //}
+                                                        //else
+                                                        //{
+                                                        //    var sap = (from vbrk in sFG_Entities.SAP_VBRK_NEWSAP
+                                                        //               join vbrp in sFG_Entities.SAP_VBRP_NEWSAP on vbrk.VBELN equals vbrp.VBELN
+                                                        //               where vbrk.Refdoc == flash.Docno
+                                                        //               select new
+                                                        //               {
+                                                        //                   vbrk.Refdoc,
+                                                        //                   vbrk.KUNRG,
+                                                        //                   vbrp.BRAND
+                                                        //               }).FirstOrDefault();
+                                                        //    if (sap != null)
+                                                        //    {
+                                                        //        var budget = budget_Entities.Departments.Where(w => w.ShortBrand == sap.BRAND).FirstOrDefault();
+                                                        //        if (budget != null)
+                                                        //        {
+                                                        //            dataTOCheck.sitestorage = sap.KUNRG.Substring(0, 4) + sap.BRAND + sap.KUNRG.Substring(4, 2);
+                                                        //            dataTOCheck.From = "Ecommerce";
+                                                        //            dataTOCheck.Department_ID = budget.Department_ID;
+                                                        //            flash.Shop = sap.KUNRG.Substring(0, 4) + sap.BRAND + sap.KUNRG.Substring(4, 2);
+                                                        //            flash.department_id = Convert.ToInt32(budget.Department_ID);
+                                                        //        }
+                                                        //    }
+                                                        //    else
+                                                        //    {
+                                                        //        flash.Shop = "";
+                                                        //    }
+                                                        //    if (flash.Shop != "" && flash.Shop != null)
+                                                        //    {
+                                                        //        if (new string[] { "ZX", "Z6" }.Contains(flash.Shop.Substring(0, 2)))
+                                                        //        {
+                                                        //            flash.saleOn = "ONLINE";
+                                                        //        }
+                                                        //        else
+                                                        //        {
+                                                        //            flash.saleOn = "OFFLINE";
+                                                        //        }
+                                                        //    }
+                                                        //    else
+                                                        //    {
+                                                        //        flash.saleOn = "OFFLINE";
+                                                        //    }
+
+                                                        //}
+
+                                                        #endregion
+
                                                         flash.Status_Match = false;
                                                         dataTOCheck.DateProcess = flash.Date_Process ?? DateTime.Now;
                                                         dataTOCheck.Docno = flash.Docno;
@@ -603,7 +759,14 @@ namespace Carrier
                 FItem.Amount = i.Amount;
                 total += i.Amount;
                 FItem.Tax_Code = i.Tax_Code;
+                try
+                {
                 FItem.Shop = i.Shop == null || i.Shop == "" ? "" : i.Shop.Length == 6 ? i.Shop : i.Shop.Substring(0, 4) + i.Shop.Substring(6, 2);
+
+                }catch(Exception ex)
+                {
+                    var ss = ex.Message;
+                }
                 FItem.Assignment = i.Assignment;
                 if (car != null)
                 {
@@ -1026,7 +1189,11 @@ namespace Carrier
                     //Sitestorage
                     foreach(var si in site)
                     {
-                        var seek = budget_Entities.Departments.Where(w => w.Department_ID == si.department_id.ToString() && w.Department_Name.StartsWith("SEEK")).FirstOrDefault();
+                        if(si.shop == "Z6SFOL")
+                        {
+                            var kk = "";
+                        }
+                            var seek = budget_Entities.Departments.Where(w => w.Department_ID == si.department_id.ToString() && w.Department_Name.StartsWith("SEEK")).FirstOrDefault();
                         if ((si.shop == "CENTER" || si.shop.StartsWith("ZY") || si.shop == "" || si.shop.StartsWith("Z6"))&& (si.shop.Length == 6 || si.shop.Length == 0))
                         {
                             var siteOff = carrier_Entities.Flash_EX_Import.Where(w => w.department_id == b && w.Shop == (si.shop == "" ? null : si.shop) && w.saleOn == si.saleon && w.Date_Process >= dateSTOrigin && w.Date_Process <= dateEDOrigin && w.Status_Budget == false)
@@ -1061,28 +1228,35 @@ namespace Carrier
                                     var budHave = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark)).FirstOrDefault();
                                     if (budHave == null)
                                     {
-                                        
-                                        var ss = service_Budget.Insert_CutBudget(temp);
-                                        
-
-                                        if (ss == "สำเร็จ")
+                                        if(temp.depart_id != "")
                                         {
-                                            foreach (var docno in siteCenter.docno)
-                                            {
-                                                var depInt = seek == null ? b.ToString() : "1619";
-                                                var typeBud = siteCenter.saleOn == "OFFLINE" ? 2 : 1;
-                                                var budget = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark) && w.Department_ID == depInt && w.TypeBudget_ID == typeBud).FirstOrDefault();
+                                            var ss = service_Budget.Insert_CutBudget(temp);
 
-                                                var carFlashImport = carrier_Entities.Flash_EX_Import.Where(w => w.Docno == docno).FirstOrDefault();
-                                                carFlashImport.Docno_Budget = budget.Docno;
-                                                carFlashImport.Status_Budget = true;
-                                                carrier_Entities.SaveChanges();
+
+                                            if (ss == "สำเร็จ")
+                                            {
+                                                foreach (var docno in siteCenter.docno)
+                                                {
+                                                    var depInt = seek == null ? b.ToString() : "1619";
+                                                    var typeBud = siteCenter.saleOn == "OFFLINE" ? 2 : 1;
+                                                    var budget = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark) && w.Department_ID == depInt && w.TypeBudget_ID == typeBud).FirstOrDefault();
+
+                                                    var carFlashImport = carrier_Entities.Flash_EX_Import.Where(w => w.Docno == docno).FirstOrDefault();
+                                                    carFlashImport.Docno_Budget = budget.Docno;
+                                                    carFlashImport.Status_Budget = true;
+                                                    carrier_Entities.SaveChanges();
+                                                }
+                                            }
+                                            else
+                                            {
+                                                FailUpload.Add(temp);
                                             }
                                         }
                                         else
                                         {
                                             FailUpload.Add(temp);
                                         }
+                                        
                                     }
                                 }
                             }
@@ -1093,7 +1267,21 @@ namespace Carrier
                                     var ShopAndBrand = si.shop.Substring(0, 4) + brand_name.ShortBrand + si.shop.Substring(4, 2);
                                 }
 
-                                siteOff = carrier_Entities.Flash_EX_Import.Where(w => w.department_id == b && w.Shop == (si.shop == ""? null : si.shop.Substring(0, 4) + brand_name.ShortBrand + si.shop.Substring(4, 2))  && w.saleOn == si.saleon && w.Date_Process >= dateSTOrigin && w.Date_Process <= dateEDOrigin && w.Status_Budget == false)
+                                //    siteOff = carrier_Entities.Flash_EX_Import.Where(w => w.department_id == b && w.Shop == (si.shop == "" ? "" : si.shop.Substring(0, 4) + (brand_name == null ? "" : brand_name.ShortBrand) + si.shop.Substring(4, 2)) && w.saleOn == si.saleon && w.Date_Process >= dateSTOrigin && w.Date_Process <= dateEDOrigin && w.Status_Budget == false)
+                                //.GroupBy(g => new
+                                //{
+                                //    g.department_id,
+                                //    g.saleOn
+                                //})
+                                //.Select(c => new
+                                //{
+                                //    c.Key.department_id,
+                                //    c.Key.saleOn,
+                                //    price = c.Sum(v => v.Price),
+                                //    docno = c.Select(v => v.Docno).ToList()
+                                //}).ToList();
+                                var Shop_For_query = si.shop == "" ? "" : si.shop.Substring(0, 4) + (brand_name == null ? "" : brand_name.ShortBrand) + si.shop.Substring(4, 2);
+                                siteOff = carrier_Entities.Flash_EX_Import.Where(w => w.department_id == b && w.Shop == Shop_For_query && w.saleOn == si.saleon && w.Date_Process >= dateSTOrigin && w.Date_Process <= dateEDOrigin && w.Status_Budget == false)
                                 .GroupBy(g => new
                                 {
                                     g.department_id,
@@ -1123,20 +1311,27 @@ namespace Carrier
                                     var budHave = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark)).FirstOrDefault();
                                     if (budHave == null)
                                     {
-                                        var ss = service_Budget.Insert_CutBudget(temp);
-                                        
-                                        if (ss == "สำเร็จ")
+                                        if (temp.depart_id != "")
                                         {
-                                            foreach (var docno in siteCenter.docno)
-                                            {
-                                                var depInt = seek == null ? b.ToString() : "1619";
-                                                var typeBud = siteCenter.saleOn == "OFFLINE" ? 2 : 1;
-                                                var budget = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark) && w.Department_ID == depInt && w.TypeBudget_ID == typeBud).FirstOrDefault();
+                                            var ss = service_Budget.Insert_CutBudget(temp);
 
-                                                var carFlashImport = carrier_Entities.Flash_EX_Import.Where(w => w.Docno == docno).FirstOrDefault();
-                                                carFlashImport.Docno_Budget = budget.Docno;
-                                                carFlashImport.Status_Budget = true;
-                                                carrier_Entities.SaveChanges();
+                                            if (ss == "สำเร็จ")
+                                            {
+                                                foreach (var docno in siteCenter.docno)
+                                                {
+                                                    var depInt = seek == null ? b.ToString() : "1619";
+                                                    var typeBud = siteCenter.saleOn == "OFFLINE" ? 2 : 1;
+                                                    var budget = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark) && w.Department_ID == depInt && w.TypeBudget_ID == typeBud).FirstOrDefault();
+
+                                                    var carFlashImport = carrier_Entities.Flash_EX_Import.Where(w => w.Docno == docno).FirstOrDefault();
+                                                    carFlashImport.Docno_Budget = budget.Docno;
+                                                    carFlashImport.Status_Budget = true;
+                                                    carrier_Entities.SaveChanges();
+                                                }
+                                            }
+                                            else
+                                            {
+                                                FailUpload.Add(temp);
                                             }
                                         }
                                         else
@@ -1159,8 +1354,10 @@ namespace Carrier
                                         }
                                     }
                                 }
+
+
                             }
-                            
+
                         }
                         else
                         {
@@ -1198,15 +1395,15 @@ namespace Carrier
                                 if(budHave == null)
                                 {
 
-                                    var io = budget_Entities.Department_IO.Where(w => w.SiteStorage.Contains(si.shop) && w.Action_Start <= DateTime.Now && w.Action_End >= DateTime.Now).FirstOrDefault();
+                                    var io = budget_2025_Entities.Department_IO_2025.Where(w => w.SiteStorage.Contains(si.shop) && w.Action_Start <= DateTime.Now && w.Action_End >= DateTime.Now && w.Status_IO == "Y").FirstOrDefault();
                                     if(io != null)
                                     {
-                                        var ioBrand = budget_Entities.Department_IO_Brand.Where(w => w.Department_ID == io.Department_ID && w.dateSt <= DateTime.Now && w.dateEd >= DateTime.Now);
+                                        var ioBrand = budget_Entities.Department_IO_Brand.Where(w => w.Department_ID == io.Department_IO_ID && w.dateSt <= DateTime.Now && w.dateEd >= DateTime.Now);
                                         foreach(var bio in ioBrand)
                                         {
                                             if(bio.Brand_ID == brandid.ID_Brand)
                                             {
-                                                temp.depart_id = io.Department_ID;
+                                                temp.depart_id = io.Department_IO_ID;
                                                 temp.group_id = "13";
                                                 temp.head_id = "1324";
                                                 temp.detail_id = "132404";
@@ -1287,11 +1484,11 @@ namespace Carrier
                     {
                         if(fu == FailUpload.Last())
                         {
-                            Site += fu.site_storage;
+                            Site += fu.site_storage ?? "";
                         }
                         else
                         {
-                            Site += fu.site_storage + ",";
+                            Site += (fu.site_storage??"") + ",";
                         }
                     }
 

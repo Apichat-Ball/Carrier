@@ -32,8 +32,20 @@
             border-radius: 7px;
             padding: 3px;
         }
+        .fitTextArea{
+            max-width: initial;
+        }
+        .text-Driver{
+            max-width: 70%;
+        }
+        .fitTextBox{
+                max-width: -webkit-fill-available;
+        }
+        .maxwide-none{
+            max-width:none;
+        }
     </style>
-    <%--<script type="text/javascript" src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js'></script>--%>
+    <script type="text/javascript" src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js'></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
     <script type="text/javascript">
@@ -104,7 +116,7 @@
                                 
                             </div>
                             <div class="col-md-2 col-sm-6">
-                                <asp:ImageButton runat="server" ID="btnNotiLalamove" OnClick="btnNotiLalamove_Click1" Width="60px"  CssClass="img-Noti" ImageUrl="~/Icon/fast-delivery.png" Visible="false" />
+                                <asp:ImageButton runat="server" ID="btnNotiLalamove" OnClick="btnNotiLalamove_Click1" Width="60px"  CssClass="img-Noti" ImageUrl="~/Icon/fast-delivery.png" Visible="false"/>
                             </div>
                             <div class="col-md-3 col-sm-6 align-self-center" >
                                 <asp:Button runat="server" ID="btnCancel" CssClass="btn btn-primary " Text="กลับหน้าหลัก" OnClick="btnCancel_Click" UseSubmitBehavior="false" />
@@ -114,6 +126,17 @@
                         
                     </div>
                     <asp:Label runat="server" ID="lbForm" Text="Transportation" CssClass="h1"></asp:Label>
+                </div>
+                <div class="row col mt-5"  runat="server" id="dv_Ifram" visible="false">
+                    <div style="pointer-events:none;">
+                        <iframe runat="server" id="iframeTracking" width="100%" height="590px" ></iframe>
+                    </div>
+                    
+                    <br />
+                    <div class="input-group">
+                        <span class="input-group-text">Shared Link</span>
+                        <asp:TextBox runat="server" ID="txtSharedLink" CssClass="form-control maxwide-none"   Enabled="false" ></asp:TextBox>
+                    </div>
                 </div>
                 <div class="row mt-5 mb-3">
                     <%-- Columns ซ้าย--%>
@@ -136,8 +159,13 @@
                                 <asp:TextBox runat="server" ID="txtTrackingID" Width="100%" CssClass="form-control s-15px shadow" Enabled="false" Visible="false"></asp:TextBox>
                             </div>
                         </div>--%>
-
-                        <div class="row col-sm-12 col-md-6" runat="server" id="div_TypeSend">
+                        <div class="row" runat="server" id="dv_Approve_name" visible="false">
+                            <div class="col-sm-2 w-100 input-group mb-2">
+                                <asp:Label runat="server" ID="lbApprove" Text="ผู้อนุมัติการเรียกรถ" CssClass="input-group-text s-15px shadow"></asp:Label>
+                                <asp:TextBox runat="server" ID="txtApprove"  Width="100%" CssClass="form-control s-15px shadow" Enabled="false"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="row col-sm-12 col-md-6" runat="server" id="div_TypeSend" visible="false">
                             <div class=" input-group mb-2 ">
                                 <asp:Label runat="server" ID="lbTypeSend" Text="ประเภทการส่ง" CssClass="input-group-text s-15px shadow"></asp:Label>
                                 <asp:DropDownList runat="server" ID="ddlTypeSend" CssClass="btn dropdown-toggle s-15px shadow">
@@ -148,15 +176,33 @@
                         </div>
                         <div class="row col-sm-12 col-md-6" runat="server" id="divLalaCar">
                             <div class=" mb-2 ">
-                                <asp:Label runat="server" ID="Label3" Text="ประเภทการส่ง" CssClass=" s-15px "></asp:Label>
+                                <asp:Label runat="server" ID="Label3" Text="ประเภทรถ" CssClass=" s-15px "></asp:Label>
                                 <asp:DropDownList runat="server" ID="ddlCar" CssClass="btn border-1 dropdown-toggle s-15px shadow" OnSelectedIndexChanged="ddlCar_SelectedIndexChanged" AutoPostBack="true">
                                     <asp:ListItem Text="เลือกรถเพื่อมารับของ" Value="0"></asp:ListItem>
                                     <asp:ListItem Text="รถมอเตอร์ไซต์" Value="MOTORCYCLE"></asp:ListItem>
                                     <asp:ListItem Text="รถกระบะตู้ทึบ" Value="TRUCK330"></asp:ListItem>
                                     <asp:ListItem Text="รถเก๋ง 4 ประตู" Value="CAR"></asp:ListItem>
+                                    <asp:ListItem Text="รถ 5 ประตู" Value="MPV"></asp:ListItem>
                                     <asp:ListItem Text="รถกระบะ" Value="PICK_UP_TRUCK"></asp:ListItem>
 
                                 </asp:DropDownList>
+                            </div>
+                        </div>
+                        <div class="row col-sm-12 col-md-6" runat="server" id="divSpecial" visible="false">
+                            <div class=" mb-2 ">
+                                <div class="row mt-2">
+                                    <asp:Label runat="server" ID="Label6" Text="บริการพิเศษช่วยขนของ" CssClass=" s-15px "></asp:Label>
+                                <asp:DropDownList runat="server" ID="ddlSpecial" CssClass="btn border-1 dropdown-toggle s-15px shadow text-left" DataTextField="SpecialRequest_Name_TH" DataValueField="SpecialRequests_Name">
+                                </asp:DropDownList>
+
+                                </div>
+                                <br />
+                                <div class="row" runat="server" id="dv_rount">
+                                    <label for="ckRount">บริการพิเศษอื่นๆ</label>
+                                    <asp:CheckBox runat="server" ID="ckRount" Text="ไป - กลับ" CssClass="" />
+                                </div>
+
+
                             </div>
                         </div>
                         <div class="col-10 m-2">
@@ -186,7 +232,7 @@
                             <div class="row col-sm-12 my-2">
                                 <div class=" input-group ">
                                     <asp:Label runat="server" ID="lbsrcName" Text="ชื่อ" CssClass=" input-group-text s-15px shadow"></asp:Label>
-                                    <asp:TextBox runat="server" ID="txtsrcName" CssClass="form-control s-15px shadow" AutoCompleteType="Disabled"></asp:TextBox>
+                                    <asp:TextBox runat="server" ID="txtsrcName" CssClass="form-control s-15px shadow fitTextBox" AutoCompleteType="Disabled"></asp:TextBox>
                                 </div>
                             </div>
                             <div class="row col-sm-12 my-2">
@@ -247,6 +293,23 @@
                     </div>
                     <%--Columns ขวา--%>
                     <div class="col-sm-12 col-md-6">
+
+                        <div runat="server" id="dv_Driver_Lalamove" visible="false">
+                            <span class="s-22px">พนักงานขับรถ</span>
+                            <div class="row border border-1 " style="border-radius: 15px; padding: 20px; width: 100%" runat="server">
+                                <div class="col-3">
+                                    <asp:Image runat="server" ID="imgDriver" Width="100%" />
+                                </div>
+                                <div class="col-9" style="display:inline-grid;">
+                                    <span style="font-weight: bold;">ID:</span><asp:Label runat="server" ID="lbDriverID"></asp:Label>
+                                    <span style="font-weight: bold;">ชื่อ:</span><asp:Label runat="server" ID="lbDriverName"></asp:Label>
+                                    <span style="font-weight: bold;">เบอร์โทร:</span><asp:Label runat="server" ID="lbDriverPhone"></asp:Label>
+                                    <span style="font-weight: bold;">ป้ายทะเบียน:</span><asp:Label runat="server" ID="lbDriverPlateNumber"></asp:Label>
+
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row col-sm-12 my-2" style="margin-bottom: 10px;">
                             <div class="input-group ">
                                 <asp:Label runat="server" ID="lbExpress" Text="รูปแบบการจัดส่ง" CssClass="input-group-text s-15px shadow"></asp:Label>
@@ -262,30 +325,30 @@
                             </div>
                         </div>
                         
-                        <div class="row col-sm-12 my-2">
-                            <div class="input-group">
-                                <asp:Label runat="server" ID="Label4" Text="เบิกเพื่อใช้ในแผนก" CssClass="input-group-text s-15px shadow"></asp:Label>
-                                <asp:DropDownList ID="ddlSDpart" runat="server" DataTextField="department_" DataValueField="departmentID" CssClass="btn text-start s-15px shadow "></asp:DropDownList>
+                        
+                        <asp:Label runat="server" ID="Label5" Text="ค้นหาที่อยู่ผู้รับจาก Sitestorage" CssClass="s-22px"></asp:Label>
+                        <div class="border border-1 " runat="server" id="divSite" style="border-radius: 15px; padding: 20px; width: 100%; margin-bottom: 10px; flex-wrap: nowrap;">
+                            <div class="row col-sm-12 my-2" runat="server" id="dv_BrandOld" >
+                                <div class="input-group">
+                                    <asp:Label runat="server" ID="Label4" Text="แผนก" CssClass="input-group-text s-15px shadow"></asp:Label>
+                                    <asp:DropDownList ID="ddlSDpart" runat="server" DataTextField="department_" DataValueField="departmentID" CssClass="btn text-start s-15px shadow mw-100" ></asp:DropDownList>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row col-sm-12 my-2" runat="server" id="divSite" style="margin-bottom: 10px; flex-wrap: nowrap;">
-                            <div class="col-sm-8  input-group mb-2 " style="width: 50%">
-                                <asp:Label runat="server" ID="lbSite" Text="Site Storage" CssClass="input-group-text s-15px shadow"></asp:Label>
-                                <asp:TextBox runat="server" ID="txtSiteStorage" CssClass="form-control s-15px shadow text-uppercase " MaxLength="14" OnTextChanged="txtSiteStorage_TextChanged" AutoCompleteType="Disabled" ToolTip="กรุณากรอก SiteStorage ถ้าไม่มีให้ใส่ CENTER"></asp:TextBox>
+                            <div class="row col-sm-12 my-2">
+                                <div class="col-8  input-group mb-2 " style="width: 60%">
+                                    <asp:Label runat="server" ID="lbSite" Text="Site Storage" CssClass="input-group-text s-15px shadow"></asp:Label>
+                                    <asp:TextBox runat="server" ID="txtSiteStorage" CssClass="form-control s-15px shadow text-uppercase " MaxLength="14" OnTextChanged="txtSiteStorage_TextChanged" AutoCompleteType="Disabled" ToolTip="กรุณากรอก SiteStorage ถ้าไม่มีให้ใส่ CENTER"></asp:TextBox>
 
+                                </div>
+                                <div class="col-4 input-group h-50" style="width: 40%">
+                                    <asp:Button runat="server" ID="btnSearchSite" CssClass="btn btn-primary input-group-text shadow" Text="Search" UseSubmitBehavior="false" OnClick="btnSearchSite_Click" />
+                                    <asp:Button runat="server" ID="btnClearSite" CssClass="btn btn-danger input-group-text shadow" Text="Clear" UseSubmitBehavior="false" OnClick="btnClearSite_Click" />
+                                </div>
                             </div>
-                            <div class="col-sm-4 input-group h-50">
-                                <asp:Button runat="server" ID="btnSearchSite" CssClass="btn btn-primary input-group-text shadow" Text="Search" UseSubmitBehavior="false" OnClick="btnSearchSite_Click" />
-                                <asp:Button runat="server" ID="btnClearSite" CssClass="btn btn-danger input-group-text shadow" Text="Clear" UseSubmitBehavior="false" OnClick="btnClearSite_Click" />
-                            </div>
+
                         </div>
-                        <div class="row col-sm-12 my-2" runat="server" id="div_sendMail" visible="false">
-                            <asp:LinkButton runat="server" ID="lkSendMail" Text="เพิ่ม SiteStorage" OnClick="lkSendMail_Click"></asp:LinkButton>
-                        </div>
-                        <div class="row mb-2 ml-2">
-                            <asp:Label runat="server" ID="lbGuidSiteStorage" Text=" - กรุณากรอก SiteStorage ถ้าไม่มีให้ใส่ CENTER" Font-Names="Comic Sans MS" Font-Size="Small" ForeColor="Red" Visible="false"></asp:Label>
-                            <asp:Label runat="server" ID="lbGuidSiteStorage2" Text=" - SiteStorage CENTER สามารถใส่ได้เฉพาะของกองหลังเท่านั้น" Font-Names="Comic Sans MS" Font-Size="Small" ForeColor="Red"></asp:Label>
-                        </div>
+
+
                         <asp:Label runat="server" ID="Label2" Text="ผู้รับ" CssClass="s-22px"></asp:Label>
                         <div class="border border-1 " style="border-radius: 15px; padding: 20px; width: 100%">
                             <div class="row col-sm-12 my-2">
@@ -297,7 +360,7 @@
                             <div class="row col-sm-12 my-2">
                                 <div class="input-group">
                                     <asp:Label runat="server" ID="lbdstName" Text="ชื่อ" CssClass="input-group-text s-15px shadow"></asp:Label>
-                                    <asp:TextBox runat="server" ID="txtdstName" CssClass="form-control s-15px shadow" AutoCompleteType="Disabled"></asp:TextBox>
+                                    <asp:TextBox runat="server" ID="txtdstName" CssClass="form-control s-15px shadow fitTextBox" AutoCompleteType="Disabled"></asp:TextBox>
                                     <%--<asp:RequiredFieldValidator ID="RequiredFieldValidator4" ControlToValidate="txtdstName" Display="Static" ErrorMessage="*" runat="server" ForeColor="Red" CssClass="ml-1" />--%>
                                 </div>
                             </div>
@@ -351,7 +414,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="row my-2" runat="server" id="dv_Address_Google" visible="false" >
+                <%--<iframe
+                    width="600"
+                    height="450"
+                    style="border: 0"
+                    loading="lazy"
+                    allowfullscreen
+                    referrerpolicy="no-referrer-when-downgrade"
+                    src="https://www.google.com/maps/embed/v1/place?key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow&q=14.1833853,100.6259676"
+                    runat="server" id="iframe1"></iframe>--%>
+                <div class="row my-2" runat="server" id="dv_Address_Google" visible="false">
                     <span class="text-center">โปรดเลือกที่อยู่ที่ถูกต้อง เพื่อความแม่นยำต่อการจัดส่ง</span>
                     <div class="row">
                         <div class="col m-2">
@@ -361,14 +433,14 @@
                             <asp:Label runat="server" ID="lbSRCCount" CssClass="mb-2"></asp:Label>
                             <br />
                             <iframe
-                            width="600"
-                            height="450"
-                            style="border: 0"
-                            loading="lazy"
-                            allowfullscreen
-                            referrerpolicy="no-referrer-when-downgrade"
-                            runat="server" id="iframe_SRC"
-                            ></iframe>
+                                width="600"
+                                height="450"
+                                style="border: 0"
+                                loading="lazy"
+                                allowfullscreen
+                                referrerpolicy="no-referrer-when-downgrade"
+                                
+                                runat="server" id="iframe_SRC"></iframe>
                         </div>
                         <div class="col m-2">
                             <span>ที่อยู่ผู้รับ : </span>
@@ -377,14 +449,14 @@
                             <asp:Label runat="server" ID="lbDSTCount" CssClass="mb-2"></asp:Label>
                             <br />
                             <iframe
-                            width="600"
-                            height="450"
-                            style="border: 0"
-                            loading="lazy"
-                            allowfullscreen
-                            referrerpolicy="no-referrer-when-downgrade"
-                            runat="server" id="iframe_DST"
-                            ></iframe>
+                                width="600"
+                                height="450"
+                                style="border: 0"
+                                loading="lazy"
+                                allowfullscreen
+                                referrerpolicy="no-referrer-when-downgrade"
+                                
+                                runat="server" id="iframe_DST"></iframe>
                         </div>
 
                     </div>
@@ -393,7 +465,19 @@
                         <asp:Button runat="server" ID="btnClearLocation_Google" CssClass="btn btn-warning" Text="แก้ไขที่อยู่" OnClick="btnClearLocation_Google_Click" UseSubmitBehavior="false" />
                     </div>
                 </div>
-
+                <div runat="server" id="dv_RemarkDriver" visible="false" class="mb-4">
+                    <div class="row text-center" >
+                        <h3>
+                            รายละเอียดให้พนักงานขับรถ
+                        </h3>
+                    </div>
+                    <div class="row text-center"  >
+                        <div class="input-group" style="place-content: center;">
+                            <asp:TextBox runat="server" ID="txtRemarkDriver" CssClass="form-control  s-15px shadow fitTextArea text-Driver"  Rows="2"  AutoCompleteType="Disabled" TextMode="MultiLine" Width="100%" ToolTip="กรอกรายละเอียดให้พนักงานขับรถ"></asp:TextBox>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="row text-center">
                     <h3>
                         กล่องที่ต้องการส่ง
@@ -404,6 +488,10 @@
                         <asp:Button runat="server" ID="btnPrintAll" Text="พิมพ์ใบปะหน้ากล่องทั้งหมด" OnClick="btnPrintAll_Click" CssClass="btn btn-primary w-50"/>
                     </div>
                 </div>
+                <div class="row mb-2 ml-2">
+                            <asp:Label runat="server" ID="lbGuidSiteStorage" Text=" - กรุณากรอก SiteStorage ถ้าไม่มีให้ใส่ CENTER" Font-Names="Comic Sans MS" Font-Size="Small" ForeColor="Red" Visible="false"></asp:Label>
+                            <asp:Label runat="server" ID="lbGuidSiteStorage2" Text=" - SiteStorage CENTER สามารถใส่ได้เฉพาะของกองหลังเท่านั้น" Font-Names="Comic Sans MS" Font-Size="Small" ForeColor="Red"></asp:Label>
+                        </div>
                 <div class="row">
                     <asp:GridView runat="server" ID="gv_Big_Box" EmptyDataText="No Reccord." CssClass="table table-hover  table-bordered small" Width="100%" AutoGenerateColumns="false" BorderStyle="None" RowStyle-BorderColor="Gray" RowStyle-CssClass="" >
                         <Columns>
@@ -435,6 +523,30 @@
                                     <%--<asp:Label runat="server" ID="lbhBBoxTracking" CssClass="input-group-text" Text="เลขพัสดุ : "></asp:Label>--%>
                                     <asp:Label runat="server" ID="lbBBoxTracking" CssClass="input-group-text"></asp:Label>
                                         </div>
+                                </ItemTemplate>
+                                </asp:TemplateField>
+                            <asp:TemplateField  ItemStyle-VerticalAlign="Top">
+                                <HeaderTemplate>
+                                    <span>
+                                        Brand & SiteStorage
+                                    </span>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <div class=" mt-2">
+                                        <div class="row my-2">
+                                            <div class="input-group">
+                                                <span class="input-group-text">เบิกเพื่อใช้ในแผนก</span>
+                                                <asp:DropDownList runat="server" ID="ddlDepartment" CssClass="btn dropdown-toggle shadow text-left" DataTextField="department_" DataValueField="departmentID"></asp:DropDownList>
+                                                <asp:Label runat="server" ID="lbDepartment_id" Visible="false" Text='<%# Bind("department") %>' ></asp:Label>
+                                            </div>
+                                        </div>
+                                        <div class="row my-2">
+                                            <div class="input-group">
+                                                <span class="input-group-text">SiteStorage</span>
+                                                <asp:TextBox runat="server" ID="txtSitestorageBox" Text='<%# Bind("Sitestorage") %>' CssClass="form-control s-15px shadow text-uppercase" MaxLength="14" AutoCompleteType="Disabled" ToolTip="กรุณากรอก SiteStorage ถ้าไม่มีให้ใส่ CENTER"></asp:TextBox>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </ItemTemplate>
                                 </asp:TemplateField>
                             <asp:TemplateField ItemStyle-VerticalAlign="Top" >
@@ -574,6 +686,7 @@
                     </div>
                 </div>--%>
                 
+                
 
                 <div class="row">
 
@@ -601,57 +714,7 @@
                     </div>
                 </div>
             </div>
-            <div class="container" runat="server" id="div_mail" visible ="false" style="margin-top: 80px; position: absolute; backdrop-filter: contrast(0.5);padding-bottom:10px;border-radius:8px; ">
-                <div class="position-absolute" style=" width: 100%;text-align: right; z-index:2" >
-                    <asp:Button runat="server" ID="btnClose" CssClass="btn-close mt-2 mr-4" OnClick="btnClose_Click"/>
-                </div>
-                <div class="row" style="z-index:-3">
-                    <div class="col-sm-12 col-12">
-                        <h3>Site Storage 
-                        </h3>
-                        <p>
-                            ในส่วนนี้มีไว้สำหรับเพิ่ม SiteStorage โดยจะแจ้งเจ้าหน้าที่ที่เกี่ยวข้อง
-                        </p>
-                        <p style="color: red">
-                            *ใส่ SiteStorage และเลือก brand ให้เรียบร้อย และตรวจสอบการกรอกข้อมูลให้ครบก่อนทำการส่ง*
-                        </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class=" col-sm-12 col-md-12 my-2" style="margin-bottom: 10px;">
-                        <div class=" input-group">
-                            <asp:Label runat="server" ID="Label6" Text="รูปแบบการขายสินค้า" CssClass="input-group-text s-15px shadow"></asp:Label>
-                            <asp:RadioButton runat="server" ID="RadioWork1" Text="ONLINE" GroupName="SaleOn" CssClass="ml-4 mt-2 custom-radio" />
-                            <asp:RadioButton runat="server" ID="RadioWork2" Text="OFFLINE" GroupName="SaleOn" CssClass="ml-2 mt-2 custom-radio " />
-                        </div>
-                    </div>
-                    <div class=" col-sm-12 col-md-4 my-2">
-                        <div class="input-group">
-                            <asp:Label runat="server" ID="Label7" Text="ปลายทาง" CssClass="input-group-text s-15px shadow"></asp:Label>
-                            <asp:DropDownList runat="server" ID="ddlTo" CssClass="btn dropdown-toggle s-15px shadow" DataValueField="val" DataTextField="text"></asp:DropDownList>
-                        </div>
-                    </div>
-                    <div class=" col-sm-12 col-md-5 my-2">
-                        <div class="input-group">
-                            <asp:Label runat="server" ID="Label8" Text="เบิกเพื่อใช้ในแผนก" CssClass="input-group-text s-15px shadow"></asp:Label>
-                            <asp:DropDownList ID="ddlBrand" runat="server" DataTextField="department_" DataValueField="departmentShot" CssClass="btn text-start s-15px shadow "></asp:DropDownList>
-                        </div>
-                    </div>
-                    <div class=" col-sm-12 my-2" runat="server" id="div2" style="margin-bottom: 10px; flex-wrap: nowrap;">
-                        <div class="  input-group mb-2 " style="width: 50%">
-                            <asp:Label runat="server" ID="Label9" Text="Site Storage" CssClass="input-group-text s-15px shadow"></asp:Label>
-                            <asp:TextBox runat="server" ID="txtSiteAdd" CssClass="form-control s-15px shadow " MaxLength="14" AutoCompleteType="Disabled"></asp:TextBox>
-
-                        </div>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-sm-12 float-end">
-                        <asp:Button runat="server" ID="btnSendMail" Text="Send" CssClass="btn btn-primary" OnClick="btnSendMail_Click"></asp:Button>
-                    </div>
-                </div>
-            </div>
+            
         </ContentTemplate>
         <Triggers>
             <asp:PostBackTrigger ControlID="btnSave" />

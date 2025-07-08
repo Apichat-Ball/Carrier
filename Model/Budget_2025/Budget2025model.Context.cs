@@ -7,16 +7,16 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Carrier.Model.Online_Lazada
+namespace Carrier.Model.Budget_2025
 {
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class Online_LazadaEntities : DbContext
+    public partial class Budget_2025Entities : DbContext
     {
-        public Online_LazadaEntities()
-            : base("name=Online_LazadaEntities")
+        public Budget_2025Entities()
+            : base("name=Budget_2025Entities")
         {
         }
     
@@ -25,11 +25,7 @@ namespace Carrier.Model.Online_Lazada
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<API_Key> API_Key { get; set; }
-        public virtual DbSet<PROVINCE> PROVINCEs { get; set; }
-        public virtual DbSet<SAP_Reference> SAP_Reference { get; set; }
-        public virtual DbSet<API_Shopify_GetOrderItems> API_Shopify_GetOrderItems { get; set; }
-        public virtual DbSet<API_Shopify_GetOrders> API_Shopify_GetOrders { get; set; }
-        public virtual DbSet<API_Shopify_Items> API_Shopify_Items { get; set; }
+        public virtual DbSet<Department_IO_2025> Department_IO_2025 { get; set; }
+        public virtual DbSet<Department_IO_2025_Brand> Department_IO_2025_Brand { get; set; }
     }
 }
