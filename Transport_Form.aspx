@@ -200,6 +200,7 @@
                                 <div class="row" runat="server" id="dv_rount">
                                     <label for="ckRount">บริการพิเศษอื่นๆ</label>
                                     <asp:CheckBox runat="server" ID="ckRount" Text="ไป - กลับ" CssClass="" />
+                                    <asp:CheckBox runat="server" ID="ckTROLLEY" Text="รถเข็น" CssClass="" />
                                 </div>
 
 

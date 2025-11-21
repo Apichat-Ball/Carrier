@@ -1133,7 +1133,7 @@ namespace Carrier
                     ddlsrcDistrictName.DataBind();
                     ddlsrcDistrictName.SelectedValue = "119";
                     txtsrcPostalCode.Text = "10120";
-                    txtsrcDetailAddress.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด " + "477 พระราม 3 ";
+                    txtsrcDetailAddress.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด 477 พระราม 3  SFG | Star Fashion Group - Star Fashion (2551) Co., Ltd.,";
 
                     break;
                 case "SDC1":
@@ -1178,7 +1178,7 @@ namespace Carrier
                     ddlsrcDistrictName.DataBind();
                     ddlsrcDistrictName.SelectedValue = "119";
                     txtsrcPostalCode.Text = "10120";
-                    txtsrcDetailAddress.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด " + "477 พระราม 3 ";
+                    txtsrcDetailAddress.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด 477 พระราม 3  SFG | Star Fashion Group - Star Fashion (2551) Co., Ltd.,";
 
                     break;
             }
@@ -1240,7 +1240,7 @@ namespace Carrier
                         ddldstDistrictName.DataBind();
                         ddldstDistrictName.SelectedValue = "119";
                         txtdstPostalCode.Text = "10120";
-                        txtdstDetailAddress.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด " + "477 พระราม 3 ";
+                        txtdstDetailAddress.Text = "บริษัท สตาร์แฟชั่น(2551) จำกัด 477 พระราม 3  SFG | Star Fashion Group - Star Fashion (2551) Co., Ltd.,";
                         break;
                 }
             }
@@ -1259,9 +1259,22 @@ namespace Carrier
 
         public void getAddressOnSite(string siteId)
         {
+            
             var brand = ddlSDpart.SelectedValue;
             var online = Online_Lazada_Entities.PROVINCEs.Select(s => s.PROVINCE_ID).ToList();
-            var address = (from tax in InsideSFG_WF_Entities.Customer_Tax
+            var address = Carrier_Entities.Address_Delivery.Where(w => online.Contains(w.Province1) && w.CustomerCode == siteId).Select(s => new
+            {
+                NameTax = s.NameTax,
+                dstDetail = s.Address1 + " " + s.lane1 + " " + s.Road1,
+                dstProvince = s.Province1,
+                dstCity = s.Area1.Trim(),
+                dstDistrict = s.Zone1.Trim(),
+                dstPostal = s.Postal1,
+                dstPhone = s.phone1
+            }).FirstOrDefault();
+            if (address == null)
+            {
+                address = (from tax in InsideSFG_WF_Entities.Customer_Tax
                            where online.Contains(tax.Province1) && tax.CustomerCode == siteId
                            select new
                            {
@@ -1272,43 +1285,10 @@ namespace Carrier
                                dstDistrict = tax.Zone1.Trim(),
                                dstPostal = tax.Postal1,
                                dstPhone = tax.phone1
-                           }).ToList().FirstOrDefault();
+                           }).FirstOrDefault();
+            }
             if (address != null)
             {
-
-                //if(address.dstPhone.Length >= 8)
-                //{
-                //    if (address.dstPhone.Substring(0, 2) == "08" || address.dstPhone.Substring(0, 2) == "09")
-                //    {
-                //        txtdstPhone.Text = address.dstPhone;
-                //        txtdstHomePhone.Text = "-";
-                //    }
-                //    else if ( address.dstPhone.Substring(0) == "8" || address.dstPhone.Substring(0) == "9")
-                //    {
-                //        txtdstPhone.Text = "0" + address.dstPhone;
-                //        txtdstHomePhone.Text = "-";
-                //    }
-                //    else if (address.dstPhone.Substring(0, 2) == "02")
-                //    {
-                //        txtdstPhone.Text = "-";
-                //        txtdstHomePhone.Text = address.dstPhone;
-                //    }
-                //    else if(address.dstPhone.Substring(0) == "2" )
-                //    {
-                //        txtdstPhone.Text = "-"; 
-                //        txtdstHomePhone.Text = "0" + address.dstPhone;
-                //    }
-                //    else
-                //    {
-                //        txtdstPhone.Text = "-";
-                //        txtdstHomePhone.Text = "-";
-                //    }
-
-                //}
-                //else
-                //{
-                //    txtdstPhone.Text = "-";
-                //}
 
                 ddldstProvinceName.SelectedValue = address.dstProvince;
                 var provinceSDC1 = Convert.ToInt32(ddldstProvinceName.SelectedValue);
@@ -1525,6 +1505,26 @@ namespace Carrier
                 }
                 #endregion
 
+                #region Check Lalamove Location Select
+
+                if (ddlExpress.SelectedValue == "2")
+                {
+                    if (ddlSRC.SelectedValue == "0" && ddlSRC.Visible)
+                    {
+                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('กรุณาเลือกที่อยู่ผู้ส่งจากการค้นหา Google Map')", true);
+                        return;
+                    }
+
+                    if (ddlDST.SelectedValue == "0" && ddlDST.Visible)
+                    {
+                        ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('กรุณาเลือกที่อยู่ผู้รับจากการค้นหาของ Google Map')", true);
+                        return;
+                    }
+                }
+
+                #endregion
+
+
                 #region Run BigBoxID
                 var docnow = "BF" + DateTime.Now.Year.ToString().Substring(2, 2);
                 var BigBoxID = Carrier_Entities.Order_Big_Box.Where(w => w.BFID.StartsWith(docnow)).OrderBy(o => o.RunID).ToList() ;
@@ -1532,7 +1532,7 @@ namespace Carrier
                 if (BigBoxID.Count() == 0)
                 {
 
-                    BBID = "BF" + DateTime.Now.Year.ToString().Substring(2, 2) + "00000001";
+                    BBID = "BF" + DateTime.Now.Year.ToString().Substring(2, 2) + "00000001" + service_Flashs.RandomID(2);
                     var Run = Carrier_Entities.RunDocnoes.Where(w => w.Type == "BF" && w.Year == DateTime.Now.Year).FirstOrDefault();
                     if (Run == null)
                     {
@@ -1547,7 +1547,7 @@ namespace Carrier
                 }
                 else
                 {
-                    BBID = BigBoxID.LastOrDefault().BFID.Substring(0, 4) + BigBoxID.LastOrDefault().BFID.Substring(4, 8 - (Convert.ToInt32(BigBoxID.LastOrDefault().BFID.Substring(4, 8)) + 1).ToString().Length) + (Convert.ToInt32(BigBoxID.LastOrDefault().BFID.Substring(4, 8)) + 1).ToString();
+                    BBID = BigBoxID.LastOrDefault().BFID.Substring(0, 4) + BigBoxID.LastOrDefault().BFID.Substring(4, 8 - (Convert.ToInt32(BigBoxID.LastOrDefault().BFID.Substring(4, 8)) + 1).ToString().Length) + (Convert.ToInt32(BigBoxID.LastOrDefault().BFID.Substring(4, 8)) + 1).ToString() + service_Flashs.RandomID(2);
                     Carrier_Entities.RunDocnoes.Where(w => w.Type == "BF" & w.Year == DateTime.Now.Year).FirstOrDefault().RunNo += 1;
                     Carrier_Entities.SaveChanges();
                 }
@@ -2193,24 +2193,36 @@ namespace Carrier
                 lbCarLoad.Text = "สามารถบรรจุได้ " + car.Car_Load + " " + car.Car_Load_Unit;
                 dv_DetailCar.Visible = true;
 
-                var special = Carrier_Entities.Lalamove_Car_SpecialRequests.Where(w => w.Location_Code == "TH BKK" && w.Car_Key == ddlCar.SelectedValue && new string[] { "DOOR_TO_DOOR_1DRIVER", "DOOR_TO_DOOR_1DRIVER1HELPER", "ROUND_TRIP" }.Contains(w.SpecialRequests_Name));
+                var special = Carrier_Entities.Lalamove_Car_SpecialRequests.Where(w => w.Location_Code == "TH BKK" && w.Car_Key == ddlCar.SelectedValue && new string[] { "DOOR_TO_DOOR_1DRIVER", "DOOR_TO_DOOR_1DRIVER1HELPER", "ROUND_TRIP", "ADD_ON_TROLLEY" }.Contains(w.SpecialRequests_Name));
                 if(special.Count() != 0)
                 {
-                    var speciallist = special.Where(w=>w.SpecialRequests_Name != "ROUND_TRIP").Select(s => new { SpecialRequests_Name = s.SpecialRequests_Name, SpecialRequest_Name_TH = s.SpecialRequest_Name_TH }).ToList();
+                    var speciallist = special.Where(w=> !new string[] { "ADD_ON_TROLLEY", "ROUND_TRIP" }.Contains(w.SpecialRequests_Name)).Select(s => new { SpecialRequests_Name = s.SpecialRequests_Name, SpecialRequest_Name_TH = s.SpecialRequest_Name_TH }).ToList();
                     speciallist.Insert(0, new { SpecialRequests_Name = "0", SpecialRequest_Name_TH = "ไม่ใช้บริการขนส่งแบบพิเศษ" });
                     divSpecial.Visible = true;
                     ddlSpecial.DataSource = speciallist;
                     ddlSpecial.DataBind();
-                    var rount = special.Where(w => w.SpecialRequests_Name == "ROUND_TRIP").FirstOrDefault();
-                    if(rount != null)
+                    var rount = special.Where(w =>new string[] { "ADD_ON_TROLLEY", "ROUND_TRIP" }.Contains(w.SpecialRequests_Name )).ToList();
+                    ckRount.Visible = false;
+                    ckTROLLEY.Visible = false;
+                    if (rount.Count() != 0)
                     {
-                        ckRount.Visible = true;
+                        foreach(var sp in rount)
+                        {
+                            switch (sp.SpecialRequests_Name)
+                            {
+                                case "ROUND_TRIP": ckRount.Visible = true;
+                                    break;
+                                case "ADD_ON_TROLLEY": ckTROLLEY.Visible = true;
+                                    break;
+                            }
+                        }
+                        
                     }
                     else
                     {
-                        ckRount.Visible = false;
+                        
                     }
-                    ckRount.Checked = false;
+                    
                 }
                 else
                 {
@@ -2232,7 +2244,16 @@ namespace Carrier
 
         protected void btnSearchSite_Click(object sender, EventArgs e)
         {
-            getAddressOnSite(txtSiteStorage.Text.ToUpper().Substring(0, 4));
+            var storag = txtSiteStorage.Text.ToUpper();
+            if (storag.StartsWith("ZXXC"))
+            {
+                getAddressOnSite(storag.Substring(0, 4) + storag.Substring(6,2));
+            }
+            else
+            {
+                getAddressOnSite(txtSiteStorage.Text.ToUpper().Substring(0, 4));
+            }
+            
             setTableBigBoxNoHeader();
         }
 
@@ -2422,7 +2443,34 @@ namespace Carrier
 
         protected void btnCheck_Click(object sender, EventArgs e)
         {
+            var userid = Convert.ToInt32(lbuserID.Text);
+            var UserCreate = InsideSFG_WF_Entities.Employees.Where(w => w.userID == userid).FirstOrDefault();
+            var usermasteridFix = 0;
+            if (UserCreate.UserID_View_Finger != null)
+            {
+                usermasteridFix = Convert.ToInt32(UserCreate.UserID_View_Finger);
+            }
+            else
+            {
+                usermasteridFix = UserCreate.masterID ?? 0;
+            }
+            if (usermasteridFix == 0)
+            {
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('หัวหน้าของคุณยังไม่ได้ระบุในระบบ โปรดติดต่อแผนก HR')", true);
+                setTableBigBox();
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
+                return;
+            }
+
             #region
+            
+            
             var ss = Request.QueryString["PM"] != null ? 1 : gv_Big_Box.Rows.Count - 1;
             List<string> checkVali = new List<string>();
             foreach (GridViewRow row in gv_Big_Box.Rows)
@@ -2535,18 +2583,25 @@ namespace Carrier
                 var srcaddress = txtsrcDetailAddress.Text + " " + ddlsrcDistrictName.SelectedItem.Text + " " + ddlsrcCityName.SelectedItem.Text + " " + ddlsrcProvinceName.SelectedItem.Text + " " + txtsrcPostalCode.Text;
                 
                 List<addressTOGoogle> srcList = GetLocation(srcaddress, "SRC");
-                
+                srcList.Insert(0, new addressTOGoogle
+                {
+                    No = 0,
+                    lng = "",
+                    lat = "",
+                    AddressDetail = "กรุณาเลือกที่อยู่"
+                });
                 ddlSRC.DataSource = srcList;
                 ddlSRC.DataBind();
-                if (srcList.Count() <= 1)
+                if (srcList.Count() <= 2)
                 {
                     ddlSRC.Visible = false;
+                    ddlSRC.SelectedValue = srcList.Where(w => w.No != 0).FirstOrDefault().No.ToString();
                     lbSRCAddress_Detail_Google.Visible = true;
-                    lbSRCAddress_Detail_Google.Text = srcList.FirstOrDefault().AddressDetail;
+                    lbSRCAddress_Detail_Google.Text = srcList.Where(w=>w.No != 0).FirstOrDefault().AddressDetail;
                 }
                 var latlngSRC = srcList.Where(w => w.No == Convert.ToInt32(ddlSRC.SelectedValue)).FirstOrDefault();
                 iframe_SRC.Src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow&q=" + latlngSRC.lat + "," + latlngSRC.lng + "&language=TH";
-                if(srcList.Count() == 0)
+                if(srcList.Count() == 1)
                 {
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ไม่พบที่อยู่ผู้ส่งโปรดแก้ไขที่อยู่และตรวจสอบอีกครั้ง')", true);
                     btnSave.Visible = false;
@@ -2558,17 +2613,25 @@ namespace Carrier
                 List<addressTOGoogle> dstList = GetLocation(dstaddress, "DST");
                 
                 Carrier_Entities.SaveChanges();
+                dstList.Insert(0, new addressTOGoogle
+                {
+                    No = 0,
+                    lng = "",
+                    lat = "",
+                    AddressDetail = "กรุณาเลือกที่อยู่"
+                });
                 ddlDST.DataSource = dstList;
                 ddlDST.DataBind();
-                if (dstList.Count() <= 1)
+                if (dstList.Count() <=2)
                 {
                     ddlDST.Visible = false;
+                    ddlDST.SelectedValue = dstList.Where(w => w.No != 0).FirstOrDefault().No.ToString();
                     lbDSTAddress_Detail_Google.Visible = true;
-                    lbDSTAddress_Detail_Google.Text = dstList.FirstOrDefault().AddressDetail;
+                    lbDSTAddress_Detail_Google.Text = dstList.Where(w => w.No != 0).FirstOrDefault().AddressDetail;
                 }
-                var latlngDST = dstList.Where(w => w.No == Convert.ToInt32(ddlSRC.SelectedValue)).FirstOrDefault();
+                var latlngDST = dstList.Where(w => w.No == Convert.ToInt32(ddlDST.SelectedValue)).FirstOrDefault();
                 iframe_DST.Src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow&q=" + latlngDST.lat + "," + latlngDST.lng + "&language=TH";
-                if (srcList.Count() == 0)
+                if (dstList.Count() == 1)
                 {
                     ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ไม่พบที่อยู่ผู้รับโปรดแก้ไขที่อยู่และตรวจสอบอีกครั้ง')", true);
                     btnSave.Visible = false;
@@ -2627,8 +2690,16 @@ namespace Carrier
 
         protected void ddlSRC_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var gettemplocaltion = Carrier_Entities.Lalamove_Location_Google_Temp.Where(w => w.Userid == lbuserID.Text && w.Address_Out == ddlSRC.SelectedItem.Text).FirstOrDefault();
-            iframe_SRC.Src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow&q=" + gettemplocaltion.Lat + ","+ gettemplocaltion.Lng + "&language=TH";
+            if(ddlSRC.SelectedValue != "0")
+            {
+                var gettemplocaltion = Carrier_Entities.Lalamove_Location_Google_Temp.Where(w => w.Userid == lbuserID.Text && w.Address_Out == ddlSRC.SelectedItem.Text).FirstOrDefault();
+                iframe_SRC.Src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow&q=" + gettemplocaltion.Lat + "," + gettemplocaltion.Lng + "&language=TH";
+            }
+            else
+            {
+                iframe_SRC.Src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow&q=,&language=TH";
+            }
+            
             setTableBigBox();
             gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
             gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
@@ -2641,8 +2712,16 @@ namespace Carrier
 
         protected void ddlDST_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var gettemplocaltion = Carrier_Entities.Lalamove_Location_Google_Temp.Where(w => w.Userid == lbuserID.Text && w.Address_Out == ddlDST.SelectedItem.Text).FirstOrDefault();
-            iframe_DST.Src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow&q=" + gettemplocaltion.Lat + "," + gettemplocaltion.Lng + "&language=TH";
+            if(ddlDST.SelectedValue != "0")
+            {
+                var gettemplocaltion = Carrier_Entities.Lalamove_Location_Google_Temp.Where(w => w.Userid == lbuserID.Text && w.Address_Out == ddlDST.SelectedItem.Text).FirstOrDefault();
+                iframe_DST.Src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow&q=" + gettemplocaltion.Lat + "," + gettemplocaltion.Lng + "&language=TH";
+            }
+            else
+            {
+                iframe_DST.Src = "https://www.google.com/maps/embed/v1/place?key=AIzaSyC3oAoBojE55Dsle4J-vN4HrFNBPcFHSow&q=,&language=TH";
+            }
+            
             setTableBigBox();
             gv_Big_Box.HeaderRow.Cells.RemoveAt(0);
             gv_Big_Box.HeaderRow.Cells.RemoveAt(0);

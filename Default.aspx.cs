@@ -33,7 +33,8 @@ namespace Carrier
             //สำหรับ Admin
             //Session.Clear();
             Session["_UserID"] = null;
-            //HttpContext.Current.Session["_UserID"] = "102063";
+            //HttpContext.Current.Session["_UserID"] = "102118";
+            //HttpContext.Current.Session["_UserID"] = "101635";
             if (Session["_UserID"] == null)
             {
                 service_Flashs.Check_UserID();

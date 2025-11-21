@@ -36,6 +36,8 @@
         <EntityTypeShape EntityType="CarrierModel.Lalamove_Car_Stop" Width="1.5" PointX="5.375" PointY="14.75" />
         <EntityTypeShape EntityType="CarrierModel.Lalamove_Car_Status" Width="1.5" PointX="7.375" PointY="14.75" />
         <EntityTypeShape EntityType="CarrierModel.Lalamove_Location_Google_Temp" Width="1.5" PointX="9.375" PointY="14.75" />
+        <EntityTypeShape EntityType="CarrierModel.Central_Import" Width="1.5" PointX="15.375" PointY="0.75" />
+        <EntityTypeShape EntityType="CarrierModel.Address_Delivery" Width="1.5" PointX="0.75" PointY="15.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

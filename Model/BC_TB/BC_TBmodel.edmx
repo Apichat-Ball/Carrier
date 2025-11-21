@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BC_TBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BC_Dimension">
+          <Key>
+            <PropertyRef Name="Dimension_Code" />
+          </Key>
+          <Property Name="Dimension_Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Dimension_Name" Type="nvarchar(max)" />
+          <Property Name="Dimension_Modified_Last" Type="datetime" />
+          <Property Name="Dimension_ID" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="BC_Dimension_Values">
+          <Key>
+            <PropertyRef Name="Dimension_Code" />
+            <PropertyRef Name="Dimension_Value_Code" />
+          </Key>
+          <Property Name="Dimension_Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Dimension_Value_Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Dimension_Value_Name" Type="nvarchar(max)" />
+          <Property Name="Dimension_Value_Modified_Last" Type="datetime" />
+          <Property Name="Dimension_Value_ID" Type="nvarchar" MaxLength="50" />
+          <Property Name="DepartmentID" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="SiteSAP_BC">
+          <Key>
+            <PropertyRef Name="SiteSAP" />
+          </Key>
+          <Property Name="SiteSAP" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="SiteBC" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityContainer Name="BC_TBModelStoreContainer">
+          <EntitySet Name="BC_Dimension" EntityType="Self.BC_Dimension" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BC_Dimension_Values" EntityType="Self.BC_Dimension_Values" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SiteSAP_BC" EntityType="Self.SiteSAP_BC" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BC_TBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BC_Dimension">
+          <Key>
+            <PropertyRef Name="Dimension_Code" />
+          </Key>
+          <Property Name="Dimension_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Dimension_Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Dimension_Modified_Last" Type="DateTime" Precision="3" />
+          <Property Name="Dimension_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="BC_Dimension_Values">
+          <Key>
+            <PropertyRef Name="Dimension_Code" />
+            <PropertyRef Name="Dimension_Value_Code" />
+          </Key>
+          <Property Name="Dimension_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Dimension_Value_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Dimension_Value_Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Dimension_Value_Modified_Last" Type="DateTime" Precision="3" />
+          <Property Name="Dimension_Value_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DepartmentID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="BC_TBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BC_Dimension" EntityType="Self.BC_Dimension" />
+          <EntitySet Name="BC_Dimension_Values" EntityType="Self.BC_Dimension_Values" />
+          <EntitySet Name="SiteSAP_BC" EntityType="BC_TBModel.SiteSAP_BC" />
+        </EntityContainer>
+        <EntityType Name="SiteSAP_BC">
+          <Key>
+            <PropertyRef Name="SiteSAP" />
+          </Key>
+          <Property Name="SiteSAP" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="SiteBC" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BC_TBModelStoreContainer" CdmEntityContainer="BC_TBEntities">
+          <EntitySetMapping Name="BC_Dimension">
+            <EntityTypeMapping TypeName="BC_TBModel.BC_Dimension">
+              <MappingFragment StoreEntitySet="BC_Dimension">
+                <ScalarProperty Name="Dimension_Code" ColumnName="Dimension_Code" />
+                <ScalarProperty Name="Dimension_Name" ColumnName="Dimension_Name" />
+                <ScalarProperty Name="Dimension_Modified_Last" ColumnName="Dimension_Modified_Last" />
+                <ScalarProperty Name="Dimension_ID" ColumnName="Dimension_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BC_Dimension_Values">
+            <EntityTypeMapping TypeName="BC_TBModel.BC_Dimension_Values">
+              <MappingFragment StoreEntitySet="BC_Dimension_Values">
+                <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
+                <ScalarProperty Name="Dimension_Code" ColumnName="Dimension_Code" />
+                <ScalarProperty Name="Dimension_Value_Code" ColumnName="Dimension_Value_Code" />
+                <ScalarProperty Name="Dimension_Value_Name" ColumnName="Dimension_Value_Name" />
+                <ScalarProperty Name="Dimension_Value_Modified_Last" ColumnName="Dimension_Value_Modified_Last" />
+                <ScalarProperty Name="Dimension_Value_ID" ColumnName="Dimension_Value_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SiteSAP_BC">
+            <EntityTypeMapping TypeName="BC_TBModel.SiteSAP_BC">
+              <MappingFragment StoreEntitySet="SiteSAP_BC">
+                <ScalarProperty Name="SiteBC" ColumnName="SiteBC" />
+                <ScalarProperty Name="SiteSAP" ColumnName="SiteSAP" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

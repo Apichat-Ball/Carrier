@@ -9,6 +9,7 @@ using Carrier.Model.Budget;
 using Carrier.Model.Budget_2025;
 using Carrier.Model.Whale;
 using Carrier.Model.InsideSFG_WF;
+using Carrier.Model.BC_TB;
 using Carrier.Service;
 using Carrier.Info;
 using System.IO;
@@ -22,11 +23,14 @@ namespace Carrier
     {
         Service_Flash service_Flash = new Service_Flash();
         Service_Budget service_Budget = new Service_Budget();
+        Service_BC service_BC = new Service_BC();
+
         CarrierEntities carrier_Entities = new CarrierEntities();
         BudgetEntities budget_Entities = new BudgetEntities();
         Budget_2025Entities budget_2025_Entities = new Budget_2025Entities();
         WhaleEntities Whale_Entities = new WhaleEntities();
         InsideSFG_WFEntities InsideSFG_WF_Entities = new InsideSFG_WFEntities();
+        BC_TBEntities bC_TB_Entities = new BC_TBEntities();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -34,7 +38,7 @@ namespace Carrier
             {
                 txtDateSt.Text = DateTime.Now.AddDays(-7).ToString("dd/MM/yyyy");
                 txtDateED.Text = DateTime.Now.AddDays(1).ToString("dd/MM/yyyy");
-                dv_App.Visible = false;
+                //dv_App.Visible = false;
             }
 
         }
@@ -296,7 +300,7 @@ namespace Carrier
                     calGrid.DataSource = res;
                     calGrid.DataBind();
                 }
-                else
+                else if(ddlTypeExport.SelectedValue == "SAP")
                 {
                     dv_App.Visible = true;
                     var deliveryGroupID = cal.GroupBy(g => g.Delivery_ID).Select(s => s.Key).ToList();
@@ -462,6 +466,161 @@ namespace Carrier
                         lalamove_Export.Add(exp);
                     }
                     calGrid.DataSource = lalamove_Export;
+                    calGrid.DataBind();
+                }
+                else if(ddlTypeExport.SelectedValue == "BC"){
+                    dv_App.Visible = true;
+                    var deliveryGroupID = cal.GroupBy(g => g.Delivery_ID).Select(s => s.Key).ToList();
+
+                    var Lalamove = (from ll in carrier_Entities.Lalamove_Import
+                                    join calcar in carrier_Entities.Calculate_Car on ll.Delivery_ID equals calcar.DeliveryNumber
+                                    join order in carrier_Entities.Orders on calcar.Docno equals order.Docno
+                                    where deliveryGroupID.Contains(ll.Delivery_ID)
+                                    select new model_Lalamove_Cal
+                                    {
+
+                                        Account = "6050008",
+                                        Amount = calcar.Price ?? 0,
+                                        Amount_in_LC = "",
+                                        Tax_Base_Amount = "",
+                                        Tax_Code = "VX",
+                                        Bus_Area = "",
+                                        Baseline_Date = "",
+                                        Payment_Term = "",
+                                        Planning_Level = "",
+                                        Profit_Center = "",
+                                        Cost_Center = "",
+                                        Service_Cost_Center = "",
+                                        Order = "",
+                                        Shop = calcar.SiteStorage,
+                                        Assignment = "Lalamove",
+                                        Brand = calcar.SDpart,
+                                        DeliveryID = ll.Delivery_ID
+                                    }).ToList();
+
+                    Lalamove = Lalamove.GroupBy(g => new { shop = g.Shop, brand = g.Brand, Delivery_ID = g.DeliveryID })
+                                .Select(s => new model_Lalamove_Cal
+                                {
+
+                                    Account = "6050008",
+                                    Amount = s.Sum(c => c.Amount),
+                                    Amount_in_LC = "",
+                                    Tax_Base_Amount = "",
+                                    Tax_Code = "VX",
+                                    Bus_Area = "",
+                                    Baseline_Date = "",
+                                    Payment_Term = "",
+                                    Planning_Level = "",
+                                    Profit_Center = "",
+                                    Cost_Center = "",
+                                    Service_Cost_Center = "",
+                                    Order = "",
+                                    Shop = s.Key.shop,
+                                    Assignment = "Lalamove",
+                                    Brand = s.Key.brand,
+                                    DeliveryID = s.Key.Delivery_ID
+                                }).ToList();
+                    var seekDepart = budget_Entities.Departments.Where(w => w.Department_Name.StartsWith("SEEK")).Select(s => s.Department_ID).ToList();
+                    var Seek = Lalamove.Where(w => seekDepart.Contains(w.Brand)).ToList();
+                    foreach (var se in Seek)
+                    {
+                        Lalamove.Remove(se);
+                    }
+                    if (Seek.Count() != 0)
+                    {
+                        Lalamove.AddRange(Seek);
+                    }
+                    double total = 0;
+                    var brandBC = service_BC.getDimensionValue("BRAND_PROFIT CENTER");
+                    foreach (var l in Lalamove)
+                    {
+                        //var shortBrand = budget_Entities.Departments.Where(w => w.Department_ID == l.Brand).FirstOrDefault();
+                        var brandMatch = brandBC.Where(w => w.DepartmentID == l.Brand).FirstOrDefault();
+                        l.Brand = brandMatch == null ? "CENTER": brandMatch.Dimension_Value_Code;
+                        l.Posting_Date = (carrier_Entities.Lalamove_Import.Where(w => w.Delivery_ID == l.DeliveryID).FirstOrDefault().Date_Complete ?? DateTime.Now).ToString("dd/MM/yyyy");
+                        total += l.Amount;
+                        
+                        //ค่ารถจัดส่ง Auto จากระบบ Courier Lalamove รอบ 08/04/2024 - 30/04/2024 เลข DeliveryID:119975549306 SiteStorage:OPPLOPM1
+                        var Delivery = "DeliveryID:" + l.DeliveryID;
+                        var SiteCar = "SiteStorage:" + l.Shop;
+                        var DocnoINBudgets = budget_Entities.MainExpenses.Where(w => w.Docno.StartsWith("UP") && w.Remark.Contains("Courier Lalamove") && w.Remark.Contains(Delivery) && w.Remark.Contains(SiteCar));
+
+                        var DocnoINBudget = DocnoINBudgets.FirstOrDefault();
+                        if (DocnoINBudget != null)
+                        {
+                            l.เลขที่เอกสารใน_FC = DocnoINBudget.Docno;
+                        }
+                        
+                        l.Shop = l.Shop.Length == 8 ? l.Shop.Substring(0, 4) + l.Shop.Substring(6, 2) : l.Shop;
+                        var convertSite = bC_TB_Entities.SiteSAP_BC.Where(w => w.SiteSAP == l.Shop).FirstOrDefault();
+                        if(convertSite != null)
+                        {
+                            l.Shop = convertSite.SiteBC;
+                        }
+                        deliveryGroupID.Remove(l.DeliveryID);
+                    }
+
+                    foreach (var i in deliveryGroupID)
+                    {
+                        var FromLala = carrier_Entities.Lalamove_Import.Where(w => w.Delivery_ID == i).FirstOrDefault();
+                        var DatePost = (FromLala.Date_Complete ?? DateTime.Now).ToString("ddMMyyyy");
+                        Lalamove.Add(new model_Lalamove_Cal
+                        {
+                            Posting_Date = DatePost,
+                            Account = "6050008",
+                            Amount = FromLala.Price ?? 0,
+                            Brand = "",
+                            DeliveryID = i
+                        });
+                        total += FromLala.Price ?? 0;
+                    }
+
+                    List<model_Lalamove_Export_BC> lalamove_Export_BC = new List<model_Lalamove_Export_BC>();
+                    foreach (var l in Lalamove)
+                    {
+                        model_Lalamove_Export_BC exp = new model_Lalamove_Export_BC();
+                        exp.type = "G/L Account";
+                        exp.No = "6050008";
+                        exp.ItemReference_No = "";
+                        exp.Description_Comment = l.Shop + "_" +l.DeliveryID+ "_"+ "ค่าขนส่ง_ค่าพาหนะเฉพาะจัดส่ง_" + l.Posting_Date ;
+                        exp.Description2 = "";
+                        exp.Attached_to_Subscription_Contract_line = "No";
+                        exp.Location_Code = "";
+                        exp.Gen_Bus_Posting_Group = "EXPENSE";
+                        exp.Gen_Prod_Posting_Group = "GL";
+                        exp.VAT_Bus_Posting_Group = "VATHO";
+                        exp.VAT_Prod_Posting_Group = "NOVAT";
+                        exp.WHT_Business_Posting_Group = "NOWHT";//Flash WHT53
+                        exp.WHT_Product_Posting_Group = "TRANSPORT";
+                        exp.Sustainability_Account_No = "";
+                        exp.Quantity = "1";
+                        exp.Unit_of_Measure_Code = "";
+                        exp.Direct_Unit_Cost_Excl_VAT = l.Amount.ToString("#,##0.00");
+                        exp.Line_Discount_Percent = "";
+                        exp.Line_Amount_Excl_VAT = l.Amount.ToString("#,##0.00");
+                        exp.Qty_to_Assign = "0";
+                        exp.Qty_Assigned = "";
+                        exp.Emission_CO2 = "0";
+                        exp.Emission_CH4 = "0";
+                        exp.Emission_N2O = "0";
+                        exp.Brand_Profit_center_Code = l.Brand;
+                        exp.Cost_center_Code = "SALES (XXX110)";
+                        exp.Site_shop_Code = l.Shop;
+                        exp.Chanel_Code = "OFFLINE";
+                        exp.Io_Code = "NONE";
+                        exp.Business_area_Code = "BA1000";
+                        exp.Tax_Invoice_Date = "";
+                        exp.Tax_Invoice_No = "";
+                        exp.Tax_Vendor_No = "";
+                        exp.Tax_Invoice_Name = "";
+                        exp.Tax_Invoice_Base = "0";
+                        exp.Tax_Head_Office = "NO";
+                        exp.VAT_Branch_Code = "";
+                        exp.Vat_Registration_No = "";
+                        exp.เลขที่เอกสารใน_FC = l.เลขที่เอกสารใน_FC;
+                        lalamove_Export_BC.Add(exp);
+                    }
+                    calGrid.DataSource = lalamove_Export_BC;
                     calGrid.DataBind();
                 }
 
@@ -662,7 +821,7 @@ namespace Carrier
 
         protected void ddlTypeExport_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ddlTypeExport.SelectedValue == "SAP")
+            if (ddlTypeExport.SelectedValue == "SAP" || ddlTypeExport.SelectedValue == "BC")
             {
 
                 dv_App.Visible = true;
@@ -723,17 +882,6 @@ namespace Carrier
                 var carApp_Success = carhave_inBud.Where(w => w.StatusBud == "F");
                 if(carApp_Success.Count() != 0)
                 {
-                    //var docno = carApp_Success.FirstOrDefault().DocInFC;
-                    //var carNot_App = carhave_inBud.Where(w => w.StatusBud != "F");
-                    //if(carNot_App.Count() != 0)
-                    //{
-                    //    foreach (var aa in carNot_App.ToList())
-                    //    {
-                    //        aa.DocInFC = docno;
-                    //        aa.StatusBud = "F";
-                    //    }
-                    //    carrier_Entities.SaveChanges();
-                    //}
                     
                 }
                 else
@@ -761,7 +909,7 @@ namespace Carrier
                                             i.Department_IO_ID
                                         }).FirstOrDefault();
                             //var io = budget_Entities.Department_IO.Where(w => w.SiteStorage.Contains(site) && w.Action_Start <= DateTime.Now && w.Action_End >= DateTime.Now && w.Status_ID == "F" && w.Status_IO == "Y" && w.Ref_Cost_Number == "").FirstOrDefault();
-                            var Depart_TOUp = "";
+                            
                             if(io != null)
                             {
                                 var datenow = Convert.ToDateTime(DateTime.Now.ToShortDateString());
@@ -776,7 +924,18 @@ namespace Carrier
                                 temp.remark = "ค่ารถจัดส่ง Auto จากระบบ Courier Lalamove รอบ " + txtDateSt.Text + " - " + txtDateED.Text + " เลข DeliveryID:" + deli + " SiteStorage:" + site;
                                 temp.typeBudget_id = carOrder.saleOn == "ONLINE" ? "1" : "2";
                                 temp.userId = "101974";
-                                temp.site_storage = site;
+                                var Shop = site.Length == 8 ? site.Substring(0, 4) + site.Substring(6, 2) : site;
+                                var siteBrand = site.Length == 8 ? site.Substring(5, 2) : "";
+                                var convertSite = bC_TB_Entities.SiteSAP_BC.Where(w => w.SiteSAP == Shop).FirstOrDefault();
+                                if (convertSite != null && !site.StartsWith("INHO"))
+                                {
+                                    Shop = convertSite.SiteBC.Substring(0,4) + siteBrand + convertSite.SiteBC.Substring(4,2);
+                                }
+                                else
+                                {
+                                    Shop = site;
+                                }
+                                temp.site_storage = Shop;
                                 foreach(var i in ioBrand)
                                 {
                                     if (i.Brand_ID == brand_id.ID_Brand)
@@ -823,7 +982,20 @@ namespace Carrier
                                 temp.remark = "ค่ารถจัดส่ง Auto จากระบบ Courier Lalamove รอบ " + txtDateSt.Text + " - " + txtDateED.Text + " เลข DeliveryID:" + deli + " SiteStorage:" + site;
                                 temp.typeBudget_id = carOrder.saleOn == "ONLINE" ? "1" : "2";
                                 temp.userId = "101974";
-                                temp.site_storage = site;
+
+
+                                var Shop = site.Length == 8 ? site.Substring(0, 4) + site.Substring(6, 2) : site;
+                                var siteBrand = site.Length == 8 ? site.Substring(5, 2) : "";
+                                var convertSite = bC_TB_Entities.SiteSAP_BC.Where(w => w.SiteSAP == Shop).FirstOrDefault();
+                                if (convertSite != null && !site.StartsWith("INHO"))
+                                {
+                                    Shop = convertSite.SiteBC.Substring(0, 4) + siteBrand + convertSite.SiteBC.Substring(4, 2);
+                                }
+                                else
+                                {
+                                    Shop = site;
+                                }
+                                temp.site_storage = Shop;
                                  ss = service_Budget.Insert_CutBudget(temp);
                             }
 
@@ -835,18 +1007,18 @@ namespace Carrier
                                 var SiteCar = "SiteStorage:" + site;
                                 var departid = Seek == null ? Docno.FirstOrDefault().SDpart : "1619";
 
-                                var DocInFC = budget_Entities.MainExpense_Sub.Where(w => w.Docno.StartsWith("UP") && w.Detail.Contains(Delivery) && w.Detail.Contains(SiteCar));
-                                var docnoFC = DocInFC.Select(s => s.Docno).ToList();
-                                var docnoMain = budget_Entities.MainExpenses.Where(w => docnoFC.Contains(w.Docno) ).FirstOrDefault();
-                                if (docnoMain != null)
-                                {
-                                    var budExpenseSub = DocInFC.Where(w=>w.Docno == docnoMain.Docno).FirstOrDefault();
-                                    docnoMain.Site_Storage = site;
-                                    budExpenseSub.SiteStorage = site;
-                                    budExpenseSub.Brand_ID = Docno.FirstOrDefault().SDpart;
-                                    budExpenseSub.Brand_Percent = 100;
+                                //var DocInFC = budget_Entities.MainExpense_Sub.Where(w => w.Docno.StartsWith("UP") && w.Detail.Contains(Delivery) && w.Detail.Contains(SiteCar));
+                                //var docnoFC = DocInFC.Select(s => s.Docno).ToList();
+                                var docnoMain = budget_Entities.MainExpenses.Where(w => w.Docno.StartsWith("UP") && w.Remark.Contains("Courier Lalamove") && w.Remark.Contains(Delivery) && w.Remark.Contains(SiteCar)).FirstOrDefault();
+                                //if (docnoMain != null)
+                                //{
+                                //    var budExpenseSub = DocInFC.Where(w=>w.Docno == docnoMain.Docno).FirstOrDefault();
+                                //    docnoMain.Site_Storage = site;
+                                //    budExpenseSub.SiteStorage = site;
+                                //    budExpenseSub.Brand_ID = Docno.FirstOrDefault().SDpart;
+                                //    budExpenseSub.Brand_Percent = 100;
 
-                                }
+                                //}
                                 var carpass = carrier_Entities.Calculate_Car.Where(w => w.DeliveryNumber == deli && w.SDpart == BrandID.SDpart && w.SiteStorage == site).ToList();
                                 foreach (var c in carpass)
                                 {
@@ -904,109 +1076,159 @@ namespace Carrier
             dv_DateST.Style.Remove("pointer-events");
             dv_DateED.Style.Remove("pointer-events");
         }
-    }
 
-    public class mainCar
-    {
-        public string DeliveryNumber { get; set; }
-        public string Address { get; set; }
-        public string Phone { get; set; }
-        public string SiteStorage { get; set; }
-    }
-    public class modelDepartment
-    {
-        public string departmentID { get; set; }
-        public string departmentName { get; set; }
-    }
 
-    public class modelDetail_Sub
-    {
-        public string DeliveryNumber { get; set; }
-        public string BFID { get; set; }
-        public string Docno { get; set; }
-        public int QTY { get; set; }
-        public double Price { get; set; }
-        public string Date_Group { get; set; }
-        public string TypeSendKO { get; set; }
-        public string SDpart { get; set; }
-        public string SiteStorage { get; set; }
-    }
-
-    public class modelDetail
-    {
-        public string site { get; set; }
-        public string address { get; set; }
-        public List<modelDetail_Sub> sub { get; set; }
-        public modelDetail()
+        public class mainCar
         {
-            sub = new List<modelDetail_Sub>();
+            public string DeliveryNumber { get; set; }
+            public string Address { get; set; }
+            public string Phone { get; set; }
+            public string SiteStorage { get; set; }
         }
+        public class modelDepartment
+        {
+            public string departmentID { get; set; }
+            public string departmentName { get; set; }
+        }
+
+        public class modelDetail_Sub
+        {
+            public string DeliveryNumber { get; set; }
+            public string BFID { get; set; }
+            public string Docno { get; set; }
+            public int QTY { get; set; }
+            public double Price { get; set; }
+            public string Date_Group { get; set; }
+            public string TypeSendKO { get; set; }
+            public string SDpart { get; set; }
+            public string SiteStorage { get; set; }
+        }
+
+        public class modelDetail
+        {
+            public string site { get; set; }
+            public string address { get; set; }
+            public List<modelDetail_Sub> sub { get; set; }
+            public modelDetail()
+            {
+                sub = new List<modelDetail_Sub>();
+            }
+        }
+
+        public class modelExportCal
+        {
+            public string DeliveryOrder { get; set; }
+            public string เลขที่เอกสาร { get; set; }
+            public string เลขที่กล่อง { get; set; }
+            public string SiteStorage { get; set; }
+            public string แผนก { get; set; }
+            public string ที่อยู๋จัดส่ง { get; set; }
+            public string จำนวนกล่อง { get; set; }
+            public string ราคาต่อกล่อง { get; set; }
+        }
+        public class modelFromLalamove
+        {
+            public string DeliveryID { get; set; }
+            public double price { get; set; }
+            public double price_Lalamove { get; set; }
+            public DateTime dateComplete { get; set; }
+            public Boolean Match { get; set; }
+        }
+        public class model_Lalamove_Cal
+        {
+            public string Posting_Date { get; set; }
+            public string Account { get; set; }
+            public double Amount { get; set; }
+            public string Amount_in_LC { get; set; }
+            public string Tax_Base_Amount { get; set; }
+            public string Tax_Code { get; set; }
+            public string Bus_Area { get; set; }
+            public string Baseline_Date { get; set; }
+            public string Payment_Term { get; set; }
+            public string Planning_Level { get; set; }
+            public string Profit_Center { get; set; }
+            public string Cost_Center { get; set; }
+            public string Service_Cost_Center { get; set; }
+            public string Order { get; set; }
+            public string Shop { get; set; }
+            public string Assignment { get; set; }
+            public string Brand { get; set; }
+            public string DeliveryID { get; set; }
+            public string เลขที่เอกสารใน_FC { get; set; }
+        }
+
+        
+
+        public class model_Lalamove_Export
+        {
+            public string Posting_Date { get; set; }
+            public string Account { get; set; }
+            public string Amount { get; set; }
+            public string Amount_in_LC { get; set; }
+            public string Tax_Base_Amount { get; set; }
+            public string Tax_Code { get; set; }
+            public string Bus_Area { get; set; }
+            public string Baseline_Date { get; set; }
+            public string Payment_Term { get; set; }
+            public string Planning_Level { get; set; }
+            public string Profit_Center { get; set; }
+            public string Cost_Center { get; set; }
+            public string Service_Cost_Center { get; set; }
+            public string Order { get; set; }
+            public string Shop { get; set; }
+            public string Assignment { get; set; }
+            public string Brand { get; set; }
+            public string DeliveryID { get; set; }
+            public string เลขที่เอกสารใน_FC { get; set; }
+        }
+
+        public class model_Lalamove_Export_BC
+        {
+            public string type { get; set; }
+            public string No { get; set; }
+            public string ItemReference_No { get; set; }
+            public string Description_Comment { get; set; }
+            public string Description2 { get; set; }
+            public string Attached_to_Subscription_Contract_line { get; set; }
+            public string Location_Code { get; set; }
+            public string Gen_Bus_Posting_Group { get; set; }
+            public string Gen_Prod_Posting_Group { get; set; }
+            public string VAT_Bus_Posting_Group { get; set; }
+            public string VAT_Prod_Posting_Group { get; set; }
+            public string WHT_Business_Posting_Group { get; set; }
+            public string WHT_Product_Posting_Group { get; set; }
+            public string Sustainability_Account_No { get; set; }
+            public string Quantity { get; set; }
+            public string Unit_of_Measure_Code { get; set; }
+            public string Direct_Unit_Cost_Excl_VAT { get; set; }
+            public string Line_Discount_Percent { get; set; }
+            public string Line_Amount_Excl_VAT { get; set; }
+            public string Qty_to_Assign { get; set; }
+            public string Qty_Assigned { get; set; }
+            public string Emission_CO2 { get; set; }
+            public string Emission_CH4 { get; set; }
+            public string Emission_N2O { get; set; }
+            public string Brand_Profit_center_Code { get; set; }
+            public string Cost_center_Code{ get; set; }
+            public string Site_shop_Code { get; set; }
+            public string Chanel_Code { get; set; }
+            public string Io_Code { get; set; }
+            public string Business_area_Code  { get; set; }
+            public string Tax_Invoice_Date { get; set; }
+            public string Tax_Invoice_No  { get; set; }
+            public string Tax_Vendor_No  { get; set; }
+            public string Tax_Invoice_Name  { get; set; }
+            public string Tax_Invoice_Base   { get; set; }
+            public string Tax_Head_Office   { get; set; }
+            public string VAT_Branch_Code { get; set; }
+            public string Vat_Registration_No { get; set; }
+            public string เลขที่เอกสารใน_FC { get; set; }
+
+
+        }
+        
     }
 
-    public class modelExportCal
-    {
-        public string DeliveryOrder { get; set; }
-        public string เลขที่เอกสาร { get; set; }
-        public string เลขที่กล่อง { get; set; }
-        public string SiteStorage { get; set; }
-        public string แผนก { get; set; }
-        public string ที่อยู๋จัดส่ง { get; set; }
-        public string จำนวนกล่อง { get; set; }
-        public string ราคาต่อกล่อง { get; set; }
-    }
-    public class modelFromLalamove
-    {
-        public string DeliveryID { get; set; }
-        public double price { get; set; }
-        public double price_Lalamove { get; set; }
-        public DateTime dateComplete { get; set; }
-        public Boolean Match { get; set; }
-    }
-    public class model_Lalamove_Cal 
-    {
-        public string Posting_Date { get; set; }
-        public string Account { get; set; }
-        public double Amount { get; set; }
-        public string Amount_in_LC { get; set; }
-        public string Tax_Base_Amount { get; set; }
-        public string Tax_Code { get; set; }
-        public string Bus_Area { get; set; }
-        public string Baseline_Date { get; set; }
-        public string Payment_Term { get; set; }
-        public string Planning_Level { get; set; }
-        public string Profit_Center { get; set; }
-        public string Cost_Center { get; set; }
-        public string Service_Cost_Center { get; set; }
-        public string Order { get; set; }
-        public string Shop { get; set; }
-        public string Assignment { get; set; }
-        public string Brand { get; set; }
-        public string DeliveryID { get; set; }
-        public string เลขที่เอกสารใน_FC { get; set; }
-    }
-
-    public class model_Lalamove_Export
-    {
-        public string Posting_Date { get; set; }
-        public string Account { get; set; }
-        public string Amount { get; set; }
-        public string Amount_in_LC { get; set; }
-        public string Tax_Base_Amount { get; set; }
-        public string Tax_Code { get; set; }
-        public string Bus_Area { get; set; }
-        public string Baseline_Date { get; set; }
-        public string Payment_Term { get; set; }
-        public string Planning_Level { get; set; }
-        public string Profit_Center { get; set; }
-        public string Cost_Center { get; set; }
-        public string Service_Cost_Center { get; set; }
-        public string Order { get; set; }
-        public string Shop { get; set; }
-        public string Assignment { get; set; }
-        public string Brand { get; set; }
-        public string DeliveryID { get; set; }
-        public string เลขที่เอกสารใน_FC { get; set; }
-    }
     public class cuttemp
     {
         public string depart_id { get; set; }

@@ -5,6 +5,27 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="CarrierModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Carrier.dbo.Address_Delivery' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Address_Delivery">
+          <Key>
+            <PropertyRef Name="CustomerCode" />
+          </Key>
+          <Property Name="CustomerCode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="NameTax" Type="nvarchar(max)" />
+          <Property Name="BranchCode" Type="nvarchar(max)" />
+          <Property Name="TaxID" Type="nvarchar(max)" />
+          <Property Name="Address1" Type="nvarchar(max)" />
+          <Property Name="lane1" Type="nvarchar(max)" />
+          <Property Name="Road1" Type="nvarchar(max)" />
+          <Property Name="Zone1" Type="nvarchar(max)" />
+          <Property Name="Area1" Type="nvarchar(max)" />
+          <Property Name="Postal1" Type="nvarchar(max)" />
+          <Property Name="phone1" Type="nvarchar(max)" />
+          <Property Name="fax1" Type="nvarchar(max)" />
+          <Property Name="Province1" Type="nvarchar(max)" />
+          <Property Name="Branch_Acc" Type="varchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="API_Carrier_Log">
           <Key>
             <PropertyRef Name="dateSend" />
@@ -54,6 +75,23 @@
           <Property Name="Email" Type="nvarchar" MaxLength="50" />
           <Property Name="Userweb" Type="nvarchar" MaxLength="50" />
           <Property Name="Pass" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Central_Import">
+          <Key>
+            <PropertyRef Name="Date_Create" />
+            <PropertyRef Name="Shop" />
+            <PropertyRef Name="Brand" />
+          </Key>
+          <Property Name="Date_Create" Type="datetime" Nullable="false" />
+          <Property Name="Date_Posting" Type="nvarchar" MaxLength="10" />
+          <Property Name="Shop" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Brand" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="Profit" Type="nvarchar" MaxLength="20" />
+          <Property Name="Center" Type="nvarchar" MaxLength="20" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Department_ID" Type="nvarchar" MaxLength="20" />
+          <Property Name="Docno_Budget" Type="nvarchar" MaxLength="20" />
+          <Property Name="Vat" Type="decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="Comment_System">
           <Key>
@@ -241,7 +279,7 @@
           <Property Name="coordinates_lat" Type="nvarchar" MaxLength="30" />
           <Property Name="coordinates_lng" Type="nvarchar" MaxLength="30" />
           <Property Name="address" Type="nvarchar(max)" />
-          <Property Name="name" Type="nvarchar" MaxLength="50" />
+          <Property Name="name" Type="nvarchar(max)" />
           <Property Name="phone" Type="nvarchar" MaxLength="20" />
           <Property Name="remark" Type="nvarchar(max)" />
           <Property Name="StopNo" Type="int" />
@@ -436,6 +474,7 @@
           <EntitySet Name="Article_Category" EntityType="Self.Article_Category" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Calculate_Car" EntityType="Self.Calculate_Car" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Carrier_Api_Key" EntityType="Self.Carrier_Api_Key" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Central_Import" EntityType="Self.Central_Import" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Comment_System" EntityType="Self.Comment_System" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DHL_eCom_Import" EntityType="Self.DHL_eCom_Import" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event_Shop" EntityType="Self.Event_Shop" Schema="dbo" store:Type="Tables" />
@@ -463,6 +502,24 @@
           <EntitySet Name="Status" EntityType="Self.Status" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Status_Notify_Order" EntityType="Self.Status_Notify_Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Address_Delivery" EntityType="Self.Address_Delivery" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Address_Delivery].[CustomerCode] AS [CustomerCode], 
+    [Address_Delivery].[NameTax] AS [NameTax], 
+    [Address_Delivery].[BranchCode] AS [BranchCode], 
+    [Address_Delivery].[TaxID] AS [TaxID], 
+    [Address_Delivery].[Address1] AS [Address1], 
+    [Address_Delivery].[lane1] AS [lane1], 
+    [Address_Delivery].[Road1] AS [Road1], 
+    [Address_Delivery].[Zone1] AS [Zone1], 
+    [Address_Delivery].[Area1] AS [Area1], 
+    [Address_Delivery].[Postal1] AS [Postal1], 
+    [Address_Delivery].[phone1] AS [phone1], 
+    [Address_Delivery].[fax1] AS [fax1], 
+    [Address_Delivery].[Province1] AS [Province1], 
+    [Address_Delivery].[Branch_Acc] AS [Branch_Acc]
+    FROM [dbo].[Address_Delivery] AS [Address_Delivery]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -500,6 +557,8 @@
           <EntitySet Name="Lalamove_Car_Stop" EntityType="CarrierModel.Lalamove_Car_Stop" />
           <EntitySet Name="Lalamove_Car_Status" EntityType="CarrierModel.Lalamove_Car_Status" />
           <EntitySet Name="Lalamove_Location_Google_Temp" EntityType="CarrierModel.Lalamove_Location_Google_Temp" />
+          <EntitySet Name="Central_Import" EntityType="CarrierModel.Central_Import" />
+          <EntitySet Name="Address_Delivery" EntityType="CarrierModel.Address_Delivery" />
         </EntityContainer>
         <EntityType Name="Article_Category">
           <Key>
@@ -901,7 +960,7 @@
           <Property Name="coordinates_lat" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="coordinates_lng" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="StopNo" Type="Int32" />
@@ -926,6 +985,42 @@
           <Property Name="Lng" Type="Double" />
           <Property Name="path" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="BFID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Central_Import">
+          <Key>
+            <PropertyRef Name="Date_Create" />
+            <PropertyRef Name="Shop" />
+            <PropertyRef Name="Brand" />
+          </Key>
+          <Property Name="Date_Create" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Date_Posting" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Shop" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Brand" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="Profit" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Center" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Department_ID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Docno_Budget" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Vat" Type="Decimal" Precision="18" Scale="2" />
+        </EntityType>
+        <EntityType Name="Address_Delivery">
+          <Key>
+            <PropertyRef Name="CustomerCode" />
+          </Key>
+          <Property Name="CustomerCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NameTax" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="BranchCode" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TaxID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Address1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="lane1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Road1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Zone1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Area1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Postal1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="phone1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="fax1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Province1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Branch_Acc" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1369,6 +1464,42 @@
                 <ScalarProperty Name="Address_In" ColumnName="Address_In" />
                 <ScalarProperty Name="Userid" ColumnName="Userid" />
                 <ScalarProperty Name="datecreate" ColumnName="datecreate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Central_Import">
+            <EntityTypeMapping TypeName="CarrierModel.Central_Import">
+              <MappingFragment StoreEntitySet="Central_Import">
+                <ScalarProperty Name="Vat" ColumnName="Vat" />
+                <ScalarProperty Name="Docno_Budget" ColumnName="Docno_Budget" />
+                <ScalarProperty Name="Department_ID" ColumnName="Department_ID" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Center" ColumnName="Center" />
+                <ScalarProperty Name="Profit" ColumnName="Profit" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+                <ScalarProperty Name="Shop" ColumnName="Shop" />
+                <ScalarProperty Name="Date_Posting" ColumnName="Date_Posting" />
+                <ScalarProperty Name="Date_Create" ColumnName="Date_Create" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Address_Delivery">
+            <EntityTypeMapping TypeName="CarrierModel.Address_Delivery">
+              <MappingFragment StoreEntitySet="Address_Delivery">
+                <ScalarProperty Name="Branch_Acc" ColumnName="Branch_Acc" />
+                <ScalarProperty Name="Province1" ColumnName="Province1" />
+                <ScalarProperty Name="fax1" ColumnName="fax1" />
+                <ScalarProperty Name="phone1" ColumnName="phone1" />
+                <ScalarProperty Name="Postal1" ColumnName="Postal1" />
+                <ScalarProperty Name="Area1" ColumnName="Area1" />
+                <ScalarProperty Name="Zone1" ColumnName="Zone1" />
+                <ScalarProperty Name="Road1" ColumnName="Road1" />
+                <ScalarProperty Name="lane1" ColumnName="lane1" />
+                <ScalarProperty Name="Address1" ColumnName="Address1" />
+                <ScalarProperty Name="TaxID" ColumnName="TaxID" />
+                <ScalarProperty Name="BranchCode" ColumnName="BranchCode" />
+                <ScalarProperty Name="NameTax" ColumnName="NameTax" />
+                <ScalarProperty Name="CustomerCode" ColumnName="CustomerCode" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

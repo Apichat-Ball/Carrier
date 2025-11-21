@@ -919,27 +919,42 @@ namespace Carrier.Service
             else
             {
 
-                var site = sFG_Entities.vSAP_Site2.Where(w=>w.SiteStorage == item.siteStorage).FirstOrDefault();
                 var BrandBud = budget_Entities.Departments.Where(w => w.Department_ID == item.SDpart).Select(s => s.ShortBrand).FirstOrDefault();
-                var siteCar = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage == item.siteStorage && w.Brand == BrandBud && w.Channel == item.saleOn).FirstOrDefault();
-                if(site != null && siteCar == null)
+                var siteHave = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage == item.siteStorage && w.Brand == BrandBud).FirstOrDefault();
+                if(siteHave != null)
                 {
-                    var profit = entities_InsideSFG_WF.BG_HApprove_Profitcenter.Where(w => w.Depart_Short == BrandBud).FirstOrDefault();
-                    if(profit != null)
+                    if (item.saleOn != siteHave.Channel)
                     {
-                        Site_Profit sitestorageAdd = new Site_Profit();
-                        sitestorageAdd.Brand = BrandBud;
-                        sitestorageAdd.Channel = item.saleOn;
-                        sitestorageAdd.COMCODE = profit.ComCode;
-                        sitestorageAdd.Profit = item.saleOn == "OFFLINE" ? profit.Profit_Offline : profit.Profit_Online;
-                        sitestorageAdd.Costcenter = item.saleOn == "OFFLINE" ? profit.CostCenter_Offline : profit.CostCenter_Online;
-                        sitestorageAdd.Site_Stroage = item.siteStorage;
-                        sitestorageAdd.Sale_Channel = item.saleChannel;
-                        sitestorageAdd.Date_Create = DateTime.Now;
-                        entities_Carrier.Site_Profit.Add(sitestorageAdd);
-                        entities_Carrier.SaveChanges();
+                        return "รูปแบบการขายสินค้า SiteStorage " + item.siteStorage + " ต้องเลือก " + siteHave.Channel;
                     }
                 }
+                else
+                {
+                    var site = sFG_Entities.vSAP_Site2.Where(w => w.SiteStorage == item.siteStorage).FirstOrDefault();
+                    var siteCar = entities_Carrier.Site_Profit.Where(w => w.Site_Stroage == item.siteStorage && w.Brand == BrandBud && w.Channel == item.saleOn).FirstOrDefault();
+                    if (site != null && siteCar == null)
+                    {
+                        var profit = entities_InsideSFG_WF.BG_HApprove_Profitcenter.Where(w => w.Depart_Short == BrandBud).FirstOrDefault();
+                        if (profit != null)
+                        {
+
+                            Site_Profit sitestorageAdd = new Site_Profit();
+                            sitestorageAdd.Brand = BrandBud;
+                            sitestorageAdd.Channel = item.saleOn;
+                            sitestorageAdd.COMCODE = profit.ComCode;
+                            sitestorageAdd.Profit = item.saleOn == "OFFLINE" ? profit.Profit_Offline : profit.Profit_Online;
+                            sitestorageAdd.Costcenter = item.saleOn == "OFFLINE" ? profit.CostCenter_Offline : profit.CostCenter_Online;
+                            sitestorageAdd.Site_Stroage = item.siteStorage;
+                            sitestorageAdd.Sale_Channel = item.saleChannel;
+                            sitestorageAdd.Date_Create = DateTime.Now;
+                            entities_Carrier.Site_Profit.Add(sitestorageAdd);
+                            entities_Carrier.SaveChanges();
+                        }
+                    }
+                }
+                
+
+                
 
                 //if (item.SDpart == "1619")
                 //{
@@ -1270,6 +1285,14 @@ namespace Carrier.Service
             var ss = order.Where(w => w.saleChannel == departOrShop && w.saleOn == "OFFLINE" && w.SDpart == SDpart).ToList();
             return ss;
 
+        }
+
+        readonly static Random random = new Random();
+        public string RandomID(int Length_random)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            return new string(Enumerable.Repeat(chars, Length_random)
+             .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
 
