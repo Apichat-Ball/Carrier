@@ -18,6 +18,7 @@
           <Key>
             <PropertyRef Name="Dimension_Code" />
             <PropertyRef Name="Dimension_Value_Code" />
+            <PropertyRef Name="APICompanyID" />
           </Key>
           <Property Name="Dimension_Code" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Dimension_Value_Code" Type="nvarchar" MaxLength="50" Nullable="false" />
@@ -25,6 +26,8 @@
           <Property Name="Dimension_Value_Modified_Last" Type="datetime" />
           <Property Name="Dimension_Value_ID" Type="nvarchar" MaxLength="50" />
           <Property Name="DepartmentID" Type="nvarchar" MaxLength="10" />
+          <Property Name="Site" Type="nvarchar" MaxLength="8" />
+          <Property Name="APICompanyID" Type="nvarchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="SiteSAP_BC">
           <Key>
@@ -55,6 +58,7 @@
           <Key>
             <PropertyRef Name="Dimension_Code" />
             <PropertyRef Name="Dimension_Value_Code" />
+            <PropertyRef Name="APICompanyID" />
           </Key>
           <Property Name="Dimension_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Dimension_Value_Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
@@ -62,6 +66,8 @@
           <Property Name="Dimension_Value_Modified_Last" Type="DateTime" Precision="3" />
           <Property Name="Dimension_Value_ID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="DepartmentID" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Site" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="APICompanyID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="BC_TBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="BC_Dimension" EntityType="Self.BC_Dimension" />
@@ -94,6 +100,8 @@
           <EntitySetMapping Name="BC_Dimension_Values">
             <EntityTypeMapping TypeName="BC_TBModel.BC_Dimension_Values">
               <MappingFragment StoreEntitySet="BC_Dimension_Values">
+                <ScalarProperty Name="APICompanyID" ColumnName="APICompanyID" />
+                <ScalarProperty Name="Site" ColumnName="Site" />
                 <ScalarProperty Name="DepartmentID" ColumnName="DepartmentID" />
                 <ScalarProperty Name="Dimension_Code" ColumnName="Dimension_Code" />
                 <ScalarProperty Name="Dimension_Value_Code" ColumnName="Dimension_Value_Code" />

@@ -20,5 +20,7 @@ namespace Carrier.Model.BC_TB
         public Nullable<System.DateTime> Dimension_Value_Modified_Last { get; set; }
         public string Dimension_Value_ID { get; set; }
         public string DepartmentID { get; set; }
+        public string Site { get; set; }
+        public string APICompanyID { get; set; }
     }
 }

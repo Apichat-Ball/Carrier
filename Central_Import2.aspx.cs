@@ -13,11 +13,10 @@ using Carrier.Model.InsideSFG_WF;
 using Carrier.Model.Budget;
 using Carrier.Model.BC_TB;
 using Carrier.Service;
-using System.Data.Entity.SqlServer;
 
 namespace Carrier
 {
-    public partial class Central_Import : System.Web.UI.Page
+    public partial class Central_Import2 : System.Web.UI.Page
     {
         CarrierEntities carrier_Entities = new CarrierEntities();
         InsideSFG_WFEntities insideSFG_WF_Entities = new InsideSFG_WFEntities();
@@ -34,23 +33,22 @@ namespace Carrier
                 txtDateSt.Text = DateTime.Now.ToString("dd/MM/yyyy");
                 txtDateED.Text = DateTime.Now.ToString("dd/MM/yyyy");
             }
-
-            
         }
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             var datestOld = Convert.ToDateTime(txtDateSt.Text);
             var dateedOld = Convert.ToDateTime(txtDateED.Text);
-            var datest = new DateTime(datestOld.Year, datestOld.Month, datestOld.Day ,0, 0,0);
-            var dateed = new DateTime(dateedOld.Year, dateedOld.Month, dateedOld.Day , 23,59,59);
+            var datest = new DateTime(datestOld.Year, datestOld.Month, datestOld.Day, 0, 0, 0);
+            var dateed = new DateTime(dateedOld.Year, dateedOld.Month, dateedOld.Day, 23, 59, 59);
 
             var import = carrier_Entities.Central_Import.AsEnumerable()
-                .Where(w => DateTime.Parse(w.Date_Posting) >= datest && DateTime.Parse( w.Date_Posting) <= dateed).ToList();
+                .Where(w => DateTime.Parse(w.Date_Posting) >= datest && DateTime.Parse(w.Date_Posting) <= dateed).ToList();
 
             List<modelFromCentral> total = new List<modelFromCentral>();
-
-            foreach(var item in import)
+            decimal totalPrice = 0;
+            decimal totalVat = 0;
+            foreach (var item in import)
             {
                 modelFromCentral log = new modelFromCentral();
 
@@ -59,26 +57,34 @@ namespace Carrier
                 log.Brand = item.Brand;
                 log.departmentID = item.Department_ID;
                 log.Docno = item.Docno_Budget ?? "";
-                log.Center = item.Center;
-                log.Price = (item.Price??0).ToString("#,##0.00");
-                log.Profit = item.Profit;
-                log.VAT = (item.Vat??0).ToString("#,##0.00");
+                log.Price = (item.Price ?? 0).ToString("#,##0.00");
+                log.VAT = (item.Vat ?? 0).ToString("#,##0.00");
                 total.Add(log);
+                totalPrice += (item.Price ?? 0);
+                totalVat += (item.Vat ?? 0);
             }
             gv_main.DataSource = total;
             gv_main.DataBind();
             if (gv_main.Rows.Count != 0)
             {
+                gv_main.HeaderRow.Cells[3].Text = "ค่ารถ(" + totalPrice + ")";
+                gv_main.HeaderRow.Cells[4].Text = "VAT(" + totalVat + ")";
+                dv_gv_main.Visible = true;
+                dv_uploadTOFC.Visible = true;
                 btnExport.Visible = true;
             }
+
         }
 
         protected void btnExport_Click(object sender, EventArgs e)
         {
+            
+            
+            //LoadData
             var datest = Convert.ToDateTime(txtDateSt.Text);
             var dateed = Convert.ToDateTime(txtDateED.Text);
 
-            var centralimport = carrier_Entities.Central_Import.Where(w => w.Date_Create >= datest && w.Date_Create <= dateed).ToList();
+            //var centralimport = carrier_Entities.Central_Import.Where(w => w.Date_Posting >= datest && w.Date_Posting <= dateed).ToList();
             GridView gv_export = new GridView();
 
             if (gv_main.Rows.Count != 0)
@@ -105,7 +111,7 @@ namespace Carrier
                     //Option
                     var brand = "";
                     var Cost_Center_Code = "";
-                    
+
                     if (brandMatch == null)
                     {
 
@@ -134,14 +140,14 @@ namespace Carrier
                         else
                         {
                             Cost_Center_Code = "SALES (XXX110)";
-                            brand =  brandMatch.Dimension_Value_Code;
+                            brand = brandMatch.Dimension_Value_Code;
                         }
                     }
                     model_Central_Export_BC exp = new model_Central_Export_BC();
                     exp.type = "G/L Account";
                     exp.No = "6050008";
                     exp.ItemReference_No = "";
-                    exp.Description_Comment = lbSiteStorage.Text +  "_" + "Central_ค่าขนส่ง_ค่าพาหนะเฉพาะจัดส่ง_M" + Convert.ToDateTime(lbPosting_Date.Text).ToString("MM/yy");
+                    exp.Description_Comment = lbSiteStorage.Text + "_" + "Central_ค่าขนส่ง_ค่าพาหนะเฉพาะจัดส่ง_M" + Convert.ToDateTime(lbPosting_Date.Text).ToString("MM/yy");
                     exp.Description2 = "";
                     exp.Attached_to_Subscription_Contract_line = "No";
                     exp.Location_Code = "";
@@ -186,6 +192,8 @@ namespace Carrier
                 gv_export.DataSource = Central_Export_BC.ToList();
                 gv_export.DataBind();
 
+
+
                 Page.Response.ClearContent();
                 Page.Response.AddHeader("Content-Disposition", "attachment;filename=" + "BC_Central_" + datest.ToString("dd-MM-yyyy") + "_" + dateed.ToString("dd-MM-yyyy") /*DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss")*/ + ".xls");
                 Page.Response.Cache.SetCacheability(HttpCacheability.NoCache);
@@ -205,11 +213,23 @@ namespace Carrier
                     Page.Response.End();
                 }
             }
-            
+
         }
 
         protected void btnRun_Click(object sender, EventArgs e)
         {
+            if(!decimal.TryParse(txtPriceAdj.Text, out _))
+            {
+                service_Budget.JSAlert("E", "กรุณากรอกจำนวนเงินให้ถูกต้อง");
+                return;
+            }
+
+            if(txtPostingDate.Text == "")
+            {
+                service_Budget.JSAlert("E", "กรุณากรอกวันที่ Posting");
+                return;
+            }
+
             if (fileupload1.HasFiles)
             {
                 string FileName = Path.GetFileName(fileupload1.PostedFile.FileName);
@@ -220,7 +240,10 @@ namespace Carrier
                 string FilePath = Server.MapPath(FolderPath + "ExelReport/" + FileName);
 
                 fileupload1.SaveAs(FilePath);
-                ReadExcel(FilePath);
+                ReadExcel2(FilePath);
+                dv_gv_main.Visible = false;
+                dv_uploadTOFC.Visible = false;
+                dv_Export.Visible = false;
             }
             else
             {
@@ -230,8 +253,13 @@ namespace Carrier
             }
         }
 
-        public void ReadExcel(string filePath)
+        
+
+        public void ReadExcel2(string filePath)
         {
+            var priceTrue = Convert.ToDouble(txtPriceAdj.Text);
+
+
             using (var steam = File.Open(filePath, FileMode.Open, FileAccess.Read))
             {
                 var reader = ExcelReaderFactory.CreateReader(steam);
@@ -240,17 +268,18 @@ namespace Carrier
                 try
                 {
                     var rowRead = false;
-                    List<modelFromCentral> dataCentral = new List<modelFromCentral>();
-                    modelFromCentral total = new modelFromCentral();
+                    List<model_Report_Due_Delivery> dataCentral = new List<model_Report_Due_Delivery>();
+                    int totalBox = 0;
+                    
                     foreach (DataTable table in tables)
                     {
-                        if (table.TableName.StartsWith("SAP Upload"))
+                        if (table.TableName.StartsWith("Report_Due_Delivery"))
                         {
                             foreach (DataRow row in table.Rows)
                             {
-
+                                model_Report_Due_Delivery dataCentralRow = new model_Report_Due_Delivery();
                                 var item = row.ItemArray;
-                                if (item[21].ToString() != "" && rowRead == false)
+                                if (item[0].ToString() != "" && rowRead == false)
                                 {
                                     rowRead = true;
                                 }
@@ -258,60 +287,58 @@ namespace Carrier
                                 {
                                     if (rowRead)
                                     {
-                                        if (item[16].ToString() == "VX" && item[21].ToString() != "")
-                                        {
-                                            total = new modelFromCentral();
-                                            var Shop = item[25].ToString();
-                                            var Profit = item[21].ToString();
-                                            var Center = item[22].ToString();
-                                            var VAT = Convert.ToDecimal(Convert.ToDouble(item[13].ToString()) * 0.07);
-
-                                            var BRAND = carrier_Entities.Site_Profit.Where(w => w.Profit == Profit && w.Costcenter == Center).FirstOrDefault();
-                                            var vbrand = insideSFG_WF_Entities.vBrandAndHeadFCs.Where(w => w.BRANDABB == BRAND.Brand).FirstOrDefault();
-                                            total.Posting_Date = item[2].ToString().Substring(0,2) +"/"+ item[2].ToString().Substring(2, 2) +"/"+ item[2].ToString().Substring(4, 4);
-                                            total.Shop = Shop;
-                                            total.Brand = vbrand.BRANDABB;
-                                            total.departmentID = vbrand.departmentID;
-                                            total.Profit = Profit;
-                                            total.Center = Center;
-                                            total.Price = item[13].ToString();
-                                            total.VAT = VAT.ToString("#,##0.00");
-
-                                            var cenImp = carrier_Entities.Central_Import.Where(w => w.Shop == total.Shop && w.Brand == total.Brand && w.Date_Posting == total.Posting_Date).FirstOrDefault();
-                                            if (cenImp == null)
-                                            {
-                                                var priceDeci = Convert.ToDecimal(total.Price);
-                                                carrier_Entities.Central_Import.Add(new Model.Carrier.Central_Import
-                                                {
-                                                    Date_Create = DateTime.Now,
-                                                    Shop = total.Shop,
-                                                    Department_ID = vbrand.departmentID,
-                                                    Brand = total.Brand,
-                                                    Date_Posting = total.Posting_Date,
-                                                    Profit = total.Profit,
-                                                    Center = total.Center,
-                                                    Price = priceDeci,
-                                                    Vat = VAT
-                                                }) ;
-                                                carrier_Entities.SaveChanges();
-                                            }
-                                            else
-                                            {
-                                                total.Docno = cenImp.Docno_Budget;
-                                            }
-                                            dataCentral.Add(total);
-                                        }
+                                        int box2 = Convert.ToInt32(item[12].ToString());
+                                        int box4 = Convert.ToInt32(item[13].ToString())*2;
+                                        dataCentralRow.Box = box2 + box4;
+                                        totalBox += box2 + box4;
+                                        var Shop = item[5].ToString().Length == 8 ? item[5].ToString().Substring(0, 4) + item[5].ToString().Substring(6, 2) : item[5].ToString();
+                                        dataCentralRow.Shop = Shop;
+                                        dataCentralRow.Brand = item[8].ToString();
+                                        var depart = insideSFG_WF_Entities.vBrandAndHeadFCs.Where(w => w.BRANDABB == dataCentralRow.Brand).FirstOrDefault();
+                                        dataCentralRow.DepartmentID = depart.departmentID;
+                                        dataCentralRow.DateProcess = Convert.ToDateTime(item[0].ToString()).ToString("dd/MM/yyyy");
+                                        dataCentral.Add(dataCentralRow);
                                     }
                                 }
                             }
                         }
                     }
 
-                    gv_main.DataSource = dataCentral.ToList();
-                    gv_main.DataBind();
 
-                    
+                    var pricePerbox = priceTrue / totalBox;
+                    double totalPrice = 0;
+                    double totalVat = 0;
+                    foreach (var i in dataCentral)
+                    {
+                        i.Price = Math.Round(pricePerbox * i.Box,2).ToString("#,##0.00") ;
+                        i.Vat = Math.Round((Convert.ToDouble(i.Price) * 0.07),2).ToString("#,##0.00");
+                        totalPrice += Math.Round(pricePerbox * i.Box, 2);
+                        totalVat += Math.Round((Convert.ToDouble(i.Price) * 0.07), 2);
+                    }
 
+                    //dataCentral = dataCentral.GroupBy(g => new { g.Shop, g.Brand , g.DateProcess }).Select(s => new model_Report_Due_Delivery
+                    //{
+                    //    Shop = s.Key.Shop,
+                    //    Brand = s.Key.Brand,
+                    //    DepartmentID = s.FirstOrDefault().DepartmentID,
+                    //    DateProcess = s.Key.DateProcess,
+                    //    Box = s.Sum(c=>c.Box),
+                    //    Vat = s.Sum(c=> Convert.ToDouble(c.Vat)).ToString("#,##0.00"),
+                    //    Price = s.Sum(c=>Convert.ToDouble(c.Price)).ToString("#,##0.00")
+                    //}).ToList();
+                    var no = 1;
+                    foreach(var i in dataCentral)
+                    {
+                        i.No = no;
+                        no++;
+                    }
+                    gv_Temp.DataSource = dataCentral;
+                    gv_Temp.DataBind();
+
+                    gv_Temp.HeaderRow.Cells[3].Text = "Price(" + totalPrice.ToString("#,##0.00") + ")";
+                    gv_Temp.HeaderRow.Cells[4].Text = "VAT(7%)(" + totalVat.ToString("#,##0.00") + ")";
+
+                    dv_Adj.Visible = true;
                 }
                 catch (Exception ex)
                 {
@@ -320,7 +347,6 @@ namespace Carrier
             }
 
         }
-
 
         protected void btnUptoBudget_Click(object sender, EventArgs e)
         {
@@ -334,7 +360,7 @@ namespace Carrier
         }
         protected void btnReject_Click(object sender, EventArgs e)
         {
-            txtDateSt.Enabled = true ;
+            txtDateSt.Enabled = true;
             txtDateED.Enabled = true;
             btnUptoBudget.Visible = true;
             btnApprove.Visible = false;
@@ -348,7 +374,7 @@ namespace Carrier
             var strError = "";
             List<modelFromCentral> total = new List<modelFromCentral>();
             GridView gv_export = new GridView();
-            if(gv_main.Rows.Count != 0)
+            if (gv_main.Rows.Count != 0)
             {
                 foreach (GridViewRow row in gv_main.Rows)
                 {
@@ -373,7 +399,7 @@ namespace Carrier
                             temp.detail_id = "5703";
                             temp.group_id = "5";
                             temp.head_id = "507";
-                            temp.money = Convert.ToDouble(lbPrice.Text) ;
+                            temp.money = Convert.ToDouble(lbPrice.Text);
                             temp.remark = "ค่ารถจัดส่ง Auto จากระบบ Courier Central รอบ :" + lbPosting_Date.Text + " SiteStorage:" + lbSiteStorage.Text + " Brand : " + lbBrand.Text;
                             temp.typeBudget_id = "2";
                             temp.userId = "101974";
@@ -391,7 +417,7 @@ namespace Carrier
                                     carrier_Entities.SaveChanges();
                                 }
                             }
-                                
+
                         }
                         total.Add(new modelFromCentral
                         {
@@ -403,14 +429,14 @@ namespace Carrier
                             Docno = lbDocnoBud.Text
 
                         });
-                        
+
                     }
                     catch (Exception ex)
                     {
                         strError += lbSiteStorage.Text + " - Brand : " + lbBrand.Text + " Error = " + ex.Message + ";" + @"</br>";
                     }
                 }
-                
+
                 if (strError != "")
                 {
                     service_Budget.JSAlert("E", strError);
@@ -419,11 +445,13 @@ namespace Carrier
                 {
                     service_Budget.JSAlert("S", "บันทึกค่าใช้จ่ายลง Budget สำเร็จ");
 
-                    
+
 
                 }
                 gv_main.DataSource = total.OrderBy(o => o.Docno).ToList();
                 gv_main.DataBind();
+
+                updatePanel1.Update();
             }
 
             btnExport_Click(this, EventArgs.Empty);
@@ -431,22 +459,7 @@ namespace Carrier
         }
 
 
-        public void ReloadLoadData()
-        {
-            foreach (GridViewRow row in gv_main.Rows)
-            {
-                Label lblbPosting_Date = (Label)row.FindControl("lbPosting_Date");
-                Label lbSiteStorage = (Label)row.FindControl("lbSiteStorage");
-                Label lbBrand = (Label)row.FindControl("lbBrand");
-                Label lbDepartment_id = (Label)row.FindControl("lbDepartment_id");
-                Label lbPrice = (Label)row.FindControl("lbPrice");
-                Label lbDocnoBud = (Label)row.FindControl("lbDocnoBud");
-
-
-                
-
-            }
-        }
+        
 
 
 
@@ -457,12 +470,23 @@ namespace Carrier
             public string Shop { get; set; }
             public string Price { get; set; }
             public string VAT { get; set; }
-            public string Profit { get; set; }
-            public string Center { get; set; }
             public string Brand { get; set; }
             public string departmentID { get; set; }
             public bool StatusBud { get; set; }
             public string Docno { get; set; }
+            
+        }
+
+        public class model_Report_Due_Delivery
+        {
+            public int No { get; set; }
+            public string Shop { get; set; }
+            public string Brand { get; set; }
+            public string Price { get; set; }
+            public string Vat { get; set; }
+            public int Box { get; set; }
+            public string DateProcess { get; set; }
+            public string DepartmentID { get; set; }
         }
 
         public class model_Central_Export_BC
@@ -513,6 +537,174 @@ namespace Carrier
             public string เลขที่เอกสารใน_FC { get; set; }
 
 
+        }
+
+        protected void btnSaveAdj_Click(object sender, EventArgs e)
+        {
+            if(!DateTime.TryParse(txtPostingDate.Text,out _))
+            {
+                service_Budget.JSAlert("E", "วันที่ Posting Date ไม่ถูกต้อง");
+                return;
+            }
+
+            //SaveData and Set gv_main
+
+            modelFromCentral total = new modelFromCentral();
+            List<modelFromCentral> dataCentral = new List<modelFromCentral>();
+            decimal totalPrice = 0;
+            decimal totalVat = 0;
+            foreach (GridViewRow row in gv_Temp.Rows)
+            {
+                if (row.RowType != DataControlRowType.DataRow)
+                    continue;
+
+                // Posting Date
+                DateTime processDate = Convert.ToDateTime(
+                    row.Cells[0].Text);
+                string processDateStr = processDate.ToString("dd/MM/yyyy");
+
+                // Shop
+                string shop = row.Cells[1].Text;
+
+                // Brand
+                string brand = row.Cells[2].Text;
+
+                // DepartmentID (Hidden BoundField)
+                Label lbDepartmentID = (Label)row.FindControl("lbDepartmentID");
+                string departmentID = lbDepartmentID.Text;
+
+                // Controls
+                TextBox txtPrice = (TextBox)row.FindControl("txtPriceAdj");
+                Label lbPrice = (Label)row.FindControl("lbPriceAdj");
+
+                TextBox txtVat = (TextBox)row.FindControl("txtVatAdj");
+                Label lbVat = (Label)row.FindControl("lbVatAdj");
+
+                decimal price = 0;
+                decimal vat = 0;
+
+                // ถ้าเป็น editable row
+                if (txtPrice != null && txtPrice.Visible)
+                    decimal.TryParse(txtPrice.Text, out price);
+                else
+                    decimal.TryParse(lbPrice.Text, out price);
+
+                if (txtVat != null && txtVat.Visible)
+                    decimal.TryParse(txtVat.Text, out vat);
+                else
+                    decimal.TryParse(lbVat.Text, out vat);
+
+
+                total = new modelFromCentral();
+                total.Posting_Date = txtPostingDate.Text;
+                total.Shop = shop;
+                total.Brand = brand;
+                total.departmentID = departmentID;
+                total.Price = price.ToString("#,##0.00");
+                total.VAT = (vat).ToString("#,##0.00");
+                dataCentral.Add(total);
+                totalPrice += price;
+                totalVat += vat;
+            }
+
+            dataCentral = dataCentral.GroupBy(g => new { g.Brand, shop = g.Shop }).OrderBy(o=>o.Key.Brand).Select(s => new modelFromCentral
+            {
+                Brand = s.Key.Brand,
+                Shop = s.Key.shop,
+                departmentID = s.FirstOrDefault().departmentID,
+                Posting_Date = s.FirstOrDefault().Posting_Date,
+                Price = s.Sum(c => Convert.ToDecimal(c.Price)).ToString("#,##0.00"),
+                VAT = s.Sum(c => Convert.ToDecimal(c.VAT)).ToString("#,##0.00")
+
+            }).ToList();
+
+            foreach(var dtct in dataCentral)
+            {
+                // ใช้งานข้อมูล
+
+                var cenImp = carrier_Entities.Central_Import.Where(w => w.Shop == dtct.Shop && w.Brand == dtct.Brand && w.Date_Posting == dtct.Posting_Date ).FirstOrDefault();
+                if (cenImp == null)
+                {
+                    decimal price = Convert.ToDecimal(dtct.Price);
+                    decimal VAT = Convert.ToDecimal(dtct.VAT);
+                    carrier_Entities.Central_Import.Add(new Model.Carrier.Central_Import
+                    {
+                        Date_Create = DateTime.Now,
+                        Shop = dtct.Shop,
+                        Department_ID = dtct.departmentID,
+                        Brand = dtct.Brand,
+                        Date_Posting = dtct.Posting_Date,
+                        Price = price,
+                        Vat = VAT
+                    });
+                    carrier_Entities.SaveChanges();
+
+                }
+            }
+
+            gv_main.DataSource = dataCentral;
+            gv_main.DataBind();
+            gv_main.HeaderRow.Cells[3].Text = "ค่ารถ(" + totalPrice + ")";
+            gv_main.HeaderRow.Cells[4].Text = "VAT(" + totalVat + ")";
+
+            dv_Adj.Visible = false;
+            dv_gv_main.Visible = true;
+            dv_uploadTOFC.Visible = true;
+            dv_Export.Visible = true;
+        }
+
+        protected void txtPriceAdj_TextChanged(object sender, EventArgs e)
+        {
+            TextBox txt = (TextBox)sender;
+            GridViewRow row = (GridViewRow)txt.NamingContainer;
+
+            string departmentID = ((Label)row.FindControl("lbDepartmentID")).Text;
+
+            decimal price = 0;
+            decimal.TryParse(txt.Text, out price);
+
+            decimal vat = price * 0.07m;
+            Label lbPriceAdj = (Label)row.FindControl("lbPriceAdj");
+
+            var headerPrice = Convert.ToDecimal(gv_Temp.HeaderRow.Cells[3].Text.Split('(')[1].TrimEnd(')'));
+            var headerVat = Convert.ToDecimal(gv_Temp.HeaderRow.Cells[4].Text.Replace("(7%)","").Split('(')[1].TrimEnd(')'));
+            headerPrice -= Convert.ToDecimal(lbPriceAdj.Text);
+            headerPrice += Convert.ToDecimal(txt.Text);
+
+
+            Label lbVat = (Label)row.FindControl("lbVatAdj");
+            TextBox txtVatAdj = (TextBox)row.FindControl("txtVatAdj");
+
+            if (lbVat != null)
+            {
+                headerVat -= Convert.ToDecimal(lbVat.Text);
+                headerVat += vat;
+
+                lbVat.Text = vat.ToString("N2");
+                txtVatAdj.Text = vat.ToString("N2");
+
+
+            }
+            gv_Temp.HeaderRow.Cells[3].Text = "Price(" + headerPrice.ToString("#,##0.00") + ")";
+            gv_Temp.HeaderRow.Cells[4].Text = "VAT(7%)(" + headerVat.ToString("#,##0.00") + ")";
+            // refresh updatepanel
+
+            lbPriceAdj.Text = txt.Text;
+            updatePanel1.Update();
+        }
+
+        protected void txtVatAdj_TextChanged(object sender, EventArgs e)
+        {
+            TextBox txt = (TextBox)sender;
+            GridViewRow row = (GridViewRow)txt.NamingContainer;
+            Label lbVat = (Label)row.FindControl("lbVatAdj");
+            var headerVat = Convert.ToDecimal(gv_Temp.HeaderRow.Cells[4].Text.Replace("(7%)", "").Split('(')[1].TrimEnd(')'));
+            headerVat -= Convert.ToDecimal(lbVat.Text);
+            headerVat += Convert.ToDecimal(txt.Text);
+
+            gv_Temp.HeaderRow.Cells[4].Text = "VAT(7%)(" + headerVat.ToString("#,##0.00") + ")";
+
+            updatePanel1.Update();
         }
     }
 }

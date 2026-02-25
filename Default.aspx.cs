@@ -16,6 +16,7 @@ namespace Carrier
 {
     public partial class _Default : Page
     {
+        Service_Lalamove service_Lalamove = new Service_Lalamove();
         Service_Flash service_Flashs;
         CarrierEntities carrier_Entities;
         InsideSFG_WFEntities insideSFG_WF_Entities;
@@ -28,8 +29,8 @@ namespace Carrier
         }
         protected void Page_Load(object sender, EventArgs e)
         {
-
-
+            
+            service_Lalamove.CallAPILalamoveSFG();
             //สำหรับ Admin
             //Session.Clear();
             Session["_UserID"] = null;

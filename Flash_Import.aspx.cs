@@ -632,7 +632,8 @@ namespace Carrier
                                     Docno = tOrder.Docno,
                                     Customer_Code = (from tCustomer in objCustomer
                                                      where tCustomer.Channel_ID.ToString() == tOrder.Channel_ID && tCustomer.Brand_ID == tOrder.Brand_ID
-                                                             && (tOrder.b_IDCard == "" || tOrder.b_IDCard == null ? !tCustomer.SAP_Channel.EndsWith("_ETAX") : tCustomer.SAP_Channel.EndsWith("_ETAX"))
+                                                             //&& (tOrder.b_IDCard == "" || tOrder.b_IDCard == null ? !tCustomer.SAP_Channel.EndsWith("_ETAX") : tCustomer.SAP_Channel.EndsWith("_ETAX"))
+                                                             && !tCustomer.SAP_Channel.EndsWith("_ETAX")
                                                      select tCustomer).FirstOrDefault()?.Customer_Code,
                                     Brand_Short = tOrder.Brand_ID,
                                     SKU = tOrder.SKU,
@@ -700,7 +701,7 @@ namespace Carrier
             {
 
 
-                var filename = "BC_Flash" + dateST.ToString("dd-MM-yyyy") + "_" + dateED.ToString("dd-MM-yyyy") /*DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss")*/ + ".xls";
+                var filename = "BC_Flash_" + dateST.ToString("dd-MM-yyyy") + "_" + dateED.ToString("dd-MM-yyyy") /*DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss")*/ + ".xls";
 
                 using (XLWorkbook wb = new XLWorkbook())
                 {
@@ -729,7 +730,6 @@ namespace Carrier
                 .Select(s => new 
                 {
                     Posting_Date = s.Date_Process,
-                    Account = "6050008",
                     Amount = s.Price??0,
                     Shop = s.Shop.ToUpper(),
                     department_ID = s.department_id,
@@ -750,6 +750,7 @@ namespace Carrier
             List<model_Flash_Export_BC> flash_item_Seek = new List<model_Flash_Export_BC>();
             double total = 0;
             var brandBC = service_BC.getDimensionValue("BRAND_PROFIT CENTER");
+            var costcenterBC = service_BC.getDimensionValue("COST CENTER");
             foreach (var i in Flash)
             {
                 var departmentID_STR = i.department_ID.ToString();
@@ -760,6 +761,40 @@ namespace Carrier
 
                 var brandMatch = brandBC.Where(w => w.DepartmentID == departmentID_STR).FirstOrDefault();
                 FItem.Brand_Profit_center_Code = brandMatch == null ? "CENTER" : brandMatch.Dimension_Value_Code;
+                //Option
+                if (brandMatch == null)
+                {
+
+                    var departmentCEnter = costcenterBC.Where(w => w.DepartmentID == departmentID_STR).FirstOrDefault();
+                    FItem.Cost_center_Code = departmentCEnter == null ? "SALES (XXX110)" : departmentCEnter.Dimension_Value_Code;
+                    FItem.Brand_Profit_center_Code = departmentCEnter == null ? "CENTER" : "SUPPORT 5020";
+                }
+                else
+                {
+                    if (brandMatch.Dimension_Value_Code == "BRATPACK SHOP 5030")
+                    {
+                        var site2DIgit = i.Shop.Substring(2, 2);
+                        var departmentCEnter = costcenterBC.Where(w => w.Site == site2DIgit).FirstOrDefault();
+                        if (departmentCEnter != null)
+                        {
+                            FItem.Cost_center_Code = departmentCEnter.Dimension_Value_Code;
+                            FItem.Brand_Profit_center_Code = brandMatch.Dimension_Value_Code;
+                        }
+                        else
+                        {
+                            FItem.Cost_center_Code = "SALES (XXX110)";
+                            FItem.Brand_Profit_center_Code = brandMatch.Dimension_Value_Code;
+                        }
+
+                    }
+                    else
+                    {
+                        FItem.Cost_center_Code = "SALES (XXX110)";
+                        FItem.Brand_Profit_center_Code = brandMatch.Dimension_Value_Code;
+                    }
+                }
+
+
                 FItem.เลขที่เอกสารใน_FC = i.เลขที่เอกสารใน_FC;
                 FItem.Direct_Unit_Cost_Excl_VAT = i.Amount.ToString("#,##0.00");
                 FItem.Line_Amount_Excl_VAT = i.Amount.ToString("#,##0.00");
@@ -775,7 +810,7 @@ namespace Carrier
                     FItem.Site_shop_Code = shop;
                 }
                 
-                FItem.Description_Comment = i.Shop + "_" + i.pno + "_" + "ค่าขนส่ง_ค่าพาหนะเฉพาะจัดส่ง_" + (i.Posting_Date?? DateTime.Now).ToString("dd/MM/yyyy");
+                FItem.Description_Comment = i.Shop + "_" + i.pno + "_" + "ค่าขนส่ง_ค่าพาหนะเฉพาะจัดส่ง_M." + (i.Posting_Date?? DateTime.Now).ToString("MM/yy");
 
                 FItem.Chanel_Code = i.saleon;
 
@@ -811,6 +846,7 @@ namespace Carrier
             BC_V1.Columns.Add(new DataColumn("WHT_Business_Posting_Group", typeof(string)));
             BC_V1.Columns.Add(new DataColumn("WHT_Product_Posting_Group", typeof(string)));
             BC_V1.Columns.Add(new DataColumn("Sustainability_Account_No", typeof(string)));
+            BC_V1.Columns.Add(new DataColumn("Energy_Source_Code", typeof(string)));
             BC_V1.Columns.Add(new DataColumn("Quantity", typeof(string)));
             BC_V1.Columns.Add(new DataColumn("Unit_of_Measure_Code", typeof(string)));
             BC_V1.Columns.Add(new DataColumn("Direct_Unit_Cost_Excl_VAT", typeof(string)));
@@ -818,9 +854,13 @@ namespace Carrier
             BC_V1.Columns.Add(new DataColumn("Line_Amount_Excl_VAT", typeof(string)));
             BC_V1.Columns.Add(new DataColumn("Qty_to_Assign", typeof(string)));
             BC_V1.Columns.Add(new DataColumn("Qty_Assigned", typeof(string)));
+            BC_V1.Columns.Add(new DataColumn("Renewable_Energy", typeof(string)));
             BC_V1.Columns.Add(new DataColumn("Emission_CO2", typeof(string)));
             BC_V1.Columns.Add(new DataColumn("Emission_CH4", typeof(string)));
             BC_V1.Columns.Add(new DataColumn("Emission_N2O", typeof(string)));
+            BC_V1.Columns.Add(new DataColumn("Source_of_Emission_data", typeof(string)));
+            BC_V1.Columns.Add(new DataColumn("Emission_Verified", typeof(string)));
+            BC_V1.Columns.Add(new DataColumn("CBAM", typeof(string)));
             BC_V1.Columns.Add(new DataColumn("Brand_Profit_center_Code", typeof(string)));
             BC_V1.Columns.Add(new DataColumn("Cost_center_Code", typeof(string)));
             BC_V1.Columns.Add(new DataColumn("Site_shop_Code", typeof(string)));
@@ -855,31 +895,36 @@ namespace Carrier
                 rowV1[11] = "WHT53";
                 rowV1[12] = "TRANSPORT";
                 rowV1[13] = "";
-                rowV1[14] = "1";
-                rowV1[15] = "";
-                rowV1[16] = i.Direct_Unit_Cost_Excl_VAT;
-                rowV1[17] = "";
-                rowV1[18] = i.Line_Amount_Excl_VAT;
-                rowV1[19] = "0";
-                rowV1[20] = "";
-                rowV1[21] = "0";
-                rowV1[22] = "0";
+                rowV1[14] = "";
+                rowV1[15] = "1";
+                rowV1[16] = "";
+                rowV1[17] = i.Direct_Unit_Cost_Excl_VAT;
+                rowV1[18] = "";
+                rowV1[19] = i.Line_Amount_Excl_VAT;
+                rowV1[20] = "0";
+                rowV1[21] = "";
+                rowV1[22] = "NO";
                 rowV1[23] = "0";
-                rowV1[24] = i.Brand_Profit_center_Code;
-                rowV1[25] = "SALES (XXX110)";
-                rowV1[26] = i.Site_shop_Code;
-                rowV1[27] = i.Chanel_Code;
-                rowV1[28] = "NONE";
-                rowV1[29] = "BA1000";
-                rowV1[30] = "";
-                rowV1[31] = "";
-                rowV1[32] = "";
-                rowV1[33] = "";
-                rowV1[34] = "0";
-                rowV1[35] = "NO";
+                rowV1[24] = "0";
+                rowV1[25] = "0";
+                rowV1[26] = "";
+                rowV1[27] = "NO";
+                rowV1[28] = "NO";
+                rowV1[29] = i.Brand_Profit_center_Code;
+                rowV1[30] = i.Cost_center_Code;
+                rowV1[31] = i.Site_shop_Code;
+                rowV1[32] = i.Chanel_Code;
+                rowV1[33] = "NONE";
+                rowV1[34] = "BA1000";
+                rowV1[35] = "";
                 rowV1[36] = "";
                 rowV1[37] = "";
-                rowV1[38] = i.เลขที่เอกสารใน_FC;
+                rowV1[38] = "";
+                rowV1[39] = "0";
+                rowV1[40] = "NO";
+                rowV1[41] = "";
+                rowV1[42] = "";
+                rowV1[43] = i.เลขที่เอกสารใน_FC;
 
                 BC_V1.Rows.Add(rowV1);
             }
@@ -1118,10 +1163,9 @@ namespace Carrier
                         }
                         else
                         {
-                            var siteST = shop.Substring(0, 4);
-                            var siteED = shop.Substring(4, 2);
-                            var siteOrder = carrier_Entities.Flash_EX_Import.Where(w => w.department_id == b && w.Shop.StartsWith(siteST) && w.Shop.EndsWith(siteED) 
-                            && w.saleOn == si.saleon && w.Date_Process >= dateSTOrigin && w.Date_Process <= dateEDOrigin && w.Status_Budget == false)
+                            var siteST = si.shop.Substring(0, 4);
+                            var siteED = si.shop.Substring(4, 2);
+                            var siteOrder = carrier_Entities.Flash_EX_Import.Where(w => w.department_id == b && w.Shop.StartsWith(siteST) && w.Shop.EndsWith(siteED) && w.saleOn == si.saleon && w.Date_Process >= dateSTOrigin && w.Date_Process <= dateEDOrigin && w.Status_Budget == false)
                                 .GroupBy(g => new
                                 {
                                     g.department_id,
@@ -1169,7 +1213,8 @@ namespace Carrier
                                                 temp.brand.Add(new cutCudget_brand_Filter
                                                 {
                                                     brand_id = bio.Brand_ID,
-                                                    brand_percent = 100
+                                                    brand_percent = 100,
+                                                    SiteStorage = bio.Site_Storage_B
                                                 });
                                             }
                                             else
@@ -1177,7 +1222,8 @@ namespace Carrier
                                                 temp.brand.Add(new cutCudget_brand_Filter
                                                 {
                                                     brand_id = bio.Brand_ID,
-                                                    brand_percent = 0
+                                                    brand_percent = 0,
+                                                    SiteStorage = bio.Site_Storage_B
                                                 });
                                             }
                                         }
@@ -1198,7 +1244,7 @@ namespace Carrier
                                         {
                                             var depInt = seek == null ? b.ToString() : "1619";
                                             var typeBud = saleonInSite.saleOn == "OFFLINE" ? 2 : 1;
-                                            var budget = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark) && w.Department_ID == depInt && w.TypeBudget_ID == typeBud).FirstOrDefault();
+                                            var budget = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark) && w.Department_ID == temp.depart_id && w.TypeBudget_ID == typeBud).FirstOrDefault();
 
                                             var carFlashImport = carrier_Entities.Flash_EX_Import.Where(w => w.Docno == docno).FirstOrDefault();
                                             carFlashImport.Docno_Budget = budget.Docno;
@@ -1217,7 +1263,7 @@ namespace Carrier
                                     {
                                         var depInt = seek == null ? b.ToString() : "1619";
                                         var typeBud = saleonInSite.saleOn == "OFFLINE" ? 2 : 1;
-                                        var budget = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark) && w.Department_ID == depInt && w.TypeBudget_ID == typeBud).FirstOrDefault();
+                                        var budget = budget_Entities.MainExpenses.Where(w => w.Remark.Contains(temp.remark) && w.Department_ID == temp.depart_id && w.TypeBudget_ID == typeBud).FirstOrDefault();
 
                                         var carFlashImport = carrier_Entities.Flash_EX_Import.Where(w => w.Docno == docno).FirstOrDefault();
                                         carFlashImport.Docno_Budget = budget.Docno;

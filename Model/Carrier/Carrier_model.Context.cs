@@ -56,7 +56,8 @@ namespace Carrier.Model.Carrier
         public virtual DbSet<Lalamove_Car_Stop> Lalamove_Car_Stop { get; set; }
         public virtual DbSet<Lalamove_Car_Status> Lalamove_Car_Status { get; set; }
         public virtual DbSet<Lalamove_Location_Google_Temp> Lalamove_Location_Google_Temp { get; set; }
-        public virtual DbSet<Central_Import> Central_Import { get; set; }
         public virtual DbSet<Address_Delivery> Address_Delivery { get; set; }
+        public virtual DbSet<User_View> User_View { get; set; }
+        public virtual DbSet<Central_Import> Central_Import { get; set; }
     }
 }

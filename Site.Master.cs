@@ -81,8 +81,8 @@ namespace Carrier
                     {
                         div_Member.Visible = false;
                         div_Admin.Visible = true;
-                        
-                        if(permision.ImportForSAP??false)
+                        div_Profit.Visible = true;
+                        if (permision.ImportForSAP??false)
                         {
                             div1.Visible = true;
                         }
@@ -97,6 +97,14 @@ namespace Carrier
                     }
                 }
                 else { Response.Redirect("Home_Carrier.aspx"); }
+
+                var user = HttpContext.Current.Session["_UserID"].ToString();
+                var listCar = carrier_Entities.User_View.Where(w => w.UserID_H == user).ToList();
+                if (listCar.Any())
+                {
+                    dv_ListOrderFromOut.Visible = true;
+                }
+                
             }
 
         }

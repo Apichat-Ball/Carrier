@@ -23,5 +23,6 @@ namespace Carrier.Model.Carrier
         public Nullable<int> SpecialRequests_Max { get; set; }
         public Nullable<System.DateTime> SpecialRequests_Date_save { get; set; }
         public string SpecialRequest_Name_TH { get; set; }
+        public string use_special { get; set; }
     }
 }

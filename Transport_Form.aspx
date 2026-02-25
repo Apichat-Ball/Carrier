@@ -44,6 +44,9 @@
         .maxwide-none{
             max-width:none;
         }
+        .maxwide-content{
+            max-width:max-content;
+        }
     </style>
     <script type="text/javascript" src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js'></script>
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
@@ -136,6 +139,11 @@
                     <div class="input-group">
                         <span class="input-group-text">Shared Link</span>
                         <asp:TextBox runat="server" ID="txtSharedLink" CssClass="form-control maxwide-none"   Enabled="false" ></asp:TextBox>
+                    </div>
+                    <br />
+                    <div class="input-group mt-2">
+                        <span class="input-group-text">ค่าขนส่ง</span>
+                        <asp:TextBox runat="server" ID="txtPrice" CssClass="form-control maxwide-content text-end"   Enabled="false" ></asp:TextBox>
                     </div>
                 </div>
                 <div class="row mt-5 mb-3">

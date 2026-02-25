@@ -409,6 +409,7 @@ namespace Carrier
                                 dv_Driver_Lalamove.Visible = true;
                                 iframeTracking.Src = placeorder.shareLink;
                                 txtSharedLink.Text = placeorder.shareLink;
+                                txtPrice.Text = (checkBox.Price_Lala??0).ToString("#,##0.00") + " บาท";
                                 dv_Ifram.Visible = true;
                             }
                             
@@ -421,9 +422,11 @@ namespace Carrier
                     var FC = (from d in budget_Entities.Departments
                               where new string[] { "F", "VIP" }.Contains(d.Flag) && bubget.Contains(d.Department_ID) && !d.Department_Name.Contains("SEEK") && !d.Department_Name.Contains("SDC1")
                               select new { departmentID = d.Department_ID, department_ = d.Department_Name }).OrderBy(o => o.department_).ToList();
-
-                    var seek = budget_Entities.Departments.Where(w => w.Department_Name.Contains("SEEK") && !new string[] { "1508", "1619" }.Contains(w.Department_ID)).Select(s => new { departmentID = s.Department_ID, department_ = s.Department_Name }).OrderBy(o => o.department_).ToList();
-                    FC.AddRange(seek);
+                    if (bubget.Where(w => w == "1619").FirstOrDefault() != null)
+                    {
+                        var seek = budget_Entities.Departments.Where(w => w.Department_Name.Contains("SEEK") && !new string[] { "1508", "1619" }.Contains(w.Department_ID)).Select(s => new { departmentID = s.Department_ID, department_ = s.Department_Name }).OrderBy(o => o.department_).ToList();
+                        FC.AddRange(seek);
+                    }
                     FC.Insert(0, new { departmentID = "Select", department_ = "กรุณาเลือกแผนกที่ต้องการเบิก" });
 
                     foreach (GridViewRow row in gv_Big_Box.Rows)
@@ -799,13 +802,15 @@ namespace Carrier
             txtlength.Text = "1";
             txtheight.Text = "1";
 
-            var bubget = budget_Entities.MainBudgets.Where(w => w.Year_Budget == date.Value.Year  ).GroupBy(g => g.Department_ID).Select(s => s.Key).ToList();
+            var budget = budget_Entities.MainBudgets.Where(w => w.Year_Budget == date.Value.Year  ).GroupBy(g => g.Department_ID).Select(s => s.Key).ToList();
             var FC = (from d in budget_Entities.Departments
-                      where new string[] { "F", "VIP" }.Contains(d.Flag) && bubget.Contains(d.Department_ID) && !d.Department_Name.Contains("SEEK") && !d.Department_Name.Contains("SDC1")
+                      where new string[] { "F", "VIP" }.Contains(d.Flag) && budget.Contains(d.Department_ID) && !d.Department_Name.Contains("SEEK") && !d.Department_Name.Contains("SDC1")
                       select new { departmentID = d.Department_ID, department_ = d.Department_Name }).OrderBy(o=>o.department_).ToList();
-            
-            var seek = budget_Entities.Departments.Where(w => w.Department_Name.Contains("SEEK") && !new string[] { "1508", "1619" }.Contains(w.Department_ID)).Select(s=>new { departmentID = s.Department_ID, department_ = s.Department_Name }).OrderBy(o=>o.department_).ToList();
-            FC.AddRange(seek);
+            if(budget.Where(w=>w == "1619").FirstOrDefault() != null)
+            {
+                var seek = budget_Entities.Departments.Where(w => w.Department_Name.Contains("SEEK") && !new string[] { "1508", "1619" }.Contains(w.Department_ID)).Select(s => new { departmentID = s.Department_ID, department_ = s.Department_Name }).OrderBy(o => o.department_).ToList();
+                FC.AddRange(seek);
+            }
             FC.Insert(0, new { departmentID = "Select", department_ = "กรุณาเลือกแผนกเพื่อค้นหา Sitestorage" });
             ddlSDpart.DataSource = FC;
             ddlSDpart.DataBind();
@@ -929,9 +934,11 @@ namespace Carrier
                 var FC = (from d in budget_Entities.Departments
                           where new string[] { "F", "VIP" }.Contains(d.Flag) && bubget.Contains(d.Department_ID) && !d.Department_Name.Contains("SEEK") && !d.Department_Name.Contains("SDC1")
                           select new { departmentID = d.Department_ID, department_ = d.Department_Name }).OrderBy(o => o.department_).ToList();
-
-                var seek = budget_Entities.Departments.Where(w => w.Department_Name.Contains("SEEK") && !new string[] { "1508", "1619" }.Contains(w.Department_ID)).Select(s => new { departmentID = s.Department_ID, department_ = s.Department_Name }).OrderBy(o => o.department_).ToList();
-                FC.AddRange(seek);
+                if (bubget.Where(w => w == "1619").FirstOrDefault() != null)
+                {
+                    var seek = budget_Entities.Departments.Where(w => w.Department_Name.Contains("SEEK") && !new string[] { "1508", "1619" }.Contains(w.Department_ID)).Select(s => new { departmentID = s.Department_ID, department_ = s.Department_Name }).OrderBy(o => o.department_).ToList();
+                    FC.AddRange(seek);
+                }
                 FC.Insert(0, new { departmentID = "Select", department_ = "กรุณาเลือกแผนกที่ต้องการเบิก" });
                 ddlDepartment.DataSource = FC;
                 ddlDepartment.DataBind();
@@ -1444,26 +1451,15 @@ namespace Carrier
             var Act = Request.QueryString["Act"];
             if (Act != "Edit")
             {
-                #region V1
-                //var docno = Carrier_Entities.Orders.Where(w=>w.Docno.StartsWith("FL")).ToList().LastOrDefault();
-                //var newId = "";
-                //if (docno == null)
-                //{
-                //    var id = "FL0000000001";
-                //    newId = id;
-                //}
-                //else
-                //{
-                //    newId = docno.Docno;
-                //    var lastId = Convert.ToInt32(newId.Substring(2, 10)) + 1;
-                //    newId = newId.Substring(0, 2) + newId.Substring(2, 10 - lastId.ToString().Length) + lastId.ToString();
-                //}
-                #endregion
+                if(txtdstDetailAddress.Text != "")
+                {
+                    txtdstDetailAddress.Text = txtdstDetailAddress.Text.TrimStart();
+                }
+                if(txtsrcDetailAddress.Text != "")
+                {
+                    txtsrcDetailAddress.Text = txtsrcDetailAddress.Text.TrimStart();
+                }
 
-                //if(ddlExpress.SelectedValue == "2")
-                //{
-                //    ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('ขณะนี้ระบบ Lalamove กำลังปรับปรุงอาจใช้เวลาประมาณ 1 - 2 วัน')", true);
-                //}
 
                 #region CancelOrder
                 var docnoC = txtDocno.Text;
@@ -2291,13 +2287,15 @@ namespace Carrier
             Article.Insert(0, new Article_Category { ArticleCode = 1111, ArticleName = "กรุณาเลือกประเภทพัสดุ" });
             var num = 0;
             List<BoxSmallLoad> listSmallBox = new List<BoxSmallLoad>();
-            var bubget = budget_Entities.MainBudgets.Where(w => w.Year_Budget == DateTime.Now.Year).GroupBy(g => g.Department_ID).Select(s => s.Key).ToList();
+            var budget = budget_Entities.MainBudgets.Where(w => w.Year_Budget == DateTime.Now.Year).GroupBy(g => g.Department_ID).Select(s => s.Key).ToList();
             var FC = (from d in budget_Entities.Departments
-                      where new string[] { "F", "VIP" }.Contains(d.Flag) && bubget.Contains(d.Department_ID) && !d.Department_Name.Contains("SEEK") && !d.Department_Name.Contains("SDC1")
+                      where new string[] { "F", "VIP" }.Contains(d.Flag) && budget.Contains(d.Department_ID) && !d.Department_Name.Contains("SEEK") && !d.Department_Name.Contains("SDC1")
                       select new { departmentID = d.Department_ID, department_ = d.Department_Name }).OrderBy(o => o.department_).ToList();
-
-            var seek = budget_Entities.Departments.Where(w => w.Department_Name.Contains("SEEK") && !new string[] { "1508", "1619" }.Contains(w.Department_ID)).Select(s => new { departmentID = s.Department_ID, department_ = s.Department_Name }).OrderBy(o => o.department_).ToList();
-            FC.AddRange(seek);
+            if (budget.Where(w => w == "1619").FirstOrDefault() != null)
+            {
+                var seek = budget_Entities.Departments.Where(w => w.Department_Name.Contains("SEEK") && !new string[] { "1508", "1619" }.Contains(w.Department_ID)).Select(s => new { departmentID = s.Department_ID, department_ = s.Department_Name }).OrderBy(o => o.department_).ToList();
+                FC.AddRange(seek);
+            }
             FC.Insert(0, new { departmentID = "Select", department_ = "กรุณาเลือกแผนกที่ต้องการเบิก" });
             foreach (GridViewRow row in gv_Big_Box.Rows)
             {

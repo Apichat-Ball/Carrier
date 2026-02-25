@@ -11,106 +11,142 @@ namespace Carrier
 {
 
 
-    public partial class SiteMaster
+    public partial class OrderFromOutEmployee
     {
 
         /// <summary>
-        /// lblUserID control.
+        /// lbForm control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblUserID;
+        protected global::System.Web.UI.WebControls.Label lbForm;
 
         /// <summary>
-        /// div_Member control.
+        /// lbuserid control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div_Member;
+        protected global::System.Web.UI.WebControls.Label lbuserid;
 
         /// <summary>
-        /// div_Admin control.
+        /// lbDateStart control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div_Admin;
+        protected global::System.Web.UI.WebControls.Label lbDateStart;
 
         /// <summary>
-        /// div_Profit control.
+        /// txtDateStart control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div_Profit;
+        protected global::System.Web.UI.WebControls.TextBox txtDateStart;
 
         /// <summary>
-        /// div1 control.
+        /// RegularExpressionValidatorDateStart control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl div1;
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator RegularExpressionValidatorDateStart;
 
         /// <summary>
-        /// dv_ListOrderFromOut control.
+        /// lbDateEnd control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dv_ListOrderFromOut;
+        protected global::System.Web.UI.WebControls.Label lbDateEnd;
 
         /// <summary>
-        /// divmenu control.
+        /// txtDateEnd control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divmenu;
+        protected global::System.Web.UI.WebControls.TextBox txtDateEnd;
 
         /// <summary>
-        /// lblName control.
+        /// RegularExpressionValidatorDateEnd control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblName;
+        protected global::System.Web.UI.WebControls.RegularExpressionValidator RegularExpressionValidatorDateEnd;
 
         /// <summary>
-        /// lblDepartmentID control.
+        /// lbDocnoSearch control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDepartmentID;
+        protected global::System.Web.UI.WebControls.Label lbDocnoSearch;
 
         /// <summary>
-        /// UpdateProgress1 control.
+        /// txtDocnoSearch control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.UpdateProgress UpdateProgress1;
+        protected global::System.Web.UI.WebControls.TextBox txtDocnoSearch;
 
         /// <summary>
-        /// MainContent control.
+        /// lbUserS control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::System.Web.UI.WebControls.Label lbUserS;
+
+        /// <summary>
+        /// ddlUserS control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlUserS;
+
+        /// <summary>
+        /// btnSearch control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSearch;
+
+        /// <summary>
+        /// updatePanel6 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel updatePanel6;
+
+        /// <summary>
+        /// gv_data control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gv_data;
     }
 }

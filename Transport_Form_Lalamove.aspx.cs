@@ -495,7 +495,8 @@ namespace Carrier
                                         Shop = calcar.SiteStorage,
                                         Assignment = "Lalamove",
                                         Brand = calcar.SDpart,
-                                        DeliveryID = ll.Delivery_ID
+                                        DeliveryID = ll.Delivery_ID,
+                                        Chanel_Code = order.saleOn
                                     }).ToList();
 
                     Lalamove = Lalamove.GroupBy(g => new { shop = g.Shop, brand = g.Brand, Delivery_ID = g.DeliveryID })
@@ -518,7 +519,8 @@ namespace Carrier
                                     Shop = s.Key.shop,
                                     Assignment = "Lalamove",
                                     Brand = s.Key.brand,
-                                    DeliveryID = s.Key.Delivery_ID
+                                    DeliveryID = s.Key.Delivery_ID,
+                                    Chanel_Code = s.FirstOrDefault().Chanel_Code
                                 }).ToList();
                     var seekDepart = budget_Entities.Departments.Where(w => w.Department_Name.StartsWith("SEEK")).Select(s => s.Department_ID).ToList();
                     var Seek = Lalamove.Where(w => seekDepart.Contains(w.Brand)).ToList();
@@ -532,11 +534,45 @@ namespace Carrier
                     }
                     double total = 0;
                     var brandBC = service_BC.getDimensionValue("BRAND_PROFIT CENTER");
+                    var costcenterBC = service_BC.getDimensionValue("COST CENTER");
                     foreach (var l in Lalamove)
                     {
+
+                        
+
                         //var shortBrand = budget_Entities.Departments.Where(w => w.Department_ID == l.Brand).FirstOrDefault();
                         var brandMatch = brandBC.Where(w => w.DepartmentID == l.Brand).FirstOrDefault();
-                        l.Brand = brandMatch == null ? "CENTER": brandMatch.Dimension_Value_Code;
+                        if (brandMatch == null)
+                        {
+
+                            var departmentCEnter = costcenterBC.Where(w => w.DepartmentID == l.Brand).FirstOrDefault();
+                            l.Cost_Center = departmentCEnter == null ? "SALES (XXX110)" : departmentCEnter.Dimension_Value_Code;
+                            l.Brand = departmentCEnter == null ? "CENTER" : "SUPPORT 5020";
+                        }
+                        else
+                        {
+                            if(brandMatch.Dimension_Value_Code == "BRATPACK SHOP 5030")
+                            {
+                                var site2DIgit = (l.Shop.Length == 8 ? l.Shop.Substring(0, 4) + l.Shop.Substring(6, 2) : l.Shop).Substring(2, 2);
+                                var departmentCEnter = costcenterBC.Where(w => w.Site == site2DIgit).FirstOrDefault();
+                                if(departmentCEnter != null)
+                                {
+                                    l.Cost_Center = departmentCEnter.Dimension_Value_Code;
+                                    l.Brand = brandMatch.Dimension_Value_Code;
+                                }
+                                else
+                                {
+                                    l.Cost_Center = "SALES (XXX110)";
+                                    l.Brand = brandMatch.Dimension_Value_Code;
+                                }
+                                
+                            }
+                            else
+                            {
+                                l.Cost_Center = "SALES (XXX110)";
+                                l.Brand =  brandMatch.Dimension_Value_Code;
+                            }
+                        }
                         l.Posting_Date = (carrier_Entities.Lalamove_Import.Where(w => w.Delivery_ID == l.DeliveryID).FirstOrDefault().Date_Complete ?? DateTime.Now).ToString("dd/MM/yyyy");
                         total += l.Amount;
                         
@@ -550,10 +586,10 @@ namespace Carrier
                         {
                             l.เลขที่เอกสารใน_FC = DocnoINBudget.Docno;
                         }
-                        
+
                         l.Shop = l.Shop.Length == 8 ? l.Shop.Substring(0, 4) + l.Shop.Substring(6, 2) : l.Shop;
                         var convertSite = bC_TB_Entities.SiteSAP_BC.Where(w => w.SiteSAP == l.Shop).FirstOrDefault();
-                        if(convertSite != null)
+                        if (convertSite != null)
                         {
                             l.Shop = convertSite.SiteBC;
                         }
@@ -563,26 +599,30 @@ namespace Carrier
                     foreach (var i in deliveryGroupID)
                     {
                         var FromLala = carrier_Entities.Lalamove_Import.Where(w => w.Delivery_ID == i).FirstOrDefault();
-                        var DatePost = (FromLala.Date_Complete ?? DateTime.Now).ToString("ddMMyyyy");
+                        var DatePost = (FromLala.Date_Complete ?? DateTime.Now).ToString("dd/MM/yyyy");
                         Lalamove.Add(new model_Lalamove_Cal
                         {
                             Posting_Date = DatePost,
                             Account = "6050008",
                             Amount = FromLala.Price ?? 0,
                             Brand = "",
-                            DeliveryID = i
-                        });
+                            DeliveryID = i,
+                            Shop = ""
+                        }) ;
                         total += FromLala.Price ?? 0;
                     }
 
                     List<model_Lalamove_Export_BC> lalamove_Export_BC = new List<model_Lalamove_Export_BC>();
                     foreach (var l in Lalamove)
                     {
+
+                        
+
                         model_Lalamove_Export_BC exp = new model_Lalamove_Export_BC();
                         exp.type = "G/L Account";
                         exp.No = "6050008";
                         exp.ItemReference_No = "";
-                        exp.Description_Comment = l.Shop + "_" +l.DeliveryID+ "_"+ "ค่าขนส่ง_ค่าพาหนะเฉพาะจัดส่ง_" + l.Posting_Date ;
+                        exp.Description_Comment = l.Shop + "_" +l.DeliveryID+ "_"+ "ค่าขนส่ง_ค่าพาหนะเฉพาะจัดส่ง_M" + Convert.ToDateTime(l.Posting_Date).ToString("MM/yy") ;
                         exp.Description2 = "";
                         exp.Attached_to_Subscription_Contract_line = "No";
                         exp.Location_Code = "";
@@ -600,13 +640,16 @@ namespace Carrier
                         exp.Line_Amount_Excl_VAT = l.Amount.ToString("#,##0.00");
                         exp.Qty_to_Assign = "0";
                         exp.Qty_Assigned = "";
+                        exp.Renewable_Energy = "NO";
                         exp.Emission_CO2 = "0";
                         exp.Emission_CH4 = "0";
                         exp.Emission_N2O = "0";
+                        exp.Emission_Verified = "NO";
+                        exp.CBAM = "NO";
                         exp.Brand_Profit_center_Code = l.Brand;
-                        exp.Cost_center_Code = "SALES (XXX110)";
+                        exp.Cost_center_Code = l.Cost_Center;
                         exp.Site_shop_Code = l.Shop;
-                        exp.Chanel_Code = "OFFLINE";
+                        exp.Chanel_Code = l.Chanel_Code;
                         exp.Io_Code = "NONE";
                         exp.Business_area_Code = "BA1000";
                         exp.Tax_Invoice_Date = "";
@@ -1155,6 +1198,7 @@ namespace Carrier
             public string Brand { get; set; }
             public string DeliveryID { get; set; }
             public string เลขที่เอกสารใน_FC { get; set; }
+            public string Chanel_Code { get; set; }
         }
 
         
@@ -1198,6 +1242,7 @@ namespace Carrier
             public string WHT_Business_Posting_Group { get; set; }
             public string WHT_Product_Posting_Group { get; set; }
             public string Sustainability_Account_No { get; set; }
+            public string Energy_Source_Code { get; set; }
             public string Quantity { get; set; }
             public string Unit_of_Measure_Code { get; set; }
             public string Direct_Unit_Cost_Excl_VAT { get; set; }
@@ -1205,9 +1250,13 @@ namespace Carrier
             public string Line_Amount_Excl_VAT { get; set; }
             public string Qty_to_Assign { get; set; }
             public string Qty_Assigned { get; set; }
+            public string Renewable_Energy { get; set; }
             public string Emission_CO2 { get; set; }
             public string Emission_CH4 { get; set; }
             public string Emission_N2O { get; set; }
+            public string Source_of_Emission_data { get; set; }
+            public string Emission_Verified { get; set; }
+            public string CBAM { get; set; }
             public string Brand_Profit_center_Code { get; set; }
             public string Cost_center_Code{ get; set; }
             public string Site_shop_Code { get; set; }

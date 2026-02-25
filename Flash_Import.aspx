@@ -88,7 +88,7 @@
                         <asp:Button runat="server" ID="btnRun" Text="Import" CssClass="btn btn-outline-primary" OnClick="btnRun_Click" UseSubmitBehavior="false"/>
                     </div>
                     <div class="col-md-2">
-                        <asp:Button runat="server" ID="btnExport" Text="Export SAP" CssClass="btn btn-outline-primary" OnClick="btnExport_Click" UseSubmitBehavior="false"/>
+                        <asp:Button runat="server" ID="btnExport" Text="Export" CssClass="btn btn-outline-primary" OnClick="btnExport_Click" UseSubmitBehavior="false"/>
                     </div>
                     <div class="col-md-3">
                         <asp:Button runat="server" ID="btnUploadToBudget" Text="Upload to Budget" CssClass="btn btn-outline-primary" OnClick="btnUploadToBudget_Click" UseSubmitBehavior="false"/>

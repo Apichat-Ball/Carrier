@@ -15,6 +15,7 @@ namespace Carrier
     public partial class Home_Carrier : System.Web.UI.Page
     {
         Service_Flash service_Flashs;
+        Service_Lalamove service_Lalamove = new Service_Lalamove();
         CarrierEntities carrier_Entities;
         InsideSFG_WFEntities insideSFG_WF_Entities;
         public Home_Carrier()
@@ -35,6 +36,9 @@ namespace Carrier
             {
                 Response.Redirect("https://www.sfg-th.com/Login/Default.aspx?Page=Carrier/");
             }
+
+            service_Lalamove.CallAPILalamoveSFG();
+
             lbuserid.Text = Session["_UserID"].ToString();
             if (!IsPostBack)
             {

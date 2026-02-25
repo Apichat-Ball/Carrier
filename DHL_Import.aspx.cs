@@ -12,6 +12,7 @@ using Carrier.Model.Carrier;
 using Carrier.Model.Budget;
 using Carrier.Model.InsideSFG_WF;
 using Carrier.Model.Whale;
+using Carrier.Model.BC_TB;
 using Carrier.Service;
 using ClosedXML.Excel;
 
@@ -24,9 +25,11 @@ namespace Carrier
         BudgetEntities budget_Entities = new BudgetEntities();
         InsideSFG_WFEntities insideSFG_WF_Entities = new InsideSFG_WFEntities();
         WhaleEntities whale_Entities = new WhaleEntities();
+        BC_TBEntities bC_TB_Entities = new BC_TBEntities();
 
         Service_Whale service_Whale = new Service_Whale();
         Service_Budget service_Budget = new Service_Budget();
+        Service_BC service_BC = new Service_BC();
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -359,11 +362,13 @@ namespace Carrier
 
             var dateST = Convert.ToDateTime(txtDateSt.Text);
             var dateED = Convert.ToDateTime(txtDateED.Text);
-            var getDataSAP = loaddataExport();
+            //var getDataSAP = loaddataExport();
+            var getDataSAP = loaddataExportBC();
 
-            if(getDataSAP != null)
+            if (getDataSAP != null)
             {
-                var filename = "SAP_DHL" + dateST.ToString("dd-MM-yyyy") + "_" + dateED.ToString("dd-MM-yyyy") /*DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss")*/ + ".xls";
+                //var filename = "SAP_DHL" + dateST.ToString("dd-MM-yyyy") + "_" + dateED.ToString("dd-MM-yyyy") /*DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss")*/ + ".xls";
+                var filename = "BC_DHL" + dateST.ToString("dd-MM-yyyy") + "_" + dateED.ToString("dd-MM-yyyy")+ ".xls";
 
                 using (XLWorkbook wb = new XLWorkbook())
                 {
@@ -454,7 +459,140 @@ namespace Carrier
             DS.Tables.Add(SAP);
             return DS;
         }
-        
+
+        public DataSet loaddataExportBC()
+        {
+            DataSet DS = new DataSet();
+            DataTable BC = new DataTable("BC_DHL");
+
+            BC.Columns.Add(new DataColumn("type", typeof(string)));
+            BC.Columns.Add(new DataColumn("No", typeof(string)));
+            BC.Columns.Add(new DataColumn("ItemReference_No", typeof(string)));
+            BC.Columns.Add(new DataColumn("Description_Comment", typeof(string)));
+            BC.Columns.Add(new DataColumn("Description2", typeof(string)));
+            BC.Columns.Add(new DataColumn("Attached_to_Subscription_Contract_line", typeof(string)));
+            BC.Columns.Add(new DataColumn("Location_Code", typeof(string)));
+            BC.Columns.Add(new DataColumn("Gen_Bus_Posting_Group", typeof(string)));
+            BC.Columns.Add(new DataColumn("Gen_Prod_Posting_Group", typeof(string)));
+            BC.Columns.Add(new DataColumn("VAT_Bus_Posting_Group", typeof(string)));
+            BC.Columns.Add(new DataColumn("VAT_Prod_Posting_Group", typeof(string)));
+            BC.Columns.Add(new DataColumn("WHT_Business_Posting_Group", typeof(string)));
+            BC.Columns.Add(new DataColumn("WHT_Product_Posting_Group", typeof(string)));
+            BC.Columns.Add(new DataColumn("Sustainability_Account_No", typeof(string)));
+            BC.Columns.Add(new DataColumn("Energy_Source_Code", typeof(string)));
+            BC.Columns.Add(new DataColumn("Quantity", typeof(string)));
+            BC.Columns.Add(new DataColumn("Unit_of_Measure_Code", typeof(string)));
+            BC.Columns.Add(new DataColumn("Direct_Unit_Cost_Excl_VAT", typeof(string)));
+            BC.Columns.Add(new DataColumn("Line_Discount_Percent", typeof(string)));
+            BC.Columns.Add(new DataColumn("Line_Amount_Excl_VAT", typeof(string)));
+            BC.Columns.Add(new DataColumn("Qty_to_Assign", typeof(string)));
+            BC.Columns.Add(new DataColumn("Qty_Assigned", typeof(string)));
+            BC.Columns.Add(new DataColumn("Renewable_Energy", typeof(string)));
+            BC.Columns.Add(new DataColumn("Emission_CO2", typeof(string)));
+            BC.Columns.Add(new DataColumn("Emission_CH4", typeof(string)));
+            BC.Columns.Add(new DataColumn("Emission_N2O", typeof(string)));
+            BC.Columns.Add(new DataColumn("Source_of_Emission_data", typeof(string)));
+            BC.Columns.Add(new DataColumn("Emission_Verified", typeof(string)));
+            BC.Columns.Add(new DataColumn("CBAM", typeof(string)));
+            BC.Columns.Add(new DataColumn("Brand_Profit_center_Code", typeof(string)));
+            BC.Columns.Add(new DataColumn("Cost_center_Code", typeof(string)));
+            BC.Columns.Add(new DataColumn("Site_shop_Code", typeof(string)));
+            BC.Columns.Add(new DataColumn("Chanel_Code", typeof(string)));
+            BC.Columns.Add(new DataColumn("Io_Code", typeof(string)));
+            BC.Columns.Add(new DataColumn("Business_area_Code", typeof(string)));
+            BC.Columns.Add(new DataColumn("Tax_Invoice_Date", typeof(string)));
+            BC.Columns.Add(new DataColumn("Tax_Invoice_No", typeof(string)));
+            BC.Columns.Add(new DataColumn("Tax_Vendor_No", typeof(string)));
+            BC.Columns.Add(new DataColumn("Tax_Invoice_Name", typeof(string)));
+            BC.Columns.Add(new DataColumn("Tax_Invoice_Base", typeof(string)));
+            BC.Columns.Add(new DataColumn("Tax_Head_Office", typeof(string)));
+            BC.Columns.Add(new DataColumn("VAT_Branch_Code", typeof(string)));
+            BC.Columns.Add(new DataColumn("Vat_Registration_No", typeof(string)));
+            BC.Columns.Add(new DataColumn("เลขที่เอกสารใน_FC", typeof(string)));
+
+
+            var carrierdata = LoadExport();
+            double total = 0;
+            var brandBC = service_BC.getDimensionValue("BRAND_PROFIT CENTER").Where(w=>w.APICompanyID == "SEEK");
+            var costcenterBC = service_BC.getDimensionValue("COST CENTER");
+            foreach (var res in carrierdata)
+            {
+                total += res.Price;
+                DataRow row = BC.NewRow();
+                row[0] = "G/L Account";
+                row[1] = "6050008";
+                row[2] = "";
+                row[3] = "ค่าขนส่ง_DHL_" + res.Tracking_No + "_M." + DateTime.Now.ToString("MM/yy");
+                row[4] = "";
+                row[5] = "No";
+                row[6] = "";
+                row[7] = "EXPENSE";
+                row[8] = "GL";
+                row[9] = "VATHO";
+                row[10] = "NOVAT";
+                row[11] = "WHT53";
+                row[12] = "TRANSPORT";
+                row[13] = "";
+                row[14] = "";
+                row[15] = "1";
+                row[16] = "";
+                row[17] = res.Price;
+                row[18] = "";
+                row[19] = res.Price;
+                row[20] = "0";
+                row[21] = "";
+                row[22] = "NO";
+                row[23] = "0";
+                row[24] = "0";
+                row[25] = "0";
+                row[26] = "";
+                row[27] = "NO";
+                row[28] = "NO";
+                string depatmentidSTR = res.department_id.ToString();
+                var brandMatch = brandBC.Where(w => w.DepartmentID == depatmentidSTR).FirstOrDefault();
+                
+                //Option
+                if (brandMatch == null)
+                {
+
+                    var departmentCEnter = costcenterBC.Where(w => w.DepartmentID == depatmentidSTR).FirstOrDefault();
+                    row[29] = departmentCEnter == null ? "CENTER" : "SUPPORT 5020";
+                    row[30] = departmentCEnter == null ? "SALES (XXX110)" : departmentCEnter.Dimension_Value_Code;
+                }
+                else
+                {
+                    row[30] = "SALES (XXX110)";
+                    row[29] = brandMatch.Dimension_Value_Code;
+                }
+
+                var convertSite = bC_TB_Entities.SiteSAP_BC.Where(w => w.SiteSAP == res.Shop).FirstOrDefault();
+                if (convertSite != null)
+                {
+                    row[31] = convertSite.SiteBC;
+                }
+                else
+                {
+                    row[31] = res.Shop;
+                }
+
+                row[32] = "ONLINE";
+                row[33] = "NONE";
+                row[34] = "BA1000";
+                row[35] = "";
+                row[36] = "";
+                row[37] = "";
+                row[38] = "";
+                row[39] = "0";
+                row[40] = "NO";
+                row[41] = "";
+                row[42] = "";
+                row[43] = res.Docno_Budget;
+
+                BC.Rows.Add(row);
+            }
+            DS.Tables.Add(BC);
+            return DS;
+        }
 
         protected void btnUploadToBudget_Click(object sender, EventArgs e)
         {
